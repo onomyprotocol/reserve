@@ -394,6 +394,7 @@ func New(
 		keys[reservemoduletypes.StoreKey],
 		keys[reservemoduletypes.MemStoreKey],
 		app.GetSubspace(reservemoduletypes.ModuleName),
+		app.BankKeeper,
 	)
 	reserveModule := reservemodule.NewAppModule(appCodec, app.ReserveKeeper, app.AccountKeeper, app.BankKeeper)
 

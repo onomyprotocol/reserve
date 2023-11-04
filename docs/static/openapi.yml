@@ -49146,6 +49146,12 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
+  onomyprotocol.reserve.reserve.MsgCreateVaultResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
   onomyprotocol.reserve.reserve.Params:
     type: object
     description: Params defines the parameters for the module.

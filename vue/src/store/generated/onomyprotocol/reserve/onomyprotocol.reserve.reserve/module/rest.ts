@@ -13,6 +13,11 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface ReserveMsgCreateVaultResponse {
+  /** @format int32 */
+  id?: number;
+}
+
 /**
  * Params defines the parameters for the module.
  */
