@@ -49150,8 +49150,10 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-        format: int32
+        type: string
+        format: uint64
+  onomyprotocol.reserve.reserve.MsgDepositCollateralResponse:
+    type: object
   onomyprotocol.reserve.reserve.Params:
     type: object
     description: Params defines the parameters for the module.

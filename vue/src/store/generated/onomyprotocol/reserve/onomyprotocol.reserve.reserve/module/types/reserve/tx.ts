@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Reader, Writer } from "protobufjs/minimal";
+import { Reader, util, configure, Writer } from "protobufjs/minimal";
+import * as Long from "long";
 
 export const protobufPackage = "onomyprotocol.reserve.reserve";
 
@@ -11,6 +12,14 @@ export interface MsgCreateVault {
 export interface MsgCreateVaultResponse {
   id: number;
 }
+
+export interface MsgDepositCollateral {
+  creator: string;
+  uid: number;
+  collateral: string;
+}
+
+export interface MsgDepositCollateralResponse {}
 
 const baseMsgCreateVault: object = { creator: "", collateral: "" };
 
@@ -92,7 +101,7 @@ export const MsgCreateVaultResponse = {
     writer: Writer = Writer.create()
   ): Writer {
     if (message.id !== 0) {
-      writer.uint32(8).int32(message.id);
+      writer.uint32(8).uint64(message.id);
     }
     return writer;
   },
@@ -105,7 +114,7 @@ export const MsgCreateVaultResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.int32();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -144,10 +153,161 @@ export const MsgCreateVaultResponse = {
   },
 };
 
+const baseMsgDepositCollateral: object = {
+  creator: "",
+  uid: 0,
+  collateral: "",
+};
+
+export const MsgDepositCollateral = {
+  encode(
+    message: MsgDepositCollateral,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.uid !== 0) {
+      writer.uint32(16).uint64(message.uid);
+    }
+    if (message.collateral !== "") {
+      writer.uint32(26).string(message.collateral);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgDepositCollateral {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgDepositCollateral } as MsgDepositCollateral;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.uid = longToNumber(reader.uint64() as Long);
+          break;
+        case 3:
+          message.collateral = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDepositCollateral {
+    const message = { ...baseMsgDepositCollateral } as MsgDepositCollateral;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = Number(object.uid);
+    } else {
+      message.uid = 0;
+    }
+    if (object.collateral !== undefined && object.collateral !== null) {
+      message.collateral = String(object.collateral);
+    } else {
+      message.collateral = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgDepositCollateral): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.uid !== undefined && (obj.uid = message.uid);
+    message.collateral !== undefined && (obj.collateral = message.collateral);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgDepositCollateral>): MsgDepositCollateral {
+    const message = { ...baseMsgDepositCollateral } as MsgDepositCollateral;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.uid !== undefined && object.uid !== null) {
+      message.uid = object.uid;
+    } else {
+      message.uid = 0;
+    }
+    if (object.collateral !== undefined && object.collateral !== null) {
+      message.collateral = object.collateral;
+    } else {
+      message.collateral = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgDepositCollateralResponse: object = {};
+
+export const MsgDepositCollateralResponse = {
+  encode(
+    _: MsgDepositCollateralResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgDepositCollateralResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgDepositCollateralResponse,
+    } as MsgDepositCollateralResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDepositCollateralResponse {
+    const message = {
+      ...baseMsgDepositCollateralResponse,
+    } as MsgDepositCollateralResponse;
+    return message;
+  },
+
+  toJSON(_: MsgDepositCollateralResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgDepositCollateralResponse>
+  ): MsgDepositCollateralResponse {
+    const message = {
+      ...baseMsgDepositCollateralResponse,
+    } as MsgDepositCollateralResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateVault(request: MsgCreateVault): Promise<MsgCreateVaultResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  DepositCollateral(
+    request: MsgDepositCollateral
+  ): Promise<MsgDepositCollateralResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -166,6 +326,20 @@ export class MsgClientImpl implements Msg {
       MsgCreateVaultResponse.decode(new Reader(data))
     );
   }
+
+  DepositCollateral(
+    request: MsgDepositCollateral
+  ): Promise<MsgDepositCollateralResponse> {
+    const data = MsgDepositCollateral.encode(request).finish();
+    const promise = this.rpc.request(
+      "onomyprotocol.reserve.reserve.Msg",
+      "DepositCollateral",
+      data
+    );
+    return promise.then((data) =>
+      MsgDepositCollateralResponse.decode(new Reader(data))
+    );
+  }
 }
 
 interface Rpc {
@@ -175,6 +349,16 @@ interface Rpc {
     data: Uint8Array
   ): Promise<Uint8Array>;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -186,3 +370,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

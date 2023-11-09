@@ -14,9 +14,11 @@ export interface ProtobufAny {
 }
 
 export interface ReserveMsgCreateVaultResponse {
-  /** @format int32 */
-  id?: number;
+  /** @format uint64 */
+  id?: string;
 }
+
+export type ReserveMsgDepositCollateralResponse = object;
 
 /**
  * Params defines the parameters for the module.

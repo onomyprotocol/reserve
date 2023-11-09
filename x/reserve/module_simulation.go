@@ -28,6 +28,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreateVault int = 100
 
+	opWeightMsgDepositCollateral = "op_weight_msg_deposit_collateral"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDepositCollateral int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -71,6 +75,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreateVault,
 		reservesimulation.SimulateMsgCreateVault(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDepositCollateral int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDepositCollateral, &weightMsgDepositCollateral, nil,
+		func(_ *rand.Rand) {
+			weightMsgDepositCollateral = defaultWeightMsgDepositCollateral
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDepositCollateral,
+		reservesimulation.SimulateMsgDepositCollateral(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

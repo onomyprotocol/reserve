@@ -10,4 +10,6 @@ import (
 var (
 	// ErrInsufficientBalance - the user balance is insufficient for the operation.
 	ErrInsufficientBalance = sdkerrors.Register(ModuleName, 1, "insufficient balance") // nolint: gomnd
+	// ErrVaultNotFound - the requested vault not found in storage.
+	ErrVaultNotFound = sdkerrors.Register(ModuleName, 2, "vault not found") // nolint: gomnd
 )
