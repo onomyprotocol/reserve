@@ -29212,6 +29212,27 @@ paths:
               params:
                 description: params holds all the parameters of this module.
                 type: object
+                properties:
+                  m_c_r:
+                    type: string
+                    title: >-
+                      minimum collateralization ratio (parameter / 10000), 19999
+                      representing as 199.99%
+                  l_r:
+                    type: string
+                    title: >-
+                      liquidation ratio (parameter / 10000), 19999 representing
+                      as 199.99%
+                  i_r:
+                    type: string
+                    title: >-
+                      interest rate (parameter / 10000), 9999 representing as
+                      99.99%
+                  s_r:
+                    type: string
+                    title: >-
+                      savings rate (parameter / 10000), 9999 representing as
+                      99.99%
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -49156,6 +49177,21 @@ definitions:
     type: object
   onomyprotocol.reserve.reserve.Params:
     type: object
+    properties:
+      m_c_r:
+        type: string
+        title: >-
+          minimum collateralization ratio (parameter / 10000), 19999
+          representing as 199.99%
+      l_r:
+        type: string
+        title: 'liquidation ratio (parameter / 10000), 19999 representing as 199.99%'
+      i_r:
+        type: string
+        title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
+      s_r:
+        type: string
+        title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
     description: Params defines the parameters for the module.
   onomyprotocol.reserve.reserve.QueryParamsResponse:
     type: object
@@ -49163,6 +49199,23 @@ definitions:
       params:
         description: params holds all the parameters of this module.
         type: object
+        properties:
+          m_c_r:
+            type: string
+            title: >-
+              minimum collateralization ratio (parameter / 10000), 19999
+              representing as 199.99%
+          l_r:
+            type: string
+            title: >-
+              liquidation ratio (parameter / 10000), 19999 representing as
+              199.99%
+          i_r:
+            type: string
+            title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
+          s_r:
+            type: string
+            title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object

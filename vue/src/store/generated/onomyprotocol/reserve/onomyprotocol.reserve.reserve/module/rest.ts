@@ -23,7 +23,12 @@ export type ReserveMsgDepositCollateralResponse = object;
 /**
  * Params defines the parameters for the module.
  */
-export type ReserveParams = object;
+export interface ReserveParams {
+  m_c_r?: string;
+  l_r?: string;
+  i_r?: string;
+  s_r?: string;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.

@@ -25,6 +25,14 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines the parameters for the module.
 type Params struct {
+	// minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
+	MCR string `protobuf:"bytes,1,opt,name=m_c_r,json=mCR,proto3" json:"m_c_r,omitempty"`
+	// liquidation ratio (parameter / 10000), 19999 representing as 199.99%
+	LR string `protobuf:"bytes,2,opt,name=l_r,json=lR,proto3" json:"l_r,omitempty"`
+	// interest rate (parameter / 10000), 9999 representing as 99.99%
+	IR string `protobuf:"bytes,3,opt,name=i_r,json=iR,proto3" json:"i_r,omitempty"`
+	// savings rate (parameter / 10000), 9999 representing as 99.99%
+	SR string `protobuf:"bytes,4,opt,name=s_r,json=sR,proto3" json:"s_r,omitempty"`
 }
 
 func (m *Params) Reset()      { *m = Params{} }
@@ -59,6 +67,34 @@ func (m *Params) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
+func (m *Params) GetMCR() string {
+	if m != nil {
+		return m.MCR
+	}
+	return ""
+}
+
+func (m *Params) GetLR() string {
+	if m != nil {
+		return m.LR
+	}
+	return ""
+}
+
+func (m *Params) GetIR() string {
+	if m != nil {
+		return m.IR
+	}
+	return ""
+}
+
+func (m *Params) GetSR() string {
+	if m != nil {
+		return m.SR
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Params)(nil), "onomyprotocol.reserve.reserve.Params")
 }
@@ -66,17 +102,20 @@ func init() {
 func init() { proto.RegisterFile("reserve/params.proto", fileDescriptor_327732f0d7364169) }
 
 var fileDescriptor_327732f0d7364169 = []byte{
-	// 147 bytes of a gzipped FileDescriptorProto
+	// 201 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x29, 0x4a, 0x2d, 0x4e,
 	0x2d, 0x2a, 0x4b, 0xd5, 0x2f, 0x48, 0x2c, 0x4a, 0xcc, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
 	0x17, 0x92, 0xcd, 0xcf, 0xcb, 0xcf, 0xad, 0x04, 0xb3, 0x93, 0xf3, 0x73, 0xf4, 0xa0, 0x6a, 0x60,
-	0xb4, 0x94, 0x48, 0x7a, 0x7e, 0x7a, 0x3e, 0x58, 0x56, 0x1f, 0xc4, 0x82, 0x68, 0x52, 0xe2, 0xe3,
-	0x62, 0x0b, 0x00, 0x1b, 0x62, 0xc5, 0x32, 0x63, 0x81, 0x3c, 0x83, 0x93, 0xd7, 0x89, 0x47, 0x72,
-	0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7,
-	0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44, 0x19, 0xa4, 0x67, 0x96, 0x64, 0x94, 0x26, 0xe9, 0x25,
-	0xe7, 0xe7, 0xea, 0xa3, 0xd8, 0xa4, 0x0f, 0x73, 0x4d, 0x05, 0x9c, 0x55, 0x52, 0x59, 0x90, 0x5a,
-	0x9c, 0xc4, 0x06, 0x56, 0x61, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff, 0x73, 0x2f, 0xc6, 0xc4, 0xaf,
-	0x00, 0x00, 0x00,
+	0xb4, 0x94, 0x48, 0x7a, 0x7e, 0x7a, 0x3e, 0x58, 0x56, 0x1f, 0xc4, 0x82, 0x68, 0x52, 0x0a, 0xe5,
+	0x62, 0x0b, 0x00, 0x1b, 0x22, 0x24, 0xc4, 0xc5, 0x9a, 0x1b, 0x9f, 0x1c, 0x5f, 0x24, 0xc1, 0xa8,
+	0xc0, 0xa8, 0xc1, 0x19, 0xc4, 0x9c, 0xeb, 0x1c, 0x24, 0xc4, 0xcf, 0xc5, 0x9c, 0x13, 0x5f, 0x24,
+	0xc1, 0x04, 0x16, 0x61, 0xca, 0x01, 0x0b, 0x64, 0xc6, 0x17, 0x49, 0x30, 0x43, 0x04, 0x32, 0xc1,
+	0x02, 0xc5, 0xf1, 0x45, 0x12, 0x2c, 0x10, 0x81, 0xe2, 0x20, 0x2b, 0x96, 0x19, 0x0b, 0xe4, 0x19,
+	0x9c, 0xbc, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09,
+	0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0xca, 0x20, 0x3d, 0xb3,
+	0x24, 0xa3, 0x34, 0x49, 0x2f, 0x39, 0x3f, 0x57, 0x1f, 0xc5, 0xc1, 0xfa, 0x30, 0x4f, 0x55, 0xc0,
+	0x59, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60, 0x15, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0x4e, 0xc9, 0xe8, 0x62, 0xf6, 0x00, 0x00, 0x00,
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -99,6 +138,34 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.SR) > 0 {
+		i -= len(m.SR)
+		copy(dAtA[i:], m.SR)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.SR)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.IR) > 0 {
+		i -= len(m.IR)
+		copy(dAtA[i:], m.IR)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.IR)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.LR) > 0 {
+		i -= len(m.LR)
+		copy(dAtA[i:], m.LR)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.LR)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.MCR) > 0 {
+		i -= len(m.MCR)
+		copy(dAtA[i:], m.MCR)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.MCR)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -119,6 +186,22 @@ func (m *Params) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.MCR)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.LR)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.IR)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.SR)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
 	return n
 }
 
@@ -157,6 +240,134 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: Params: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MCR", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MCR = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LR", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LR = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IR", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.IR = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SR", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SR = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipParams(dAtA[iNdEx:])
