@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	// KeyMCR is byte key for Minimum Collateral Ratio param.
+	// KeyMCR is byte key for Minimum Collateralization Ratio param.
 	KeyMCR = []byte("MCR") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeyLR is byte key for Liquidiation Ratio param.
 	KeyLR = []byte("LR") //nolint:gochecknoglobals // cosmos-sdk style
@@ -14,17 +14,21 @@ var (
 	KeyIR = []byte("IR") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeySR is byte key for Savings Rate param.
 	KeySR = []byte("SR") //nolint:gochecknoglobals // cosmos-sdk style
+	// KeyONEX is byte key for ONEX chain channel.
+	KeyONEX = []byte("ONEX") //nolint:gochecknoglobals // cosmos-sdk style
 )
 
 var (
-	// DefaultEarnRate is default value for the DefaultEarnRate param.
+	// DefaultMCR is default value for the Minimum Collateralization Ratio.
 	DefaultMCR = "25000" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultBurnRate is default value for the DefaultBurnRate param.
+	// DefaultLR is default value for the Liquidation Ratio.
 	DefaultLR = "15000" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultBurnCoin is default value for the DefaultBurnCoin param.
+	// DefaultIR is default value for the Interest Rate.
 	DefaultIR = "0600" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultMarketFee is default value for the MarketFee param.
+	// DefaultMarketFee is default value for the Savings Rate.
 	DefaultSR = "0060" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
+	// DefaultONEX is default value for the ONEX channel.
+	DefaultONEX = "1" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -40,18 +44,20 @@ func NewParams(
 	LR string,
 	IR string,
 	SR string,
+	ONEX string,
 ) Params {
 	return Params{
-		MCR: MCR,
-		LR:  LR,
-		IR:  IR,
-		SR:  SR,
+		MCR:  MCR,
+		LR:   LR,
+		IR:   IR,
+		SR:   SR,
+		ONEX: ONEX,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefaultMCR, DefaultLR, DefaultIR, DefaultSR)
+	return NewParams(DefaultMCR, DefaultLR, DefaultIR, DefaultSR, DefaultONEX)
 }
 
 // ParamSetPairs get the params.ParamSet

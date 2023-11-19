@@ -4,13 +4,13 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
-import { MsgDepositCollateral } from "./types/reserve/tx";
 import { MsgCreateVault } from "./types/reserve/tx";
+import { MsgDepositCollateral } from "./types/reserve/tx";
 
 
 const types = [
-  ["/onomyprotocol.reserve.reserve.MsgDepositCollateral", MsgDepositCollateral],
   ["/onomyprotocol.reserve.reserve.MsgCreateVault", MsgCreateVault],
+  ["/onomyprotocol.reserve.reserve.MsgDepositCollateral", MsgDepositCollateral],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -43,8 +43,8 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
-    msgDepositCollateral: (data: MsgDepositCollateral): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgDepositCollateral", value: MsgDepositCollateral.fromPartial( data ) }),
     msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
+    msgDepositCollateral: (data: MsgDepositCollateral): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgDepositCollateral", value: MsgDepositCollateral.fromPartial( data ) }),
     
   };
 };

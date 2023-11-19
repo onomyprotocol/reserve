@@ -13,9 +13,17 @@ export interface Params {
   i_r: string;
   /** savings rate (parameter / 10000), 9999 representing as 99.99% */
   s_r: string;
+  /** onex ibc channel */
+  o_n_e_x: string;
 }
 
-const baseParams: object = { m_c_r: "", l_r: "", i_r: "", s_r: "" };
+const baseParams: object = {
+  m_c_r: "",
+  l_r: "",
+  i_r: "",
+  s_r: "",
+  o_n_e_x: "",
+};
 
 export const Params = {
   encode(message: Params, writer: Writer = Writer.create()): Writer {
@@ -30,6 +38,9 @@ export const Params = {
     }
     if (message.s_r !== "") {
       writer.uint32(34).string(message.s_r);
+    }
+    if (message.o_n_e_x !== "") {
+      writer.uint32(42).string(message.o_n_e_x);
     }
     return writer;
   },
@@ -52,6 +63,9 @@ export const Params = {
           break;
         case 4:
           message.s_r = reader.string();
+          break;
+        case 5:
+          message.o_n_e_x = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -83,6 +97,11 @@ export const Params = {
     } else {
       message.s_r = "";
     }
+    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
+      message.o_n_e_x = String(object.o_n_e_x);
+    } else {
+      message.o_n_e_x = "";
+    }
     return message;
   },
 
@@ -92,6 +111,7 @@ export const Params = {
     message.l_r !== undefined && (obj.l_r = message.l_r);
     message.i_r !== undefined && (obj.i_r = message.i_r);
     message.s_r !== undefined && (obj.s_r = message.s_r);
+    message.o_n_e_x !== undefined && (obj.o_n_e_x = message.o_n_e_x);
     return obj;
   },
 
@@ -116,6 +136,11 @@ export const Params = {
       message.s_r = object.s_r;
     } else {
       message.s_r = "";
+    }
+    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
+      message.o_n_e_x = object.o_n_e_x;
+    } else {
+      message.o_n_e_x = "";
     }
     return message;
   },

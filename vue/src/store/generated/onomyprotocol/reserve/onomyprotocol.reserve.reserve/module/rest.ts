@@ -28,6 +28,7 @@ export interface ReserveParams {
   l_r?: string;
   i_r?: string;
   s_r?: string;
+  o_n_e_x?: string;
 }
 
 /**
