@@ -20,6 +20,8 @@ export interface ReserveMsgCreateVaultResponse {
 
 export type ReserveMsgDepositCollateralResponse = object;
 
+export type ReserveMsgMintDenomResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

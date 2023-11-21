@@ -6,11 +6,13 @@ import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "
 import { Api } from "./rest";
 import { MsgCreateVault } from "./types/reserve/tx";
 import { MsgDepositCollateral } from "./types/reserve/tx";
+import { MsgMintDenom } from "./types/reserve/tx";
 
 
 const types = [
   ["/onomyprotocol.reserve.reserve.MsgCreateVault", MsgCreateVault],
   ["/onomyprotocol.reserve.reserve.MsgDepositCollateral", MsgDepositCollateral],
+  ["/onomyprotocol.reserve.reserve.MsgMintDenom", MsgMintDenom],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -45,6 +47,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgCreateVault: (data: MsgCreateVault): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgCreateVault", value: MsgCreateVault.fromPartial( data ) }),
     msgDepositCollateral: (data: MsgDepositCollateral): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgDepositCollateral", value: MsgDepositCollateral.fromPartial( data ) }),
+    msgMintDenom: (data: MsgMintDenom): EncodeObject => ({ typeUrl: "/onomyprotocol.reserve.reserve.MsgMintDenom", value: MsgMintDenom.fromPartial( data ) }),
     
   };
 };

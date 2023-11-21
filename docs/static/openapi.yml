@@ -49178,6 +49178,8 @@ definitions:
         format: uint64
   onomyprotocol.reserve.reserve.MsgDepositCollateralResponse:
     type: object
+  onomyprotocol.reserve.reserve.MsgMintDenomResponse:
+    type: object
   onomyprotocol.reserve.reserve.Params:
     type: object
     properties:
