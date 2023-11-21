@@ -350,7 +350,7 @@ func New(
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(app.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(app.UpgradeKeeper)).
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper)).
-		AddRoute(reservemoduletypes.RouterKey, reservemodule.NewDenomProposalHandler(app.ReserveKeeper)).
+		AddRoute(reservemoduletypes.RouterKey, reservemodule.NewReserveProposalHandler(app.ReserveKeeper)).
 
 		// Create Transfer Keepers
 		app.TransferKeeper = ibctransferkeeper.NewKeeper(
