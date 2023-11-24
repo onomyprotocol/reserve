@@ -1,10 +1,11 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
+import { Denom } from "./module/types/reserve/denom"
 import { Params } from "./module/types/reserve/params"
 import { Vault } from "./module/types/reserve/vault"
 
 
-export { Params, Vault };
+export { Denom, Params, Vault };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -45,6 +46,7 @@ const getDefaultState = () => {
 				Params: {},
 				
 				_Structure: {
+						Denom: getStructure(Denom.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						Vault: getStructure(Vault.fromPartial({})),
 						
@@ -137,18 +139,18 @@ export default {
 		},
 		
 		
-		async sendMsgMintDenom({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDepositCollateral({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgMintDenom(value)
+				const msg = await txClient.msgDepositCollateral(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgMintDenom:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgMintDenom:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDepositCollateral:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -167,32 +169,32 @@ export default {
 				}
 			}
 		},
-		async sendMsgDepositCollateral({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgMintDenom({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDepositCollateral(value)
+				const msg = await txClient.msgMintDenom(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgMintDenom:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDepositCollateral:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgMintDenom:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgMintDenom({ rootGetters }, { value }) {
+		async MsgDepositCollateral({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgMintDenom(value)
+				const msg = await txClient.msgDepositCollateral(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgMintDenom:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgMintDenom:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDepositCollateral:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -209,16 +211,16 @@ export default {
 				}
 			}
 		},
-		async MsgDepositCollateral({ rootGetters }, { value }) {
+		async MsgMintDenom({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDepositCollateral(value)
+				const msg = await txClient.msgMintDenom(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgMintDenom:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDepositCollateral:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgMintDenom:Create Could not create message: ' + e.message)
 				}
 			}
 		},
