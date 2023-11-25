@@ -11,19 +11,19 @@ func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
 	a := k.cdc.MustMarshal(&denom)
 	store.Set(types.DenomKey(
-		denom.Uid,
+		denom.Base,
 	), a)
 }
 
 // GetDenom returns a denom from its index
 func (k Keeper) GetDenom(
 	ctx sdk.Context,
-	uid uint64,
+	base string,
 ) (val types.Denom, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
 
 	b := store.Get(types.DenomKey(
-		uid,
+		base,
 	))
 	if b == nil {
 		return val, false

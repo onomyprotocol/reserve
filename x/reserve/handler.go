@@ -39,7 +39,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 func NewReserveProposalHandler(k keeper.Keeper) govtypes.Handler {
 	return func(ctx sdk.Context, content govtypes.Content) error {
 		switch c := content.(type) {
-		case *types.FundTreasuryProposal:
+		case *types.CreateDenomProposal:
 			return k.CreateDenomProposal(ctx, c)
 
 		default:

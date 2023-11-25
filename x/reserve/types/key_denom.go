@@ -9,26 +9,14 @@ const (
 	DenomKeyPrefix = "Denom/"
 )
 
-// DropKey returns the store key to retrieve a Drop from the index fields
+// DenomKey returns the store key to retrieve a Denom from the index fields
 func DenomKey(
-	uid uint64,
+	base string,
 ) []byte {
 	var key []byte
 
-	uidBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(uidBytes, uid)
-	key = append(key, uidBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
-}
-
-// DenomsKey returns the store key to retrieve a Drop from the index fields
-func DenomsKey() []byte {
-	var key []byte
-
-	ownerBytes := []byte(owner)
-	key = append(key, ownerBytes...)
+	denomBytes := []byte(base)
+	key = append(key, denomBytes...)
 	key = append(key, []byte("/")...)
 
 	return key
