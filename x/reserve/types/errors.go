@@ -12,4 +12,6 @@ var (
 	ErrInsufficientBalance = sdkerrors.Register(ModuleName, 1, "insufficient balance") // nolint: gomnd
 	// ErrVaultNotFound - the requested vault not found in storage.
 	ErrVaultNotFound = sdkerrors.Register(ModuleName, 2, "vault not found") // nolint: gomnd
+	// DenomAlreadyExists - the denom being created found in storage.
+	ErrDenomExists = sdkerrors.Register(ModuleName, 3, "denom already exists") // nolint: gomnd
 )

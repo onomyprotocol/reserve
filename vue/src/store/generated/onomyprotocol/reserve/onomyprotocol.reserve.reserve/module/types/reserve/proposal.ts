@@ -8,7 +8,7 @@ export interface CreateDenomProposal {
   sender: string;
   title: string;
   description: string;
-  denom: string;
+  metadata: string;
   rate: string[];
 }
 
@@ -16,7 +16,7 @@ const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  denom: "",
+  metadata: "",
   rate: "",
 };
 
@@ -34,8 +34,8 @@ export const CreateDenomProposal = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.denom !== "") {
-      writer.uint32(34).string(message.denom);
+    if (message.metadata !== "") {
+      writer.uint32(34).string(message.metadata);
     }
     for (const v of message.rate) {
       writer.uint32(42).string(v!);
@@ -61,7 +61,7 @@ export const CreateDenomProposal = {
           message.description = reader.string();
           break;
         case 4:
-          message.denom = reader.string();
+          message.metadata = reader.string();
           break;
         case 5:
           message.rate.push(reader.string());
@@ -92,10 +92,10 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.denom !== undefined && object.denom !== null) {
-      message.denom = String(object.denom);
+    if (object.metadata !== undefined && object.metadata !== null) {
+      message.metadata = String(object.metadata);
     } else {
-      message.denom = "";
+      message.metadata = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
       for (const e of object.rate) {
@@ -111,7 +111,7 @@ export const CreateDenomProposal = {
     message.title !== undefined && (obj.title = message.title);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.denom !== undefined && (obj.denom = message.denom);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
     if (message.rate) {
       obj.rate = message.rate.map((e) => e);
     } else {
@@ -138,10 +138,10 @@ export const CreateDenomProposal = {
     } else {
       message.description = "";
     }
-    if (object.denom !== undefined && object.denom !== null) {
-      message.denom = object.denom;
+    if (object.metadata !== undefined && object.metadata !== null) {
+      message.metadata = object.metadata;
     } else {
-      message.denom = "";
+      message.metadata = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
       for (const e of object.rate) {

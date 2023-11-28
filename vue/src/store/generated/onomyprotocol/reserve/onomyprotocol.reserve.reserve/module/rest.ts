@@ -23,22 +23,22 @@ export type ReserveMsgDepositCollateralResponse = object;
 export type ReserveMsgMintDenomResponse = object;
 
 /**
+ * QueryParamsResponse is response type for the Query/Params RPC method.
+ */
+export interface ReserveQueryParamsResponse {
+  /** params holds all the parameters of this module. */
+  params?: ReservereserveParams;
+}
+
+/**
  * Params defines the parameters for the module.
  */
-export interface ReserveParams {
+export interface ReservereserveParams {
   m_c_r?: string;
   l_r?: string;
   i_r?: string;
   s_r?: string;
   o_n_e_x?: string;
-}
-
-/**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- */
-export interface ReserveQueryParamsResponse {
-  /** params holds all the parameters of this module. */
-  params?: ReserveParams;
 }
 
 export interface RpcStatus {

@@ -13,7 +13,7 @@ func (k msgServer) CreateVault(goCtx context.Context, msg *types.MsgCreateVault)
 	// CoinAmsg and CoinBmsg pre-sort from raw msg
 	collateral, err := sdk.ParseCoinNormalized(msg.Collateral)
 	if err != nil {
-		panic(err)
+		panic(err) // validate basic should catch
 	}
 
 	creator, _ := sdk.AccAddressFromBech32(msg.Creator)

@@ -4,23 +4,23 @@ import { Writer, Reader } from "protobufjs/minimal";
 export const protobufPackage = "onomyprotocol.reserve.reserve";
 
 export interface Denom {
-  base: string;
+  display: string;
   rate: string;
   total: string;
 }
 
-const baseDenom: object = { base: "", rate: "", total: "" };
+const baseDenom: object = { display: "", rate: "", total: "" };
 
 export const Denom = {
   encode(message: Denom, writer: Writer = Writer.create()): Writer {
-    if (message.base !== "") {
-      writer.uint32(10).string(message.base);
+    if (message.display !== "") {
+      writer.uint32(10).string(message.display);
     }
     if (message.rate !== "") {
-      writer.uint32(18).string(message.rate);
+      writer.uint32(26).string(message.rate);
     }
     if (message.total !== "") {
-      writer.uint32(26).string(message.total);
+      writer.uint32(34).string(message.total);
     }
     return writer;
   },
@@ -33,12 +33,12 @@ export const Denom = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.base = reader.string();
-          break;
-        case 2:
-          message.rate = reader.string();
+          message.display = reader.string();
           break;
         case 3:
+          message.rate = reader.string();
+          break;
+        case 4:
           message.total = reader.string();
           break;
         default:
@@ -51,10 +51,10 @@ export const Denom = {
 
   fromJSON(object: any): Denom {
     const message = { ...baseDenom } as Denom;
-    if (object.base !== undefined && object.base !== null) {
-      message.base = String(object.base);
+    if (object.display !== undefined && object.display !== null) {
+      message.display = String(object.display);
     } else {
-      message.base = "";
+      message.display = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
       message.rate = String(object.rate);
@@ -71,7 +71,7 @@ export const Denom = {
 
   toJSON(message: Denom): unknown {
     const obj: any = {};
-    message.base !== undefined && (obj.base = message.base);
+    message.display !== undefined && (obj.display = message.display);
     message.rate !== undefined && (obj.rate = message.rate);
     message.total !== undefined && (obj.total = message.total);
     return obj;
@@ -79,10 +79,10 @@ export const Denom = {
 
   fromPartial(object: DeepPartial<Denom>): Denom {
     const message = { ...baseDenom } as Denom;
-    if (object.base !== undefined && object.base !== null) {
-      message.base = object.base;
+    if (object.display !== undefined && object.display !== null) {
+      message.display = object.display;
     } else {
-      message.base = "";
+      message.display = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
       message.rate = object.rate;
