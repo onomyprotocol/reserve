@@ -17,9 +17,6 @@ message CreateDenomProposal {
   string sender = 1;
   string title = 2;
   string description = 3;
-  string metadata = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/bank/types.Metadata",
-    (gogoproto.nullable) = false
-  ];
+  cosmos.bank.v1beta1.Metadata metadata = 4;
   repeated string rate = 5;
 }

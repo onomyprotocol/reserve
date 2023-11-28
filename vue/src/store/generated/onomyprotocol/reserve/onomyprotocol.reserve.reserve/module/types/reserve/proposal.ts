@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "../cosmos/bank/v1beta1/bank";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "onomyprotocol.dao.v1";
@@ -8,7 +9,7 @@ export interface CreateDenomProposal {
   sender: string;
   title: string;
   description: string;
-  metadata: string;
+  metadata: Metadata | undefined;
   rate: string[];
 }
 
@@ -16,7 +17,6 @@ const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
   description: "",
-  metadata: "",
   rate: "",
 };
 
@@ -34,8 +34,8 @@ export const CreateDenomProposal = {
     if (message.description !== "") {
       writer.uint32(26).string(message.description);
     }
-    if (message.metadata !== "") {
-      writer.uint32(34).string(message.metadata);
+    if (message.metadata !== undefined) {
+      Metadata.encode(message.metadata, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.rate) {
       writer.uint32(42).string(v!);
@@ -61,7 +61,7 @@ export const CreateDenomProposal = {
           message.description = reader.string();
           break;
         case 4:
-          message.metadata = reader.string();
+          message.metadata = Metadata.decode(reader, reader.uint32());
           break;
         case 5:
           message.rate.push(reader.string());
@@ -93,9 +93,9 @@ export const CreateDenomProposal = {
       message.description = "";
     }
     if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = String(object.metadata);
+      message.metadata = Metadata.fromJSON(object.metadata);
     } else {
-      message.metadata = "";
+      message.metadata = undefined;
     }
     if (object.rate !== undefined && object.rate !== null) {
       for (const e of object.rate) {
@@ -111,7 +111,10 @@ export const CreateDenomProposal = {
     message.title !== undefined && (obj.title = message.title);
     message.description !== undefined &&
       (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
+    message.metadata !== undefined &&
+      (obj.metadata = message.metadata
+        ? Metadata.toJSON(message.metadata)
+        : undefined);
     if (message.rate) {
       obj.rate = message.rate.map((e) => e);
     } else {
@@ -139,9 +142,9 @@ export const CreateDenomProposal = {
       message.description = "";
     }
     if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = object.metadata;
+      message.metadata = Metadata.fromPartial(object.metadata);
     } else {
-      message.metadata = "";
+      message.metadata = undefined;
     }
     if (object.rate !== undefined && object.rate !== null) {
       for (const e of object.rate) {

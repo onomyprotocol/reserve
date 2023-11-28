@@ -36,12 +36,12 @@ func (k Keeper) GetDenom(
 // RemoveDenom removes a denom from the store
 func (k Keeper) RemoveDenom(
 	ctx sdk.Context,
-	uid uint64,
+	base string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
 
 	b := store.Get(types.DenomKey(
-		uid,
+		base,
 	))
 
 	if b == nil {
@@ -49,6 +49,6 @@ func (k Keeper) RemoveDenom(
 	}
 
 	store.Delete(types.DenomKey(
-		uid,
+		base,
 	))
 }
