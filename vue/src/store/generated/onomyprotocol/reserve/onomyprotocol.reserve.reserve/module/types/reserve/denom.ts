@@ -5,7 +5,7 @@ export const protobufPackage = "onomyprotocol.reserve.reserve";
 
 export interface Denom {
   display: string;
-  rate: string;
+  rate: string[];
   total: string;
 }
 
@@ -16,11 +16,11 @@ export const Denom = {
     if (message.display !== "") {
       writer.uint32(10).string(message.display);
     }
-    if (message.rate !== "") {
-      writer.uint32(26).string(message.rate);
+    for (const v of message.rate) {
+      writer.uint32(18).string(v!);
     }
     if (message.total !== "") {
-      writer.uint32(34).string(message.total);
+      writer.uint32(26).string(message.total);
     }
     return writer;
   },
@@ -29,16 +29,17 @@ export const Denom = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDenom } as Denom;
+    message.rate = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           message.display = reader.string();
           break;
-        case 3:
-          message.rate = reader.string();
+        case 2:
+          message.rate.push(reader.string());
           break;
-        case 4:
+        case 3:
           message.total = reader.string();
           break;
         default:
@@ -51,15 +52,16 @@ export const Denom = {
 
   fromJSON(object: any): Denom {
     const message = { ...baseDenom } as Denom;
+    message.rate = [];
     if (object.display !== undefined && object.display !== null) {
       message.display = String(object.display);
     } else {
       message.display = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
-      message.rate = String(object.rate);
-    } else {
-      message.rate = "";
+      for (const e of object.rate) {
+        message.rate.push(String(e));
+      }
     }
     if (object.total !== undefined && object.total !== null) {
       message.total = String(object.total);
@@ -72,22 +74,27 @@ export const Denom = {
   toJSON(message: Denom): unknown {
     const obj: any = {};
     message.display !== undefined && (obj.display = message.display);
-    message.rate !== undefined && (obj.rate = message.rate);
+    if (message.rate) {
+      obj.rate = message.rate.map((e) => e);
+    } else {
+      obj.rate = [];
+    }
     message.total !== undefined && (obj.total = message.total);
     return obj;
   },
 
   fromPartial(object: DeepPartial<Denom>): Denom {
     const message = { ...baseDenom } as Denom;
+    message.rate = [];
     if (object.display !== undefined && object.display !== null) {
       message.display = object.display;
     } else {
       message.display = "";
     }
     if (object.rate !== undefined && object.rate !== null) {
-      message.rate = object.rate;
-    } else {
-      message.rate = "";
+      for (const e of object.rate) {
+        message.rate.push(e);
+      }
     }
     if (object.total !== undefined && object.total !== null) {
       message.total = object.total;

@@ -8,12 +8,23 @@ import (
 
 // FundTreasuryProposal submits the FundTreasuryProposal.
 func (k Keeper) CreateDenomProposal(ctx sdk.Context, request *types.CreateDenomProposal) error {
-	_, found := k.GetDenom(ctx, request.Metadata)
+
+	_, found := k.GetDenom(ctx, request.Metadata.Base)
 	if found {
-		sdkerrors.Wrapf(types.ErrDenomExists, "Denom: %s already exists", request.Denom)
+		return sdkerrors.Wrapf(types.ErrDenomExists, "Denom: %s already exists", request.Metadata.Base)
 	}
 
-	k.SetDenom(ctx, types.Denom{})
+	k.SetDenom(
+		ctx,
+		request.Metadata.Base,
+		types.Denom{
+			Display: request.Metadata.Display,
+			Rate:    request.Rate,
+			Total:   sdk.ZeroUint(),
+		},
+	)
 
-	return k.bankKeeper.SendCoinsFromAccountToModule(ctx, senderAddr, types.ModuleName, amountToSend)
+	k.bankKeeper.SetDenomMetaData(ctx, *request.Metadata)
+
+	return nil
 }

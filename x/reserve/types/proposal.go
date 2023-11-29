@@ -2,10 +2,10 @@ package types
 
 import (
 	"fmt"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
@@ -24,8 +24,8 @@ func init() { // nolint:gochecknoinits // cosmos sdk style
 }
 
 // NewCreateDenomProposal creates a new fund treasury proposal.
-func NewCreateDenomProposal(sender sdk.AccAddress, title, description string, amount sdk.Coins) *CreateDenomProposal {
-	return &CreateDenomProposal{sender.String(), title, description, amount}
+func NewCreateDenomProposal(sender sdk.AccAddress, title string, description string, metadata banktypes.Metadata, rate []sdk.Uint) *CreateDenomProposal {
+	return &CreateDenomProposal{sender.String(), title, description, &metadata, rate}
 }
 
 // GetTitle returns the title of a fund treasury proposal.
@@ -54,28 +54,8 @@ func (m *CreateDenomProposal) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address: %s", err)
 	}
 
-	if !m.Amount.IsValid() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Amount.String())
-	}
-
-	if !m.Amount.IsAllPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, m.Amount.String())
-	}
-
 	return nil
 }
 
 // GetProposer returns the proposer from the proposal struct.
 func (m *CreateDenomProposal) GetProposer() string { return m.Sender }
-
-// String implements the Stringer interface.
-func (m CreateDenomProposal) String() string {
-	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`Fund treasury proposal:
-  Sender: %s
-  Title: %s
-  Description: %s
-  Amount: %s
-`, m.Sender, m.Title, m.Description, m.Amount))
-	return b.String()
-}
