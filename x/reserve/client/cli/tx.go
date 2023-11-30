@@ -17,6 +17,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/version"
 
 	govcli "github.com/cosmos/cosmos-sdk/x/gov/client/cli"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+
 	// "github.com/cosmos/cosmos-sdk/client/flags"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/onomyprotocol/reserve/x/reserve/types"
@@ -79,10 +81,18 @@ Must have denom.json in directory containing the denom metadata`,
 
 			rateString := args[0]
 			rateStringSplit := strings.Split(rateString, ",")
-			rate := []sdk.Uint{
-				sdk.NewUintFromString(rateStringSplit[0]),
-				sdk.NewUintFromString(rateStringSplit[1]),
+
+			rateNumerator, err := sdk.ParseUint(rateStringSplit[0])
+			if err != nil {
+				return err
 			}
+
+			rateDenominator, err := sdk.ParseUint(rateStringSplit[1])
+			if err != nil {
+				return err
+			}
+			
+			rate := []sdk.Uint{rateNumerator, rateDenominator}
 
 			metadataFile, err := os.Open("metadata.json")
 			if err != nil {
@@ -112,7 +122,7 @@ Must have denom.json in directory containing the denom metadata`,
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description)
+			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, rate)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {
