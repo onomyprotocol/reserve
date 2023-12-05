@@ -91,7 +91,7 @@ Must have denom.json in directory containing the denom metadata`,
 			if err != nil {
 				return err
 			}
-			
+
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
 
 			metadataFile, err := os.Open("metadata.json")
@@ -164,5 +164,4 @@ func addProposalFlags(cmd *cobra.Command) {
 	cmd.Flags().String(govcli.FlagTitle, "", "The proposal title")
 	cmd.Flags().String(govcli.FlagDescription, "", "The proposal description")
 	cmd.Flags().String(govcli.FlagDeposit, "", "The proposal deposit")
-	cmd.Flags().
 }
