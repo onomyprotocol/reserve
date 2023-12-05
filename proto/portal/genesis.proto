@@ -1,0 +1,15 @@
+syntax = "proto3";
+package onomyprotocol.reserve.portal;
+
+import "gogoproto/gogo.proto";
+import "portal/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/onomyprotocol/reserve/x/portal/types";
+
+// GenesisState defines the portal module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  string port_id = 2;
+  // this line is used by starport scaffolding # genesis/proto/state
+}

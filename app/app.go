@@ -100,6 +100,9 @@ import (
 
 	"github.com/onomyprotocol/reserve/docs"
 
+	portalmodule "github.com/onomyprotocol/reserve/x/portal"
+	portalmodulekeeper "github.com/onomyprotocol/reserve/x/portal/keeper"
+	portalmoduletypes "github.com/onomyprotocol/reserve/x/portal/types"
 	reservemodule "github.com/onomyprotocol/reserve/x/reserve"
 	reservemodulekeeper "github.com/onomyprotocol/reserve/x/reserve/keeper"
 	reservemoduletypes "github.com/onomyprotocol/reserve/x/reserve/types"
@@ -158,6 +161,7 @@ var (
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		reservemodule.AppModuleBasic{},
+		portalmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -230,7 +234,9 @@ type App struct {
 	ScopedTransferKeeper   capabilitykeeper.ScopedKeeper
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
-	ReserveKeeper reservemodulekeeper.Keeper
+	ReserveKeeper      reservemodulekeeper.Keeper
+	ScopedPortalKeeper capabilitykeeper.ScopedKeeper
+	PortalKeeper       portalmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -268,6 +274,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		reservemoduletypes.StoreKey,
+		portalmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -399,12 +406,26 @@ func New(
 	)
 	reserveModule := reservemodule.NewAppModule(appCodec, app.ReserveKeeper, app.AccountKeeper, app.BankKeeper)
 
+	scopedPortalKeeper := app.CapabilityKeeper.ScopeToModule(portalmoduletypes.ModuleName)
+	app.ScopedPortalKeeper = scopedPortalKeeper
+	app.PortalKeeper = *portalmodulekeeper.NewKeeper(
+		appCodec,
+		keys[portalmoduletypes.StoreKey],
+		keys[portalmoduletypes.MemStoreKey],
+		app.GetSubspace(portalmoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedPortalKeeper,
+	)
+	portalModule := portalmodule.NewAppModule(appCodec, app.PortalKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(monitoringptypes.ModuleName, monitoringModule)
+	ibcRouter.AddRoute(portalmoduletypes.ModuleName, portalModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -441,6 +462,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		reserveModule,
+		portalModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -469,6 +491,7 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		reservemoduletypes.ModuleName,
+		portalmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -493,6 +516,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		reservemoduletypes.ModuleName,
+		portalmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -522,6 +546,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		reservemoduletypes.ModuleName,
+		portalmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -547,6 +572,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		reserveModule,
+		portalModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -737,6 +763,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(reservemoduletypes.ModuleName)
+	paramsKeeper.Subspace(portalmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
