@@ -13,8 +13,12 @@ export interface Params {
   i_r: string;
   /** savings rate (parameter / 10000), 9999 representing as 99.99% */
   s_r: string;
-  /** onex ibc channel */
-  o_n_e_x: string;
+  /** market chain channel */
+  market_channel: string;
+  /** market_coin is the ibc address for collateral on market chain */
+  market_coin: string;
+  /** reserve_coin is the ibc address for collateral on reserve chain */
+  reserve_coin: string;
 }
 
 const baseParams: object = {
@@ -22,7 +26,9 @@ const baseParams: object = {
   l_r: "",
   i_r: "",
   s_r: "",
-  o_n_e_x: "",
+  market_channel: "",
+  market_coin: "",
+  reserve_coin: "",
 };
 
 export const Params = {
@@ -39,8 +45,14 @@ export const Params = {
     if (message.s_r !== "") {
       writer.uint32(34).string(message.s_r);
     }
-    if (message.o_n_e_x !== "") {
-      writer.uint32(42).string(message.o_n_e_x);
+    if (message.market_channel !== "") {
+      writer.uint32(42).string(message.market_channel);
+    }
+    if (message.market_coin !== "") {
+      writer.uint32(50).string(message.market_coin);
+    }
+    if (message.reserve_coin !== "") {
+      writer.uint32(58).string(message.reserve_coin);
     }
     return writer;
   },
@@ -65,7 +77,13 @@ export const Params = {
           message.s_r = reader.string();
           break;
         case 5:
-          message.o_n_e_x = reader.string();
+          message.market_channel = reader.string();
+          break;
+        case 6:
+          message.market_coin = reader.string();
+          break;
+        case 7:
+          message.reserve_coin = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -97,10 +115,20 @@ export const Params = {
     } else {
       message.s_r = "";
     }
-    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
-      message.o_n_e_x = String(object.o_n_e_x);
+    if (object.market_channel !== undefined && object.market_channel !== null) {
+      message.market_channel = String(object.market_channel);
     } else {
-      message.o_n_e_x = "";
+      message.market_channel = "";
+    }
+    if (object.market_coin !== undefined && object.market_coin !== null) {
+      message.market_coin = String(object.market_coin);
+    } else {
+      message.market_coin = "";
+    }
+    if (object.reserve_coin !== undefined && object.reserve_coin !== null) {
+      message.reserve_coin = String(object.reserve_coin);
+    } else {
+      message.reserve_coin = "";
     }
     return message;
   },
@@ -111,7 +139,12 @@ export const Params = {
     message.l_r !== undefined && (obj.l_r = message.l_r);
     message.i_r !== undefined && (obj.i_r = message.i_r);
     message.s_r !== undefined && (obj.s_r = message.s_r);
-    message.o_n_e_x !== undefined && (obj.o_n_e_x = message.o_n_e_x);
+    message.market_channel !== undefined &&
+      (obj.market_channel = message.market_channel);
+    message.market_coin !== undefined &&
+      (obj.market_coin = message.market_coin);
+    message.reserve_coin !== undefined &&
+      (obj.reserve_coin = message.reserve_coin);
     return obj;
   },
 
@@ -137,10 +170,20 @@ export const Params = {
     } else {
       message.s_r = "";
     }
-    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
-      message.o_n_e_x = object.o_n_e_x;
+    if (object.market_channel !== undefined && object.market_channel !== null) {
+      message.market_channel = object.market_channel;
     } else {
-      message.o_n_e_x = "";
+      message.market_channel = "";
+    }
+    if (object.market_coin !== undefined && object.market_coin !== null) {
+      message.market_coin = object.market_coin;
+    } else {
+      message.market_coin = "";
+    }
+    if (object.reserve_coin !== undefined && object.reserve_coin !== null) {
+      message.reserve_coin = object.reserve_coin;
+    } else {
+      message.reserve_coin = "";
     }
     return message;
   },

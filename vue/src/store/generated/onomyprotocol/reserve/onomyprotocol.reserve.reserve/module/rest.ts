@@ -38,7 +38,9 @@ export interface ReservereserveParams {
   l_r?: string;
   i_r?: string;
   s_r?: string;
-  o_n_e_x?: string;
+  market_channel?: string;
+  market_coin?: string;
+  reserve_coin?: string;
 }
 
 export interface RpcStatus {

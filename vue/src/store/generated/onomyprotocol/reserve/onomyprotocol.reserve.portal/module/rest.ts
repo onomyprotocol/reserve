@@ -9,6 +9,8 @@
  * ---------------------------------------------------------------
  */
 
+export type PortalMsgSendSubscribeRateResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

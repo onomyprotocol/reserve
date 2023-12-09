@@ -403,6 +403,7 @@ func New(
 		keys[reservemoduletypes.MemStoreKey],
 		app.GetSubspace(reservemoduletypes.ModuleName),
 		app.BankKeeper,
+		app.AccountKeeper,
 	)
 	reserveModule := reservemodule.NewAppModule(appCodec, app.ReserveKeeper, app.AccountKeeper, app.BankKeeper)
 

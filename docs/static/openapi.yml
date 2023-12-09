@@ -29269,9 +29269,19 @@ paths:
                     title: >-
                       savings rate (parameter / 10000), 9999 representing as
                       99.99%
-                  o_n_e_x:
+                  market_channel:
                     type: string
-                    title: onex ibc channel
+                    title: market chain channel
+                  market_coin:
+                    type: string
+                    title: >-
+                      market_coin is the ibc address for collateral on market
+                      chain
+                  reserve_coin:
+                    type: string
+                    title: >-
+                      reserve_coin is the ibc address for collateral on reserve
+                      chain
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -49206,6 +49216,8 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
+  onomyprotocol.reserve.portal.MsgSendSubscribeRateResponse:
+    type: object
   onomyprotocol.reserve.portal.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -49243,9 +49255,15 @@ definitions:
       s_r:
         type: string
         title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
-      o_n_e_x:
+      market_channel:
         type: string
-        title: onex ibc channel
+        title: market chain channel
+      market_coin:
+        type: string
+        title: market_coin is the ibc address for collateral on market chain
+      reserve_coin:
+        type: string
+        title: reserve_coin is the ibc address for collateral on reserve chain
     description: Params defines the parameters for the module.
   onomyprotocol.reserve.reserve.QueryParamsResponse:
     type: object
@@ -49270,9 +49288,15 @@ definitions:
           s_r:
             type: string
             title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
-          o_n_e_x:
+          market_channel:
             type: string
-            title: onex ibc channel
+            title: market chain channel
+          market_coin:
+            type: string
+            title: market_coin is the ibc address for collateral on market chain
+          reserve_coin:
+            type: string
+            title: reserve_coin is the ibc address for collateral on reserve chain
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object

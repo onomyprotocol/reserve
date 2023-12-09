@@ -9,10 +9,21 @@ message PortalPacketData {
     oneof packet {
         NoData noData = 1;
         // this line is used by starport scaffolding # ibc/packet/proto/field
+				SubscribeRatePacketData subscribeRatePacket = 2; // this line is used by starport scaffolding # ibc/packet/proto/field/number
     }
 }
 
 message NoData {
 }
 
+// SubscribeRatePacketData defines a struct for the packet payload
+message SubscribeRatePacketData {
+  string chain = 1;
+  string denom = 2;
+}
+
+// SubscribeRatePacketAck defines a struct for the packet acknowledgment
+message SubscribeRatePacketAck {
+	  bool success = 1;
+}
 // this line is used by starport scaffolding # ibc/packet/proto/message
