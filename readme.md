@@ -43,6 +43,17 @@ curl https://get.ignite.com/onomyprotocol/reserve@latest! | sudo bash
 ```
 `onomyprotocol/reserve` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
 
+### Portal Protocol
+1) Proposal to add Denom is passed
+2) Reserve Chain sends SubscribeRate Packet to Market Chain
+3) Market Chain receives SubscribeRate Packet
+4) Market Chain sends acknowledgement
+5) Market Chain creates Denom / NOM pool with initial rate
+6) When Denom / NOM pool rate changes RateChange Packet sent to Reserve Chain
+7) Reserve Chain sends acknowledgement
+8) Reserve Chain updates Denom / NOM rate for minting protocol
+  
+
 ## Learn more
 
 - [Ignite CLI](https://ignite.com/cli)

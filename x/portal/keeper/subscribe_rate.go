@@ -134,4 +134,5 @@ func (k msgServer) SubscribeRate(ctx sdk.Context, denom string, port string) err
 		denom,
 	)
 
+	k.SendSubscribeRate(ctx, msg)
 }

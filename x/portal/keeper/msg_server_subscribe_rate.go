@@ -16,7 +16,6 @@ func (k msgServer) SendSubscribeRate(goCtx context.Context, msg *types.MsgSendSu
 	// Construct the packet
 	var packet types.SubscribeRatePacketData
 
-	packet.Chain = msg.Chain
 	packet.Denom = msg.Denom
 
 	// Transmit the packet
