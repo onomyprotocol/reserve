@@ -10,7 +10,6 @@ import (
 )
 
 func TestCreateDenomProposal_ValidateBasic(t *testing.T) { //nolint:dupl // test template
-	const denom1 = "denom1"
 
 	type fields struct {
 		Sender      string
