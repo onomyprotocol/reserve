@@ -3,11 +3,12 @@ package reserve_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	keepertest "reserve/testutil/keeper"
 	"reserve/testutil/nullify"
 	"reserve/x/reserve"
 	"reserve/x/reserve/types"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

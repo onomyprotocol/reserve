@@ -1,5 +1,5 @@
 syntax = "proto3";
-package reserve.reserve;
+package onomyprotocol.reserve.reserve;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
@@ -13,7 +13,7 @@ option go_package = "reserve/x/reserve/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/reserve/reserve/params";
+    option (google.api.http).get = "/onomyprotocol/reserve/reserve/params";
   }
   // this line is used by starport scaffolding # 2
 }

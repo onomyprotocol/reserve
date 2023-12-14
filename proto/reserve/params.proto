@@ -1,5 +1,5 @@
 syntax = "proto3";
-package reserve.reserve;
+package onomyprotocol.reserve.reserve;
 
 import "gogoproto/gogo.proto";
 
@@ -8,5 +8,20 @@ option go_package = "reserve/x/reserve/types";
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
+
+  // minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
+  string m_c_r = 1;
+
+  // liquidation ratio (parameter / 10000), 19999 representing as 199.99%
+  string l_r = 2;
+
+  // interest rate (parameter / 10000), 9999 representing as 99.99%
+  string i_r = 3;
+
+  // savings rate (parameter / 10000), 9999 representing as 99.99%
+  string s_r = 4;
+
+  // onex ibc channel
+  string o_n_e_x = 5;
   
 }

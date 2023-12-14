@@ -1,5 +1,5 @@
 syntax = "proto3";
-package reserve.reserve;
+package onomyprotocol.reserve.reserve;
 
 import "gogoproto/gogo.proto";
 import "reserve/params.proto";

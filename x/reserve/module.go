@@ -3,6 +3,7 @@ package reserve
 import (
 	"encoding/json"
 	"fmt"
+
 	// this line is used by starport scaffolding # 1
 
 	"github.com/gorilla/mux"
@@ -11,14 +12,15 @@ import (
 
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"reserve/x/reserve/client/cli"
+	"reserve/x/reserve/keeper"
+	"reserve/x/reserve/types"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"reserve/x/reserve/client/cli"
-	"reserve/x/reserve/keeper"
-	"reserve/x/reserve/types"
 )
 
 var (

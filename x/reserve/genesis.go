@@ -1,9 +1,10 @@
 package reserve
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"reserve/x/reserve/keeper"
 	"reserve/x/reserve/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis
