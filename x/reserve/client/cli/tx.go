@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
@@ -29,15 +30,15 @@ var (
 	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 )
 
-const (
-	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
-	listSeparator              = ","
-)
-
 type proposalGeneric struct {
 	Title       string
 	Description string
 	Deposit     string
+}
+
+func addTxFlags(cmd *cobra.Command) *cobra.Command {
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
 }
 
 // GetTxCmd returns the transaction commands for this module
@@ -50,7 +51,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdCreateDenomProposal())
+	cmd.AddCommand(addTxFlags(CmdCreateDenomProposal()))
 	cmd.AddCommand(CmdCreateVault())
 	cmd.AddCommand(CmdDepositCollateral())
 	cmd.AddCommand(CmdMintDenom())
@@ -62,13 +63,13 @@ func GetTxCmd() *cobra.Command {
 // CmdFundTreasuryProposal implements the command to submit a fund-treasury proposal.
 func CmdCreateDenomProposal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-denom rate",
-		Args:  cobra.ExactArgs(1),
+		Use:   "create-denom rate collateral",
+		Args:  cobra.ExactArgs(2),
 		Short: "Submit a create denom proposal",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Submit a create denom proposal.
 Example:
-$ %s tx gov submit-proposal create-denom 1,1 --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aores" --from mykey
+$ %s tx gov submit-proposal create-denom 1,1 100000 --title="Test Proposal" --description="My awesome proposal" --deposit="10000000000000000000aores" --from mykey
 
 Must have denom.json in directory containing the denom metadata`,
 				version.AppName,
@@ -94,6 +95,11 @@ Must have denom.json in directory containing the denom metadata`,
 			}
 
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
+
+			collateral, err := sdk.ParseUint(args[1])
+			if err != nil {
+				return err
+			}
 
 			metadataFile, err := os.Open("metadata.json")
 			if err != nil {
@@ -123,7 +129,7 @@ Must have denom.json in directory containing the denom metadata`,
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, rate)
+			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, rate, collateral)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

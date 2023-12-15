@@ -11,6 +11,7 @@ export interface CreateDenomProposal {
   description: string;
   metadata: Metadata | undefined;
   rate: string[];
+  deposit: string;
 }
 
 const baseCreateDenomProposal: object = {
@@ -18,6 +19,7 @@ const baseCreateDenomProposal: object = {
   title: "",
   description: "",
   rate: "",
+  deposit: "",
 };
 
 export const CreateDenomProposal = {
@@ -39,6 +41,9 @@ export const CreateDenomProposal = {
     }
     for (const v of message.rate) {
       writer.uint32(42).string(v!);
+    }
+    if (message.deposit !== "") {
+      writer.uint32(50).string(message.deposit);
     }
     return writer;
   },
@@ -65,6 +70,9 @@ export const CreateDenomProposal = {
           break;
         case 5:
           message.rate.push(reader.string());
+          break;
+        case 6:
+          message.deposit = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -102,6 +110,11 @@ export const CreateDenomProposal = {
         message.rate.push(String(e));
       }
     }
+    if (object.deposit !== undefined && object.deposit !== null) {
+      message.deposit = String(object.deposit);
+    } else {
+      message.deposit = "";
+    }
     return message;
   },
 
@@ -120,6 +133,7 @@ export const CreateDenomProposal = {
     } else {
       obj.rate = [];
     }
+    message.deposit !== undefined && (obj.deposit = message.deposit);
     return obj;
   },
 
@@ -150,6 +164,11 @@ export const CreateDenomProposal = {
       for (const e of object.rate) {
         message.rate.push(e);
       }
+    }
+    if (object.deposit !== undefined && object.deposit !== null) {
+      message.deposit = object.deposit;
+    } else {
+      message.deposit = "";
     }
     return message;
   },
