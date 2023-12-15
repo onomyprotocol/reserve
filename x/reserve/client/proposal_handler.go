@@ -19,9 +19,9 @@ var (
 
 func emptyRestHandler(client.Context) govrest.ProposalRESTHandler {
 	return govrest.ProposalRESTHandler{
-		SubRoute: "unsupported-dao-routes",
+		SubRoute: "unsupported-reserve-routes",
 		Handler: func(w http.ResponseWriter, r *http.Request) {
-			rest.WriteErrorResponse(w, http.StatusBadRequest, "Legacy REST Routes are not supported for DAO proposals")
+			rest.WriteErrorResponse(w, http.StatusBadRequest, "Legacy REST Routes are not supported for Reserve proposals")
 		},
 	}
 }

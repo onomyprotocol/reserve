@@ -26,15 +26,21 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // Params defines the parameters for the module.
 type Params struct {
 	// minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
-	MCR string `protobuf:"bytes,1,opt,name=m_c_r,json=mCR,proto3" json:"m_c_r,omitempty"`
+	MinCollateralizationRatio string `protobuf:"bytes,1,opt,name=min_collateralization_ratio,json=minCollateralizationRatio,proto3" json:"min_collateralization_ratio,omitempty"`
 	// liquidation ratio (parameter / 10000), 19999 representing as 199.99%
-	LR string `protobuf:"bytes,2,opt,name=l_r,json=lR,proto3" json:"l_r,omitempty"`
+	LiquidationRatio string `protobuf:"bytes,2,opt,name=liquidation_ratio,json=liquidationRatio,proto3" json:"liquidation_ratio,omitempty"`
 	// interest rate (parameter / 10000), 9999 representing as 99.99%
-	IR string `protobuf:"bytes,3,opt,name=i_r,json=iR,proto3" json:"i_r,omitempty"`
+	InterestRate string `protobuf:"bytes,3,opt,name=interest_rate,json=interestRate,proto3" json:"interest_rate,omitempty"`
 	// savings rate (parameter / 10000), 9999 representing as 99.99%
-	SR string `protobuf:"bytes,4,opt,name=s_r,json=sR,proto3" json:"s_r,omitempty"`
-	// onex ibc channel
-	ONEX string `protobuf:"bytes,5,opt,name=o_n_e_x,json=oNEX,proto3" json:"o_n_e_x,omitempty"`
+	SavingsRate string `protobuf:"bytes,4,opt,name=savings_rate,json=savingsRate,proto3" json:"savings_rate,omitempty"`
+	// provider chain channel
+	ProviderChannel string `protobuf:"bytes,5,opt,name=provider_channel,json=providerChannel,proto3" json:"provider_channel,omitempty"`
+	// market chain channel
+	MarketChannel string `protobuf:"bytes,6,opt,name=market_channel,json=marketChannel,proto3" json:"market_channel,omitempty"`
+	// market_coin is the ibc address for collateral on market chain
+	MarketCollateral string `protobuf:"bytes,7,opt,name=market_collateral,json=marketCollateral,proto3" json:"market_collateral,omitempty"`
+	// reserve_coin is the ibc address for collateral on reserve chain
+	ReserveCollateral string `protobuf:"bytes,8,opt,name=reserve_collateral,json=reserveCollateral,proto3" json:"reserve_collateral,omitempty"`
 }
 
 func (m *Params) Reset()      { *m = Params{} }
@@ -69,37 +75,58 @@ func (m *Params) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Params proto.InternalMessageInfo
 
-func (m *Params) GetMCR() string {
+func (m *Params) GetMinCollateralizationRatio() string {
 	if m != nil {
-		return m.MCR
+		return m.MinCollateralizationRatio
 	}
 	return ""
 }
 
-func (m *Params) GetLR() string {
+func (m *Params) GetLiquidationRatio() string {
 	if m != nil {
-		return m.LR
+		return m.LiquidationRatio
 	}
 	return ""
 }
 
-func (m *Params) GetIR() string {
+func (m *Params) GetInterestRate() string {
 	if m != nil {
-		return m.IR
+		return m.InterestRate
 	}
 	return ""
 }
 
-func (m *Params) GetSR() string {
+func (m *Params) GetSavingsRate() string {
 	if m != nil {
-		return m.SR
+		return m.SavingsRate
 	}
 	return ""
 }
 
-func (m *Params) GetONEX() string {
+func (m *Params) GetProviderChannel() string {
 	if m != nil {
-		return m.ONEX
+		return m.ProviderChannel
+	}
+	return ""
+}
+
+func (m *Params) GetMarketChannel() string {
+	if m != nil {
+		return m.MarketChannel
+	}
+	return ""
+}
+
+func (m *Params) GetMarketCollateral() string {
+	if m != nil {
+		return m.MarketCollateral
+	}
+	return ""
+}
+
+func (m *Params) GetReserveCollateral() string {
+	if m != nil {
+		return m.ReserveCollateral
 	}
 	return ""
 }
@@ -111,20 +138,28 @@ func init() {
 func init() { proto.RegisterFile("reserve/params.proto", fileDescriptor_327732f0d7364169) }
 
 var fileDescriptor_327732f0d7364169 = []byte{
-	// 207 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x29, 0x4a, 0x2d, 0x4e,
-	0x2d, 0x2a, 0x4b, 0xd5, 0x2f, 0x48, 0x2c, 0x4a, 0xcc, 0x2d, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
-	0x17, 0x92, 0xcd, 0xcf, 0xcb, 0xcf, 0xad, 0x04, 0xb3, 0x93, 0xf3, 0x73, 0xf4, 0xa0, 0x6a, 0x60,
-	0xb4, 0x94, 0x48, 0x7a, 0x7e, 0x7a, 0x3e, 0x58, 0x56, 0x1f, 0xc4, 0x82, 0x68, 0x52, 0xca, 0xe1,
-	0x62, 0x0b, 0x00, 0x1b, 0x22, 0x24, 0xc4, 0xc5, 0x9a, 0x1b, 0x9f, 0x1c, 0x5f, 0x24, 0xc1, 0xa8,
-	0xc0, 0xa8, 0xc1, 0x19, 0xc4, 0x9c, 0xeb, 0x1c, 0x24, 0xc4, 0xcf, 0xc5, 0x9c, 0x13, 0x5f, 0x24,
-	0xc1, 0x04, 0x16, 0x61, 0xca, 0x01, 0x0b, 0x64, 0xc6, 0x17, 0x49, 0x30, 0x43, 0x04, 0x32, 0xc1,
-	0x02, 0xc5, 0xf1, 0x45, 0x12, 0x2c, 0x10, 0x81, 0xe2, 0x20, 0x21, 0x51, 0x2e, 0xf6, 0xfc, 0xf8,
-	0xbc, 0xf8, 0xd4, 0xf8, 0x0a, 0x09, 0x56, 0xb0, 0x20, 0x4b, 0xbe, 0x9f, 0x6b, 0x84, 0x15, 0xcb,
-	0x8c, 0x05, 0xf2, 0x0c, 0x4e, 0x86, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0,
-	0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10,
-	0x25, 0x0e, 0xf3, 0x52, 0x85, 0x3e, 0x8c, 0x55, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0x76,
-	0xa7, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xf7, 0x61, 0x67, 0x88, 0xf4, 0x00, 0x00, 0x00,
+	// 322 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x5c, 0xd1, 0x3d, 0x4e, 0xc3, 0x30,
+	0x14, 0x07, 0xf0, 0xa4, 0x94, 0x02, 0xa6, 0x85, 0xd6, 0xaa, 0x44, 0x00, 0x61, 0xbe, 0x84, 0x04,
+	0xaa, 0x68, 0x85, 0xd8, 0x18, 0x18, 0xe8, 0x05, 0x50, 0x47, 0x96, 0xca, 0xb4, 0x4f, 0xc5, 0xc2,
+	0xb1, 0x83, 0x6d, 0x2a, 0xca, 0x29, 0x18, 0x19, 0x39, 0x0e, 0x63, 0x47, 0x46, 0xd4, 0x9c, 0x80,
+	0x1b, 0xa0, 0xd8, 0x71, 0x88, 0x58, 0xe2, 0xa7, 0xff, 0xfb, 0xbd, 0x48, 0xf6, 0x43, 0x6d, 0x05,
+	0x1a, 0xd4, 0x14, 0x7a, 0x09, 0x55, 0x34, 0xd6, 0xdd, 0x44, 0x49, 0x23, 0xf1, 0x9e, 0x14, 0x32,
+	0x9e, 0xd9, 0x7a, 0x24, 0x79, 0x37, 0x37, 0xfe, 0xdc, 0x69, 0x4f, 0xe4, 0x44, 0xda, 0x6e, 0x2f,
+	0xab, 0xdc, 0xd0, 0xd1, 0x4f, 0x05, 0xd5, 0x6e, 0xed, 0x5f, 0xf0, 0x35, 0xda, 0x8d, 0x99, 0x18,
+	0x8e, 0x24, 0xe7, 0xd4, 0x80, 0xa2, 0x9c, 0xbd, 0x52, 0xc3, 0xa4, 0x18, 0xaa, 0xec, 0x88, 0xc2,
+	0x83, 0xf0, 0x74, 0x6d, 0xb0, 0x1d, 0x33, 0xd1, 0xff, 0x2f, 0x06, 0xd9, 0x17, 0x77, 0x50, 0x8b,
+	0xb3, 0xa7, 0x67, 0x36, 0x2e, 0x4f, 0x55, 0xec, 0x54, 0xb3, 0xd4, 0x70, 0xf8, 0x18, 0x35, 0x98,
+	0x30, 0xa0, 0x40, 0x9b, 0x4c, 0x42, 0xb4, 0x64, 0x61, 0xdd, 0x87, 0x03, 0x6a, 0x00, 0x1f, 0xa2,
+	0xba, 0xa6, 0x53, 0x26, 0x26, 0xda, 0x99, 0xaa, 0x35, 0xeb, 0x79, 0x66, 0xc9, 0x19, 0x6a, 0x26,
+	0x4a, 0x4e, 0xd9, 0x18, 0xd4, 0x70, 0xf4, 0x40, 0x85, 0x00, 0x1e, 0x2d, 0x5b, 0xb6, 0xe9, 0xf3,
+	0xbe, 0x8b, 0xf1, 0x09, 0xda, 0x88, 0xa9, 0x7a, 0x04, 0x53, 0xc0, 0x9a, 0x85, 0x0d, 0x97, 0x7a,
+	0xd6, 0x41, 0x2d, 0xcf, 0x8a, 0x7b, 0x46, 0x2b, 0xee, 0x1a, 0xb9, 0x2c, 0x72, 0x7c, 0x8e, 0x70,
+	0xfe, 0xbe, 0x65, 0xbd, 0x6a, 0x75, 0x2b, 0xef, 0xfc, 0xf1, 0xab, 0xea, 0xfb, 0xc7, 0x7e, 0x70,
+	0x73, 0xf1, 0xb9, 0x20, 0xe1, 0x7c, 0x41, 0xc2, 0xef, 0x05, 0x09, 0xdf, 0x52, 0x12, 0xcc, 0x53,
+	0x12, 0x7c, 0xa5, 0x24, 0xb8, 0xdb, 0xf2, 0x8b, 0x7d, 0xe9, 0xf9, 0xca, 0xcc, 0x12, 0xd0, 0xf7,
+	0x35, 0xbb, 0xad, 0xcb, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x5c, 0xb3, 0x19, 0xb2, 0xfa, 0x01,
+	0x00, 0x00,
 }
 
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -147,38 +182,59 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ONEX) > 0 {
-		i -= len(m.ONEX)
-		copy(dAtA[i:], m.ONEX)
-		i = encodeVarintParams(dAtA, i, uint64(len(m.ONEX)))
+	if len(m.ReserveCollateral) > 0 {
+		i -= len(m.ReserveCollateral)
+		copy(dAtA[i:], m.ReserveCollateral)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.ReserveCollateral)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.MarketCollateral) > 0 {
+		i -= len(m.MarketCollateral)
+		copy(dAtA[i:], m.MarketCollateral)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.MarketCollateral)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.MarketChannel) > 0 {
+		i -= len(m.MarketChannel)
+		copy(dAtA[i:], m.MarketChannel)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.MarketChannel)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.ProviderChannel) > 0 {
+		i -= len(m.ProviderChannel)
+		copy(dAtA[i:], m.ProviderChannel)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.ProviderChannel)))
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.SR) > 0 {
-		i -= len(m.SR)
-		copy(dAtA[i:], m.SR)
-		i = encodeVarintParams(dAtA, i, uint64(len(m.SR)))
+	if len(m.SavingsRate) > 0 {
+		i -= len(m.SavingsRate)
+		copy(dAtA[i:], m.SavingsRate)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.SavingsRate)))
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.IR) > 0 {
-		i -= len(m.IR)
-		copy(dAtA[i:], m.IR)
-		i = encodeVarintParams(dAtA, i, uint64(len(m.IR)))
+	if len(m.InterestRate) > 0 {
+		i -= len(m.InterestRate)
+		copy(dAtA[i:], m.InterestRate)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.InterestRate)))
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.LR) > 0 {
-		i -= len(m.LR)
-		copy(dAtA[i:], m.LR)
-		i = encodeVarintParams(dAtA, i, uint64(len(m.LR)))
+	if len(m.LiquidationRatio) > 0 {
+		i -= len(m.LiquidationRatio)
+		copy(dAtA[i:], m.LiquidationRatio)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.LiquidationRatio)))
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.MCR) > 0 {
-		i -= len(m.MCR)
-		copy(dAtA[i:], m.MCR)
-		i = encodeVarintParams(dAtA, i, uint64(len(m.MCR)))
+	if len(m.MinCollateralizationRatio) > 0 {
+		i -= len(m.MinCollateralizationRatio)
+		copy(dAtA[i:], m.MinCollateralizationRatio)
+		i = encodeVarintParams(dAtA, i, uint64(len(m.MinCollateralizationRatio)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -202,23 +258,35 @@ func (m *Params) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.MCR)
+	l = len(m.MinCollateralizationRatio)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}
-	l = len(m.LR)
+	l = len(m.LiquidationRatio)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}
-	l = len(m.IR)
+	l = len(m.InterestRate)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}
-	l = len(m.SR)
+	l = len(m.SavingsRate)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}
-	l = len(m.ONEX)
+	l = len(m.ProviderChannel)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.MarketChannel)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.MarketCollateral)
+	if l > 0 {
+		n += 1 + l + sovParams(uint64(l))
+	}
+	l = len(m.ReserveCollateral)
 	if l > 0 {
 		n += 1 + l + sovParams(uint64(l))
 	}
@@ -262,7 +330,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MCR", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCollateralizationRatio", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -290,11 +358,11 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MCR = string(dAtA[iNdEx:postIndex])
+			m.MinCollateralizationRatio = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LR", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field LiquidationRatio", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -322,11 +390,11 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.LR = string(dAtA[iNdEx:postIndex])
+			m.LiquidationRatio = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field IR", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field InterestRate", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -354,11 +422,11 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.IR = string(dAtA[iNdEx:postIndex])
+			m.InterestRate = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SR", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field SavingsRate", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -386,11 +454,11 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.SR = string(dAtA[iNdEx:postIndex])
+			m.SavingsRate = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ONEX", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderChannel", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -418,7 +486,103 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ONEX = string(dAtA[iNdEx:postIndex])
+			m.ProviderChannel = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MarketChannel", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MarketChannel = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MarketCollateral", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MarketCollateral = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReserveCollateral", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ReserveCollateral = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

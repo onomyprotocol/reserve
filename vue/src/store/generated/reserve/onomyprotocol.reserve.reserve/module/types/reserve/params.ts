@@ -6,41 +6,59 @@ export const protobufPackage = "onomyprotocol.reserve.reserve";
 /** Params defines the parameters for the module. */
 export interface Params {
   /** minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99% */
-  m_c_r: string;
+  min_collateralization_ratio: string;
   /** liquidation ratio (parameter / 10000), 19999 representing as 199.99% */
-  l_r: string;
+  liquidation_ratio: string;
   /** interest rate (parameter / 10000), 9999 representing as 99.99% */
-  i_r: string;
+  interest_rate: string;
   /** savings rate (parameter / 10000), 9999 representing as 99.99% */
-  s_r: string;
-  /** onex ibc channel */
-  o_n_e_x: string;
+  savings_rate: string;
+  /** provider chain channel */
+  provider_channel: string;
+  /** market chain channel */
+  market_channel: string;
+  /** market_coin is the ibc address for collateral on market chain */
+  market_collateral: string;
+  /** reserve_coin is the ibc address for collateral on reserve chain */
+  reserve_collateral: string;
 }
 
 const baseParams: object = {
-  m_c_r: "",
-  l_r: "",
-  i_r: "",
-  s_r: "",
-  o_n_e_x: "",
+  min_collateralization_ratio: "",
+  liquidation_ratio: "",
+  interest_rate: "",
+  savings_rate: "",
+  provider_channel: "",
+  market_channel: "",
+  market_collateral: "",
+  reserve_collateral: "",
 };
 
 export const Params = {
   encode(message: Params, writer: Writer = Writer.create()): Writer {
-    if (message.m_c_r !== "") {
-      writer.uint32(10).string(message.m_c_r);
+    if (message.min_collateralization_ratio !== "") {
+      writer.uint32(10).string(message.min_collateralization_ratio);
     }
-    if (message.l_r !== "") {
-      writer.uint32(18).string(message.l_r);
+    if (message.liquidation_ratio !== "") {
+      writer.uint32(18).string(message.liquidation_ratio);
     }
-    if (message.i_r !== "") {
-      writer.uint32(26).string(message.i_r);
+    if (message.interest_rate !== "") {
+      writer.uint32(26).string(message.interest_rate);
     }
-    if (message.s_r !== "") {
-      writer.uint32(34).string(message.s_r);
+    if (message.savings_rate !== "") {
+      writer.uint32(34).string(message.savings_rate);
     }
-    if (message.o_n_e_x !== "") {
-      writer.uint32(42).string(message.o_n_e_x);
+    if (message.provider_channel !== "") {
+      writer.uint32(42).string(message.provider_channel);
+    }
+    if (message.market_channel !== "") {
+      writer.uint32(50).string(message.market_channel);
+    }
+    if (message.market_collateral !== "") {
+      writer.uint32(58).string(message.market_collateral);
+    }
+    if (message.reserve_collateral !== "") {
+      writer.uint32(66).string(message.reserve_collateral);
     }
     return writer;
   },
@@ -53,19 +71,28 @@ export const Params = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.m_c_r = reader.string();
+          message.min_collateralization_ratio = reader.string();
           break;
         case 2:
-          message.l_r = reader.string();
+          message.liquidation_ratio = reader.string();
           break;
         case 3:
-          message.i_r = reader.string();
+          message.interest_rate = reader.string();
           break;
         case 4:
-          message.s_r = reader.string();
+          message.savings_rate = reader.string();
           break;
         case 5:
-          message.o_n_e_x = reader.string();
+          message.provider_channel = reader.string();
+          break;
+        case 6:
+          message.market_channel = reader.string();
+          break;
+        case 7:
+          message.market_collateral = reader.string();
+          break;
+        case 8:
+          message.reserve_collateral = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -77,70 +104,143 @@ export const Params = {
 
   fromJSON(object: any): Params {
     const message = { ...baseParams } as Params;
-    if (object.m_c_r !== undefined && object.m_c_r !== null) {
-      message.m_c_r = String(object.m_c_r);
+    if (
+      object.min_collateralization_ratio !== undefined &&
+      object.min_collateralization_ratio !== null
+    ) {
+      message.min_collateralization_ratio = String(
+        object.min_collateralization_ratio
+      );
     } else {
-      message.m_c_r = "";
+      message.min_collateralization_ratio = "";
     }
-    if (object.l_r !== undefined && object.l_r !== null) {
-      message.l_r = String(object.l_r);
+    if (
+      object.liquidation_ratio !== undefined &&
+      object.liquidation_ratio !== null
+    ) {
+      message.liquidation_ratio = String(object.liquidation_ratio);
     } else {
-      message.l_r = "";
+      message.liquidation_ratio = "";
     }
-    if (object.i_r !== undefined && object.i_r !== null) {
-      message.i_r = String(object.i_r);
+    if (object.interest_rate !== undefined && object.interest_rate !== null) {
+      message.interest_rate = String(object.interest_rate);
     } else {
-      message.i_r = "";
+      message.interest_rate = "";
     }
-    if (object.s_r !== undefined && object.s_r !== null) {
-      message.s_r = String(object.s_r);
+    if (object.savings_rate !== undefined && object.savings_rate !== null) {
+      message.savings_rate = String(object.savings_rate);
     } else {
-      message.s_r = "";
+      message.savings_rate = "";
     }
-    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
-      message.o_n_e_x = String(object.o_n_e_x);
+    if (
+      object.provider_channel !== undefined &&
+      object.provider_channel !== null
+    ) {
+      message.provider_channel = String(object.provider_channel);
     } else {
-      message.o_n_e_x = "";
+      message.provider_channel = "";
+    }
+    if (object.market_channel !== undefined && object.market_channel !== null) {
+      message.market_channel = String(object.market_channel);
+    } else {
+      message.market_channel = "";
+    }
+    if (
+      object.market_collateral !== undefined &&
+      object.market_collateral !== null
+    ) {
+      message.market_collateral = String(object.market_collateral);
+    } else {
+      message.market_collateral = "";
+    }
+    if (
+      object.reserve_collateral !== undefined &&
+      object.reserve_collateral !== null
+    ) {
+      message.reserve_collateral = String(object.reserve_collateral);
+    } else {
+      message.reserve_collateral = "";
     }
     return message;
   },
 
   toJSON(message: Params): unknown {
     const obj: any = {};
-    message.m_c_r !== undefined && (obj.m_c_r = message.m_c_r);
-    message.l_r !== undefined && (obj.l_r = message.l_r);
-    message.i_r !== undefined && (obj.i_r = message.i_r);
-    message.s_r !== undefined && (obj.s_r = message.s_r);
-    message.o_n_e_x !== undefined && (obj.o_n_e_x = message.o_n_e_x);
+    message.min_collateralization_ratio !== undefined &&
+      (obj.min_collateralization_ratio = message.min_collateralization_ratio);
+    message.liquidation_ratio !== undefined &&
+      (obj.liquidation_ratio = message.liquidation_ratio);
+    message.interest_rate !== undefined &&
+      (obj.interest_rate = message.interest_rate);
+    message.savings_rate !== undefined &&
+      (obj.savings_rate = message.savings_rate);
+    message.provider_channel !== undefined &&
+      (obj.provider_channel = message.provider_channel);
+    message.market_channel !== undefined &&
+      (obj.market_channel = message.market_channel);
+    message.market_collateral !== undefined &&
+      (obj.market_collateral = message.market_collateral);
+    message.reserve_collateral !== undefined &&
+      (obj.reserve_collateral = message.reserve_collateral);
     return obj;
   },
 
   fromPartial(object: DeepPartial<Params>): Params {
     const message = { ...baseParams } as Params;
-    if (object.m_c_r !== undefined && object.m_c_r !== null) {
-      message.m_c_r = object.m_c_r;
+    if (
+      object.min_collateralization_ratio !== undefined &&
+      object.min_collateralization_ratio !== null
+    ) {
+      message.min_collateralization_ratio = object.min_collateralization_ratio;
     } else {
-      message.m_c_r = "";
+      message.min_collateralization_ratio = "";
     }
-    if (object.l_r !== undefined && object.l_r !== null) {
-      message.l_r = object.l_r;
+    if (
+      object.liquidation_ratio !== undefined &&
+      object.liquidation_ratio !== null
+    ) {
+      message.liquidation_ratio = object.liquidation_ratio;
     } else {
-      message.l_r = "";
+      message.liquidation_ratio = "";
     }
-    if (object.i_r !== undefined && object.i_r !== null) {
-      message.i_r = object.i_r;
+    if (object.interest_rate !== undefined && object.interest_rate !== null) {
+      message.interest_rate = object.interest_rate;
     } else {
-      message.i_r = "";
+      message.interest_rate = "";
     }
-    if (object.s_r !== undefined && object.s_r !== null) {
-      message.s_r = object.s_r;
+    if (object.savings_rate !== undefined && object.savings_rate !== null) {
+      message.savings_rate = object.savings_rate;
     } else {
-      message.s_r = "";
+      message.savings_rate = "";
     }
-    if (object.o_n_e_x !== undefined && object.o_n_e_x !== null) {
-      message.o_n_e_x = object.o_n_e_x;
+    if (
+      object.provider_channel !== undefined &&
+      object.provider_channel !== null
+    ) {
+      message.provider_channel = object.provider_channel;
     } else {
-      message.o_n_e_x = "";
+      message.provider_channel = "";
+    }
+    if (object.market_channel !== undefined && object.market_channel !== null) {
+      message.market_channel = object.market_channel;
+    } else {
+      message.market_channel = "";
+    }
+    if (
+      object.market_collateral !== undefined &&
+      object.market_collateral !== null
+    ) {
+      message.market_collateral = object.market_collateral;
+    } else {
+      message.market_collateral = "";
+    }
+    if (
+      object.reserve_collateral !== undefined &&
+      object.reserve_collateral !== null
+    ) {
+      message.reserve_collateral = object.reserve_collateral;
+    } else {
+      message.reserve_collateral = "";
     }
     return message;
   },

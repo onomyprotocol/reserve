@@ -29587,29 +29587,42 @@ paths:
                 description: params holds all the parameters of this module.
                 type: object
                 properties:
-                  m_c_r:
+                  min_collateralization_ratio:
                     type: string
                     title: >-
                       minimum collateralization ratio (parameter / 10000), 19999
                       representing as 199.99%
-                  l_r:
+                  liquidation_ratio:
                     type: string
                     title: >-
                       liquidation ratio (parameter / 10000), 19999 representing
                       as 199.99%
-                  i_r:
+                  interest_rate:
                     type: string
                     title: >-
                       interest rate (parameter / 10000), 9999 representing as
                       99.99%
-                  s_r:
+                  savings_rate:
                     type: string
                     title: >-
                       savings rate (parameter / 10000), 9999 representing as
                       99.99%
-                  o_n_e_x:
+                  provider_channel:
                     type: string
-                    title: onex ibc channel
+                    title: provider chain channel
+                  market_channel:
+                    type: string
+                    title: market chain channel
+                  market_collateral:
+                    type: string
+                    title: >-
+                      market_coin is the ibc address for collateral on market
+                      chain
+                  reserve_collateral:
+                    type: string
+                    title: >-
+                      reserve_coin is the ibc address for collateral on reserve
+                      chain
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -49702,23 +49715,32 @@ definitions:
   onomyprotocol.reserve.reserve.Params:
     type: object
     properties:
-      m_c_r:
+      min_collateralization_ratio:
         type: string
         title: >-
           minimum collateralization ratio (parameter / 10000), 19999
           representing as 199.99%
-      l_r:
+      liquidation_ratio:
         type: string
         title: 'liquidation ratio (parameter / 10000), 19999 representing as 199.99%'
-      i_r:
+      interest_rate:
         type: string
         title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
-      s_r:
+      savings_rate:
         type: string
         title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
-      o_n_e_x:
+      provider_channel:
         type: string
-        title: onex ibc channel
+        title: provider chain channel
+      market_channel:
+        type: string
+        title: market chain channel
+      market_collateral:
+        type: string
+        title: market_coin is the ibc address for collateral on market chain
+      reserve_collateral:
+        type: string
+        title: reserve_coin is the ibc address for collateral on reserve chain
     description: Params defines the parameters for the module.
   onomyprotocol.reserve.reserve.QueryParamsResponse:
     type: object
@@ -49727,25 +49749,34 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
         properties:
-          m_c_r:
+          min_collateralization_ratio:
             type: string
             title: >-
               minimum collateralization ratio (parameter / 10000), 19999
               representing as 199.99%
-          l_r:
+          liquidation_ratio:
             type: string
             title: >-
               liquidation ratio (parameter / 10000), 19999 representing as
               199.99%
-          i_r:
+          interest_rate:
             type: string
             title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
-          s_r:
+          savings_rate:
             type: string
             title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
-          o_n_e_x:
+          provider_channel:
             type: string
-            title: onex ibc channel
+            title: provider chain channel
+          market_channel:
+            type: string
+            title: market chain channel
+          market_collateral:
+            type: string
+            title: market_coin is the ibc address for collateral on market chain
+          reserve_collateral:
+            type: string
+            title: reserve_coin is the ibc address for collateral on reserve chain
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object

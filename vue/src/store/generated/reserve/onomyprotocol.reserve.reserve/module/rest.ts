@@ -34,11 +34,14 @@ export interface ReserveQueryParamsResponse {
  * Params defines the parameters for the module.
  */
 export interface ReservereserveParams {
-  m_c_r?: string;
-  l_r?: string;
-  i_r?: string;
-  s_r?: string;
-  o_n_e_x?: string;
+  min_collateralization_ratio?: string;
+  liquidation_ratio?: string;
+  interest_rate?: string;
+  savings_rate?: string;
+  provider_channel?: string;
+  market_channel?: string;
+  market_collateral?: string;
+  reserve_collateral?: string;
 }
 
 export interface RpcStatus {
