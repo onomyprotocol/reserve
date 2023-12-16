@@ -139,18 +139,18 @@ export default {
 		},
 		
 		
-		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgDepositCollateral({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
+				const msg = await txClient.msgDepositCollateral(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgDepositCollateral:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -169,32 +169,32 @@ export default {
 				}
 			}
 		},
-		async sendMsgDepositCollateral({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateVault({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDepositCollateral(value)
+				const msg = await txClient.msgCreateVault(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDepositCollateral:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateVault:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgCreateVault({ rootGetters }, { value }) {
+		async MsgDepositCollateral({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgCreateVault(value)
+				const msg = await txClient.msgDepositCollateral(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgDepositCollateral:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -211,16 +211,16 @@ export default {
 				}
 			}
 		},
-		async MsgDepositCollateral({ rootGetters }, { value }) {
+		async MsgCreateVault({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDepositCollateral(value)
+				const msg = await txClient.msgCreateVault(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDepositCollateral:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateVault:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDepositCollateral:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateVault:Create Could not create message: ' + e.message)
 				}
 			}
 		},

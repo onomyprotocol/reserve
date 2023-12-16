@@ -14,6 +14,11 @@ export interface CreateDenomProposal {
   deposit: string;
 }
 
+export interface Escrow {
+  proposer: string;
+  amount: string;
+}
+
 const baseCreateDenomProposal: object = {
   sender: "",
   title: "",
@@ -169,6 +174,78 @@ export const CreateDenomProposal = {
       message.deposit = object.deposit;
     } else {
       message.deposit = "";
+    }
+    return message;
+  },
+};
+
+const baseEscrow: object = { proposer: "", amount: "" };
+
+export const Escrow = {
+  encode(message: Escrow, writer: Writer = Writer.create()): Writer {
+    if (message.proposer !== "") {
+      writer.uint32(10).string(message.proposer);
+    }
+    if (message.amount !== "") {
+      writer.uint32(18).string(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Escrow {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseEscrow } as Escrow;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.proposer = reader.string();
+          break;
+        case 2:
+          message.amount = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Escrow {
+    const message = { ...baseEscrow } as Escrow;
+    if (object.proposer !== undefined && object.proposer !== null) {
+      message.proposer = String(object.proposer);
+    } else {
+      message.proposer = "";
+    }
+    if (object.amount !== undefined && object.amount !== null) {
+      message.amount = String(object.amount);
+    } else {
+      message.amount = "";
+    }
+    return message;
+  },
+
+  toJSON(message: Escrow): unknown {
+    const obj: any = {};
+    message.proposer !== undefined && (obj.proposer = message.proposer);
+    message.amount !== undefined && (obj.amount = message.amount);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<Escrow>): Escrow {
+    const message = { ...baseEscrow } as Escrow;
+    if (object.proposer !== undefined && object.proposer !== null) {
+      message.proposer = object.proposer;
+    } else {
+      message.proposer = "";
+    }
+    if (object.amount !== undefined && object.amount !== null) {
+      message.amount = object.amount;
+    } else {
+      message.amount = "";
     }
     return message;
   },
