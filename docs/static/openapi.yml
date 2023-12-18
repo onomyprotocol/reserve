@@ -29587,26 +29587,6 @@ paths:
                 description: params holds all the parameters of this module.
                 type: object
                 properties:
-                  min_collateralization_ratio:
-                    type: string
-                    title: >-
-                      minimum collateralization ratio (parameter / 10000), 19999
-                      representing as 199.99%
-                  liquidation_ratio:
-                    type: string
-                    title: >-
-                      liquidation ratio (parameter / 10000), 19999 representing
-                      as 199.99%
-                  interest_rate:
-                    type: string
-                    title: >-
-                      interest rate (parameter / 10000), 9999 representing as
-                      99.99%
-                  savings_rate:
-                    type: string
-                    title: >-
-                      savings rate (parameter / 10000), 9999 representing as
-                      99.99%
                   provider_channel:
                     type: string
                     title: provider chain channel
@@ -29616,13 +29596,18 @@ paths:
                   market_collateral:
                     type: string
                     title: >-
-                      market_coin is the ibc address for collateral on market
-                      chain
+                      market_collateral is the ibc address for collateral on
+                      market chain
                   reserve_collateral:
                     type: string
                     title: >-
-                      reserve_coin is the ibc address for collateral on reserve
-                      chain
+                      reserve_collateral is the ibc address for collateral on
+                      reserve chain
+                  collateral_deposit:
+                    type: string
+                    title: >-
+                      collateral_deposit is the amount of collateral needed to
+                      create a new denom
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
               method.
@@ -49715,20 +49700,6 @@ definitions:
   onomyprotocol.reserve.reserve.Params:
     type: object
     properties:
-      min_collateralization_ratio:
-        type: string
-        title: >-
-          minimum collateralization ratio (parameter / 10000), 19999
-          representing as 199.99%
-      liquidation_ratio:
-        type: string
-        title: 'liquidation ratio (parameter / 10000), 19999 representing as 199.99%'
-      interest_rate:
-        type: string
-        title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
-      savings_rate:
-        type: string
-        title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
       provider_channel:
         type: string
         title: provider chain channel
@@ -49737,10 +49708,15 @@ definitions:
         title: market chain channel
       market_collateral:
         type: string
-        title: market_coin is the ibc address for collateral on market chain
+        title: market_collateral is the ibc address for collateral on market chain
       reserve_collateral:
         type: string
-        title: reserve_coin is the ibc address for collateral on reserve chain
+        title: reserve_collateral is the ibc address for collateral on reserve chain
+      collateral_deposit:
+        type: string
+        title: >-
+          collateral_deposit is the amount of collateral needed to create a new
+          denom
     description: Params defines the parameters for the module.
   onomyprotocol.reserve.reserve.QueryParamsResponse:
     type: object
@@ -49749,22 +49725,6 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
         properties:
-          min_collateralization_ratio:
-            type: string
-            title: >-
-              minimum collateralization ratio (parameter / 10000), 19999
-              representing as 199.99%
-          liquidation_ratio:
-            type: string
-            title: >-
-              liquidation ratio (parameter / 10000), 19999 representing as
-              199.99%
-          interest_rate:
-            type: string
-            title: 'interest rate (parameter / 10000), 9999 representing as 99.99%'
-          savings_rate:
-            type: string
-            title: 'savings rate (parameter / 10000), 9999 representing as 99.99%'
           provider_channel:
             type: string
             title: provider chain channel
@@ -49773,10 +49733,19 @@ definitions:
             title: market chain channel
           market_collateral:
             type: string
-            title: market_coin is the ibc address for collateral on market chain
+            title: >-
+              market_collateral is the ibc address for collateral on market
+              chain
           reserve_collateral:
             type: string
-            title: reserve_coin is the ibc address for collateral on reserve chain
+            title: >-
+              reserve_collateral is the ibc address for collateral on reserve
+              chain
+          collateral_deposit:
+            type: string
+            title: >-
+              collateral_deposit is the amount of collateral needed to create a
+              new denom
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object

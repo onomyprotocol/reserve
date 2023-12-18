@@ -21,26 +21,32 @@ func (k Keeper) getParams(ctx sdk.Context) (params types.Params) {
 	return params
 }
 
-// MCR - the Minimum Collateralization Ratio
-func (k Keeper) MCR(ctx sdk.Context) (res string) {
-	k.paramstore.Get(ctx, types.KeyMCR, &res)
+// ProviderChannel - The Provider Chain IBC channel
+func (k Keeper) ProviderChannel(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyProviderChannel, &res)
 	return
 }
 
-// LR - the Liquidation Ratio
-func (k Keeper) LR(ctx sdk.Context) (res string) {
-	k.paramstore.Get(ctx, types.KeyLR, &res)
+// MarketChannel - The Market Chain IBC channel
+func (k Keeper) MarketChannel(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyMarketChannel, &res)
 	return
 }
 
-// IR - the Interest Rate
-func (k Keeper) IR(ctx sdk.Context) (res string) {
-	k.paramstore.Get(ctx, types.KeyIR, &res)
+// MarketCollateral - The Collateral IBC address on Market Chain
+func (k Keeper) MarketCollateral(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyMarketCollateral, &res)
 	return
 }
 
-// SR - the Saving Rate
-func (k Keeper) SR(ctx sdk.Context) (res string) {
-	k.paramstore.Get(ctx, types.KeySR, &res)
+// ReserveCollateral - The Collateral IBC address on Reserve Chain
+func (k Keeper) ReserveCollateral(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyReserveCollateral, &res)
+	return
+}
+
+// CollateralDeposit - The Collateral amount needed to create a denom
+func (k Keeper) CollateralDeposit(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyCollateralDeposit, &res)
 	return
 }

@@ -96,11 +96,6 @@ Must have denom.json in directory containing the denom metadata`,
 
 			rate := []sdk.Uint{rateNumerator, rateDenominator}
 
-			collateral, err := sdk.ParseUint(args[1])
-			if err != nil {
-				return err
-			}
-
 			metadataFile, err := os.Open("metadata.json")
 			if err != nil {
 				return err
@@ -118,6 +113,23 @@ Must have denom.json in directory containing the denom metadata`,
 				return err
 			}
 
+			reservedataFile, err := os.Open("reservedata.json")
+			if err != nil {
+				return err
+			}
+
+			byteReservedata, err := io.ReadAll(reservedataFile)
+			if err != nil {
+				return err
+			}
+
+			var reservedata types.Reservedata
+
+			err = json.Unmarshal(byteReservedata, &reservedata)
+			if err != nil {
+				return err
+			}
+
 			proposalGeneric, err := parseSubmitProposalFlags(cmd.Flags())
 			if err != nil {
 				return err
@@ -129,7 +141,7 @@ Must have denom.json in directory containing the denom metadata`,
 			}
 
 			from := clientCtx.GetFromAddress()
-			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, rate, collateral)
+			content := types.NewCreateDenomProposal(from, proposalGeneric.Title, proposalGeneric.Description, metadata, reservedata, rate)
 
 			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
 			if err != nil {

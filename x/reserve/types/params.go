@@ -5,28 +5,21 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// What to do with this?
 var (
 	// KeyMCR is byte key for Minimum Collateralization Ratio param.
-	KeyMCR = []byte("MCR") //nolint:gochecknoglobals // cosmos-sdk style
+	KeyProviderChannel = []byte("ProviderChannel") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeyLR is byte key for Liquidiation Ratio param.
-	KeyLR = []byte("LR") //nolint:gochecknoglobals // cosmos-sdk style
+	KeyMarketChannel = []byte("MarketChannel") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeyIR is byte key for Interest Rate param.
-	KeyIR = []byte("IR") //nolint:gochecknoglobals // cosmos-sdk style
+	KeyMarketCollateral = []byte("MarketCollateral") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeySR is byte key for Savings Rate param.
-	KeySR = []byte("SR") //nolint:gochecknoglobals // cosmos-sdk style
+	KeyReserveCollateral = []byte("ReserveCollateral") //nolint:gochecknoglobals // cosmos-sdk style
 	// KeyONEX is byte key for ONEX chain channel.
-	KeyONEX = []byte("ONEX") //nolint:gochecknoglobals // cosmos-sdk style
+	KeyCollateralDeposit = []byte("CollateralDeposit") //nolint:gochecknoglobals // cosmos-sdk style
 )
 
 var (
-	// DefaultMinCollateralizationRatio is default value for the Minimum Collateralization Ratio.
-	DefaultMinCollateralizationRatio = "25000" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultLiquidationRatio is default value for the Liquidation Ratio.
-	DefaultLiquidationRatio = "15000" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultInterestRate is default value for the Interest Rate.
-	DefaultInterestRate = "0600" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
-	// DefaultSavingsRate is default value for the Savings Rate.
-	DefaultSavingsRate = "0060" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
 	// DefaultProviderChannel is default value for the Provider channel.
 	DefaultProviderChannel = "0" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
 	// DefaultMarketChannel is default value for the Market channel.
@@ -37,6 +30,8 @@ var (
 	DefaultMarketCollateral = "0" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
 	// DefaultReserveCollateral is default value for the Market channel.
 	DefaultReserveCollateral = "0" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
+	// DefaultCollateralDeposit is default value for the Denom Collateral Deposit.
+	DefaultCollateralDeposit = "100000000000000000" //nolint:gomnd,gochecknoglobals // cosmos-sdk style
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -48,30 +43,30 @@ func ParamKeyTable() paramtypes.KeyTable {
 
 // NewParams creates a new Params instance
 func NewParams(
-	minCollateralizationRatio string,
-	liquidationRatio string,
-	interestRate string,
-	savingsRate string,
 	providerChannel string,
 	marketChannel string,
 	marketCollateral string,
 	reserveCollateral string,
+	collateralDeposit string,
 ) Params {
 	return Params{
-		MinCollateralizationRatio: minCollateralizationRatio,
-		LiquidationRatio:          liquidationRatio,
-		InterestRate:              interestRate,
-		SavingsRate:               savingsRate,
-		ProviderChannel:           providerChannel,
-		MarketChannel:             marketChannel,
-		MarketCollateral:          marketCollateral,
-		ReserveCollateral:         reserveCollateral,
+		ProviderChannel:   providerChannel,
+		MarketChannel:     marketChannel,
+		MarketCollateral:  marketCollateral,
+		ReserveCollateral: reserveCollateral,
+		CollateralDeposit: collateralDeposit,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefaultMinCollateralizationRatio, DefaultLiquidationRatio, DefaultInterestRate, DefaultSavingsRate, DefaultProviderChannel, DefaultMarketChannel, DefaultMarketCollateral, DefaultReserveCollateral)
+	return NewParams(
+		DefaultProviderChannel,
+		DefaultMarketChannel,
+		DefaultMarketCollateral,
+		DefaultReserveCollateral,
+		DefaultCollateralDeposit,
+	)
 }
 
 // ParamSetPairs get the params.ParamSet

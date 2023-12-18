@@ -26,14 +26,14 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// FundTreasuryProposal details a dao fund treasury proposal.
+// CreateDenomProposal details proposal that creates a new denom
 type CreateDenomProposal struct {
 	Sender      string                                    `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	Title       string                                    `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description string                                    `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Metadata    *types.Metadata                           `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
-	Rate        []github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,5,rep,name=rate,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"rate"`
-	Deposit     github_com_cosmos_cosmos_sdk_types.Uint   `protobuf:"bytes,6,opt,name=deposit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"deposit"`
+	Reservedata *Reservedata                              `protobuf:"bytes,5,opt,name=reservedata,proto3" json:"reservedata,omitempty"`
+	Rate        []github_com_cosmos_cosmos_sdk_types.Uint `protobuf:"bytes,6,rep,name=rate,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Uint" json:"rate"`
 }
 
 func (m *CreateDenomProposal) Reset()         { *m = CreateDenomProposal{} }
@@ -114,40 +114,119 @@ func (m *Escrow) GetProposer() string {
 	return ""
 }
 
+type Reservedata struct {
+	// minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
+	MinCollateralizationRatio string `protobuf:"bytes,1,opt,name=min_collateralization_ratio,json=minCollateralizationRatio,proto3" json:"min_collateralization_ratio,omitempty"`
+	// liquidation ratio (parameter / 10000), 19999 representing as 199.99%
+	LiquidationRatio string `protobuf:"bytes,2,opt,name=liquidation_ratio,json=liquidationRatio,proto3" json:"liquidation_ratio,omitempty"`
+	// interest rate (parameter / 10000), 9999 representing as 99.99%
+	InterestRate string `protobuf:"bytes,3,opt,name=interest_rate,json=interestRate,proto3" json:"interest_rate,omitempty"`
+	// savings rate (parameter / 10000), 9999 representing as 99.99%
+	SavingsRate string `protobuf:"bytes,4,opt,name=savings_rate,json=savingsRate,proto3" json:"savings_rate,omitempty"`
+}
+
+func (m *Reservedata) Reset()         { *m = Reservedata{} }
+func (m *Reservedata) String() string { return proto.CompactTextString(m) }
+func (*Reservedata) ProtoMessage()    {}
+func (*Reservedata) Descriptor() ([]byte, []int) {
+	return fileDescriptor_179ea2155667c8d4, []int{2}
+}
+func (m *Reservedata) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Reservedata) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Reservedata.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Reservedata) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Reservedata.Merge(m, src)
+}
+func (m *Reservedata) XXX_Size() int {
+	return m.Size()
+}
+func (m *Reservedata) XXX_DiscardUnknown() {
+	xxx_messageInfo_Reservedata.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Reservedata proto.InternalMessageInfo
+
+func (m *Reservedata) GetMinCollateralizationRatio() string {
+	if m != nil {
+		return m.MinCollateralizationRatio
+	}
+	return ""
+}
+
+func (m *Reservedata) GetLiquidationRatio() string {
+	if m != nil {
+		return m.LiquidationRatio
+	}
+	return ""
+}
+
+func (m *Reservedata) GetInterestRate() string {
+	if m != nil {
+		return m.InterestRate
+	}
+	return ""
+}
+
+func (m *Reservedata) GetSavingsRate() string {
+	if m != nil {
+		return m.SavingsRate
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*CreateDenomProposal)(nil), "onomyprotocol.dao.v1.CreateDenomProposal")
 	proto.RegisterType((*Escrow)(nil), "onomyprotocol.dao.v1.Escrow")
+	proto.RegisterType((*Reservedata)(nil), "onomyprotocol.dao.v1.Reservedata")
 }
 
 func init() { proto.RegisterFile("reserve/proposal.proto", fileDescriptor_179ea2155667c8d4) }
 
 var fileDescriptor_179ea2155667c8d4 = []byte{
-	// 385 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x52, 0xbf, 0xee, 0xd3, 0x30,
-	0x10, 0x4e, 0x7e, 0x7f, 0x42, 0x7f, 0xee, 0x66, 0xaa, 0x12, 0x55, 0xc2, 0x89, 0xba, 0xd0, 0x05,
-	0x5b, 0x05, 0x31, 0xc0, 0xd8, 0x82, 0x10, 0x03, 0x12, 0xaa, 0xc4, 0xc2, 0xe6, 0x24, 0xa7, 0x12,
-	0xb5, 0xf1, 0x45, 0xb6, 0x5b, 0xe8, 0x1b, 0x30, 0xf2, 0x08, 0x1d, 0x79, 0x06, 0x9e, 0xa0, 0x63,
-	0x47, 0xc4, 0x50, 0xa1, 0x74, 0xe1, 0x31, 0x50, 0x9d, 0x34, 0x42, 0xfa, 0x4d, 0x9d, 0x7c, 0xdf,
-	0x7d, 0xf7, 0x9d, 0x3f, 0xdf, 0x99, 0xf4, 0x35, 0x18, 0xd0, 0x6b, 0x10, 0xa5, 0xc6, 0x12, 0x8d,
-	0x5c, 0xf2, 0x52, 0xa3, 0x45, 0xda, 0x43, 0x85, 0xc5, 0xc6, 0xc5, 0x29, 0x2e, 0x79, 0x26, 0x91,
-	0xaf, 0xc7, 0x83, 0xde, 0x1c, 0xe7, 0xe8, 0x92, 0xe2, 0x14, 0xd5, 0xb5, 0x03, 0x96, 0xa2, 0x29,
-	0xd0, 0x88, 0x44, 0x1a, 0x10, 0xeb, 0x71, 0x02, 0x56, 0x8e, 0x45, 0x8a, 0xb9, 0xba, 0xc7, 0xab,
-	0x45, 0xcb, 0x9f, 0x40, 0xcd, 0x0f, 0x7f, 0x5e, 0x91, 0x87, 0x53, 0x0d, 0xd2, 0xc2, 0x6b, 0x50,
-	0x58, 0x7c, 0x68, 0x9c, 0xd0, 0x3e, 0x09, 0x0c, 0xa8, 0x0c, 0x74, 0xe8, 0xc7, 0xfe, 0xe8, 0x6e,
-	0xd6, 0x20, 0xda, 0x23, 0xb7, 0x36, 0xb7, 0x4b, 0x08, 0xaf, 0x5c, 0xba, 0x06, 0x34, 0x26, 0xdd,
-	0x0c, 0x4c, 0xaa, 0xf3, 0xd2, 0xe6, 0xa8, 0xc2, 0x6b, 0xc7, 0xfd, 0x9f, 0xa2, 0x2f, 0x49, 0xa7,
-	0x00, 0x2b, 0x33, 0x69, 0x65, 0x78, 0x13, 0xfb, 0xa3, 0xee, 0xb3, 0xc7, 0xbc, 0xb6, 0xc6, 0x9d,
-	0x9b, 0xc6, 0x1a, 0x7f, 0xdf, 0x14, 0xcd, 0xda, 0x72, 0x3a, 0x25, 0x37, 0x5a, 0x5a, 0x08, 0x6f,
-	0xe3, 0xeb, 0xd1, 0xdd, 0x44, 0xec, 0x0e, 0x91, 0xf7, 0xfb, 0x10, 0x3d, 0x99, 0xe7, 0xf6, 0xf3,
-	0x2a, 0xe1, 0x29, 0x16, 0xa2, 0x79, 0x63, 0x7d, 0x3c, 0x35, 0xd9, 0x42, 0xd8, 0x4d, 0x09, 0x86,
-	0x7f, 0xcc, 0x95, 0x9d, 0x39, 0x31, 0x7d, 0x47, 0x1e, 0x64, 0x50, 0xa2, 0xc9, 0x6d, 0x18, 0x9c,
-	0xdc, 0x5d, 0xde, 0xe7, 0xac, 0x7f, 0xd5, 0xf9, 0xb6, 0x8d, 0xbc, 0xbf, 0xdb, 0xc8, 0x1b, 0x16,
-	0x24, 0x78, 0x63, 0x52, 0x8d, 0x5f, 0xe8, 0x80, 0x74, 0xea, 0x25, 0xb6, 0x03, 0x6b, 0x31, 0x7d,
-	0x4b, 0x02, 0x59, 0xe0, 0x4a, 0xd9, 0x7a, 0x66, 0x97, 0xdf, 0xdc, 0xc8, 0x27, 0x2f, 0x7e, 0x54,
-	0xcc, 0xdf, 0x55, 0xcc, 0xdf, 0x57, 0xcc, 0xff, 0x53, 0x31, 0xff, 0xfb, 0x91, 0x79, 0xfb, 0x23,
-	0xf3, 0x7e, 0x1d, 0x99, 0xf7, 0xe9, 0xd1, 0xf9, 0x37, 0x7d, 0x15, 0xe7, 0xc8, 0xf5, 0x48, 0x02,
-	0xb7, 0xe9, 0xe7, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xed, 0x37, 0x2a, 0x2c, 0x6f, 0x02, 0x00,
-	0x00,
+	// 487 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0xb1, 0x8e, 0xd3, 0x4a,
+	0x14, 0xb5, 0x77, 0xb3, 0x56, 0x76, 0xb2, 0x4f, 0x7a, 0x0c, 0xd1, 0x62, 0x82, 0x70, 0xb2, 0xa1,
+	0x20, 0x12, 0x62, 0xac, 0x80, 0x28, 0xa0, 0xa0, 0xd8, 0x80, 0xa8, 0x90, 0x90, 0x25, 0x1a, 0x9a,
+	0x68, 0x62, 0x5f, 0x85, 0xd1, 0xda, 0x73, 0xcd, 0xcc, 0x24, 0xb0, 0x7c, 0x01, 0x25, 0x9f, 0xb0,
+	0x25, 0x1f, 0xc0, 0x17, 0x50, 0x6d, 0xb9, 0x25, 0xa2, 0x58, 0xa1, 0xa4, 0xe1, 0x33, 0x90, 0x67,
+	0x9c, 0x60, 0x01, 0x0d, 0x8d, 0xe7, 0xde, 0x7b, 0xce, 0x91, 0x8f, 0xcf, 0xf5, 0x90, 0x43, 0x05,
+	0x1a, 0xd4, 0x12, 0xe2, 0x52, 0x61, 0x89, 0x9a, 0xe7, 0xac, 0x54, 0x68, 0x90, 0x76, 0x51, 0x62,
+	0x71, 0x6a, 0xeb, 0x14, 0x73, 0x96, 0x71, 0x64, 0xcb, 0x71, 0xaf, 0x3b, 0xc7, 0x39, 0xda, 0x61,
+	0x5c, 0x55, 0x8e, 0xdb, 0x8b, 0x52, 0xd4, 0x05, 0xea, 0x78, 0xc6, 0x35, 0xc4, 0xcb, 0xf1, 0x0c,
+	0x0c, 0x1f, 0xc7, 0x29, 0x0a, 0xf9, 0x07, 0x2e, 0x4f, 0xb6, 0x78, 0xd5, 0x38, 0x7c, 0xf8, 0x79,
+	0x87, 0x5c, 0x9d, 0x28, 0xe0, 0x06, 0x9e, 0x80, 0xc4, 0xe2, 0x45, 0xed, 0x84, 0x1e, 0x92, 0x40,
+	0x83, 0xcc, 0x40, 0x85, 0xfe, 0xc0, 0x1f, 0xed, 0x27, 0x75, 0x47, 0xbb, 0x64, 0xcf, 0x08, 0x93,
+	0x43, 0xb8, 0x63, 0xc7, 0xae, 0xa1, 0x03, 0xd2, 0xc9, 0x40, 0xa7, 0x4a, 0x94, 0x46, 0xa0, 0x0c,
+	0x77, 0x2d, 0xd6, 0x1c, 0xd1, 0x87, 0xa4, 0x5d, 0x80, 0xe1, 0x19, 0x37, 0x3c, 0x6c, 0x0d, 0xfc,
+	0x51, 0xe7, 0xde, 0x4d, 0xe6, 0xac, 0x31, 0xeb, 0xa6, 0xb6, 0xc6, 0x9e, 0xd7, 0xa4, 0x64, 0x4b,
+	0xa7, 0x13, 0xd2, 0xa9, 0x83, 0xb2, 0xea, 0x3d, 0xab, 0x3e, 0x62, 0x7f, 0x0b, 0x89, 0x25, 0xbf,
+	0x88, 0x49, 0x53, 0x45, 0x27, 0xa4, 0xa5, 0xb8, 0x81, 0x30, 0x18, 0xec, 0x8e, 0xf6, 0x8f, 0xe3,
+	0xf3, 0xcb, 0xbe, 0xf7, 0xed, 0xb2, 0x7f, 0x7b, 0x2e, 0xcc, 0xeb, 0xc5, 0x8c, 0xa5, 0x58, 0xc4,
+	0x75, 0x50, 0xee, 0xb8, 0xab, 0xb3, 0x93, 0xd8, 0x9c, 0x96, 0xa0, 0xd9, 0x4b, 0x21, 0x4d, 0x62,
+	0xc5, 0x8f, 0xda, 0x1f, 0xce, 0xfa, 0xde, 0x8f, 0xb3, 0xbe, 0x37, 0x2c, 0x48, 0xf0, 0x54, 0xa7,
+	0x0a, 0xdf, 0xd2, 0x1e, 0x69, 0xbb, 0xf5, 0x6d, 0xa3, 0xda, 0xf6, 0xf4, 0x19, 0x09, 0x78, 0x81,
+	0x0b, 0x69, 0x5c, 0x5a, 0xff, 0xfe, 0xda, 0x5a, 0x3e, 0xfc, 0xe2, 0x93, 0x4e, 0xe3, 0xd3, 0xe8,
+	0x63, 0x72, 0xa3, 0x10, 0x72, 0x9a, 0x62, 0x9e, 0x73, 0x03, 0x8a, 0xe7, 0xe2, 0x3d, 0xaf, 0x62,
+	0x9e, 0xaa, 0xea, 0xa8, 0x7d, 0x5c, 0x2f, 0x84, 0x9c, 0xfc, 0xce, 0x48, 0xaa, 0x27, 0xbd, 0x43,
+	0xae, 0xe4, 0xe2, 0xcd, 0x42, 0x64, 0x4d, 0x95, 0xdb, 0xe8, 0xff, 0x0d, 0xc0, 0x91, 0x6f, 0x91,
+	0xff, 0x84, 0x34, 0xa0, 0x40, 0x9b, 0xa9, 0xcd, 0xd0, 0xad, 0xf7, 0x60, 0x33, 0x4c, 0xb8, 0x01,
+	0x7a, 0x44, 0x0e, 0x34, 0x5f, 0x0a, 0x39, 0xd7, 0x8e, 0xd3, 0x72, 0xbf, 0x40, 0x3d, 0xab, 0x28,
+	0xc7, 0x0f, 0x3e, 0xad, 0x22, 0xff, 0x7c, 0x15, 0xf9, 0x17, 0xab, 0xc8, 0xff, 0xbe, 0x8a, 0xfc,
+	0x8f, 0xeb, 0xc8, 0xbb, 0x58, 0x47, 0xde, 0xd7, 0x75, 0xe4, 0xbd, 0xba, 0xb6, 0xb9, 0x0c, 0xef,
+	0xe2, 0x4d, 0x65, 0x83, 0x98, 0x05, 0x76, 0xc7, 0xf7, 0x7f, 0x06, 0x00, 0x00, 0xff, 0xff, 0x07,
+	0x02, 0x33, 0x02, 0x2e, 0x03, 0x00, 0x00,
 }
 
 func (this *Escrow) Equal(that interface{}) bool {
@@ -177,6 +256,39 @@ func (this *Escrow) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *Reservedata) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Reservedata)
+	if !ok {
+		that2, ok := that.(Reservedata)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.MinCollateralizationRatio != that1.MinCollateralizationRatio {
+		return false
+	}
+	if this.LiquidationRatio != that1.LiquidationRatio {
+		return false
+	}
+	if this.InterestRate != that1.InterestRate {
+		return false
+	}
+	if this.SavingsRate != that1.SavingsRate {
+		return false
+	}
+	return true
+}
 func (m *CreateDenomProposal) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -197,16 +309,6 @@ func (m *CreateDenomProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	{
-		size := m.Deposit.Size()
-		i -= size
-		if _, err := m.Deposit.MarshalTo(dAtA[i:]); err != nil {
-			return 0, err
-		}
-		i = encodeVarintProposal(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x32
 	if len(m.Rate) > 0 {
 		for iNdEx := len(m.Rate) - 1; iNdEx >= 0; iNdEx-- {
 			{
@@ -218,8 +320,20 @@ func (m *CreateDenomProposal) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintProposal(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x2a
+			dAtA[i] = 0x32
 		}
+	}
+	if m.Reservedata != nil {
+		{
+			size, err := m.Reservedata.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintProposal(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
 	}
 	if m.Metadata != nil {
 		{
@@ -297,6 +411,57 @@ func (m *Escrow) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *Reservedata) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Reservedata) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Reservedata) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.SavingsRate) > 0 {
+		i -= len(m.SavingsRate)
+		copy(dAtA[i:], m.SavingsRate)
+		i = encodeVarintProposal(dAtA, i, uint64(len(m.SavingsRate)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.InterestRate) > 0 {
+		i -= len(m.InterestRate)
+		copy(dAtA[i:], m.InterestRate)
+		i = encodeVarintProposal(dAtA, i, uint64(len(m.InterestRate)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.LiquidationRatio) > 0 {
+		i -= len(m.LiquidationRatio)
+		copy(dAtA[i:], m.LiquidationRatio)
+		i = encodeVarintProposal(dAtA, i, uint64(len(m.LiquidationRatio)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.MinCollateralizationRatio) > 0 {
+		i -= len(m.MinCollateralizationRatio)
+		copy(dAtA[i:], m.MinCollateralizationRatio)
+		i = encodeVarintProposal(dAtA, i, uint64(len(m.MinCollateralizationRatio)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintProposal(dAtA []byte, offset int, v uint64) int {
 	offset -= sovProposal(v)
 	base := offset
@@ -330,14 +495,16 @@ func (m *CreateDenomProposal) Size() (n int) {
 		l = m.Metadata.Size()
 		n += 1 + l + sovProposal(uint64(l))
 	}
+	if m.Reservedata != nil {
+		l = m.Reservedata.Size()
+		n += 1 + l + sovProposal(uint64(l))
+	}
 	if len(m.Rate) > 0 {
 		for _, e := range m.Rate {
 			l = e.Size()
 			n += 1 + l + sovProposal(uint64(l))
 		}
 	}
-	l = m.Deposit.Size()
-	n += 1 + l + sovProposal(uint64(l))
 	return n
 }
 
@@ -353,6 +520,31 @@ func (m *Escrow) Size() (n int) {
 	}
 	l = m.Amount.Size()
 	n += 1 + l + sovProposal(uint64(l))
+	return n
+}
+
+func (m *Reservedata) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.MinCollateralizationRatio)
+	if l > 0 {
+		n += 1 + l + sovProposal(uint64(l))
+	}
+	l = len(m.LiquidationRatio)
+	if l > 0 {
+		n += 1 + l + sovProposal(uint64(l))
+	}
+	l = len(m.InterestRate)
+	if l > 0 {
+		n += 1 + l + sovProposal(uint64(l))
+	}
+	l = len(m.SavingsRate)
+	if l > 0 {
+		n += 1 + l + sovProposal(uint64(l))
+	}
 	return n
 }
 
@@ -525,6 +717,42 @@ func (m *CreateDenomProposal) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Reservedata", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProposal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthProposal
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Reservedata == nil {
+				m.Reservedata = &Reservedata{}
+			}
+			if err := m.Reservedata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Rate", wireType)
 			}
 			var stringLen uint64
@@ -556,40 +784,6 @@ func (m *CreateDenomProposal) Unmarshal(dAtA []byte) error {
 			var v github_com_cosmos_cosmos_sdk_types.Uint
 			m.Rate = append(m.Rate, v)
 			if err := m.Rate[len(m.Rate)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Deposit", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowProposal
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthProposal
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthProposal
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Deposit.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -708,6 +902,184 @@ func (m *Escrow) Unmarshal(dAtA []byte) error {
 			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipProposal(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Reservedata) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowProposal
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Reservedata: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Reservedata: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinCollateralizationRatio", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProposal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthProposal
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MinCollateralizationRatio = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LiquidationRatio", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProposal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthProposal
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LiquidationRatio = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field InterestRate", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProposal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthProposal
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.InterestRate = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SavingsRate", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowProposal
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthProposal
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthProposal
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SavingsRate = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

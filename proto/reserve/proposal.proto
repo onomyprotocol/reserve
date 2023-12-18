@@ -8,7 +8,7 @@ import "cosmos/bank/v1beta1/bank.proto";
 option go_package = "reserve/x/reserve/types";
 option (gogoproto.equal_all) = true;
 
-// FundTreasuryProposal details a dao fund treasury proposal.
+// CreateDenomProposal details proposal that creates a new denom
 message CreateDenomProposal {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -18,11 +18,8 @@ message CreateDenomProposal {
   string title = 2;
   string description = 3;
   cosmos.bank.v1beta1.Metadata metadata = 4;
-  repeated string rate = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
-    (gogoproto.nullable) = false
-  ];
-  string deposit = 6 [
+  Reservedata reservedata = 5;
+  repeated string rate = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Uint",
     (gogoproto.nullable) = false
   ];
@@ -36,4 +33,16 @@ message Escrow {
   ];
 }
 
+message Reservedata {
+  // minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
+  string min_collateralization_ratio = 1;
 
+  // liquidation ratio (parameter / 10000), 19999 representing as 199.99%
+  string liquidation_ratio = 2;
+
+  // interest rate (parameter / 10000), 9999 representing as 99.99%
+  string interest_rate = 3;
+
+  // savings rate (parameter / 10000), 9999 representing as 99.99%
+  string savings_rate = 4;
+}

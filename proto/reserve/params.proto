@@ -9,28 +9,19 @@ option go_package = "reserve/x/reserve/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // minimum collateralization ratio (parameter / 10000), 19999 representing as 199.99%
-  string min_collateralization_ratio = 1;
-
-  // liquidation ratio (parameter / 10000), 19999 representing as 199.99%
-  string liquidation_ratio = 2;
-
-  // interest rate (parameter / 10000), 9999 representing as 99.99%
-  string interest_rate = 3;
-
-  // savings rate (parameter / 10000), 9999 representing as 99.99%
-  string savings_rate = 4;
-
   // provider chain channel
-  string provider_channel = 5;
+  string provider_channel = 1;
 
   // market chain channel
-  string market_channel = 6;
+  string market_channel = 2;
   
-  // market_coin is the ibc address for collateral on market chain
-  string market_collateral = 7;
+  // market_collateral is the ibc address for collateral on market chain
+  string market_collateral = 3;
 
-  // reserve_coin is the ibc address for collateral on reserve chain 
-  string reserve_collateral = 8;
+  // reserve_collateral is the ibc address for collateral on reserve chain 
+  string reserve_collateral = 4;
+
+  // collateral_deposit is the amount of collateral needed to create a new denom
+  string collateral_deposit = 5;
   
 }
