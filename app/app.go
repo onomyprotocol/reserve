@@ -102,6 +102,9 @@ import (
 	portalmodule "reserve/x/portal"
 	portalmodulekeeper "reserve/x/portal/keeper"
 	portalmoduletypes "reserve/x/portal/types"
+	reservemodule "reserve/x/reserve"
+	reservemodulekeeper "reserve/x/reserve/keeper"
+	reservemoduletypes "reserve/x/reserve/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
@@ -157,6 +160,7 @@ var (
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		portalmodule.AppModuleBasic{},
+		reservemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -169,6 +173,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		reservemoduletypes.ModuleName:  {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -231,6 +236,8 @@ type App struct {
 
 	ScopedPortalKeeper capabilitykeeper.ScopedKeeper
 	PortalKeeper       portalmodulekeeper.Keeper
+
+	ReserveKeeper reservemodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -268,6 +275,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		portalmoduletypes.StoreKey,
+		reservemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -402,6 +410,18 @@ func New(
 	)
 	portalModule := portalmodule.NewAppModule(appCodec, app.PortalKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.ReserveKeeper = *reservemodulekeeper.NewKeeper(
+		appCodec,
+		keys[reservemoduletypes.StoreKey],
+		keys[reservemoduletypes.MemStoreKey],
+		app.GetSubspace(reservemoduletypes.ModuleName),
+
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.GovKeeper,
+	)
+	reserveModule := reservemodule.NewAppModule(appCodec, app.ReserveKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -445,6 +465,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		portalModule,
+		reserveModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -473,6 +494,7 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		portalmoduletypes.ModuleName,
+		reservemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -497,6 +519,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		portalmoduletypes.ModuleName,
+		reservemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -526,6 +549,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		portalmoduletypes.ModuleName,
+		reservemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -551,6 +575,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		portalModule,
+		reserveModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -741,6 +766,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(portalmoduletypes.ModuleName)
+	paramsKeeper.Subspace(reservemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

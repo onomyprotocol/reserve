@@ -1,0 +1,17 @@
+syntax = "proto3";
+package reserve.reserve;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "reserve/x/reserve/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+  string providerChannel = 1 [(gogoproto.moretags) = "yaml:\"provider_channel\""];
+  string marketChannel = 2 [(gogoproto.moretags) = "yaml:\"market_channel\""];
+  string marketCollateral = 3 [(gogoproto.moretags) = "yaml:\"market_collateral\""];
+  string reserveCollateral = 4 [(gogoproto.moretags) = "yaml:\"reserve_collateral\""];
+  string collateralDeposit = 5 [(gogoproto.moretags) = "yaml:\"collateral_deposit\""];
+}

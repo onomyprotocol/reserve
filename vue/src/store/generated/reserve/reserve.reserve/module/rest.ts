@@ -9,22 +9,28 @@
  * ---------------------------------------------------------------
  */
 
-/**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- */
-export interface PortalQueryParamsResponse {
-  /** params holds all the parameters of this module. */
-  params?: ReserveportalParams;
-}
-
 export interface ProtobufAny {
   "@type"?: string;
 }
 
 /**
+ * QueryParamsResponse is response type for the Query/Params RPC method.
+ */
+export interface ReserveQueryParamsResponse {
+  /** params holds all the parameters of this module. */
+  params?: ReservereserveParams;
+}
+
+/**
  * Params defines the parameters for the module.
  */
-export type ReserveportalParams = object;
+export interface ReservereserveParams {
+  providerChannel?: string;
+  marketChannel?: string;
+  marketCollateral?: string;
+  reserveCollateral?: string;
+  collateralDeposit?: string;
+}
 
 export interface RpcStatus {
   /** @format int32 */
@@ -225,7 +231,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title portal/genesis.proto
+ * @title reserve/genesis.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -235,11 +241,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * @tags Query
    * @name QueryParams
    * @summary Parameters queries the parameters of the module.
-   * @request GET:/reserve/portal/params
+   * @request GET:/reserve/reserve/params
    */
   queryParams = (params: RequestParams = {}) =>
-    this.request<PortalQueryParamsResponse, RpcStatus>({
-      path: `/reserve/portal/params`,
+    this.request<ReserveQueryParamsResponse, RpcStatus>({
+      path: `/reserve/reserve/params`,
       method: "GET",
       format: "json",
       ...params,
