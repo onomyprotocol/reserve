@@ -29199,6 +29199,49 @@ paths:
           format: uint64
       tags:
         - Query
+  /reserve/reserve/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: ReserveReserveParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+                properties:
+                  marketCollateral:
+                    type: string
+                  reserveCollateral:
+                    type: string
+                  collateralDeposit:
+                    type: string
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /tendermint/spn/monitoringp/connection_channel_id:
     get:
       summary: Queries a ConnectionChannelID by index.
@@ -49110,6 +49153,30 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
+  reserve.reserve.Params:
+    type: object
+    properties:
+      marketCollateral:
+        type: string
+      reserveCollateral:
+        type: string
+      collateralDeposit:
+        type: string
+    description: Params defines the parameters for the module.
+  reserve.reserve.QueryParamsResponse:
+    type: object
+    properties:
+      params:
+        description: params holds all the parameters of this module.
+        type: object
+        properties:
+          marketCollateral:
+            type: string
+          reserveCollateral:
+            type: string
+          collateralDeposit:
+            type: string
+    description: QueryParamsResponse is response type for the Query/Params RPC method.
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object
     properties:
