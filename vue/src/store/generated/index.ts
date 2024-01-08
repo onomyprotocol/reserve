@@ -20,6 +20,7 @@ import CosmosIbcGoIbcCoreChannelV1 from './cosmos/ibc-go/ibc.core.channel.v1'
 import CosmosIbcGoIbcCoreClientV1 from './cosmos/ibc-go/ibc.core.client.v1'
 import CosmosIbcGoIbcCoreConnectionV1 from './cosmos/ibc-go/ibc.core.connection.v1'
 import CosmosIbcGoIbcCorePortV1 from './cosmos/ibc-go/ibc.core.port.v1'
+import ReserveReservePortal from './reserve/reserve.portal'
 import ReserveReserveReserve from './reserve/reserve.reserve'
 
 
@@ -44,6 +45,7 @@ export default {
   CosmosIbcGoIbcCoreClientV1: load(CosmosIbcGoIbcCoreClientV1, 'ibc.core.client.v1'),
   CosmosIbcGoIbcCoreConnectionV1: load(CosmosIbcGoIbcCoreConnectionV1, 'ibc.core.connection.v1'),
   CosmosIbcGoIbcCorePortV1: load(CosmosIbcGoIbcCorePortV1, 'ibc.core.port.v1'),
+  ReserveReservePortal: load(ReserveReservePortal, 'reserve.portal'),
   ReserveReserveReserve: load(ReserveReserveReserve, 'reserve.reserve'),
   
 }
