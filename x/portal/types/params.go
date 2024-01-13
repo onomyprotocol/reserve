@@ -12,13 +12,13 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 var (
 	KeyProviderChannel = []byte("ProviderChannel")
 	// TODO: Determine the default value
-	DefaultProviderChannel string = "provider_channel"
+	DefaultProviderChannel string = "0"
 )
 
 var (
 	KeyMarketChannel = []byte("MarketChannel")
 	// TODO: Determine the default value
-	DefaultMarketChannel string = "market_channel"
+	DefaultMarketChannel string = "1"
 )
 
 // ParamKeyTable the param key table for launch module
