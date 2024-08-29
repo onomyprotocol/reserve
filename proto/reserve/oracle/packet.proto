@@ -1,0 +1,13 @@
+syntax = "proto3";
+package reserve.oracle;
+
+option go_package = "reserve/x/oracle/types";
+
+message OraclePacketData {
+    oneof packet {
+        NoData noData = 1;
+    }
+}
+
+message NoData {
+}
