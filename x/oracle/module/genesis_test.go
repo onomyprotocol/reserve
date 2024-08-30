@@ -3,10 +3,10 @@ package oracle_test
 import (
 	"testing"
 
-	keepertest "reserve/testutil/keeper"
-	"reserve/testutil/nullify"
-	oracle "reserve/x/oracle/module"
-	"reserve/x/oracle/types"
+	keepertest "github.com/onomyprotocol/reserve/testutil/keeper"
+	"github.com/onomyprotocol/reserve/testutil/nullify"
+	oracle "github.com/onomyprotocol/reserve/x/oracle/module"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 
 	"github.com/stretchr/testify/require"
 )

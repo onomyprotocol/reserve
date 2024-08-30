@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	keepertest "reserve/testutil/keeper"
-	"reserve/x/oracle/keeper"
-	"reserve/x/oracle/types"
+	keepertest "github.com/onomyprotocol/reserve/testutil/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 func setupMsgServer(t testing.TB) (keeper.Keeper, types.MsgServer, context.Context) {

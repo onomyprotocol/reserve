@@ -3,8 +3,8 @@ package oracle
 import (
 	"fmt"
 
-	"reserve/x/oracle/keeper"
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"

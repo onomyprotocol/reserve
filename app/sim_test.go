@@ -31,7 +31,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 
-	"reserve/app"
+	"github.com/onomyprotocol/reserve/app"
 )
 
 const (

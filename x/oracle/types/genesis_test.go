@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 
 	"github.com/stretchr/testify/require"
 )

@@ -3,8 +3,8 @@ package oracle
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"reserve/x/oracle/keeper"
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.

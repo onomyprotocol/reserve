@@ -3,9 +3,8 @@ package app
 import (
 	"time"
 
-	oraclemodulev1 "reserve/api/reserve/oracle/module"
-	_ "reserve/x/oracle/module" // import for side-effects
-	oraclemoduletypes "reserve/x/oracle/types"
+	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"
 	appv1alpha1 "cosmossdk.io/api/cosmos/app/v1alpha1"

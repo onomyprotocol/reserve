@@ -24,10 +24,10 @@ import (
 
 	// this line is used by starport scaffolding # 1
 
-	modulev1 "reserve/api/reserve/oracle/module"
-	"reserve/x/oracle/client/cli"
-	"reserve/x/oracle/keeper"
-	"reserve/x/oracle/types"
+	modulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	"github.com/onomyprotocol/reserve/x/oracle/client/cli"
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 var (

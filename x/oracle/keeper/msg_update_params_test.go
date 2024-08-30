@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 func TestMsgUpdateParams(t *testing.T) {

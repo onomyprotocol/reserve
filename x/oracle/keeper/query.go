@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 var _ types.QueryServer = Keeper{}
