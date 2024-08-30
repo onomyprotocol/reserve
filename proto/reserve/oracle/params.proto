@@ -10,6 +10,4 @@ option go_package = "reserve/x/oracle/types";
 message Params {
   option (amino.name) = "reserve/x/oracle/Params";
   option (gogoproto.equal) = true;
-
-  
 }

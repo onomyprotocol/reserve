@@ -10,9 +10,9 @@ option go_package = "reserve/x/oracle/types";
 
 // GenesisState defines the oracle module's genesis state.
 message GenesisState {
-  
+
   // params defines all the parameters of the module.
-  Params params  = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  Params params = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
   string port_id = 2;
 }
-
