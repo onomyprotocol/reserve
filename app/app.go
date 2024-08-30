@@ -75,10 +75,10 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 
-	oraclemodulekeeper "reserve/x/oracle/keeper"
+	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	"reserve/docs"
+	"github.com/onomyprotocol/reserve/docs"
 )
 
 const (

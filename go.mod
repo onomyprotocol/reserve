@@ -1,4 +1,4 @@
-module reserve
+module github.com/onomyprotocol/reserve
 
 go 1.21
 

@@ -37,8 +37,8 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
 	// this line is used by starport scaffolding # ibc/app/import
-	oraclemodule "reserve/x/oracle/module"
-	oraclemoduletypes "reserve/x/oracle/types"
+	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
+	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.

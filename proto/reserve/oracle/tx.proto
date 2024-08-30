@@ -7,7 +7,7 @@ import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "reserve/oracle/params.proto";
 
-option go_package = "reserve/x/oracle/types";
+option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
 // Msg defines the Msg service.
 service Msg {

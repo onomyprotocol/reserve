@@ -13,5 +13,5 @@ for dir in $proto_dirs; do
 done
 cd ..
 # move proto files to the right places
-cp -r ./proto/reserve/x/* ./x
-rm -rf ./proto/reserve/x
+cp -r proto/github.com/onomyprotocol/reserve/* ./
+rm -rf proto/github.com

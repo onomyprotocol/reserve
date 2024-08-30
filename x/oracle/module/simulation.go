@@ -8,9 +8,9 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"reserve/testutil/sample"
-	oraclesimulation "reserve/x/oracle/simulation"
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/testutil/sample"
+	oraclesimulation "github.com/onomyprotocol/reserve/x/oracle/simulation"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // avoid unused import issue

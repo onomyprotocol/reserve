@@ -24,7 +24,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"reserve/app"
+	"github.com/onomyprotocol/reserve/app"
 )
 
 // NewRootCmd creates a new root command for reserved. It is called once in the main function.

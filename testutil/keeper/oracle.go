@@ -21,8 +21,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 
-	"reserve/x/oracle/keeper"
-	"reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 func OracleKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
