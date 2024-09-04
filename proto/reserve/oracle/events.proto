@@ -1,0 +1,16 @@
+syntax = "proto3";
+package reserve.oracle;
+
+option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
+
+message EventBandIBCAckSuccess {
+    string ack_result = 1;
+    int64 client_id = 2;
+  }
+  
+message EventBandIBCAckError {
+string ack_error = 1;
+int64 client_id = 2;
+}
+
+message EventBandIBCResponseTimeout { int64 client_id = 1; }

@@ -15,7 +15,7 @@ message GenesisState {
   // params defines all the parameters of the module.
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
-  BandParams band_ibc_params = 8 [ (gogoproto.nullable) = false ];
+  BandParams band_params = 8 [ (gogoproto.nullable) = false ];
   repeated BandPriceState band_price_states = 2;
   repeated BandOracleRequest band_oracle_requests = 3;
 }

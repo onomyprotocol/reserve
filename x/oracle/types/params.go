@@ -6,6 +6,14 @@ import (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
+const (
+	// Each value below is the default value for each parameter when generating the default
+	// genesis file.
+	DefaultBandRequestInterval = int64(1) // every 7 blocks
+	DefaultBandVersion         = "bandchain-1"
+	DefaultBandPortID          = "oracle"
+)
+
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
@@ -24,6 +32,16 @@ func DefaultParams() Params {
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{}
+}
+
+
+// DefaultBandParams returns the default BandParams
+func DefaultBandParams() BandParams {
+	return BandParams{
+		IbcRequestInterval: DefaultBandRequestInterval,
+		IbcVersion:         DefaultBandVersion,
+		IbcPortId:          DefaultBandPortID,
+	}
 }
 
 // Validate validates the set of params

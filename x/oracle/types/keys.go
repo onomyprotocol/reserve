@@ -18,7 +18,8 @@ const (
 )
 
 var (
-	ParamsKey = []byte("p_oracle")
+	ParamsKey     = []byte("p_oracle")
+	BandParamsKey = []byte{0x01}
 )
 
 var (
