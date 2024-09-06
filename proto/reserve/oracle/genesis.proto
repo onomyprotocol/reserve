@@ -87,3 +87,8 @@ message PriceState {
   ];
   int64 timestamp = 2;
 }
+
+message CalldataRecord {
+  uint64 client_id = 1;
+  bytes calldata = 2;
+}
