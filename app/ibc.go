@@ -9,7 +9,9 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	"github.com/cosmos/cosmos-sdk/x/params"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	paramproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
@@ -39,6 +41,8 @@ import (
 	// this line is used by starport scaffolding # ibc/app/import
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.
@@ -94,7 +98,9 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 	// by granting the governance module the right to execute the message.
 	// See: https://docs.cosmos.network/main/modules/gov#proposal-messages
 	govRouter := govv1beta1.NewRouter()
-	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler)
+	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(psmtypes.RouterKey, psm.NewStablecoinProposalHandler(&app.PSMKeeper))
 
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.GetKey(ibcfeetypes.StoreKey),

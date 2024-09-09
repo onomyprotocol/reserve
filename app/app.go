@@ -76,6 +76,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/onomyprotocol/reserve/docs"
@@ -141,6 +143,7 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 
 	OracleKeeper oraclemodulekeeper.Keeper
+	PSMKeeper    psmkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -163,6 +166,8 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
+		psm.AddStableCoinProposalHandler,
+		psm.UpdatesStableCoinProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -280,6 +285,7 @@ func New(
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
 		&app.OracleKeeper,
+		&app.PSMKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)

@@ -7,6 +7,8 @@ import (
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
+
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"
 	appv1alpha1 "cosmossdk.io/api/cosmos/app/v1alpha1"
 	authmodulev1 "cosmossdk.io/api/cosmos/auth/module/v1"
@@ -95,6 +97,7 @@ var (
 		circuittypes.ModuleName,
 		// chain modules
 		oraclemoduletypes.ModuleName,
+		psmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -120,6 +123,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		oraclemoduletypes.ModuleName,
+		psmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -139,6 +143,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		oraclemoduletypes.ModuleName,
+		psmtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -159,6 +164,7 @@ var (
 		{Account: ibctransfertypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: ibcfeetypes.ModuleName},
 		{Account: icatypes.ModuleName},
+		{Account: psmtypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -297,6 +303,10 @@ var (
 			{
 				Name:   oraclemoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&oraclemodulev1.Module{}),
+			},
+			{
+				Name:   psmtypes.ModuleName,
+				Config: appconfig.WrapAny(&psmtypes.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

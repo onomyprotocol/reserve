@@ -69,3 +69,8 @@ func (msg MsgSwapToStablecoin) GetSigners() []sdk.AccAddress {
 
 // Route implements the sdk.Msg interface.
 func (msg MsgSwapToStablecoin) Route() string { return RouterKey }
+
+var (
+	Query_serviceDesc = _Query_serviceDesc
+	Msg_serviceDesc   = _Msg_serviceDesc
+)

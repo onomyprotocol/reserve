@@ -45,8 +45,8 @@ func initRootCmd(
 	rootCmd.AddCommand(
 		server.StatusCommand(),
 		genesisCommand(txConfig, basicManager),
-		queryCommand(),
-		txCommand(),
+		queryCommand(basicManager),
+		txCommand(basicManager),
 		keys.Commands(),
 	)
 }
@@ -65,7 +65,7 @@ func genesisCommand(txConfig client.TxConfig, basicManager module.BasicManager, 
 	return cmd
 }
 
-func queryCommand() *cobra.Command {
+func queryCommand(basicManager module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "query",
 		Aliases:                    []string{"q"},
@@ -84,12 +84,15 @@ func queryCommand() *cobra.Command {
 		authcmd.QueryTxCmd(),
 		server.QueryBlockResultsCmd(),
 	)
+
+	basicManager.AddQueryCommands(cmd)
+
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 
 	return cmd
 }
 
-func txCommand() *cobra.Command {
+func txCommand(basicManager module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
 		Short:                      "Transactions subcommands",
@@ -110,6 +113,9 @@ func txCommand() *cobra.Command {
 		authcmd.GetDecodeCommand(),
 		authcmd.GetSimulateCmd(),
 	)
+
+	basicManager.AddTxCommands(cmd)
+
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 
 	return cmd
