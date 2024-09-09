@@ -65,8 +65,8 @@ func (k Keeper) GetAuthority() string {
 }
 
 // Logger returns a module-specific logger.
-func (k Keeper) Logger() log.Logger {
-	return k.logger.With("module", fmt.Sprintf("x/%s", types.ModuleName))
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger().With("module", types.ModuleName)
 }
 
 // ----------------------------------------------------------------------------

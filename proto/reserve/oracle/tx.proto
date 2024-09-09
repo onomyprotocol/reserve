@@ -37,3 +37,18 @@ message MsgUpdateParams {
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
+
+// MsgRequestBandRates defines a SDK message for requesting data from
+// BandChain using IBC.
+message MsgRequestBandRates {
+  option (amino.name) = "oracle/MsgRequestBandRates";
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  string sender = 1;
+  uint64 request_id = 2;
+}
+
+// MsgRequestBandRatesResponse defines the Msg/RequestBandRates response type.
+message MsgRequestBandRatesResponse {}

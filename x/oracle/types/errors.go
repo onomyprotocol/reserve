@@ -1,15 +1,13 @@
 package types
 
-// DONTCOVER
-
 import (
 	sdkerrors "cosmossdk.io/errors"
 )
 
 // x/oracle module sentinel errors
 var (
-	ErrInvalidSigner        = sdkerrors.Register(ModuleName, 1100, "expected gov account as only signer for proposal message")
-	ErrSample               = sdkerrors.Register(ModuleName, 1101, "sample error")
-	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 1500, "invalid packet timeout")
-	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 1501, "invalid version")
+	ErrInvalidSigner        = sdkerrors.Register(ModuleName, 1, "expected gov account as only signer for proposal message")
+	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 2, "invalid packet timeout")
+	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 3, "invalid version")
+	ErrInvalidBandRequest   = sdkerrors.Register(ModuleName, 4, "Invalid Band IBC Request")
 )
