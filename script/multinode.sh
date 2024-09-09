@@ -107,6 +107,7 @@ update_test_genesis () {
 }
 # sed -i 's/"voting_period": "172800s"/"voting_period": "15s"/g' $HOME/.reserved/validator1/config/genesis.json
 update_test_genesis '.app_state["gov"]["params"]["voting_period"] = "15s"'
+update_test_genesis '.app_state["gov"]["params"]["expedited_voting_period"] = "10s"'
 
 # copy validator1 genesis file to validator2-3
 cp $HOME/.reserved/validator1/config/genesis.json $HOME/.reserved/validator2/config/genesis.json
@@ -148,10 +149,14 @@ echo "========DONE==========="
 
 # reserved q psm stablecoin usdt
 
-# reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
-# echo "==================="
-# reserved tx psm swap-to-ist 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
+reserved q bank balances cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07
+echo "==================="
+reserved tx psm swap-to-ist 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
 
-# sleep 7
+sleep 7
+reserved q bank balances cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07
+reserved tx psm swap-to-stablecoin usdt 99700299899800199999999999004ist --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
 
-# reserved tx psm swap-to-stablecoin usdt 1000IST --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
+sleep 7 
+
+reserved q bank balances cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07

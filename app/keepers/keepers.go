@@ -209,6 +209,7 @@ func NewAppKeeper(
 		runtime.NewKVStoreService(appKeepers.keys[psmtypes.StoreKey]),
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		appKeepers.BankKeeper,
+		appKeepers.AccountKeeper,
 	)
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(

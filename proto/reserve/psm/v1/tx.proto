@@ -6,6 +6,7 @@ import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "reserve/psm/v1/params.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
 
@@ -16,6 +17,8 @@ service Msg {
   // UpdateParams defines a (governance) operation for updating the module
   // parameters. The authority defaults to the x/gov module account.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+  rpc SwapToIST(MsgSwapToIST) returns (MsgSwapToISTResponse);
+  rpc SwapToStablecoin(MsgSwapToStablecoin) returns (MsgSwapToStablecoinResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -38,3 +41,25 @@ message MsgUpdateParams {
 // MsgUpdateParamsResponse defines the response structure for executing a
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
+
+message MsgSwapToIST {
+  option (cosmos.msg.v1.signer) = "address";
+
+  string address = 1;
+  cosmos.base.v1beta1.Coin coin = 2;
+}
+message MsgSwapToISTResponse {}
+
+message MsgSwapToStablecoin {
+  option (cosmos.msg.v1.signer) = "address";
+
+  string address = 1;
+  string to_denom = 2;
+  bytes amount = 3 [
+  (cosmos_proto.scalar)  = "cosmos.Int",
+  (gogoproto.customtype) = "cosmossdk.io/math.Int",
+  (gogoproto.nullable)   = false,
+  (amino.dont_omitempty) = true
+  ];
+}
+message MsgSwapToStablecoinResponse {}

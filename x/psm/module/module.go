@@ -9,6 +9,7 @@ import (
 	"cosmossdk.io/core/appmodule"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
+	"github.com/spf13/cobra"
 	// "cosmossdk.io/depinject/appconfig"
 	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -23,6 +24,7 @@ import (
 	// this line is used by starport scaffolding # 1
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
+	"github.com/onomyprotocol/reserve/x/psm/client/cli"
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
@@ -87,6 +89,16 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
+}
+
+// GetTxCmd returns the root tx command for the psm module.
+func (AppModuleBasic) GetTxCmd() *cobra.Command {
+	return cli.GetTxCmd()
+}
+
+// GetQueryCmd returns the psm module's root query command.
+func (AppModuleBasic) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
 }
 
 // ----------------------------------------------------------------------------
@@ -213,6 +225,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		// in.Logger,
 		authority.String(),
 		in.BankKeeper,
+		in.AccountKeeper,
 	)
 	m := NewAppModule(
 		in.Cdc,

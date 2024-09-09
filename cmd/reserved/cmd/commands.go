@@ -115,6 +115,7 @@ func txCommand(basicManager module.BasicManager) *cobra.Command {
 	)
 
 	basicManager.AddTxCommands(cmd)
+	basicManager.AddQueryCommands(cmd)
 
 	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
 

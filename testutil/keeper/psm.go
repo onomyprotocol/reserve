@@ -43,6 +43,7 @@ func PsmKeeper(t testing.TB) (keeper.Keeper, sdk.Context, address.Codec) {
 		// log.NewNopLogger(),
 		authority.String(),
 		nil,
+		nil,
 	)
 
 	ctx := sdk.NewContext(stateStore, cmtproto.Header{}, false, log.NewNopLogger())
