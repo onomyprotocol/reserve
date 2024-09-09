@@ -1,8 +1,10 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 	"strconv"
+	math "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	prefix "cosmossdk.io/store/prefix"
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
@@ -152,6 +154,29 @@ func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleReq
 	return bandIBCOracleRequests
 }
 
+// GetBandPriceState reads the stored band ibc price state.
+func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPriceState {
+	var priceState types.BandPriceState
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
+	if err != nil {
+		return nil
+	}
+	if bz == nil {
+		return nil
+	}
+
+	k.cdc.MustUnmarshal(bz, &priceState)
+	return &priceState
+}
+
+// SetBandPriceState sets the band ibc price state.
+func (k *Keeper) SetBandPriceState(ctx sdk.Context, symbol string, priceState *types.BandPriceState) error{
+	bz := k.cdc.MustMarshal(priceState)
+	store := k.storeService.OpenKVStore(ctx)
+	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
+}
+
 // RequestBandOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
 func (k *Keeper) RequestBandOraclePrices(
 	ctx sdk.Context,
@@ -221,4 +246,124 @@ func (k *Keeper) RequestBandOraclePrices(
 	k.SetBandLatestClientID(ctx, clientID)
 
 	return
+}
+
+func (k *Keeper) ProcessBandOraclePrices(
+	ctx sdk.Context,
+	relayer sdk.Address,
+	packet types.OracleResponsePacketData,
+) error {
+	clientID, err := strconv.Atoi(packet.ClientID)
+	if err != nil {
+		return fmt.Errorf("failed to parse client ID: %w", err)
+	}
+
+	callRecord := k.GetBandCallDataRecord(ctx, uint64(clientID))
+	if callRecord == nil {
+		// TODO: should this be an error?
+		return nil
+	}
+
+	input, err := types.DecodeOracleInput(callRecord.Calldata)
+	if err != nil {
+		return err
+	}
+
+	output, err := types.DecodeOracleOutput(packet.Result)
+	if err != nil {
+		return err
+	}
+
+	k.updateBandPriceStates(ctx, input, output, packet, relayer, clientID)
+
+	// Delete the calldata corresponding to the sequence number
+	k.DeleteBandCallDataRecord(ctx, uint64(clientID))
+
+	return nil
+}
+
+func (k *Keeper) updateBandPriceStates(
+	ctx sdk.Context,
+	input types.OracleInput,
+	output types.OracleOutput,
+	packet types.OracleResponsePacketData,
+	relayer sdk.Address,
+	clientID int,
+) {
+	var (
+		inputSymbols = input.PriceSymbols()
+		requestID    = packet.RequestID
+		resolveTime  = uint64(packet.ResolveTime)
+		symbols      = make([]string, 0, len(inputSymbols))
+		prices       = make([]math.LegacyDec, 0, len(inputSymbols))
+	)
+
+	// loop SetBandPriceState for all symbols
+	for idx, symbol := range inputSymbols {
+		if !output.Valid(idx) {
+			//	failed response for given symbol, skip it
+			continue
+		}
+
+		var (
+			rate       = output.Rate(idx)
+			multiplier = input.PriceMultiplier()
+			price      = math.LegacyNewDec(int64(rate)).Quo(math.LegacyNewDec(int64(multiplier)))
+		)
+
+		if price.IsZero() {
+			continue
+		}
+
+		bandPriceState := k.GetBandPriceState(ctx, symbol)
+
+		// don't update band prices with an older price
+		if bandPriceState != nil && bandPriceState.ResolveTime > resolveTime {
+			continue
+		}
+
+		// skip price update if the price changes beyond 100x or less than 1% of the last price
+		if bandPriceState != nil && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
+			continue
+		}
+
+		blockTime := ctx.BlockTime().Unix()
+		if bandPriceState == nil {
+			bandPriceState = &types.BandPriceState{
+				Symbol:      symbol,
+				Rate:        math.NewInt(int64(rate)),
+				ResolveTime: resolveTime,
+				Request_ID:  requestID,
+				PriceState:  *types.NewPriceState(price, blockTime),
+			}
+		} else {
+			bandPriceState.Rate = math.NewInt(int64(rate))
+			bandPriceState.ResolveTime = resolveTime
+			bandPriceState.Request_ID = requestID
+			bandPriceState.PriceState.UpdatePrice(price, blockTime)
+		}
+
+		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
+		if err != nil {
+			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
+		}
+
+		symbols = append(symbols, symbol)
+		prices = append(prices, price)
+	}
+
+	if len(symbols) == 0 {
+		return
+	}
+
+	// emit SetBandPriceEvent event
+	// nolint:errcheck //ignored on purpose
+	ctx.EventManager().EmitTypedEvent(&types.SetBandIBCPriceEvent{
+		Relayer:     relayer.String(),
+		Symbols:     symbols,
+		Prices:      prices,
+		ResolveTime: uint64(packet.ResolveTime),
+		RequestId:   packet.RequestID,
+		ClientId:    int64(clientID),
+	})
 }

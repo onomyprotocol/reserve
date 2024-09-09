@@ -27,6 +27,7 @@ var (
 	BandCallDataRecordKey  = []byte{0x02}
 	LatestClientIDKey      = []byte{0x03}
 	BandOracleRequestIDKey = []byte{0x04}
+	BandPriceKey           = []byte{0x05}
 )
 
 var (
@@ -40,6 +41,10 @@ func GetBandCallDataRecordKey(clientID uint64) []byte {
 
 func GetBandOracleRequestIDKey(requestID uint64) []byte {
 	return append(BandOracleRequestIDKey, sdk.Uint64ToBigEndian(requestID)...)
+}
+
+func GetBandPriceStoreKey(symbol string) []byte {
+	return append(BandPriceKey, []byte(symbol)...)
 }
 
 func KeyPrefix(p string) []byte {

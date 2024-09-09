@@ -1,6 +1,7 @@
 package oracle
 
 import (
+	"fmt"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"strconv"
@@ -151,7 +152,10 @@ func (im IBCModule) OnRecvPacket(
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &resp); err != nil {
 		return channeltypes.NewErrorAcknowledgement(errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()))
 	}
-	// TODO: add process band oracle price here
+	
+	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
+		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
+	}
 
 	return channeltypes.NewResultAcknowledgement([]byte{byte(1)})
 }
