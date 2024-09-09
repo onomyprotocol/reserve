@@ -24,6 +24,7 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 func (appKeepers *AppKeepers) GenerateKeys() {
@@ -33,6 +34,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		authtypes.StoreKey,
 		banktypes.StoreKey,
 		stakingtypes.StoreKey,
+		psmtypes.StoreKey,
 		crisistypes.StoreKey,
 		minttypes.StoreKey,
 		distrtypes.StoreKey,

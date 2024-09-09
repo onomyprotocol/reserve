@@ -5,7 +5,7 @@ set -xeu
 killall reserved || true
 rm -rf $HOME/.reserved/
 
-# make four gaia directories
+# make four reserved directories
 mkdir $HOME/.reserved
 cd $HOME/.reserved/
 mkdir $HOME/.reserved/validator1
@@ -26,15 +26,15 @@ echo $(cat /Users/donglieu/script/keys/mnemonic2)| reserved keys add validator2 
 echo $(cat /Users/donglieu/script/keys/mnemonic3)| reserved keys add validator3 --recover --keyring-backend=test --home=$HOME/.reserved/validator3
 
 # create validator node with tokens to transfer to the three other nodes
-reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator1
-reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator2
-reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000gaia --home=$HOME/.reserved/validator3
+reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator1
+reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator2
+reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account cosmos1g9v3zjt6rfkwm4s8sw9wu4jgz9me8pn27f8nyc 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator3
 reserved genesis gentx validator1 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator1 --chain-id=testing-1
 reserved genesis gentx validator2 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator2 --chain-id=testing-1
 reserved genesis gentx validator3 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator3 --chain-id=testing-1
@@ -101,20 +101,12 @@ sed -i -E 's|allow_duplicate_ip = false|allow_duplicate_ip = true|g' $VALIDATOR3
 sed -i -E 's|prometheus = false|prometheus = true|g' $VALIDATOR3_CONFIG
 sed -i -E 's|prometheus_listen_addr = ":26660"|prometheus_listen_addr = ":26620"|g' $VALIDATOR3_CONFIG
 
-# # update
-# update_test_genesis () {
-#     # EX: update_test_genesis '.consensus_params["block"]["max_gas"]="100000000"'
-#     cat $HOME/.reserved/validator1/config/genesis.json | jq "$1" > tmp.json && mv tmp.json $HOME/.reserved/validator1/config/genesis.json
-#     cat $HOME/.reserved/validator2/config/genesis.json | jq "$1" > tmp.json && mv tmp.json $HOME/.reserved/validator2/config/genesis.json
-#     cat $HOME/.reserved/validator3/config/genesis.json | jq "$1" > tmp.json && mv tmp.json $HOME/.reserved/validator3/config/genesis.json
-# }
 
-# update_test_genesis '.app_state["gov"]["voting_params"]["voting_period"] = "30s"'
-# update_test_genesis '.app_state["mint"]["params"]["mint_denom"]= "stake"'
-# update_test_genesis '.app_state["gov"]["deposit_params"]["min_deposit"]=[{"denom": "stake","amount": "1000000"}]'
-# update_test_genesis '.app_state["crisis"]["constant_fee"]={"denom": "stake","amount": "1000"}'
-# update_test_genesis '.app_state["staking"]["params"]["bond_denom"]="stake"'
-
+update_test_genesis () {
+    cat $HOME/.reserved/validator1/config/genesis.json | jq "$1" > tmp.json && mv tmp.json $HOME/.reserved/validator1/config/genesis.json
+}
+# sed -i 's/"voting_period": "172800s"/"voting_period": "15s"/g' $HOME/.reserved/validator1/config/genesis.json
+update_test_genesis '.app_state["gov"]["params"]["voting_period"] = "15s"'
 
 # copy validator1 genesis file to validator2-3
 cp $HOME/.reserved/validator1/config/genesis.json $HOME/.reserved/validator2/config/genesis.json
@@ -131,34 +123,35 @@ sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$node1@localhost:26656
 
 # # start all three validators/
 # reserved start --home=$HOME/.reserved/validator1
-screen -S gaia1 -t gaia1 -d -m reserved start --home=$HOME/.reserved/validator1
-screen -S gaia2 -t gaia2 -d -m reserved start --home=$HOME/.reserved/validator2
-screen -S gaia3 -t gaia3 -d -m reserved start --home=$HOME/.reserved/validator3
+screen -S reserved1 -t reserved1 -d -m reserved start --home=$HOME/.reserved/validator1
+screen -S reserved2 -t reserved2 -d -m reserved start --home=$HOME/.reserved/validator2
+screen -S reserved3 -t reserved3 -d -m reserved start --home=$HOME/.reserved/validator3
 # reserved start --home=$HOME/.reserved/validator3
 
-# screen -r gaia1
-
 sleep 7
-
-# reserved tx bank send cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 cosmos1w7f3xx7e75p4l7qdym5msqem9rd4dyc4752spg 100000stake --keyring-backend=test --chain-id=testing-1 -y --home=$HOME/.reserved/validator1 --fees 10stake
-
-# sleep 7
-# reserved tx bank send cosmos1f7twgcq4ypzg7y24wuywy06xmdet8pc4473tnq cosmos1qvuhm5m644660nd8377d6l7yz9e9hhm9evmx3x 10000000000000000000000stake --keyring-backend=test --chain-id=testing-1 -y --home=$HOME/.reserved/validator1 --fees 200000stake
-# sleep 7
-# reserved tx bank send gaia1f7twgcq4ypzg7y24wuywy06xmdet8pc4hhtf9t gaia16gjg8p5fedy48wf403jwmz2cxlwqtkqlwe0lug 10000000000000000000000stake --keyring-backend=test --chain-id=testing-1 -y --home=$HOME/.reserved/validator1 --fees 10stake
 
 reserved q staking validators
 reserved keys list --keyring-backend=test --home=$HOME/.reserved/validator1
 reserved keys list --keyring-backend=test --home=$HOME/.reserved/validator2
 reserved keys list --keyring-backend=test --home=$HOME/.reserved/validator3
 
+sleep 7
+reserved tx gov submit-legacy-proposal add-stable-coin "d" "d" "usdt" "100000000000000000000000000000" "1" "0.001" "0.001" cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07  10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from cosmos1wa3u4knw74r598quvzydvca42qsmk6jrzmgy07 -y --chain-id testing-1
 
-# reserved in-place-testnet testing-1 cosmosvaloper1w7f3xx7e75p4l7qdym5msqem9rd4dyc4mq79dm --home $HOME/.reserved/validator1
-# sleep 30
-# killall reserved || true
-# # # cosmosvaloper1wa3u4knw74r598quvzydvca42qsmk6jr80u3rd
-# reserved in-place-testnet testing-1 cosmosvaloper1wa3u4knw74r598quvzydvca42qsmk6jr80u3rd --home $HOME/.reserved/validator1  --accounts-to-fund="cosmos1f7twgcq4ypzg7y24wuywy06xmdet8pc4473tnq,cosmos1qvuhm5m644660nd8377d6l7yz9e9hhm9evmx3x" --skip-confirmation
-# reserved in-place-testnet testing-1 cosmosvaloper1wa3u4knw74r598quvzydvca42qsmk6jr80u3rd --home $HOME/.reserved/validator1  --accounts-to-fund="cosmos1f7twgcq4ypzg7y24wuywy06xmdet8pc4473tnq,cosmos1qvuhm5m644660nd8377d6l7yz9e9hhm9evmx3x"
-# echo "y" | reserved testnet testing-1 cosmosvaloper1wa3u4knw74r598quvzydvca42qsmk6jr80u3rd --home $HOME/.reserved/validator1  --accounts-to-fund="cosmos1f7twgcq4ypzg7y24wuywy06xmdet8pc4473tnq,cosmos1qvuhm5m644660nd8377d6l7yz9e9hhm9evmx3x"
+sleep 7
+reserved tx gov vote 1 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y 
+reserved tx gov vote 1 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y 
+reserved tx gov vote 1 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y 
 
-# reserved testnet in-place-testnet testing-1 cosmosvaloper1w7f3xx7e75p4l7qdym5msqem9rd4dyc4mq79dm --home $HOME/.reserved/validator1 --validator-pukey=xzaD8WNQopfBWPuA4U/WMA+rNLRQATJS3KWspcyigTo= --validator-privkey=6dq+/KHNvyiw2TToCgOpUpQKIzrLs69Rb8Az39xvmxPHNoPxY1Cil8FY+4DhT9YwD6s0tFABMlLcpaylzKKBOg== --accounts-to-fund="cosmos1f7twgcq4ypzg7y24wuywy06xmdet8pc4473tnq,cosmos1qvuhm5m644660nd8377d6l7yz9e9hhm9evmx3x"
+sleep 15
+echo "========DONE==========="
+
+# reserved q psm stablecoin usdt
+
+# reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
+# echo "==================="
+# reserved tx psm swap-to-ist 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
+
+# sleep 7
+
+# reserved tx psm swap-to-stablecoin usdt 1000IST --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y
