@@ -70,6 +70,10 @@ import (
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+
+	// psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 var maccPerms = map[string][]string{
@@ -83,6 +87,7 @@ var maccPerms = map[string][]string{
 	// liquiditytypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 	ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	ibcfeetypes.ModuleName:      nil,
+	psmtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 }
 
 func appModules(
@@ -109,6 +114,7 @@ func appModules(
 		sdkparams.NewAppModule(app.ParamsKeeper),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		genutil.NewAppModule(app.AccountKeeper, app.StakingKeeper, app, txConfig),
 	}
 
@@ -122,6 +128,8 @@ func newBasicManagerFromManager(app *App) module.BasicManager {
 			govtypes.ModuleName: gov.NewAppModuleBasic(
 				[]govclient.ProposalHandler{
 					paramsclient.ProposalHandler,
+					psm.AddStableCoinProposalHandler,
+					psm.UpdatesStableCoinProposalHandler,
 				},
 			),
 		})
@@ -138,6 +146,7 @@ func orderBeginBlockers() []string {
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
+		psmtypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		govtypes.ModuleName,
@@ -160,6 +169,7 @@ func orderEndBlockers() []string {
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
+		psmtypes.ModuleName,
 		ibcexported.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
@@ -189,6 +199,7 @@ func orderInitBlockers() []string {
 		distrtypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
+		psmtypes.ModuleName,
 		slashingtypes.ModuleName,
 		minttypes.ModuleName,
 		genutiltypes.ModuleName,
@@ -220,6 +231,7 @@ func simulationModules(
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil, app.GetSubspace(minttypes.ModuleName)),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
+		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName), app.interfaceRegistry),
 		sdkparams.NewAppModule(app.ParamsKeeper),

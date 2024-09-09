@@ -6,74 +6,53 @@ import (
 	"os"
 	"path/filepath"
 
-	_ "cosmossdk.io/api/cosmos/tx/config/v1" // import for side-effects
 	"cosmossdk.io/log"
 	storetypes "cosmossdk.io/store/types"
-	_ "cosmossdk.io/x/circuit" // import for side-effects
-
-	_ "cosmossdk.io/x/evidence" // import for side-effects
-
-	_ "cosmossdk.io/x/feegrant/module" // import for side-effects
 
 	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 
-	"github.com/cosmos/cosmos-sdk/runtime"
-	"github.com/cosmos/cosmos-sdk/server"
-	"github.com/cosmos/cosmos-sdk/server/api"
-	"github.com/cosmos/cosmos-sdk/server/config"
-	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/module"
-	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side-effects
-
-	_ "github.com/cosmos/cosmos-sdk/x/auth/vesting" // import for side-effects
-
-	_ "github.com/cosmos/cosmos-sdk/x/authz/module" // import for side-effects
-	_ "github.com/cosmos/cosmos-sdk/x/bank"         // import for side-effects
-
-	_ "github.com/cosmos/cosmos-sdk/x/consensus" // import for side-effects
-
-	_ "github.com/cosmos/cosmos-sdk/x/crisis" // import for side-effects
-
-	_ "github.com/cosmos/cosmos-sdk/x/distribution" // import for side-effects
-	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
-	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
-
-	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
-
-	psm "github.com/onomyprotocol/reserve/x/psm/module"
-
-	"cosmossdk.io/x/tx/signing"
-	"github.com/cosmos/cosmos-sdk/codec/address"
-	"github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/std"
-	"github.com/cosmos/cosmos-sdk/types/msgservice"
-	sigtypes "github.com/cosmos/cosmos-sdk/types/tx/signing"
-	"github.com/cosmos/cosmos-sdk/version"
-	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
-	txmodule "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
-	"github.com/cosmos/gogoproto/proto"
-	"github.com/onomyprotocol/reserve/app/keepers"
-	"github.com/spf13/cast"
-
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
 	autocli "cosmossdk.io/client/v2/autocli"
 	"cosmossdk.io/core/appmodule"
+	"cosmossdk.io/x/tx/signing"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	tmos "github.com/cometbft/cometbft/libs/os"
 	"github.com/cosmos/cosmos-sdk/client/grpc/cmtservice"
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
+	"github.com/cosmos/cosmos-sdk/codec/address"
+	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/runtime"
 	runtimeservices "github.com/cosmos/cosmos-sdk/runtime/services"
+	"github.com/cosmos/cosmos-sdk/server"
+	"github.com/cosmos/cosmos-sdk/server/api"
+	"github.com/cosmos/cosmos-sdk/server/config"
+	servertypes "github.com/cosmos/cosmos-sdk/server/types"
+	"github.com/cosmos/cosmos-sdk/std"
 	"github.com/cosmos/cosmos-sdk/testutil/testdata"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/cosmos/cosmos-sdk/types/msgservice"
+	sigtypes "github.com/cosmos/cosmos-sdk/types/tx/signing"
+	"github.com/cosmos/cosmos-sdk/version"
 	authcodec "github.com/cosmos/cosmos-sdk/x/auth/codec"
+	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
+	txmodule "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/cosmos-sdk/x/crisis"
+	// govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	// paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/cosmos/gogoproto/proto"
+	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	"github.com/onomyprotocol/reserve/app/keepers"
+	"github.com/spf13/cast"
+	// psm "github.com/onomyprotocol/reserve/x/psm/module"
 )
 
 const (
@@ -123,20 +102,20 @@ func init() {
 	DefaultNodeHome = filepath.Join(userHomeDir, ".gaia")
 }
 
-// getGovProposalHandlers return the chain proposal handlers.
-func getGovProposalHandlers() []govclient.ProposalHandler {
-	var govProposalHandlers []govclient.ProposalHandler
-	// this line is used by starport scaffolding # stargate/app/govProposalHandlers
+// // getGovProposalHandlers return the chain proposal handlers.
+// func getGovProposalHandlers() []govclient.ProposalHandler {
+// 	var govProposalHandlers []govclient.ProposalHandler
+// 	// this line is used by starport scaffolding # stargate/app/govProposalHandlers
 
-	govProposalHandlers = append(govProposalHandlers,
-		paramsclient.ProposalHandler,
-		psm.AddStableCoinProposalHandler,
-		psm.UpdatesStableCoinProposalHandler,
-		// this line is used by starport scaffolding # stargate/app/govProposalHandler
-	)
+// 	govProposalHandlers = append(govProposalHandlers,
+// 		paramsclient.ProposalHandler,
+// 		psm.AddStableCoinProposalHandler,
+// 		psm.UpdatesStableCoinProposalHandler,
+// 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
+// 	)
 
-	return govProposalHandlers
-}
+// 	return govProposalHandlers
+// }
 
 // New returns a reference to an initialized App.
 // NewGaiaApp returns a reference to an initialized Gaia.
@@ -349,7 +328,7 @@ func (app *App) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 }
 
 // kvStoreKeys returns all the kv store keys registered inside App.
-func (app *App) kvStoreKeys() map[string]*storetypes.KVStoreKey {
+func (app *App) KvStoreKeys() map[string]*storetypes.KVStoreKey {
 
 	return app.AppKeepers.GetKVStoreKey()
 }
@@ -360,20 +339,10 @@ func (app *App) GetSubspace(moduleName string) paramstypes.Subspace {
 	return subspace
 }
 
-// // GetIBCKeeper returns the IBC keeper.
-// func (app *App) GetIBCKeeper() *ibckeeper.Keeper {
-// 	return app.IBCKeeper
-// }
-
-// // GetCapabilityScopedKeeper returns the capability scoped keeper.
-// func (app *App) GetCapabilityScopedKeeper(moduleName string) capabilitykeeper.ScopedKeeper {
-// 	sk, ok := app.ScopedKeepers[moduleName]
-// 	if !ok {
-// 		sk = app.CapabilityKeeper.ScopeToModule(moduleName)
-// 		app.ScopedKeepers[moduleName] = sk
-// 	}
-// 	return sk
-// }
+// GetIBCKeeper returns the IBC keeper.
+func (app *App) GetIBCKeeper() *ibckeeper.Keeper {
+	return app.IBCKeeper
+}
 
 // SimulationManager implements the SimulationApp interface.
 func (app *App) SimulationManager() *module.SimulationManager {
@@ -412,31 +381,6 @@ func GetMaccPerms() map[string][]string {
 	return dup
 }
 
-// // BlockedAddresses returns all the app's blocked account addresses.
-// func BlockedAddresses() map[string]bool {
-// 	result := make(map[string]bool)
-// 	if len(blockAccAddrs) > 0 {
-// 		for _, addr := range blockAccAddrs {
-// 			result[addr] = true
-// 		}
-// 	} else {
-// 		for addr := range GetMaccPerms() {
-// 			result[addr] = true
-// 		}
-// 	}
-// 	return result
-// }
-
-// // ModuleAccountAddrs returns all the app's module account addresses.
-// func (app *App) ModuleAccountAddrs() map[string]bool {
-// 	modAccAddrs := make(map[string]bool)
-// 	for acc := range maccPerms {
-// 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
-// 	}
-
-// 	return modAccAddrs
-// }
-
 func (app *App) BlockedModuleAccountAddrs(modAccAddrs map[string]bool) map[string]bool {
 	// remove module accounts that are ALLOWED to received funds
 	delete(modAccAddrs, authtypes.NewModuleAddress(govtypes.ModuleName).String())
@@ -472,19 +416,6 @@ func (app *App) BeginBlocker(ctx sdk.Context) (sdk.BeginBlock, error) {
 func (app *App) EndBlocker(ctx sdk.Context) (sdk.EndBlock, error) {
 	return app.mm.EndBlock(ctx)
 }
-
-// func (app *App) setupUpgradeHandlers() {
-// 	for _, upgrade := range Upgrades {
-// 		app.UpgradeKeeper.SetUpgradeHandler(
-// 			upgrade.UpgradeName,
-// 			upgrade.CreateUpgradeHandler(
-// 				app.mm,
-// 				app.configurator,
-// 				&app.AppKeepers,
-// 			),
-// 		)
-// 	}
-// }
 
 func (app *App) setupUpgradeStoreLoaders() {
 	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()

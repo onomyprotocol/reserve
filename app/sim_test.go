@@ -48,9 +48,9 @@ func init() {
 
 // fauxMerkleModeOpt returns a BaseApp option to use a dbStoreAdapter instead of
 // an IAVLStore for faster simulation speed.
-func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
-	bapp.SetFauxMerkleMode()
-}
+// func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
+// 	bapp.SetFauxMerkleMode()
+// }
 
 // interBlockCacheOpt returns a BaseApp option function that sets the persistent
 // inter-block write-through cache.

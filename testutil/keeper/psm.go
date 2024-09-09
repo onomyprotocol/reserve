@@ -38,9 +38,9 @@ func PsmKeeper(t testing.TB) (keeper.Keeper, sdk.Context, address.Codec) {
 
 	k := keeper.NewKeeper(
 		cdc,
-		addressCodec,
+		// addressCodec,
 		runtime.NewKVStoreService(storeKey),
-		log.NewNopLogger(),
+		// log.NewNopLogger(),
 		authority.String(),
 		nil,
 	)

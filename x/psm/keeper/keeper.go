@@ -35,25 +35,25 @@ type (
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	addressCodec address.Codec,
+	// addressCodec address.Codec,
 	storeService store.KVStoreService,
-	logger log.Logger,
+	// logger log.Logger,
 	authority string,
 
 	bankKeeper types.BankKeeper,
 ) Keeper {
-	if _, err := addressCodec.StringToBytes(authority); err != nil {
-		panic(fmt.Sprintf("invalid authority address %s: %s", authority, err))
-	}
+	// if _, err := addressCodec.StringToBytes(authority); err != nil {
+	// 	panic(fmt.Sprintf("invalid authority address %s: %s", authority, err))
+	// }
 
 	sb := collections.NewSchemaBuilder(storeService)
 
 	k := Keeper{
-		cdc:          cdc,
-		addressCodec: addressCodec,
+		cdc: cdc,
+		// addressCodec: addressCodec,
 		storeService: storeService,
 		authority:    authority,
-		logger:       logger,
+		// logger:       logger,
 
 		bankKeeper: bankKeeper,
 		Params:     collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
