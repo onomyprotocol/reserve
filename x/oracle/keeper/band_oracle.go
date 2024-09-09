@@ -152,8 +152,8 @@ func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleReq
 	return bandIBCOracleRequests
 }
 
-// RequestBandIBCOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
-func (k *Keeper) RequestBandIBCOraclePrices(
+// RequestBandOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
+func (k *Keeper) RequestBandOraclePrices(
 	ctx sdk.Context,
 	req *types.BandOracleRequest,
 ) (err error) {

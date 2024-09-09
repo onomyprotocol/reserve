@@ -9,6 +9,7 @@ import (
 
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
+	// TODO: update init genesis
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, types.PortID)
 	// Only try to bind to port if it is not already bound, since we may already own
@@ -28,11 +29,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
-	// genesis := types.DefaultGenesis()
-	// genesis.Params = k.GetParams(ctx)
-
-	// genesis.PortId = k.GetPort(ctx)
-	// // this line is used by starport scaffolding # genesis/module/export
-
+	// TODO: update export genesis state
 	return &types.GenesisState{}
 }

@@ -27,7 +27,7 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 	}
 
 	for _, req := range bandIBCOracleRequests {
-		err := k.RequestBandIBCOraclePrices(ctx, req)
+		err := k.RequestBandOraclePrices(ctx, req)
 		if err != nil {
 			ctx.Logger().Error(err.Error())
 		}

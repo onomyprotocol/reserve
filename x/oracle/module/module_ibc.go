@@ -188,7 +188,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 			ClientId:  int64(clientID),
 		})
 	case *channeltypes.Acknowledgement_Error:
-		// TODO: handle delete record request id  before?
+		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
 		ctx.EventManager().EmitTypedEvent(&types.EventBandIBCAckError{
 			AckError: resp.Error,
@@ -215,7 +215,8 @@ func (im IBCModule) OnTimeoutPacket(
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot parse client id: %s", err.Error())
 	}
 
-	// TODO: handle delete record request id  before?
+	// Delete the calldata corresponding to the sequence number
+	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 	// nolint:errcheck //ignored on purpose
 	ctx.EventManager().EmitTypedEvent(&types.EventBandIBCResponseTimeout{
 		ClientId: int64(clientID),
