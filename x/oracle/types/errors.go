@@ -10,4 +10,5 @@ var (
 	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 2, "invalid packet timeout")
 	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 3, "invalid version")
 	ErrInvalidBandRequest   = sdkerrors.Register(ModuleName, 4, "Invalid Band IBC Request")
+	ErrBadIBCPortBind       = sdkerrors.Register(ModuleName, 5, "could not claim port capability")
 )

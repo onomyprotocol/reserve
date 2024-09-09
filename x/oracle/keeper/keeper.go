@@ -93,6 +93,12 @@ func (k *Keeper) ShouldBound(ctx sdk.Context, portID string) bool {
 	return !ok
 }
 
+// IsBound checks if the module is already bound to the desired port
+func (k Keeper) IsBound(ctx sdk.Context, portID string) bool {
+	_, ok := k.scopedKeeper.GetCapability(ctx, host.PortPath(portID))
+	return ok
+}
+
 // BindPort defines a wrapper function for the port Keeper's function in
 // order to expose it to module's InitGenesis function
 func (k *Keeper) BindPort(ctx sdk.Context, portID string) error {

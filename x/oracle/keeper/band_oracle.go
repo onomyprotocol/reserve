@@ -177,6 +177,24 @@ func (k *Keeper) SetBandPriceState(ctx sdk.Context, symbol string, priceState *t
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
 }
 
+// GetAllBandPriceStates reads all stored band price states.
+func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState {
+	priceStates := make([]*types.BandPriceState, 0)
+	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
+
+	iterator := bandPriceStore.Iterator(nil, nil)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var bandPriceState types.BandPriceState
+		k.cdc.MustUnmarshal(iterator.Value(), &bandPriceState)
+		priceStates = append(priceStates, &bandPriceState)
+	}
+
+	return priceStates
+}
+
 // RequestBandOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
 func (k *Keeper) RequestBandOraclePrices(
 	ctx sdk.Context,
