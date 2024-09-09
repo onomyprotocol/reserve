@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	errors "github.com/pkg/errors"
@@ -41,12 +40,9 @@ func NewRequestBandRatesTxCmd() *cobra.Command {
 		Use:   "request-band-rates [request-id]",
 		Short: "Make a new data request via an existing oracle script",
 		Args:  cobra.ExactArgs(1),
-		Long: strings.TrimSpace(
-			fmt.Sprintf(`Make a new request via an existing oracle script with the configuration flags.
-Example:
-$ reserved tx oracle request-band-rates 2 --from mykey
-`),
-		),
+		Long: `Make a new request via an existing oracle script with the configuration flags.
+		Example:
+		$ %s tx oracle request-band-rates 2 --from mykey`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
