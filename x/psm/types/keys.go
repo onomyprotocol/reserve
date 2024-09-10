@@ -30,3 +30,7 @@ var (
 func GetKeyStableCoin(denom string) []byte {
 	return append(KeyStableCoin, []byte(denom)...)
 }
+
+func GetKeyLockCoin(denom string) []byte {
+	return append(KeyLockStableCoin, []byte(denom)...)
+}

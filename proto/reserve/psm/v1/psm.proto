@@ -4,6 +4,7 @@ package reserve.psm.v1;
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 import "amino/amino.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
 
@@ -32,4 +33,10 @@ message Stablecoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+}
+
+message LockCoin {
+  string address = 1;
+  cosmos.base.v1beta1.Coin coin = 2;
+  int64 time = 3;
 }

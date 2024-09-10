@@ -6,7 +6,6 @@ killall reserved || true
 rm -rf $HOME/.reserved/
 
 mkdir $HOME/.reserved
-cd $HOME/.reserved/
 mkdir $HOME/.reserved/validator1
 mkdir $HOME/.reserved/validator2
 mkdir $HOME/.reserved/validator3
@@ -35,8 +34,8 @@ reserved genesis gentx validator1 1000000000000000000000stake --keyring-backend=
 reserved genesis gentx validator2 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator2 --chain-id=testing-1
 reserved genesis gentx validator3 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator3 --chain-id=testing-1
 
-cp validator2/config/gentx/*.json $HOME/.reserved/validator1/config/gentx/
-cp validator3/config/gentx/*.json $HOME/.reserved/validator1/config/gentx/
+# cp validator2/config/gentx/*.json $HOME/.reserved/validator1/config/gentx/
+# cp validator3/config/gentx/*.json $HOME/.reserved/validator1/config/gentx/
 reserved genesis collect-gentxs --home=$HOME/.reserved/validator1 
 
 # change app.toml values
