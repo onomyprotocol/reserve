@@ -11,4 +11,6 @@ var (
 	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 3, "invalid version")
 	ErrInvalidBandRequest   = sdkerrors.Register(ModuleName, 4, "Invalid Band IBC Request")
 	ErrBadIBCPortBind       = sdkerrors.Register(ModuleName, 5, "could not claim port capability")
+	ErrBadRequestInterval   = sdkerrors.Register(ModuleName, 6, "invalid Band IBC request interval")
+	ErrInvalidSourceChannel = sdkerrors.Register(ModuleName, 7, "invalid IBC source channel")
 )

@@ -36,7 +36,7 @@ import (
 	solomachine "github.com/cosmos/ibc-go/v8/modules/light-clients/06-solomachine"
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
-	// this line is used by starport scaffolding # ibc/app/import
+	oracle "github.com/onomyprotocol/reserve/x/oracle"
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 )
@@ -94,7 +94,8 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 	// by granting the governance module the right to execute the message.
 	// See: https://docs.cosmos.network/main/modules/gov#proposal-messages
 	govRouter := govv1beta1.NewRouter()
-	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler)
+	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
+		AddRoute(oraclemoduletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper))
 
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.GetKey(ibcfeetypes.StoreKey),
