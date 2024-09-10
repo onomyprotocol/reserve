@@ -58,9 +58,9 @@ func (k Keeper) DeleteBandCallDataRecord(ctx sdk.Context, clientID uint64) error
 func (k Keeper) GetAllBandCalldataRecords(ctx sdk.Context) []*types.CalldataRecord {
 	calldataRecords := make([]*types.CalldataRecord, 0)
 	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandIBCCalldataStore := prefix.NewStore(kvStore, types.BandCallDataRecordKey)
+	bandCalldataStore := prefix.NewStore(kvStore, types.BandCallDataRecordKey)
 
-	iterator := bandIBCCalldataStore.Iterator(nil, nil)
+	iterator := bandCalldataStore.Iterator(nil, nil)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -138,20 +138,20 @@ func (k Keeper) DeleteBandOracleRequest(ctx sdk.Context, requestID uint64) error
 
 // GetAllBandOracleRequests gets all Band oracle requests for each requestID
 func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleRequest {
-	bandIBCOracleRequests := make([]*types.BandOracleRequest, 0)
+	bandOracleRequests := make([]*types.BandOracleRequest, 0)
 	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandIBCOracleRequestStore := prefix.NewStore(kvStore, types.BandOracleRequestIDKey)
+	bandOracleRequestStore := prefix.NewStore(kvStore, types.BandOracleRequestIDKey)
 
-	iterator := bandIBCOracleRequestStore.Iterator(nil, nil)
+	iterator := bandOracleRequestStore.Iterator(nil, nil)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var bandIBCOracleRequest types.BandOracleRequest
-		k.cdc.MustUnmarshal(iterator.Value(), &bandIBCOracleRequest)
-		bandIBCOracleRequests = append(bandIBCOracleRequests, &bandIBCOracleRequest)
+		var bandOracleRequest types.BandOracleRequest
+		k.cdc.MustUnmarshal(iterator.Value(), &bandOracleRequest)
+		bandOracleRequests = append(bandOracleRequests, &bandOracleRequest)
 	}
 
-	return bandIBCOracleRequests
+	return bandOracleRequests
 }
 
 // GetBandPriceState reads the stored band ibc price state.
@@ -200,11 +200,11 @@ func (k *Keeper) RequestBandOraclePrices(
 	ctx sdk.Context,
 	req *types.BandOracleRequest,
 ) (err error) {
-	bandIBCParams := k.GetBandParams(ctx)
-	sourcePortID := bandIBCParams.IbcPortId
-	sourceChannel := bandIBCParams.IbcSourceChannel
+	bandParams := k.GetBandParams(ctx)
+	sourcePortID := bandParams.IbcPortId
+	sourceChannel := bandParams.IbcSourceChannel
 
-	calldata := req.GetCalldata(types.IsLegacySchemeOracleScript(req.OracleScriptId, bandIBCParams))
+	calldata := req.GetCalldata(types.IsLegacySchemeOracleScript(req.OracleScriptId, bandParams))
 
 	sourceChannelEnd, found := k.ibcKeeperFn().ChannelKeeper.GetChannel(ctx, sourcePortID, sourceChannel)
 	if !found {
@@ -376,7 +376,7 @@ func (k *Keeper) updateBandPriceStates(
 
 	// emit SetBandPriceEvent event
 	// nolint:errcheck //ignored on purpose
-	ctx.EventManager().EmitTypedEvent(&types.SetBandIBCPriceEvent{
+	ctx.EventManager().EmitTypedEvent(&types.SetBandPriceEvent{
 		Relayer:     relayer.String(),
 		Symbols:     symbols,
 		Prices:      prices,

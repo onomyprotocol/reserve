@@ -44,7 +44,7 @@ func (msg MsgUpdateParams) GetSigners() []sdk.AccAddress {
 }
 
 // NewMsgRequestBandRates creates a new MsgRequestBandRates instance.
-func NewMsgRequestBandIBCRates(
+func NewMsgRequestBandRates(
 	sender sdk.AccAddress,
 	requestID uint64,
 ) *MsgRequestBandRates {
@@ -67,11 +67,11 @@ func (msg MsgRequestBandRates) ValidateBasic() error {
 		return err
 	}
 	if sender.Empty() {
-		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandIBCRates: Sender address must not be empty.")
+		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: Sender address must not be empty.")
 	}
 
 	if msg.RequestId == 0 {
-		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandIBCRates: requestID should be greater than zero")
+		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: requestID should be greater than zero")
 	}
 	return nil
 }

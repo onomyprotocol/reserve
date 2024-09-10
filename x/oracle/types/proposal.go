@@ -7,11 +7,11 @@ import (
 
 // constants
 const (
-	ProposalUpdateBandParamsProposal string = "ProposalTypeEnableBandIBC"
+	ProposalUpdateBandParams string = "ProposalUpdateBandParams"
 )
 
 func init() {
-	govtypes.RegisterProposalType(ProposalUpdateBandParamsProposal)
+	govtypes.RegisterProposalType(ProposalUpdateBandParams)
 }
 
 // Implements Proposal Interface
@@ -32,7 +32,7 @@ func (p *UpdateBandParamsProposal) ProposalRoute() string { return RouterKey }
 
 // ProposalType returns proposal type of this proposal.
 func (p *UpdateBandParamsProposal) ProposalType() string {
-	return ProposalUpdateBandParamsProposal
+	return ProposalUpdateBandParams
 }
 
 // ValidateBasic returns ValidateBasic result of this proposal.

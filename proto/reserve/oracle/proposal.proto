@@ -9,7 +9,7 @@ import "cosmos_proto/cosmos.proto";
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
 message UpdateBandParamsProposal {
-    option (amino.name) = "oracle/EnableBandIBCProposal";
+    option (amino.name) = "oracle/UpdateBandParamsProposal";
     option (gogoproto.equal) = false;
     option (gogoproto.goproto_getters) = false;
 

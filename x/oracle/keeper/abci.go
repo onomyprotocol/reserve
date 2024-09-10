@@ -11,22 +11,22 @@ import (
 
 func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
-	bandIBCParams := k.GetBandParams(ctx)
+	bandParams := k.GetBandParams(ctx)
 
 	// Request oracle prices using band IBC in frequent intervals
-	if ctx.BlockHeight()%bandIBCParams.IbcRequestInterval == 0 {
+	if ctx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
 		k.RequestAllBandRates(ctx)
 	}
 }
 
 func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
-	bandIBCOracleRequests := k.GetAllBandOracleRequests(ctx)
+	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
-	if len(bandIBCOracleRequests) == 0 {
+	if len(bandOracleRequests) == 0 {
 		return
 	}
 
-	for _, req := range bandIBCOracleRequests {
+	for _, req := range bandOracleRequests {
 		err := k.RequestBandOraclePrices(ctx, req)
 		if err != nil {
 			ctx.Logger().Error(err.Error())

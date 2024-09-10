@@ -5,19 +5,19 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
-message EventBandIBCAckSuccess {
+message EventBandAckSuccess {
     string ack_result = 1;
     int64 client_id = 2;
   }
   
-message EventBandIBCAckError {
+message EventBandAckError {
 string ack_error = 1;
 int64 client_id = 2;
 }
 
-message EventBandIBCResponseTimeout { int64 client_id = 1; }
+message EventBandResponseTimeout { int64 client_id = 1; }
 
-message SetBandIBCPriceEvent {
+message SetBandPriceEvent {
   string relayer = 1;
   repeated string symbols = 2;
   repeated string prices = 3 [

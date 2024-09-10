@@ -15,7 +15,7 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 	return func(ctx sdk.Context, content govtypes.Content) error {
 		switch c := content.(type) {
 		case *types.UpdateBandParamsProposal:
-			return handleUpdateBandIBCProposal(ctx, k, c)
+			return handleUpdateBandParamsProposal(ctx, k, c)
 
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized param proposal content type: %T", c)
@@ -23,7 +23,7 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 	}
 }
 
-func handleUpdateBandIBCProposal(ctx sdk.Context, k keeper.Keeper, p *types.UpdateBandParamsProposal) error {
+func handleUpdateBandParamsProposal(ctx sdk.Context, k keeper.Keeper, p *types.UpdateBandParamsProposal) error {
 	if err := p.ValidateBasic(); err != nil {
 		return err
 	}

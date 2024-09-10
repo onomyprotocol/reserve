@@ -56,7 +56,7 @@ func NewRequestBandRatesTxCmd() *cobra.Command {
 				return errors.New("requestID should be a positive number")
 			}
 
-			msg := types.NewMsgRequestBandIBCRates(
+			msg := types.NewMsgRequestBandRates(
 				clientCtx.GetFromAddress(),
 				uint64(requestID),
 			)

@@ -18,8 +18,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
 	}
 
-	for _, bandIBCOracleRequest := range genState.BandOracleRequests {
-		k.SetBandOracleRequest(ctx, *bandIBCOracleRequest)
+	for _, bandOracleRequest := range genState.BandOracleRequests {
+		k.SetBandOracleRequest(ctx, *bandOracleRequest)
 	}
 
 	k.SetBandParams(ctx, genState.BandParams)

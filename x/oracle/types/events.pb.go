@@ -24,23 +24,23 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type EventBandIBCAckSuccess struct {
+type EventBandAckSuccess struct {
 	AckResult string `protobuf:"bytes,1,opt,name=ack_result,json=ackResult,proto3" json:"ack_result,omitempty"`
 	ClientId  int64  `protobuf:"varint,2,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 }
 
-func (m *EventBandIBCAckSuccess) Reset()         { *m = EventBandIBCAckSuccess{} }
-func (m *EventBandIBCAckSuccess) String() string { return proto.CompactTextString(m) }
-func (*EventBandIBCAckSuccess) ProtoMessage()    {}
-func (*EventBandIBCAckSuccess) Descriptor() ([]byte, []int) {
+func (m *EventBandAckSuccess) Reset()         { *m = EventBandAckSuccess{} }
+func (m *EventBandAckSuccess) String() string { return proto.CompactTextString(m) }
+func (*EventBandAckSuccess) ProtoMessage()    {}
+func (*EventBandAckSuccess) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5441448c19065114, []int{0}
 }
-func (m *EventBandIBCAckSuccess) XXX_Unmarshal(b []byte) error {
+func (m *EventBandAckSuccess) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventBandIBCAckSuccess) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventBandAckSuccess) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventBandIBCAckSuccess.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventBandAckSuccess.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -50,49 +50,49 @@ func (m *EventBandIBCAckSuccess) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *EventBandIBCAckSuccess) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventBandIBCAckSuccess.Merge(m, src)
+func (m *EventBandAckSuccess) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventBandAckSuccess.Merge(m, src)
 }
-func (m *EventBandIBCAckSuccess) XXX_Size() int {
+func (m *EventBandAckSuccess) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventBandIBCAckSuccess) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventBandIBCAckSuccess.DiscardUnknown(m)
+func (m *EventBandAckSuccess) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventBandAckSuccess.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventBandIBCAckSuccess proto.InternalMessageInfo
+var xxx_messageInfo_EventBandAckSuccess proto.InternalMessageInfo
 
-func (m *EventBandIBCAckSuccess) GetAckResult() string {
+func (m *EventBandAckSuccess) GetAckResult() string {
 	if m != nil {
 		return m.AckResult
 	}
 	return ""
 }
 
-func (m *EventBandIBCAckSuccess) GetClientId() int64 {
+func (m *EventBandAckSuccess) GetClientId() int64 {
 	if m != nil {
 		return m.ClientId
 	}
 	return 0
 }
 
-type EventBandIBCAckError struct {
+type EventBandAckError struct {
 	AckError string `protobuf:"bytes,1,opt,name=ack_error,json=ackError,proto3" json:"ack_error,omitempty"`
 	ClientId int64  `protobuf:"varint,2,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 }
 
-func (m *EventBandIBCAckError) Reset()         { *m = EventBandIBCAckError{} }
-func (m *EventBandIBCAckError) String() string { return proto.CompactTextString(m) }
-func (*EventBandIBCAckError) ProtoMessage()    {}
-func (*EventBandIBCAckError) Descriptor() ([]byte, []int) {
+func (m *EventBandAckError) Reset()         { *m = EventBandAckError{} }
+func (m *EventBandAckError) String() string { return proto.CompactTextString(m) }
+func (*EventBandAckError) ProtoMessage()    {}
+func (*EventBandAckError) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5441448c19065114, []int{1}
 }
-func (m *EventBandIBCAckError) XXX_Unmarshal(b []byte) error {
+func (m *EventBandAckError) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventBandIBCAckError) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventBandAckError) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventBandIBCAckError.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventBandAckError.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -102,48 +102,48 @@ func (m *EventBandIBCAckError) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *EventBandIBCAckError) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventBandIBCAckError.Merge(m, src)
+func (m *EventBandAckError) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventBandAckError.Merge(m, src)
 }
-func (m *EventBandIBCAckError) XXX_Size() int {
+func (m *EventBandAckError) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventBandIBCAckError) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventBandIBCAckError.DiscardUnknown(m)
+func (m *EventBandAckError) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventBandAckError.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventBandIBCAckError proto.InternalMessageInfo
+var xxx_messageInfo_EventBandAckError proto.InternalMessageInfo
 
-func (m *EventBandIBCAckError) GetAckError() string {
+func (m *EventBandAckError) GetAckError() string {
 	if m != nil {
 		return m.AckError
 	}
 	return ""
 }
 
-func (m *EventBandIBCAckError) GetClientId() int64 {
+func (m *EventBandAckError) GetClientId() int64 {
 	if m != nil {
 		return m.ClientId
 	}
 	return 0
 }
 
-type EventBandIBCResponseTimeout struct {
+type EventBandResponseTimeout struct {
 	ClientId int64 `protobuf:"varint,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 }
 
-func (m *EventBandIBCResponseTimeout) Reset()         { *m = EventBandIBCResponseTimeout{} }
-func (m *EventBandIBCResponseTimeout) String() string { return proto.CompactTextString(m) }
-func (*EventBandIBCResponseTimeout) ProtoMessage()    {}
-func (*EventBandIBCResponseTimeout) Descriptor() ([]byte, []int) {
+func (m *EventBandResponseTimeout) Reset()         { *m = EventBandResponseTimeout{} }
+func (m *EventBandResponseTimeout) String() string { return proto.CompactTextString(m) }
+func (*EventBandResponseTimeout) ProtoMessage()    {}
+func (*EventBandResponseTimeout) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5441448c19065114, []int{2}
 }
-func (m *EventBandIBCResponseTimeout) XXX_Unmarshal(b []byte) error {
+func (m *EventBandResponseTimeout) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventBandIBCResponseTimeout) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventBandResponseTimeout) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventBandIBCResponseTimeout.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventBandResponseTimeout.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -153,26 +153,26 @@ func (m *EventBandIBCResponseTimeout) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *EventBandIBCResponseTimeout) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventBandIBCResponseTimeout.Merge(m, src)
+func (m *EventBandResponseTimeout) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventBandResponseTimeout.Merge(m, src)
 }
-func (m *EventBandIBCResponseTimeout) XXX_Size() int {
+func (m *EventBandResponseTimeout) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventBandIBCResponseTimeout) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventBandIBCResponseTimeout.DiscardUnknown(m)
+func (m *EventBandResponseTimeout) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventBandResponseTimeout.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventBandIBCResponseTimeout proto.InternalMessageInfo
+var xxx_messageInfo_EventBandResponseTimeout proto.InternalMessageInfo
 
-func (m *EventBandIBCResponseTimeout) GetClientId() int64 {
+func (m *EventBandResponseTimeout) GetClientId() int64 {
 	if m != nil {
 		return m.ClientId
 	}
 	return 0
 }
 
-type SetBandIBCPriceEvent struct {
+type SetBandPriceEvent struct {
 	Relayer     string                        `protobuf:"bytes,1,opt,name=relayer,proto3" json:"relayer,omitempty"`
 	Symbols     []string                      `protobuf:"bytes,2,rep,name=symbols,proto3" json:"symbols,omitempty"`
 	Prices      []cosmossdk_io_math.LegacyDec `protobuf:"bytes,3,rep,name=prices,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"prices"`
@@ -181,18 +181,18 @@ type SetBandIBCPriceEvent struct {
 	ClientId    int64                         `protobuf:"varint,6,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 }
 
-func (m *SetBandIBCPriceEvent) Reset()         { *m = SetBandIBCPriceEvent{} }
-func (m *SetBandIBCPriceEvent) String() string { return proto.CompactTextString(m) }
-func (*SetBandIBCPriceEvent) ProtoMessage()    {}
-func (*SetBandIBCPriceEvent) Descriptor() ([]byte, []int) {
+func (m *SetBandPriceEvent) Reset()         { *m = SetBandPriceEvent{} }
+func (m *SetBandPriceEvent) String() string { return proto.CompactTextString(m) }
+func (*SetBandPriceEvent) ProtoMessage()    {}
+func (*SetBandPriceEvent) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5441448c19065114, []int{3}
 }
-func (m *SetBandIBCPriceEvent) XXX_Unmarshal(b []byte) error {
+func (m *SetBandPriceEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *SetBandIBCPriceEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *SetBandPriceEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_SetBandIBCPriceEvent.Marshal(b, m, deterministic)
+		return xxx_messageInfo_SetBandPriceEvent.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -202,47 +202,47 @@ func (m *SetBandIBCPriceEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *SetBandIBCPriceEvent) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SetBandIBCPriceEvent.Merge(m, src)
+func (m *SetBandPriceEvent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetBandPriceEvent.Merge(m, src)
 }
-func (m *SetBandIBCPriceEvent) XXX_Size() int {
+func (m *SetBandPriceEvent) XXX_Size() int {
 	return m.Size()
 }
-func (m *SetBandIBCPriceEvent) XXX_DiscardUnknown() {
-	xxx_messageInfo_SetBandIBCPriceEvent.DiscardUnknown(m)
+func (m *SetBandPriceEvent) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetBandPriceEvent.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SetBandIBCPriceEvent proto.InternalMessageInfo
+var xxx_messageInfo_SetBandPriceEvent proto.InternalMessageInfo
 
-func (m *SetBandIBCPriceEvent) GetRelayer() string {
+func (m *SetBandPriceEvent) GetRelayer() string {
 	if m != nil {
 		return m.Relayer
 	}
 	return ""
 }
 
-func (m *SetBandIBCPriceEvent) GetSymbols() []string {
+func (m *SetBandPriceEvent) GetSymbols() []string {
 	if m != nil {
 		return m.Symbols
 	}
 	return nil
 }
 
-func (m *SetBandIBCPriceEvent) GetResolveTime() uint64 {
+func (m *SetBandPriceEvent) GetResolveTime() uint64 {
 	if m != nil {
 		return m.ResolveTime
 	}
 	return 0
 }
 
-func (m *SetBandIBCPriceEvent) GetRequestId() uint64 {
+func (m *SetBandPriceEvent) GetRequestId() uint64 {
 	if m != nil {
 		return m.RequestId
 	}
 	return 0
 }
 
-func (m *SetBandIBCPriceEvent) GetClientId() int64 {
+func (m *SetBandPriceEvent) GetClientId() int64 {
 	if m != nil {
 		return m.ClientId
 	}
@@ -250,44 +250,44 @@ func (m *SetBandIBCPriceEvent) GetClientId() int64 {
 }
 
 func init() {
-	proto.RegisterType((*EventBandIBCAckSuccess)(nil), "reserve.oracle.EventBandIBCAckSuccess")
-	proto.RegisterType((*EventBandIBCAckError)(nil), "reserve.oracle.EventBandIBCAckError")
-	proto.RegisterType((*EventBandIBCResponseTimeout)(nil), "reserve.oracle.EventBandIBCResponseTimeout")
-	proto.RegisterType((*SetBandIBCPriceEvent)(nil), "reserve.oracle.SetBandIBCPriceEvent")
+	proto.RegisterType((*EventBandAckSuccess)(nil), "reserve.oracle.EventBandAckSuccess")
+	proto.RegisterType((*EventBandAckError)(nil), "reserve.oracle.EventBandAckError")
+	proto.RegisterType((*EventBandResponseTimeout)(nil), "reserve.oracle.EventBandResponseTimeout")
+	proto.RegisterType((*SetBandPriceEvent)(nil), "reserve.oracle.SetBandPriceEvent")
 }
 
 func init() { proto.RegisterFile("reserve/oracle/events.proto", fileDescriptor_5441448c19065114) }
 
 var fileDescriptor_5441448c19065114 = []byte{
-	// 395 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0x3f, 0x6f, 0xd4, 0x40,
-	0x10, 0xc5, 0xbd, 0xb9, 0x70, 0xc4, 0x0b, 0xa2, 0xb0, 0x4e, 0xc8, 0xc2, 0xc2, 0x31, 0xa1, 0xb9,
-	0xca, 0x2e, 0xe8, 0xa0, 0xc2, 0x90, 0xc2, 0x12, 0x45, 0xe4, 0xa4, 0xa2, 0x39, 0xed, 0xad, 0x47,
-	0x8e, 0xe5, 0x3f, 0x63, 0x76, 0xd6, 0x27, 0xfc, 0x2d, 0xf8, 0x58, 0x29, 0x53, 0x22, 0x8a, 0x08,
-	0xdd, 0x49, 0x7c, 0x0e, 0xb4, 0x3e, 0x5b, 0xca, 0x9d, 0x94, 0xce, 0xf3, 0xde, 0xbc, 0x9f, 0xf6,
-	0x79, 0x97, 0x7b, 0x0a, 0x08, 0xd4, 0x06, 0x22, 0x54, 0x42, 0x56, 0x10, 0xc1, 0x06, 0x1a, 0x4d,
-	0x61, 0xab, 0x50, 0xa3, 0xf3, 0x6a, 0x34, 0xc3, 0xbd, 0xf9, 0x66, 0x91, 0x63, 0x8e, 0x83, 0x15,
-	0x99, 0xaf, 0xfd, 0xd6, 0xc5, 0x0d, 0x7f, 0x7d, 0x69, 0x52, 0xb1, 0x68, 0xb2, 0x24, 0xfe, 0xf2,
-	0x59, 0x96, 0xd7, 0x9d, 0x94, 0x40, 0xe4, 0xbc, 0xe5, 0x5c, 0xc8, 0x72, 0xa5, 0x80, 0xba, 0x4a,
-	0xbb, 0x2c, 0x60, 0x4b, 0x3b, 0xb5, 0x85, 0x2c, 0xd3, 0x41, 0x70, 0x3c, 0x6e, 0xcb, 0xaa, 0x80,
-	0x46, 0xaf, 0x8a, 0xcc, 0x3d, 0x09, 0xd8, 0x72, 0x96, 0x9e, 0xed, 0x85, 0x24, 0xbb, 0xb8, 0xe2,
-	0x8b, 0x23, 0xea, 0xa5, 0x52, 0xa8, 0x4c, 0xc8, 0x30, 0xc1, 0x0c, 0x23, 0xf2, 0x4c, 0x3c, 0x32,
-	0x9f, 0x26, 0x7e, 0xe4, 0xde, 0x63, 0x62, 0x0a, 0xd4, 0x62, 0x43, 0x70, 0x53, 0xd4, 0x80, 0xdd,
-	0xd1, 0x69, 0xd8, 0x51, 0xf6, 0x1f, 0xe3, 0x8b, 0x6b, 0x98, 0xa2, 0x57, 0xaa, 0x90, 0x30, 0xb0,
-	0x1c, 0x97, 0x3f, 0x57, 0x50, 0x89, 0x1e, 0xa6, 0xc3, 0x4c, 0xa3, 0x71, 0xa8, 0xaf, 0xd7, 0x58,
-	0x91, 0x7b, 0x12, 0xcc, 0x8c, 0x33, 0x8e, 0xce, 0x27, 0x3e, 0x6f, 0x0d, 0x81, 0xdc, 0x99, 0x31,
-	0xe2, 0xf7, 0x77, 0x0f, 0xe7, 0xd6, 0x9f, 0x87, 0x73, 0x4f, 0x22, 0xd5, 0x48, 0x94, 0x95, 0x61,
-	0x81, 0x51, 0x2d, 0xf4, 0x6d, 0xf8, 0x0d, 0x72, 0x21, 0xfb, 0xaf, 0x20, 0xd3, 0x31, 0xe2, 0xbc,
-	0xe3, 0x2f, 0x15, 0x10, 0x56, 0x1b, 0x58, 0xe9, 0xa2, 0x06, 0xf7, 0x34, 0x60, 0xcb, 0xd3, 0xf4,
-	0xc5, 0xa8, 0x99, 0x32, 0xe6, 0xb7, 0x2b, 0xf8, 0xd1, 0x01, 0x0d, 0x55, 0x9e, 0x0d, 0x0b, 0xf6,
-	0xa8, 0x24, 0xd9, 0x61, 0xd1, 0xf9, 0x61, 0xd1, 0x38, 0xb9, 0xdb, 0xfa, 0xec, 0x7e, 0xeb, 0xb3,
-	0xbf, 0x5b, 0x9f, 0xfd, 0xda, 0xf9, 0xd6, 0xfd, 0xce, 0xb7, 0x7e, 0xef, 0x7c, 0xeb, 0x7b, 0x94,
-	0x17, 0xfa, 0xb6, 0x5b, 0x87, 0x12, 0xeb, 0x08, 0x1b, 0xac, 0xfb, 0xe1, 0xf6, 0x25, 0x56, 0xd1,
-	0xf4, 0x84, 0x7e, 0x4e, 0x8f, 0x48, 0xf7, 0x2d, 0xd0, 0x7a, 0x3e, 0x2c, 0x7c, 0xf8, 0x1f, 0x00,
-	0x00, 0xff, 0xff, 0x05, 0xdc, 0xb3, 0x3d, 0x63, 0x02, 0x00, 0x00,
+	// 393 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0x3f, 0x8f, 0xd3, 0x40,
+	0x10, 0xc5, 0xbd, 0x97, 0x23, 0x9c, 0x17, 0x84, 0x74, 0x86, 0xc2, 0x22, 0xc2, 0x67, 0x8e, 0x26,
+	0x95, 0x5d, 0x50, 0x50, 0x50, 0x11, 0x71, 0x45, 0x24, 0x90, 0xc0, 0x47, 0x45, 0x13, 0x6d, 0xd6,
+	0x23, 0x9f, 0xe5, 0x3f, 0x63, 0x76, 0xd6, 0x11, 0xfe, 0x16, 0x7c, 0xac, 0x2b, 0xaf, 0x44, 0x14,
+	0x27, 0x14, 0x7f, 0x11, 0xb4, 0x1b, 0x1b, 0x25, 0x91, 0xae, 0xf3, 0xbc, 0x37, 0xef, 0xa7, 0x7d,
+	0xde, 0xe5, 0x33, 0x05, 0x04, 0x6a, 0x03, 0x31, 0x2a, 0x21, 0x4b, 0x88, 0x61, 0x03, 0xb5, 0xa6,
+	0xa8, 0x51, 0xa8, 0xd1, 0x7b, 0x36, 0x98, 0xd1, 0xce, 0x7c, 0xf9, 0x22, 0xc3, 0x0c, 0xad, 0x15,
+	0x9b, 0xaf, 0xdd, 0xd6, 0xe5, 0x57, 0xfe, 0xfc, 0xca, 0xa4, 0x16, 0xa2, 0x4e, 0x3f, 0xc8, 0xe2,
+	0xba, 0x95, 0x12, 0x88, 0xbc, 0x57, 0x9c, 0x0b, 0x59, 0xac, 0x14, 0x50, 0x5b, 0x6a, 0x9f, 0x85,
+	0x6c, 0xee, 0x26, 0xae, 0x90, 0x45, 0x62, 0x05, 0x6f, 0xc6, 0x5d, 0x59, 0xe6, 0x50, 0xeb, 0x55,
+	0x9e, 0xfa, 0x27, 0x21, 0x9b, 0x4f, 0x92, 0xb3, 0x9d, 0xb0, 0x4c, 0x2f, 0x3f, 0xf3, 0xf3, 0x7d,
+	0xe4, 0x95, 0x52, 0xa8, 0x4c, 0xc2, 0x00, 0xc1, 0x0c, 0x03, 0xef, 0x4c, 0xec, 0x99, 0x0f, 0xe3,
+	0xde, 0x71, 0xff, 0x3f, 0x2e, 0x01, 0x6a, 0xb0, 0x26, 0xf8, 0x96, 0x57, 0x80, 0xed, 0xd1, 0x39,
+	0xd8, 0x51, 0xb0, 0x67, 0xfc, 0xfc, 0x1a, 0x6c, 0xee, 0x8b, 0xca, 0x25, 0x58, 0x8a, 0xe7, 0xf3,
+	0xc7, 0x0a, 0x4a, 0xd1, 0xc1, 0x78, 0x8c, 0x71, 0x34, 0x0e, 0x75, 0xd5, 0x1a, 0x4b, 0xf2, 0x4f,
+	0xc2, 0x89, 0x71, 0x86, 0xd1, 0x7b, 0xcf, 0xa7, 0x8d, 0x21, 0x90, 0x3f, 0x31, 0xc6, 0xe2, 0xcd,
+	0xed, 0xfd, 0x85, 0xf3, 0xe7, 0xfe, 0x62, 0x26, 0x91, 0x2a, 0x24, 0x4a, 0x8b, 0x28, 0xc7, 0xb8,
+	0x12, 0xfa, 0x26, 0xfa, 0x04, 0x99, 0x90, 0xdd, 0x47, 0x90, 0xc9, 0x10, 0xf1, 0x5e, 0xf3, 0xa7,
+	0x0a, 0x08, 0xcb, 0x0d, 0xac, 0x74, 0x5e, 0x81, 0x7f, 0x1a, 0xb2, 0xf9, 0x69, 0xf2, 0x64, 0xd0,
+	0x4c, 0x13, 0xf3, 0xb7, 0x15, 0xfc, 0x68, 0x81, 0x6c, 0x8f, 0x47, 0x76, 0xc1, 0x1d, 0x94, 0x65,
+	0x7a, 0xd8, 0x72, 0x7a, 0xd8, 0x72, 0xb1, 0xbc, 0xdd, 0x06, 0xec, 0x6e, 0x1b, 0xb0, 0xbf, 0xdb,
+	0x80, 0xfd, 0xea, 0x03, 0xe7, 0xae, 0x0f, 0x9c, 0xdf, 0x7d, 0xe0, 0x7c, 0x8f, 0xb3, 0x5c, 0xdf,
+	0xb4, 0xeb, 0x48, 0x62, 0x15, 0x63, 0x8d, 0x55, 0x67, 0x6f, 0x5c, 0x62, 0x19, 0x8f, 0xcf, 0xe6,
+	0xe7, 0xf8, 0x70, 0x74, 0xd7, 0x00, 0xad, 0xa7, 0x76, 0xe1, 0xed, 0xbf, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0xa5, 0x56, 0xe4, 0xad, 0x57, 0x02, 0x00, 0x00,
 }
 
-func (m *EventBandIBCAckSuccess) Marshal() (dAtA []byte, err error) {
+func (m *EventBandAckSuccess) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -297,12 +297,12 @@ func (m *EventBandIBCAckSuccess) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventBandIBCAckSuccess) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventBandAckSuccess) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventBandIBCAckSuccess) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventBandAckSuccess) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -322,7 +322,7 @@ func (m *EventBandIBCAckSuccess) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *EventBandIBCAckError) Marshal() (dAtA []byte, err error) {
+func (m *EventBandAckError) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -332,12 +332,12 @@ func (m *EventBandIBCAckError) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventBandIBCAckError) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventBandAckError) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventBandIBCAckError) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventBandAckError) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -357,7 +357,7 @@ func (m *EventBandIBCAckError) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *EventBandIBCResponseTimeout) Marshal() (dAtA []byte, err error) {
+func (m *EventBandResponseTimeout) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -367,12 +367,12 @@ func (m *EventBandIBCResponseTimeout) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventBandIBCResponseTimeout) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventBandResponseTimeout) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventBandIBCResponseTimeout) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventBandResponseTimeout) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -385,7 +385,7 @@ func (m *EventBandIBCResponseTimeout) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *SetBandIBCPriceEvent) Marshal() (dAtA []byte, err error) {
+func (m *SetBandPriceEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -395,12 +395,12 @@ func (m *SetBandIBCPriceEvent) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *SetBandIBCPriceEvent) MarshalTo(dAtA []byte) (int, error) {
+func (m *SetBandPriceEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *SetBandIBCPriceEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *SetBandPriceEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -464,7 +464,7 @@ func encodeVarintEvents(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *EventBandIBCAckSuccess) Size() (n int) {
+func (m *EventBandAckSuccess) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -480,7 +480,7 @@ func (m *EventBandIBCAckSuccess) Size() (n int) {
 	return n
 }
 
-func (m *EventBandIBCAckError) Size() (n int) {
+func (m *EventBandAckError) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -496,7 +496,7 @@ func (m *EventBandIBCAckError) Size() (n int) {
 	return n
 }
 
-func (m *EventBandIBCResponseTimeout) Size() (n int) {
+func (m *EventBandResponseTimeout) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -508,7 +508,7 @@ func (m *EventBandIBCResponseTimeout) Size() (n int) {
 	return n
 }
 
-func (m *SetBandIBCPriceEvent) Size() (n int) {
+func (m *SetBandPriceEvent) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -548,7 +548,7 @@ func sovEvents(x uint64) (n int) {
 func sozEvents(x uint64) (n int) {
 	return sovEvents(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *EventBandIBCAckSuccess) Unmarshal(dAtA []byte) error {
+func (m *EventBandAckSuccess) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -571,10 +571,10 @@ func (m *EventBandIBCAckSuccess) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventBandIBCAckSuccess: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventBandAckSuccess: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventBandIBCAckSuccess: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventBandAckSuccess: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -649,7 +649,7 @@ func (m *EventBandIBCAckSuccess) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventBandIBCAckError) Unmarshal(dAtA []byte) error {
+func (m *EventBandAckError) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -672,10 +672,10 @@ func (m *EventBandIBCAckError) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventBandIBCAckError: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventBandAckError: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventBandIBCAckError: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventBandAckError: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -750,7 +750,7 @@ func (m *EventBandIBCAckError) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventBandIBCResponseTimeout) Unmarshal(dAtA []byte) error {
+func (m *EventBandResponseTimeout) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -773,10 +773,10 @@ func (m *EventBandIBCResponseTimeout) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventBandIBCResponseTimeout: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventBandResponseTimeout: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventBandIBCResponseTimeout: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventBandResponseTimeout: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -819,7 +819,7 @@ func (m *EventBandIBCResponseTimeout) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *SetBandIBCPriceEvent) Unmarshal(dAtA []byte) error {
+func (m *SetBandPriceEvent) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -842,10 +842,10 @@ func (m *SetBandIBCPriceEvent) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: SetBandIBCPriceEvent: wiretype end group for non-group")
+			return fmt.Errorf("proto: SetBandPriceEvent: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: SetBandIBCPriceEvent: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: SetBandPriceEvent: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

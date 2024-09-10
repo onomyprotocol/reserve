@@ -187,14 +187,14 @@ func (im IBCModule) OnAcknowledgementPacket(
 		// the acknowledgement succeeded on the receiving chain so nothing
 		// needs to be executed and no error needs to be returned
 		// nolint:errcheck //ignored on purpose
-		ctx.EventManager().EmitTypedEvent(&types.EventBandIBCAckSuccess{
+		ctx.EventManager().EmitTypedEvent(&types.EventBandAckSuccess{
 			AckResult: string(resp.Result),
 			ClientId:  int64(clientID),
 		})
 	case *channeltypes.Acknowledgement_Error:
 		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
-		ctx.EventManager().EmitTypedEvent(&types.EventBandIBCAckError{
+		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
 			AckError: resp.Error,
 			ClientId: int64(clientID),
 		})
@@ -222,7 +222,7 @@ func (im IBCModule) OnTimeoutPacket(
 	// Delete the calldata corresponding to the sequence number
 	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 	// nolint:errcheck //ignored on purpose
-	ctx.EventManager().EmitTypedEvent(&types.EventBandIBCResponseTimeout{
+	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
 		ClientId: int64(clientID),
 	})
 
