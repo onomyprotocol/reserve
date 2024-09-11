@@ -16,7 +16,8 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 		switch c := content.(type) {
 		case *types.UpdateBandParamsProposal:
 			return handleUpdateBandParamsProposal(ctx, k, c)
-
+		case *types.AuthorizeBandOracleRequestProposal:
+			return handleAuthorizeBandOracleRequestProposal(ctx, k, c)
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized param proposal content type: %T", c)
 		}
@@ -40,5 +41,19 @@ func handleUpdateBandParamsProposal(ctx sdk.Context, k keeper.Keeper, p *types.U
 	}
 
 	k.SetBandParams(ctx, p.BandParams)
+	return nil
+}
+
+func handleAuthorizeBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *types.AuthorizeBandOracleRequestProposal) error {
+	if err := p.ValidateBasic(); err != nil {
+		return err
+	}
+
+	requestID := k.GetBandLatestRequestID(ctx) + 1
+	p.Request.RequestId = requestID
+
+	k.SetBandOracleRequest(ctx, p.Request)
+
+	k.SetBandLatestRequestID(ctx, requestID)
 	return nil
 }

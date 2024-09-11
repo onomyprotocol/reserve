@@ -107,7 +107,27 @@ func (k Keeper) SetBandLatestClientID(ctx sdk.Context, clientID uint64) error {
 	return store.Set(types.LatestClientIDKey, sdk.Uint64ToBigEndian(clientID))
 }
 
-// SetBandOracleRequest sets the Band IBC oracle request data
+// GetBandLatestRequestID returns the latest requestID of Band oracle request types.
+func (k Keeper) GetBandLatestRequestID(ctx sdk.Context) uint64 {
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.LatestRequestIDKey)
+	if err != nil {
+		return 0
+	}
+	if bz == nil {
+		return 0
+	}
+	requestID := sdk.BigEndianToUint64(bz)
+	return requestID
+}
+
+// SetBandLatestRequestID sets the latest requestID of Band oracle request types.
+func (k Keeper) SetBandLatestRequestID(ctx sdk.Context, requestID uint64) error {
+	store := k.storeService.OpenKVStore(ctx)
+	return store.Set(types.LatestRequestIDKey, sdk.Uint64ToBigEndian(requestID))
+}
+
+// SetBandOracleRequest sets the Band oracle request data
 func (k Keeper) SetBandOracleRequest(ctx sdk.Context, req types.BandOracleRequest) error {
 	bz := k.cdc.MustMarshal(&req)
 	store := k.storeService.OpenKVStore(ctx)

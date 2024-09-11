@@ -28,6 +28,7 @@ var (
 	LatestClientIDKey      = []byte{0x03}
 	BandOracleRequestIDKey = []byte{0x04}
 	BandPriceKey           = []byte{0x05}
+	LatestRequestIDKey     = []byte{0x06}
 )
 
 var (

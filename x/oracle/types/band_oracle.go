@@ -10,7 +10,11 @@ import (
 	utils "github.com/onomyprotocol/reserve/x/oracle/utils"
 )
 
-const BandPriceMultiplier uint64 = 1000000000 // 1e9
+const (
+	BandPriceMultiplier uint64 = 1000000000 // 1e9
+	MaxDataSize                = 256        // 256B
+)
+
 type RequestID int64
 
 func NewOracleRequestPacketData(clientID string, calldata []byte, r *BandOracleRequest) OracleRequestPacketData {
@@ -197,8 +201,8 @@ func NewPrice(symbol string, multiplier, px uint64, reqID RequestID, resolveTime
 
 func NewPriceState(price math.LegacyDec, timestamp int64) *PriceState {
 	return &PriceState{
-		Price:           price,
-		Timestamp:       timestamp,
+		Price:     price,
+		Timestamp: timestamp,
 	}
 }
 
