@@ -20,4 +20,5 @@ var (
 	ErrInvalidOwasmGas          = sdkerrors.Register(ModuleName, 12, "invalid owasm gas")
 	ErrInvalidBandUpdateRequest = sdkerrors.Register(ModuleName, 13, "Invalid Band Update Request Proposal")
 	ErrBandRequestNotFound      = sdkerrors.Register(ModuleName, 14, "Band Oracle Request not found")
+	ErrInvalidBandDeleteRequest = sdkerrors.Register(ModuleName, 15, "Invalid Band Delete Request Proposal")
 )

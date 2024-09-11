@@ -20,6 +20,9 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 			return handleAuthorizeBandOracleRequestProposal(ctx, k, c)
 		case *types.UpdateBandOracleRequestProposal:
 			return handleUpdateBandOracleRequestProposal(ctx, k, c)
+
+		case *types.DeleteBandOracleRequestProposal:
+			return handleDeleteBandOracleRequestProposal(ctx, k, c)	
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized param proposal content type: %T", c)
 		}
@@ -103,6 +106,18 @@ func handleUpdateBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *
 	}
 
 	k.SetBandOracleRequest(ctx, *request)
+
+	return nil
+}
+
+func handleDeleteBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *types.DeleteBandOracleRequestProposal) error {
+	if err := p.ValidateBasic(); err != nil {
+		return err
+	}
+
+	for _, requestID := range p.DeleteRequestIds {
+		k.DeleteBandOracleRequest(ctx, requestID)
+	}
 
 	return nil
 }

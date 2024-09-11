@@ -2,28 +2,31 @@ package types
 
 import (
 	errorsmod "cosmossdk.io/errors"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/onomyprotocol/reserve/x/oracle/utils"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // constants
 const (
 	ProposalUpdateBandParams           string = "ProposalUpdateBandParams"
 	ProposalAuthorizeBandOracleRequest string = "ProposalTypeAuthorizeBandOracleRequest"
-	ProposalUpdateBandOracleRequest              string = "ProposalUpdateBandOracleRequest"
+	ProposalUpdateBandOracleRequest    string = "ProposalUpdateBandOracleRequest"
+	ProposalDeleteBandOracleRequest    string = "ProposalDeleteBandOracleRequest"
 )
 
 func init() {
 	govtypes.RegisterProposalType(ProposalUpdateBandParams)
 	govtypes.RegisterProposalType(ProposalAuthorizeBandOracleRequest)
 	govtypes.RegisterProposalType(ProposalUpdateBandOracleRequest)
+	govtypes.RegisterProposalType(ProposalDeleteBandOracleRequest)
 }
 
 // Implements Proposal Interface
 var _ govtypes.Content = &UpdateBandParamsProposal{}
 var _ govtypes.Content = &AuthorizeBandOracleRequestProposal{}
 var _ govtypes.Content = &UpdateBandOracleRequestProposal{}
+var _ govtypes.Content = &DeleteBandOracleRequestProposal{}
 
 // GetTitle returns the title of this proposal.
 func (p *UpdateBandParamsProposal) GetTitle() string {
@@ -180,6 +183,33 @@ func (p *UpdateBandOracleRequestProposal) ValidateBasic() error {
 
 	if p.UpdateOracleRequest != nil && p.UpdateOracleRequest.ExecuteGas <= 0 {
 		return errorsmod.Wrapf(ErrInvalidOwasmGas, "UpdateBandOracleRequestProposal: Invalid Execute Gas (%d)", p.UpdateOracleRequest.ExecuteGas)
+	}
+
+	return govtypes.ValidateAbstract(p)
+}
+
+// GetTitle returns the title of this proposal.
+func (p *DeleteBandOracleRequestProposal) GetTitle() string {
+	return p.Title
+}
+
+// GetDescription returns the description of this proposal.
+func (p *DeleteBandOracleRequestProposal) GetDescription() string {
+	return p.Description
+}
+
+// ProposalRoute returns router key of this proposal.
+func (p *DeleteBandOracleRequestProposal) ProposalRoute() string { return RouterKey }
+
+// ProposalType returns proposal type of this proposal.
+func (p *DeleteBandOracleRequestProposal) ProposalType() string {
+	return ProposalDeleteBandOracleRequest
+}
+
+// ValidateBasic returns ValidateBasic result of this proposal.
+func (p *DeleteBandOracleRequestProposal) ValidateBasic() error {
+	if len(p.DeleteRequestIds) == 0 {
+		return ErrInvalidBandDeleteRequest
 	}
 
 	return govtypes.ValidateAbstract(p)
