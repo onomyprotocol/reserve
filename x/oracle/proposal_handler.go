@@ -18,6 +18,8 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 			return handleUpdateBandParamsProposal(ctx, k, c)
 		case *types.AuthorizeBandOracleRequestProposal:
 			return handleAuthorizeBandOracleRequestProposal(ctx, k, c)
+		case *types.UpdateBandOracleRequestProposal:
+			return handleUpdateBandOracleRequestProposal(ctx, k, c)
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized param proposal content type: %T", c)
 		}
@@ -55,5 +57,52 @@ func handleAuthorizeBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, 
 	k.SetBandOracleRequest(ctx, p.Request)
 
 	k.SetBandLatestRequestID(ctx, requestID)
+	return nil
+}
+
+func handleUpdateBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *types.UpdateBandOracleRequestProposal) error {
+	if err := p.ValidateBasic(); err != nil {
+		return err
+	}
+
+	request := k.GetBandOracleRequest(ctx, p.UpdateOracleRequest.RequestId)
+	if request == nil {
+		return errorsmod.Wrapf(types.ErrBandRequestNotFound, "cannot update requestID %T", p.UpdateOracleRequest.RequestId)
+	}
+
+	if p.UpdateOracleRequest.OracleScriptId > 0 {
+		request.OracleScriptId = p.UpdateOracleRequest.OracleScriptId
+	}
+
+	if len(p.UpdateOracleRequest.Symbols) > 0 {
+		request.Symbols = p.UpdateOracleRequest.Symbols
+	}
+
+	if p.UpdateOracleRequest.MinCount > 0 {
+		request.MinCount = p.UpdateOracleRequest.MinCount
+	}
+
+	if p.UpdateOracleRequest.AskCount > 0 {
+		request.AskCount = p.UpdateOracleRequest.AskCount
+	}
+
+	if p.UpdateOracleRequest.FeeLimit != nil {
+		request.FeeLimit = p.UpdateOracleRequest.FeeLimit
+	}
+
+	if p.UpdateOracleRequest.PrepareGas > 0 {
+		request.PrepareGas = p.UpdateOracleRequest.PrepareGas
+	}
+
+	if p.UpdateOracleRequest.ExecuteGas > 0 {
+		request.ExecuteGas = p.UpdateOracleRequest.ExecuteGas
+	}
+
+	if p.UpdateOracleRequest.MinSourceCount > 0 {
+		request.MinSourceCount = p.UpdateOracleRequest.MinSourceCount
+	}
+
+	k.SetBandOracleRequest(ctx, *request)
+
 	return nil
 }
