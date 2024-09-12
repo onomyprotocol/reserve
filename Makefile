@@ -41,7 +41,7 @@ proto-update-deps:
 golangci_lint_cmd=golangci-lint
 golangci_version=v1.53.3
 
-lint-all:
+lint:
 	@echo "--> Running linter"
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(golangci_version)
 	@$(golangci_lint_cmd) run --timeout=10m
