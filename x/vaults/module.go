@@ -16,20 +16,21 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 
 	"cosmossdk.io/core/appmodule"
-	"github.com/onomyprotocol/reserve/x/vaults/types"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-
+	"github.com/onomyprotocol/reserve/x/vaults/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 const consensusVersion uint64 = 1
 
 var (
-	_ module.AppModuleGenesis   = AppModule{}
 	_ module.AppModule          = AppModule{}
 	_ appmodule.HasBeginBlocker = (*AppModule)(nil)
 )
 
-type AppModuleBasic struct{}
+type AppModuleBasic struct {
+	keeper keeper.Keeper
+}
 
 func (a AppModuleBasic) Name() string {
 	return types.ModuleName
@@ -48,8 +49,10 @@ func (a AppModule) ExportGenesis(_ sdk.Context, cdc codec.JSONCodec) json.RawMes
 	return a.DefaultGenesis(cdc)
 }
 
-func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) []abci.ValidatorUpdate {
-	return nil
+func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) {
+	var genesisState types.GenesisState
+	marshaler.MustUnmarshalJSON(message, &genesisState)
+	a.keeper.InitGenesis(ctx, genesisState)
 }
 
 func (AppModule) ConsensusVersion() uint64 { return consensusVersion }

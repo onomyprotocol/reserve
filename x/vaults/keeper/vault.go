@@ -9,7 +9,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
-func (k *Keeper) CreateVault(
+func (k *Keeper) CreateNewVault(
 	ctx context.Context,
 	denom string,
 	owner sdk.AccAddress,
@@ -143,7 +143,7 @@ func (k *Keeper) MintCoin(
 
 }
 
-func (k *Keeper) Repay(
+func (k *Keeper) RepayDebt(
 	ctx context.Context,
 	vaultId uint64,
 	sender sdk.AccAddress,
@@ -176,7 +176,7 @@ func (k *Keeper) Repay(
 	return k.VaultsManager.Set(ctx, vm.Denom, vm)
 }
 
-func (k *Keeper) Deposit(
+func (k *Keeper) DepositToVault(
 	ctx context.Context,
 	vaultId uint64,
 	sender sdk.AccAddress,
@@ -198,7 +198,7 @@ func (k *Keeper) Deposit(
 	return k.SetVault(ctx, vault)
 }
 
-func (k *Keeper) Withdraw(
+func (k *Keeper) WithdrawFromVault(
 	ctx context.Context,
 	vaultId uint64,
 	sender sdk.AccAddress,
