@@ -29,8 +29,6 @@ import (
 
 // NewRootCmd creates a new root command for reserved. It is called once in the main function.
 func NewRootCmd() *cobra.Command {
-	initSDKConfig()
-
 	var (
 		txConfigOpts       tx.ConfigOptions
 		autoCliOpts        autocli.AppOptions
