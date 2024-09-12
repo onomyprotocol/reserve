@@ -41,6 +41,7 @@ func GetTxCmd() *cobra.Command {
 		NewRequestBandRatesTxCmd(),
 		NewAuthorizeBandOracleRequestProposalTxCmd(),
 		NewUpdateBandOracleRequestProposalTxCmd(),
+		NewDeleteBandOracleRequestProposalTxCmd(),
 	)
 
 	return cmd
@@ -188,6 +189,54 @@ func NewUpdateBandOracleRequestProposalTxCmd() *cobra.Command {
 	cmd.Flags().Uint64(flagRequestedValidatorCount, 0, "Requested Validator Count")
 	cmd.Flags().Uint64(flagSufficientValidatorCount, 0, "Sufficient Validator Count")
 	cmd.Flags().Uint64(flagMinSourceCount, 3, "Min Source Count")
+	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
+	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
+	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
+
+	flags.AddTxFlagsToCmd(cmd)
+	return cmd
+}
+
+func NewDeleteBandOracleRequestProposalTxCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "delete-band-oracle-request-proposal 1 [flags]",
+		Args:  cobra.MinimumNArgs(1),
+		Short: "Submit a proposal to Delete a Band Oracle IBC Request.",
+		Long: `Submit a proposal to Delete a Band Oracle IBC Request.
+			Example:
+			$ %s tx oracle delete-band-oracle-request-proposal 1 --from mykey
+		`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			content, err := deleteBandOracleRequestProposalArgsToContent(cmd, args)
+			if err != nil {
+				return err
+			}
+
+			from := clientCtx.GetFromAddress()
+
+			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
+			if err != nil {
+				return err
+			}
+			deposit, err := sdk.ParseCoinsNormalized(depositStr)
+			if err != nil {
+				return err
+			}
+
+			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
+			if err != nil {
+				return err
+			}
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
 	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
 	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
 	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
@@ -353,6 +402,43 @@ func updateBandOracleRequestProposalArgsToContent(
 			MinSourceCount: minSourceCount,
 		},
 	}
+	if err := content.ValidateBasic(); err != nil {
+		return nil, err
+	}
+
+	return content, nil
+}
+
+func deleteBandOracleRequestProposalArgsToContent(
+	cmd *cobra.Command,
+	args []string,
+) (govtypes.Content, error) {
+	title, err := cmd.Flags().GetString(govcli.FlagTitle)
+	if err != nil {
+		return nil, err
+	}
+
+	description, err := cmd.Flags().GetString(govcli.FlagDescription)
+	if err != nil {
+		return nil, err
+	}
+
+	requestIDs := make([]uint64, 0, len(args))
+	for _, arg := range args {
+		id, err := strconv.ParseInt(arg, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+
+		requestIDs = append(requestIDs, uint64(id))
+	}
+
+	content := &types.DeleteBandOracleRequestProposal{
+		Title:            title,
+		Description:      description,
+		DeleteRequestIds: requestIDs,
+	}
+
 	if err := content.ValidateBasic(); err != nil {
 		return nil, err
 	}
