@@ -41,5 +41,4 @@ proto-update-deps:
 
 lint-all:
 	@echo "--> Running linter"
-	@go run github.com/golangci/golangci-lint/cmd/golangci-lint run --timeout=10m
-	@docker run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md"
+	@golangci-lint run --fix
