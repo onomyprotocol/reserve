@@ -243,7 +243,7 @@ func (k *Keeper) UpdateVaultsDebt(
 	params := k.GetParams(ctx)
 	fee := params.StabilityFee
 
-	k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+	return k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
 		if vault.Status == 0 {
 			debtAmount := vault.Debt.Amount
 			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fee)).TruncateInt()
@@ -252,7 +252,59 @@ func (k *Keeper) UpdateVaultsDebt(
 
 		return false, nil
 	})
-	return nil
+}
+
+func (k *Keeper) ShouldLiquidate(
+	ctx context.Context,
+	vault types.Vault,
+	price math.LegacyDec,
+	liquidationRatio math.LegacyDec,
+) (bool, error) {
+	// Only liquidate OPEN vault
+	if vault.Status != 0 {
+		return false, nil
+	}
+
+	collateralValue := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(price)
+	ratio := collateralValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
+	if ratio.LTE(liquidationRatio) {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (k *Keeper) GetLiquidateVaults(
+	ctx context.Context,
+) ([]types.Vault, map[string]math.LegacyDec, error) {
+	var liquidateVaults []types.Vault
+	liquidationRatios := make(map[string]math.LegacyDec)
+	prices := make(map[string]math.LegacyDec)
+
+	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
+		price := k.GetPrice(ctx, vm.Denom)
+		prices[vm.Denom] = price
+		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
+
+		return false, nil
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+		denom := vault.CollateralLocked.Denom
+		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault, prices[denom], liquidationRatios[denom])
+		if shouldLiquidate && err != nil {
+			liquidateVaults = append(liquidateVaults, vault)
+		}
+
+		return false, nil
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return liquidateVaults, prices, nil
 }
 
 func (k *Keeper) GetVault(
