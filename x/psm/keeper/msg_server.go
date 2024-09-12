@@ -43,7 +43,7 @@ func (k msgServer) UpdateParams(ctx context.Context, req *types.MsgUpdateParams)
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-func (k msgServer) SwapToIST(ctx context.Context, msg *types.MsgSwapToIST) (*types.MsgSwapToISTResponse, error) {
+func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD) (*types.MsgSwapTonomUSDResponse, error) {
 	// validate msg
 	if err := msg.ValidateBasic(); err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (k msgServer) SwapToIST(ctx context.Context, msg *types.MsgSwapToIST) (*typ
 
 	// check balance user and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountIST, _, err := k.keeper.SwapToIST(ctx, addr, *msg.Coin)
+	receiveAmountnomUSD, _, err := k.keeper.SwapTonomUSD(ctx, addr, *msg.Coin)
 	if err != nil {
 		return nil, err
 	}
@@ -75,8 +75,8 @@ func (k msgServer) SwapToIST(ctx context.Context, msg *types.MsgSwapToIST) (*typ
 		return nil, err
 	}
 
-	// mint IST and send to user
-	coinsMint := sdk.NewCoins(sdk.NewCoin(types.InterStableToken, receiveAmountIST))
+	// mint nomUSD and send to user
+	coinsMint := sdk.NewCoins(sdk.NewCoin(types.DenomStable, receiveAmountnomUSD))
 	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return nil, err
@@ -90,12 +90,12 @@ func (k msgServer) SwapToIST(ctx context.Context, msg *types.MsgSwapToIST) (*typ
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
-			types.EventSwapToIST,
+			types.EventSwapTonomUSD,
 			sdk.NewAttribute(types.AttributeAmount, msg.Coin.String()),
-			sdk.NewAttribute(types.AttributeReceive, receiveAmountIST.String()+"IST"),
+			sdk.NewAttribute(types.AttributeReceive, receiveAmountnomUSD.String()+types.DenomStable),
 		),
 	)
-	return &types.MsgSwapToISTResponse{}, nil
+	return &types.MsgSwapTonomUSDResponse{}, nil
 }
 
 func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToStablecoin) (*types.MsgSwapToStablecoinResponse, error) {
@@ -128,8 +128,8 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 		return nil, fmt.Errorf("amount %s locked lesser than amount desired", msg.ToDenom)
 	}
 
-	// burn IST
-	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.InterStableToken, msg.Amount))
+	// burn nomUSD
+	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.DenomStable, msg.Amount))
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
 	if err != nil {
 		return nil, err
@@ -154,8 +154,8 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
-			types.EventSwapToIST,
-			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.InterStableToken),
+			types.EventSwapToStablecoin,
+			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.DenomStable),
 			sdk.NewAttribute(types.AttributeReceive, receiveAmountStablecoin.String()+msg.ToDenom),
 		),
 	)

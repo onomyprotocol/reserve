@@ -130,16 +130,16 @@ echo "========sleep=========="
 reserved q psm stablecoin usdt
 reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
 
-# tx swap usdt to ist
+# tx swap usdt to nomUSD
 echo "========swap==========="
-reserved tx psm swap-to-ist 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nomUSD 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 # Check account after swap
 reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
 
-# tx swap ist to usdt
-reserved tx psm swap-to-stablecoin usdt 1000IST --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+# tx swap nomUSD to usdt
+reserved tx psm swap-to-stablecoin usdt 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 # Check account after swap

@@ -10,13 +10,13 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
+func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 	s.SetupTest()
 
 	tests := []struct {
 		name  string
 		addr  sdk.AccAddress
-		setup func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToIST
+		setup func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD
 
 		expectPass      bool
 		expectedReceive math.Int
@@ -24,7 +24,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
 		{
 			name: "success",
 			addr: s.TestAccs[0],
-			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToIST {
+			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD {
 				coinsMint := sdk.NewCoins(sdk.NewCoin(usdt, math.NewInt(1000000)))
 				err := keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 				s.Require().NoError(err)
@@ -41,7 +41,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
 				s.k.SetStablecoin(s.Ctx, sc)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
-				return &types.MsgSwapToIST{
+				return &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[0].String(),
 					Coin:    &amountSwap,
 				}
@@ -53,7 +53,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
 		{
 			name: "insufficient balance",
 			addr: s.TestAccs[1],
-			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToIST {
+			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
@@ -64,7 +64,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
 				s.k.SetStablecoin(s.Ctx, sc)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
-				return &types.MsgSwapToIST{
+				return &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[1].String(),
 					Coin:    &amountSwap,
 				}
@@ -79,10 +79,10 @@ func (s *KeeperTestSuite) TestMsgServerSwapToIST() {
 		s.Run(t.name, func() {
 			msg := t.setup(s.Ctx, s.k)
 
-			_, err := s.msgServer.SwapToIST(s.Ctx, msg)
+			_, err := s.msgServer.SwapTonomUSD(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.InterStableToken)
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DenomStable)
 				s.Require().Equal(t.expectedReceive, balance.Amount)
 
 			} else {
@@ -101,14 +101,14 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 		addr  sdk.AccAddress
 		setup func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToStablecoin
 
-		expectPass         bool
-		expectedBalanceIST math.Int
+		expectPass            bool
+		expectedBalancenomUSD math.Int
 	}{
 		{
 			name: "success",
 			addr: s.TestAccs[0],
 			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToStablecoin {
-				// swaptoIST
+				// swaptonomUSD
 				coinsMint := sdk.NewCoins(sdk.NewCoin(usdt, math.NewInt(1000000)))
 				err := keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 				s.Require().NoError(err)
@@ -125,11 +125,11 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				s.k.SetStablecoin(s.Ctx, sc)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))
-				msg := &types.MsgSwapToIST{
+				msg := &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[0].String(),
 					Coin:    &amountSwap,
 				}
-				_, err = s.msgServer.SwapToIST(s.Ctx, msg)
+				_, err = s.msgServer.SwapTonomUSD(s.Ctx, msg)
 				s.Require().NoError(err)
 
 				return &types.MsgSwapToStablecoin{
@@ -139,8 +139,8 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				}
 			},
 
-			expectPass:         true,
-			expectedBalanceIST: math.NewInt(0),
+			expectPass:            true,
+			expectedBalancenomUSD: math.NewInt(0),
 		},
 	}
 
@@ -151,8 +151,8 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 			_, err := s.msgServer.SwapToStablecoin(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.InterStableToken)
-				s.Require().Equal(t.expectedBalanceIST.String(), balance.Amount.String())
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DenomStable)
+				s.Require().Equal(t.expectedBalancenomUSD.String(), balance.Amount.String())
 
 			} else {
 				s.Require().Error(err)

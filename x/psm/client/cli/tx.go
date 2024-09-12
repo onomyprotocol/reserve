@@ -25,7 +25,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewSwapToStablecoinCmd())
-	cmd.AddCommand(NewSwapToISTCmd())
+	cmd.AddCommand(NewSwapTonomUSDCmd())
 
 	return cmd
 }
@@ -95,8 +95,17 @@ func NewCmdUpdatesStableCoinProposal() *cobra.Command {
 				return fmt.Errorf("value %s cannot constructs Int from string", args[3])
 			}
 			price, err := math.LegacyNewDecFromStr(args[4])
+			if err != nil {
+				return err
+			}
 			feeIn, err := math.LegacyNewDecFromStr(args[5])
+			if err != nil {
+				return err
+			}
 			feeOut, err := math.LegacyNewDecFromStr(args[6])
+			if err != nil {
+				return err
+			}
 			from := clientCtx.GetFromAddress()
 			content := types.NewUpdatesStableCoinProposal(
 				args[0], args[1], args[2], limitTotalUpdate, price, feeIn, feeOut,
@@ -119,15 +128,15 @@ func NewCmdUpdatesStableCoinProposal() *cobra.Command {
 	return cmd
 }
 
-func NewSwapToISTCmd() *cobra.Command {
+func NewSwapTonomUSDCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap-to-ist [stablecoin]",
+		Use:   "swap-to-nomUSD [stablecoin]",
 		Args:  cobra.ExactArgs(1),
-		Short: "swap stablecoin to $ist ",
-		Long: `swap stablecoin to $ist.
+		Short: "swap stablecoin to $nomUSD ",
+		Long: `swap stablecoin to $nomUSD.
 
 			Example:
-			$ onomyd tx psm swap-to-ist 1000usdt --from mykey
+			$ onomyd tx psm swap-to-nomUSD 1000usdt --from mykey
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -141,7 +150,7 @@ func NewSwapToISTCmd() *cobra.Command {
 			}
 
 			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapToIST(addr.String(), &stablecoin)
+			msg := types.NewMsgSwapTonomUSD(addr.String(), &stablecoin)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
@@ -154,13 +163,13 @@ func NewSwapToISTCmd() *cobra.Command {
 
 func NewSwapToStablecoinCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap-to-stablecoin [stable-coin-type] [amount-ist]",
+		Use:   "swap-to-stablecoin [stable-coin-type] [amount-nomUSD]",
 		Args:  cobra.ExactArgs(2),
-		Short: "swap $ist to stablecoin ",
-		Long: `swap $ist to stablecoin.
+		Short: "swap $nomUSD to stablecoin ",
+		Long: `swap $nomUSD to stablecoin.
 
 			Example:
-			$ onomyd tx psm swap-to-stablecoin usdt 10000ist --from mykey
+			$ onomyd tx psm swap-to-stablecoin usdt 10000nomUSD --from mykey
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -168,13 +177,13 @@ func NewSwapToStablecoinCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			ISTcoin, err := sdk.ParseCoinNormalized(args[1])
+			nomUSDcoin, err := sdk.ParseCoinNormalized(args[1])
 			if err != nil {
 				return err
 			}
 
 			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapToStablecoin(addr.String(), args[0], ISTcoin.Amount)
+			msg := types.NewMsgSwapToStablecoin(addr.String(), args[0], nomUSDcoin.Amount)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

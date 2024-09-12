@@ -10,7 +10,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-func (s *KeeperTestSuite) TestSwapToIST() {
+func (s *KeeperTestSuite) TestSwapTonomUSD() {
 	s.SetupTest()
 
 	tests := []struct {
@@ -73,7 +73,7 @@ func (s *KeeperTestSuite) TestSwapToIST() {
 		s.Run(t.name, func() {
 			t.setup(s.Ctx, s.k)
 
-			receiveAmount, fee, err := s.k.SwapToIST(s.Ctx, t.addr, t.stablecoin)
+			receiveAmount, fee, err := s.k.SwapTonomUSD(s.Ctx, t.addr, t.stablecoin)
 			if t.expectPass {
 				s.Require().NoError(err)
 				s.Require().Equal(t.expectedReceive, receiveAmount)
@@ -103,7 +103,7 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 		{
 			name: "success",
 			setup: func(ctx context.Context, keeper keeper.Keeper) {
-				coinsMint := sdk.NewCoins(sdk.NewCoin(types.InterStableToken, math.NewInt(1000000)))
+				coinsMint := sdk.NewCoins(sdk.NewCoin(types.DenomStable, math.NewInt(1000000)))
 				err := keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 				s.Require().NoError(err)
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)

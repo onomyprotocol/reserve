@@ -7,18 +7,18 @@ import (
 )
 
 var (
-	_ sdk.Msg = &MsgSwapToIST{}
+	_ sdk.Msg = &MsgSwapTonomUSD{}
 	_ sdk.Msg = &MsgSwapToStablecoin{}
 )
 
-func NewMsgSwapToIST(addr string, coin *sdk.Coin) *MsgSwapToIST {
-	return &MsgSwapToIST{
+func NewMsgSwapTonomUSD(addr string, coin *sdk.Coin) *MsgSwapTonomUSD {
+	return &MsgSwapTonomUSD{
 		Address: addr,
 		Coin:    coin,
 	}
 }
 
-func (msg MsgSwapToIST) ValidateBasic() error {
+func (msg MsgSwapTonomUSD) ValidateBasic() error {
 	if msg.Address == "" {
 		return fmt.Errorf("empty address")
 	}
@@ -26,7 +26,7 @@ func (msg MsgSwapToIST) ValidateBasic() error {
 	return msg.Coin.Validate()
 }
 
-func (msg MsgSwapToIST) GetSigners() []sdk.AccAddress {
+func (msg MsgSwapTonomUSD) GetSigners() []sdk.AccAddress {
 	acc, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		panic(err)
@@ -35,7 +35,7 @@ func (msg MsgSwapToIST) GetSigners() []sdk.AccAddress {
 }
 
 // Route implements the sdk.Msg interface.
-func (msg MsgSwapToIST) Route() string { return RouterKey }
+func (msg MsgSwapTonomUSD) Route() string { return RouterKey }
 
 // ///////////
 func NewMsgSwapToStablecoin(addr, toDenom string, amount math.Int) *MsgSwapToStablecoin {
