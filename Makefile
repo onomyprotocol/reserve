@@ -38,6 +38,8 @@ proto-update-deps:
 ###############################################################################
 ###                                Linting                                  ###
 ###############################################################################
+golangci_lint_cmd=golangci-lint
+golangci_version=v1.53.3
 
 lint-all:
 	@echo "--> Running linter"
