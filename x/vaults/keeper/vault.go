@@ -237,6 +237,24 @@ func (k *Keeper) Withdraw(
 	return k.SetVault(ctx, vault)
 }
 
+func (k *Keeper) UpdateVaultsDebt(
+	ctx context.Context,
+) error {
+	params := k.GetParams(ctx)
+	fee := params.StabilityFee
+
+	k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+		if vault.Status == 0 {
+			debtAmount := vault.Debt.Amount
+			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fee)).TruncateInt()
+			vault.Debt.Amount = newDebtAmount
+		}
+
+		return false, nil
+	})
+	return nil
+}
+
 func (k *Keeper) GetVault(
 	ctx context.Context,
 	id uint64,

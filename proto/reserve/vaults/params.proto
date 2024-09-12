@@ -41,6 +41,9 @@ message Params {
     (amino.dont_omitempty) = true,
     (gogoproto.nullable)   = false
   ];
+
+  uint64 recalculate_debt_period = 5;
+  uint64 liquidate_period = 6;
 }
 
 // VaultParams defines the parameters for each collateral vault type.
