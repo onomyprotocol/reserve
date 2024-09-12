@@ -13,7 +13,7 @@ const (
 	// Version defines the current version the IBC module supports
 	Version = "oracle-1"
 
-	// PortID is the default port id that module binds to
+	// PortID is the default port id that module binds to.
 	PortID = "oracle"
 )
 
