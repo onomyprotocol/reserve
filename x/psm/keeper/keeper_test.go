@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"cosmossdk.io/math"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -10,16 +11,28 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
+var (
+	usdt = "usdt"
+	usdc = "usdc"
+
+	limitUSDT = math.NewInt(1000000)
+	limitUSDC = math.NewInt(1000000)
+)
+
 type KeeperTestSuite struct {
 	apptesting.KeeperTestHelper
 
-	k keeper.Keeper
+	k           keeper.Keeper
+	msgServer   types.MsgServer
+	queryServer types.QueryServer
 }
 
 func (s *KeeperTestSuite) SetupTest() {
 	s.Setup()
 
 	s.k = s.App.PSMKeeper
+	s.msgServer = keeper.NewMsgServerImpl(s.k)
+	s.queryServer = keeper.NewQueryServerImpl(s.k)
 }
 
 func TestKeeperTestSuite(t *testing.T) {
