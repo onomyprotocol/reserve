@@ -9,98 +9,67 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom string) (math.Int, error) {
-	s, found := k.GetStablecoin(ctx, denom)
-	if !found {
-		return math.Int{}, fmt.Errorf("not found Stable coin %s", denom)
-	}
-	return s.LimitTotal, nil
-}
-
-func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.Coin, error) {
-	asset := k.bankKeeper.GetBalance(ctx, addr, types.InterStableToken)
+// SwapToStablecoin return receiveAmount, fee, error
+func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
+	asset := k.BankKeeper.GetBalance(ctx, addr, types.InterStableToken)
 
 	if asset.Amount.LT(amount) {
-		return math.ZeroInt(), sdk.Coin{}, fmt.Errorf("insufficient balance")
+		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
 	multiplier, err := k.GetPrice(ctx, toDenom)
 	if err != nil || multiplier.IsZero() {
-		return math.Int{}, sdk.Coin{}, err
+		return math.Int{}, sdk.DecCoin{}, err
 	}
-	amountStablecoin := amount.ToLegacyDec().Quo(multiplier).RoundInt()
+	amountStablecoin := amount.ToLegacyDec().Quo(multiplier)
 
-	fee, err := k.PayFeesOut(ctx, amountStablecoin, toDenom)
+	fee, err := k.PayFeesOut(ctx, amountStablecoin.RoundInt(), toDenom)
 	if err != nil {
-		return math.Int{}, sdk.Coin{}, err
+		return math.Int{}, sdk.DecCoin{}, err
 	}
 
 	receiveAmount := amountStablecoin.Sub(fee)
-	return receiveAmount, sdk.NewCoin(toDenom, fee), nil
+	return receiveAmount.RoundInt(), sdk.NewDecCoinFromDec(toDenom, fee), nil
 }
 
-func (k Keeper) SwaptoIST(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.Coin, error) {
-	asset := k.bankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
+func (k Keeper) SwapToIST(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
+	asset := k.BankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
 
 	if asset.Amount.LT(stablecoin.Amount) {
-		return math.ZeroInt(), sdk.Coin{}, fmt.Errorf("insufficient balance")
+		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
 	multiplier, err := k.GetPrice(ctx, stablecoin.Denom)
 	if err != nil || multiplier.IsZero() {
-		return math.Int{}, sdk.Coin{}, err
+		return math.Int{}, sdk.DecCoin{}, err
 	}
 
-	amountIST := multiplier.Mul(stablecoin.Amount.ToLegacyDec()).RoundInt()
+	amountIST := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
 
-	fee, err := k.PayFeesIn(ctx, amountIST, stablecoin.Denom)
+	fee, err := k.PayFeesIn(ctx, amountIST.RoundInt(), stablecoin.Denom)
 	if err != nil {
-		return math.Int{}, sdk.Coin{}, err
+		return math.Int{}, sdk.DecCoin{}, err
 	}
 
 	receiveAmountIST := amountIST.Sub(fee)
-	return receiveAmountIST, sdk.NewCoin(types.InterStableToken, fee), nil
+	return receiveAmountIST.RoundInt(), sdk.NewDecCoinFromDec(types.InterStableToken, fee), nil
 }
 
-func (k Keeper) GetPrice(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, found := k.GetStablecoin(ctx, denom)
-	if !found {
-		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
-	}
-	return s.Price, nil
-}
-
-func (k Keeper) GetFeeIn(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, found := k.GetStablecoin(ctx, denom)
-	if !found {
-		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
-	}
-	return s.FeeIn, nil
-}
-
-func (k Keeper) GetFeeOut(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, found := k.GetStablecoin(ctx, denom)
-	if !found {
-		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
-	}
-	return s.FeeOut, nil
-}
-
-func (k Keeper) PayFeesOut(ctx context.Context, amount math.Int, denom string) (math.Int, error) {
+func (k Keeper) PayFeesOut(ctx context.Context, amount math.Int, denom string) (math.LegacyDec, error) {
 	ratioSwapOutFees, err := k.GetFeeOut(ctx, denom)
 	if err != nil {
-		return math.Int{}, err
+		return math.LegacyDec{}, err
 	}
 
-	fee := ratioSwapOutFees.MulInt(amount).RoundInt()
+	fee := ratioSwapOutFees.MulInt(amount)
 	return fee, nil
 }
 
-func (k Keeper) PayFeesIn(ctx context.Context, amount math.Int, denom string) (math.Int, error) {
+func (k Keeper) PayFeesIn(ctx context.Context, amount math.Int, denom string) (math.LegacyDec, error) {
 	ratioSwapInFees, err := k.GetFeeIn(ctx, denom)
 	if err != nil {
-		return math.Int{}, err
+		return math.LegacyDec{}, err
 	}
-	fee := ratioSwapInFees.MulInt(amount).RoundInt()
+	fee := ratioSwapInFees.MulInt(amount)
 	return fee, nil
 }

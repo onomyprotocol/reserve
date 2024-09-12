@@ -27,8 +27,8 @@ type (
 		Params collections.Item[types.Params]
 		// this line is used by starport scaffolding # collection/type
 
-		bankKeeper    types.BankKeeper
-		accountKeeper types.AccountKeeper
+		BankKeeper    types.BankKeeper
+		AccountKeeper types.AccountKeeper
 	}
 )
 
@@ -55,8 +55,8 @@ func NewKeeper(
 		authority:    authority,
 		// logger:       logger,
 
-		bankKeeper:    bankKeeper,
-		accountKeeper: accountKeeper,
+		BankKeeper:    bankKeeper,
+		AccountKeeper: accountKeeper,
 		Params:        collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		// this line is used by starport scaffolding # collection/instantiate
 	}

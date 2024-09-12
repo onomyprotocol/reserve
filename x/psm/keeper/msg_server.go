@@ -63,25 +63,25 @@ func (k msgServer) SwapToIST(ctx context.Context, msg *types.MsgSwapToIST) (*typ
 
 	// check balance user and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountIST, _, err := k.keeper.SwaptoIST(ctx, addr, *msg.Coin)
+	receiveAmountIST, _, err := k.keeper.SwapToIST(ctx, addr, *msg.Coin)
 	if err != nil {
 		return nil, err
 	}
 
 	// lock coin and send to module
 	k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: msg.Coin, Time: time.Now().Unix()})
-	err = k.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
+	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
 	if err != nil {
 		return nil, err
 	}
 
 	// mint IST and send to user
 	coinsMint := sdk.NewCoins(sdk.NewCoin(types.InterStableToken, receiveAmountIST))
-	err = k.keeper.bankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
+	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return nil, err
 	}
-	err = k.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, coinsMint)
+	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, coinsMint)
 	if err != nil {
 		return nil, err
 	}
@@ -130,11 +130,11 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 
 	// burn IST
 	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.InterStableToken, msg.Amount))
-	err = k.keeper.bankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
+	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
 	if err != nil {
 		return nil, err
 	}
-	err = k.keeper.bankKeeper.BurnCoins(ctx, types.ModuleName, coinsBurn)
+	err = k.keeper.BankKeeper.BurnCoins(ctx, types.ModuleName, coinsBurn)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: &newLockCoin, Time: time.Now().Unix()})
 
 	// send stablecoin to user
-	err = k.keeper.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(coinReceive))
+	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(coinReceive))
 	if err != nil {
 		return nil, err
 	}

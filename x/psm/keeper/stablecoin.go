@@ -7,10 +7,6 @@ import (
 	"cosmossdk.io/math"
 	storetypes "cosmossdk.io/store/types"
 
-	// "github.com/cosmos/cosmos-sdk/codec"
-
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
@@ -109,16 +105,42 @@ func (k Keeper) TotalStablecoinLock(ctx context.Context, denom string) math.Int 
 
 	k.IterateLockCoin(ctx, func(red types.LockCoin) (stop bool) {
 		if red.Coin.Denom == denom {
-			total.Add(red.Coin.Amount)
+			total = total.Add(red.Coin.Amount)
 		}
 		return false
 	})
-	moduleAddr := k.accountKeeper.GetModuleAddress(types.ModuleName)
-	totalStablecoinLock := k.bankKeeper.GetBalance(ctx, moduleAddr, denom).Amount
-
-	if !total.Equal(totalStablecoinLock) {
-		panic(fmt.Sprintf("no equal %v and %v", total, totalStablecoinLock))
-	}
 
 	return total
+}
+
+func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom string) (math.Int, error) {
+	s, found := k.GetStablecoin(ctx, denom)
+	if !found {
+		return math.Int{}, fmt.Errorf("not found Stable coin %s", denom)
+	}
+	return s.LimitTotal, nil
+}
+
+func (k Keeper) GetPrice(ctx context.Context, denom string) (math.LegacyDec, error) {
+	s, found := k.GetStablecoin(ctx, denom)
+	if !found {
+		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
+	}
+	return s.Price, nil
+}
+
+func (k Keeper) GetFeeIn(ctx context.Context, denom string) (math.LegacyDec, error) {
+	s, found := k.GetStablecoin(ctx, denom)
+	if !found {
+		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
+	}
+	return s.FeeIn, nil
+}
+
+func (k Keeper) GetFeeOut(ctx context.Context, denom string) (math.LegacyDec, error) {
+	s, found := k.GetStablecoin(ctx, denom)
+	if !found {
+		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
+	}
+	return s.FeeOut, nil
 }

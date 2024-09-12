@@ -53,8 +53,7 @@ func (q queryServer) Stablecoin(c context.Context, req *types.QueryStablecoinReq
 		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
 	}
 
-	moduleAddr := q.keeper.accountKeeper.GetModuleAddress(types.ModuleName)
-	totalStablecoinLock := q.keeper.bankKeeper.GetBalance(ctx, moduleAddr, req.Denom).Amount
+	totalStablecoinLock := q.keeper.TotalStablecoinLock(ctx, req.Denom)
 
 	return &types.QueryStablecoinResponse{
 		Stablecoin:       stablecoin,
