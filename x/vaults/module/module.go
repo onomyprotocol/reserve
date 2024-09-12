@@ -1,4 +1,4 @@
-package vaults
+package module
 
 import (
 	"context"
