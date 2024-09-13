@@ -1,4 +1,4 @@
-package keeper
+package oracle
 
 import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
@@ -41,7 +41,7 @@ func handleUpdateBandParamsProposal(ctx sdk.Context, k keeper.Keeper, p *types.U
 		// and claims the returned capability
 		err := k.BindPort(ctx, p.BandParams.IbcPortId)
 		if err != nil {
-			return errorsmod.Wrap(types.ErrBadIBCPortBind, err.Error())
+			return errorsmod.Wrap(types.ErrBandPortBind, err.Error())
 		}
 	}
 

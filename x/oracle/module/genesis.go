@@ -32,21 +32,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 			// and claims the returned capability
 			err := k.BindPort(ctx, genState.BandParams.IbcPortId)
 			if err != nil {
-				panic(types.ErrBadIBCPortBind.Error() + err.Error())
+				panic(types.ErrBandPortBind.Error() + err.Error())
 			}
 		}
 	}
-	k.SetPort(ctx, types.PortID)
-	// Only try to bind to port if it is not already bound, since we may already own
-	// port capability from capability InitGenesis
-	if k.ShouldBound(ctx, types.PortID) {
-		// module binds to the port on InitChain
-		// and claims the returned capability
-		err := k.BindPort(ctx, types.PortID)
-		if err != nil {
-			panic("could not claim port capability: " + err.Error())
-		}
-	}
+ 
 	if genState.BandLatestClientId != 0 {
 		k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
 	}

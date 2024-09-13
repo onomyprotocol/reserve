@@ -9,7 +9,8 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 const (
 	// Each value below is the default value for each parameter when generating the default
 	// genesis file.
-	DefaultBandRequestInterval = int64(1) // every 7 blocks
+	DefaultBandRequestInterval = int64(1) // every 1 block
+	DefaultBandSourceChannel   = "channel-0"
 	DefaultBandVersion         = "bandchain-1"
 	DefaultBandPortID          = "oracle"
 )
@@ -34,11 +35,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{}
 }
 
-
 // DefaultBandParams returns the default BandParams
 func DefaultBandParams() BandParams {
 	return BandParams{
 		IbcRequestInterval: DefaultBandRequestInterval,
+		IbcSourceChannel:   DefaultBandSourceChannel,
 		IbcVersion:         DefaultBandVersion,
 		IbcPortId:          DefaultBandPortID,
 	}
