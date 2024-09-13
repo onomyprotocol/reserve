@@ -57,7 +57,9 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 			s.Require().NoError(err)
 			mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)
 
-			s.k.UpdatesStablecoinEpoch(s.Ctx)
+			err = s.k.UpdatesStablecoinEpoch(s.Ctx)
+			s.Require().NoError(err)
+
 			scUpdate, found := s.k.GetStablecoin(s.Ctx, usdt)
 			s.Require().True(found)
 			s.Require().Equal(t.priceUpdate, scUpdate.Price)

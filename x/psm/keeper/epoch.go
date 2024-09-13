@@ -7,7 +7,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) {
+func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 	updatePrice := func(red types.Stablecoin) bool {
 		price, err := k.OracleKeeper.Price(ctx, red.Denom)
 		if err != nil {
@@ -22,8 +22,7 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) {
 		return false
 	}
 
-	k.IterateStablecoin(ctx, updatePrice)
-
+	return k.IterateStablecoin(ctx, updatePrice)
 }
 
 // price is $nomUSD amount to exchange for 1 $stabalecoin
