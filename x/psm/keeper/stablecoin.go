@@ -10,13 +10,13 @@ import (
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-func (k Keeper) SetStablecoin(ctx context.Context, s types.Stablecoin) {
+func (k Keeper) SetStablecoin(ctx context.Context, s types.Stablecoin) error {
 	store := k.storeService.OpenKVStore(ctx)
 
 	key := types.GetKeyStableCoin(s.Denom)
 	bz := k.cdc.MustMarshal(&s)
 
-	store.Set(key, bz)
+	return store.Set(key, bz)
 }
 
 func (k Keeper) GetStablecoin(ctx context.Context, denom string) (types.Stablecoin, bool) {
@@ -55,13 +55,13 @@ func (k Keeper) IterateStablecoin(ctx context.Context, cb func(red types.Stablec
 	return nil
 }
 
-func (k Keeper) SetLockCoin(ctx context.Context, lockCoin types.LockCoin) {
+func (k Keeper) SetLockCoin(ctx context.Context, lockCoin types.LockCoin) error {
 	store := k.storeService.OpenKVStore(ctx)
 
 	key := types.GetKeyLockCoin(lockCoin.Address)
 	bz := k.cdc.MustMarshal(&lockCoin)
 
-	store.Set(key, bz)
+	return store.Set(key, bz)
 }
 
 func (k Keeper) GetLockCoin(ctx context.Context, addr string) (types.LockCoin, bool) {
@@ -100,17 +100,17 @@ func (k Keeper) IterateLockCoin(ctx context.Context, cb func(red types.LockCoin)
 	return nil
 }
 
-func (k Keeper) TotalStablecoinLock(ctx context.Context, denom string) math.Int {
+func (k Keeper) TotalStablecoinLock(ctx context.Context, denom string) (math.Int, error) {
 	total := math.ZeroInt()
 
-	k.IterateLockCoin(ctx, func(red types.LockCoin) (stop bool) {
+	err := k.IterateLockCoin(ctx, func(red types.LockCoin) (stop bool) {
 		if red.Coin.Denom == denom {
 			total = total.Add(red.Coin.Amount)
 		}
 		return false
 	})
 
-	return total
+	return total, err
 }
 
 func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom string) (math.Int, error) {

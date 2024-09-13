@@ -38,7 +38,8 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
+				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
 				return &types.MsgSwapTonomUSD{
@@ -61,7 +62,8 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
+				err := s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
 				return &types.MsgSwapTonomUSD{
@@ -122,7 +124,8 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
+				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))
 				msg := &types.MsgSwapTonomUSD{

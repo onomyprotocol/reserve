@@ -26,8 +26,10 @@ func (s *KeeperTestSuite) TestStoreStablecoin() {
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
 
-	s.k.SetStablecoin(s.Ctx, s1)
-	s.k.SetStablecoin(s.Ctx, s2)
+	err := s.k.SetStablecoin(s.Ctx, s1)
+	s.Require().NoError(err)
+	err = s.k.SetStablecoin(s.Ctx, s2)
+	s.Require().NoError(err)
 
 	stablecoin1, found := s.k.GetStablecoin(s.Ctx, usdt)
 	s.Require().True(found)
@@ -40,10 +42,11 @@ func (s *KeeperTestSuite) TestStoreStablecoin() {
 	s.Require().Equal(stablecoin2.LimitTotal, limitUSDC)
 
 	count := 0
-	s.k.IterateStablecoin(s.Ctx, func(red types.Stablecoin) (stop bool) {
+	err = s.k.IterateStablecoin(s.Ctx, func(red types.Stablecoin) (stop bool) {
 		count += 1
 		return false
 	})
+	s.Require().NoError(err)
 	s.Require().Equal(count, 2)
 }
 
@@ -64,8 +67,11 @@ func (s *KeeperTestSuite) TestStoreLockcoin() {
 		Time:    time.Now().Unix(),
 	}
 
-	s.k.SetLockCoin(s.Ctx, l1)
-	s.k.SetLockCoin(s.Ctx, l2)
+	err := s.k.SetLockCoin(s.Ctx, l1)
+	s.Require().NoError(err)
+
+	err = s.k.SetLockCoin(s.Ctx, l2)
+	s.Require().NoError(err)
 
 	lockCoin1, found := s.k.GetLockCoin(s.Ctx, s.TestAccs[0].String())
 	s.Require().True(found)
@@ -76,10 +82,11 @@ func (s *KeeperTestSuite) TestStoreLockcoin() {
 	s.Require().Equal(coinLock2, *lockCoin2.Coin)
 
 	count := 0
-	s.k.IterateLockCoin(s.Ctx, func(red types.LockCoin) (stop bool) {
+	err = s.k.IterateLockCoin(s.Ctx, func(red types.LockCoin) (stop bool) {
 		count += 1
 		return false
 	})
+	s.Require().NoError(err)
 	s.Require().Equal(count, 2)
 
 	l3 := types.LockCoin{
@@ -87,8 +94,10 @@ func (s *KeeperTestSuite) TestStoreLockcoin() {
 		Coin:    &coinLock1,
 		Time:    time.Now().Unix(),
 	}
-	s.k.SetLockCoin(s.Ctx, l3)
+	err = s.k.SetLockCoin(s.Ctx, l3)
+	s.Require().NoError(err)
 
-	totalLock := s.k.TotalStablecoinLock(s.Ctx, usdt)
+	totalLock, err := s.k.TotalStablecoinLock(s.Ctx, usdt)
+	s.Require().NoError(err)
 	s.Require().Equal(l1.Coin.Add(*l3.Coin).Amount.String(), totalLock.String())
 }

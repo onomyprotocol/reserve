@@ -53,7 +53,10 @@ func (q queryServer) Stablecoin(c context.Context, req *types.QueryStablecoinReq
 		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
 	}
 
-	totalStablecoinLock := q.keeper.TotalStablecoinLock(ctx, req.Denom)
+	totalStablecoinLock, err := q.keeper.TotalStablecoinLock(ctx, req.Denom)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.QueryStablecoinResponse{
 		Stablecoin:       stablecoin,

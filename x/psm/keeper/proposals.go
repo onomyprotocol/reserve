@@ -17,8 +17,10 @@ func (k Keeper) AddStableCoinProposal(ctx sdk.Context, c *types.AddStableCoinPro
 		return fmt.Errorf("%s has existed", c.Denom)
 	}
 
-	k.SetStablecoin(ctx, types.ConvertAddStableCoinToStablecoin(*c))
-
+	err := k.SetStablecoin(ctx, types.ConvertAddStableCoinToStablecoin(*c))
+	if err != nil {
+		return err
+	}
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,
@@ -38,8 +40,10 @@ func (k Keeper) UpdatesStableCoinProposal(ctx sdk.Context, c *types.UpdatesStabl
 		return fmt.Errorf("%s not existed", c.Denom)
 	}
 
-	k.SetStablecoin(ctx, types.ConvertUpdateStableCoinToStablecoin(*c))
-
+	err := k.SetStablecoin(ctx, types.ConvertUpdateStableCoinToStablecoin(*c))
+	if err != nil {
+		return err
+	}
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,

@@ -39,7 +39,8 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
+				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 
 			},
 			addr:            s.TestAccs[0],
@@ -58,7 +59,8 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
+				err := s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 
 			},
 			addr:            s.TestAccs[1],
@@ -116,8 +118,8 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
-
+				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[0],
 			amount:          math.NewInt(1000),
@@ -136,8 +138,8 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 				}
-				s.k.SetStablecoin(s.Ctx, sc)
-
+				err := s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[1],
 			amount:          math.NewInt(1000),

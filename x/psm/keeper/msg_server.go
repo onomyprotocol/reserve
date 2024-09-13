@@ -69,7 +69,11 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// lock coin and send to module
-	k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: msg.Coin, Time: time.Now().Unix()})
+	err = k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: msg.Coin, Time: time.Now().Unix()})
+	if err != nil {
+		return nil, err
+	}
+
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
 	if err != nil {
 		return nil, err
@@ -142,7 +146,10 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	// unlock
 	coinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
 	newLockCoin := lockCoin.Coin.Sub(coinReceive)
-	k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: &newLockCoin, Time: time.Now().Unix()})
+	err = k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: &newLockCoin, Time: time.Now().Unix()})
+	if err != nil {
+		return nil, err
+	}
 
 	// send stablecoin to user
 	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(coinReceive))
@@ -163,7 +170,11 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 }
 
 func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, denom string, amountSwap math.Int) error {
-	totalStablecoinLock := k.TotalStablecoinLock(ctx, denom)
+	totalStablecoinLock, err := k.TotalStablecoinLock(ctx, denom)
+	if err != nil {
+		return err
+	}
+
 	totalLimit, err := k.GetTotalLimitWithDenomStablecoin(ctx, denom)
 	if err != nil {
 		return err

@@ -23,7 +23,8 @@ func (s *KeeperTestSuite) TestStablecoin() {
 		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
-	s.k.SetStablecoin(s.Ctx, sc)
+	err := s.k.SetStablecoin(s.Ctx, sc)
+	s.Require().NoError(err)
 
 	rp, err := s.queryServer.Stablecoin(s.Ctx, &types.QueryStablecoinRequest{Denom: usdt})
 	s.Require().NoError(err)
