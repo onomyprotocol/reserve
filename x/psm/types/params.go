@@ -9,6 +9,8 @@ import (
 var (
 	DefaultLimitTotal           = math.NewInt(100_000_000)
 	DefaultAcceptablePriceRatio = math.LegacyMustNewDecFromStr("0.001")
+	DefaultAdjustmentFeeIn      = math.LegacyMustNewDecFromStr("0.05")
+	DefaultAdjustmentFeeOut     = math.LegacyMustNewDecFromStr("0.05")
 
 	KeyLimitTotal           = []byte("LimitTotal")
 	KeyAcceptablePriceRatio = []byte("AcceptablePriceRatio")
@@ -17,18 +19,22 @@ var (
 // NewParams creates a new Params instance.
 func NewParams(
 	limitTotal math.Int,
-	AcceptablePriceRatio math.LegacyDec,
+	acceptablePriceRatio math.LegacyDec,
+	adjustmentFeeIn math.LegacyDec,
+	adjustmentFeeOut math.LegacyDec,
 ) Params {
 	return Params{
 		LimitTotal:           limitTotal,
-		AcceptablePriceRatio: AcceptablePriceRatio,
+		AcceptablePriceRatio: acceptablePriceRatio,
+		AdjustmentFeeIn:      adjustmentFeeIn,
+		AdjustmentFeeOut:     adjustmentFeeOut,
 	}
 }
 
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultLimitTotal, DefaultAcceptablePriceRatio,
+		DefaultLimitTotal, DefaultAcceptablePriceRatio, DefaultAdjustmentFeeIn, DefaultAdjustmentFeeOut,
 	)
 }
 

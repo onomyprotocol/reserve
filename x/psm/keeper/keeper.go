@@ -29,6 +29,7 @@ type (
 
 		BankKeeper    types.BankKeeper
 		AccountKeeper types.AccountKeeper
+		OracleKeeper  types.OracleKeeper
 	}
 )
 
