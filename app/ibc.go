@@ -37,7 +37,6 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
 	oracle "github.com/onomyprotocol/reserve/x/oracle"
-	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
@@ -162,8 +161,13 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 
-	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
-	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleIBCModule)
+	// oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
+	oracleStack, err := app.registerOracleModule()
+	if err != nil {
+		return err
+	}
+
+	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleStack)
 	// this line is used by starport scaffolding # ibc/app/module
 
 	app.IBCKeeper.SetRouter(ibcRouter)

@@ -3,7 +3,7 @@ package app
 import (
 	"time"
 
-	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	// oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
@@ -294,10 +294,10 @@ var (
 				Name:   circuittypes.ModuleName,
 				Config: appconfig.WrapAny(&circuitmodulev1.Module{}),
 			},
-			{
-				Name:   oraclemoduletypes.ModuleName,
-				Config: appconfig.WrapAny(&oraclemodulev1.Module{}),
-			},
+			// {
+			// 	Name:   oraclemoduletypes.ModuleName,
+			// 	Config: appconfig.WrapAny(&oraclemodulev1.Module{}),
+			// },
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
 	})
