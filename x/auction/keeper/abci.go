@@ -18,13 +18,28 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	}
 
 	// check if has reached the next auction periods
-	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
-		return nil
+	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
+		// update latest auction period
+		k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods))
+
+		liquidatedVaults, err := k.vaultKeeper.GetLiquidatedVaults(ctx)
+		if err != nil {
+			return err
+		}
+
+		// create new auction for this vault
+		for _, vault := range liquidatedVaults {
+			auction, err := k.NewAuction(ctx, currentTime, vault.InitialPrice, vault.Collatheral, vault.Collatheral)
+			if err != nil {
+				return err
+			}
+
+			err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+			if err != nil {
+				return err
+			}
+		}
 	}
-
-	k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods))
-
-	// TODO: check vault module for liquidate vault
 
 	// loop through all auctions
 	err = k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
@@ -35,16 +50,25 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 
 		needCleanup := false
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED {
-			// TODO: notify vault that the debt goal has been reached
+			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, true)
+			if err != nil {
+				return true, err
+			}
 
 			needCleanup = true
 			// skip other logic
 		} else if auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL {
-			// TODO: notify vault out of collatheral to auction
+			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, false)
+			if err != nil {
+				return true, err
+			}
 
 			needCleanup = true
 		} else if auction.EndTime.After(currentTime) {
-			// TODO: notify vault that the auction has ended
+			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, false)
+			if err != nil {
+				return true, err
+			}
 
 			needCleanup = true
 		}

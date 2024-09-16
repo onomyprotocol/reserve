@@ -99,9 +99,7 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
+	keeper keeper.Keeper
 }
 
 func NewAppModule(
@@ -113,8 +111,6 @@ func NewAppModule(
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
-		accountKeeper:  accountKeeper,
-		bankKeeper:     bankKeeper,
 	}
 }
 
@@ -182,6 +178,7 @@ type ModuleInputs struct {
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
+	VaultKeeper   types.VaultKeeper
 }
 
 type ModuleOutputs struct {
@@ -200,6 +197,9 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 	k := keeper.NewKeeper(
 		in.Cdc,
 		in.StoreService,
+		in.AccountKeeper,
+		in.BankKeeper,
+		in.VaultKeeper,
 		in.Logger,
 		authority.String(),
 	)

@@ -7,6 +7,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+type LiquidateVaults struct {
+	VaultId      uint64
+	TargetGoal   sdk.Coin
+	Collatheral  sdk.Coin
+	InitialPrice sdk.Coin
+}
+
 // AccountKeeper defines the expected interface for the Account module.
 type AccountKeeper interface {
 	AddressCodec() addresscodec.Codec
@@ -29,4 +36,10 @@ type BankKeeper interface {
 type ParamSubspace interface {
 	Get(context.Context, []byte, interface{})
 	Set(context.Context, []byte, interface{})
+}
+
+type VaultKeeper interface {
+	GetLiquidatedVaults(ctx context.Context) ([]LiquidateVaults, error)
+
+	NotifyVault(ctx context.Context, tokenRaised, collatheralUnsold sdk.Coin, isReachedGoal bool) error
 }
