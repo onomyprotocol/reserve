@@ -1,0 +1,23 @@
+syntax = "proto3";
+package reserve.auction.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "reserve/auction/v1/params.proto";
+import "reserve/auction/v1/auction.proto";
+
+option go_package = "github.com/onomyprotocol/reserve/x/auction/types";
+
+// GenesisState defines the auction module's genesis state.
+message GenesisState {
+
+  // params defines all the parameters of the module.
+  Params params = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+
+  // list of auctions
+  repeated Auction auctions = 2;
+
+  // list of all bid entries
+  repeated Bid bid_entries = 3;
+}
