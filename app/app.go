@@ -75,6 +75,7 @@ import (
 	ibcfeekeeper "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
@@ -456,6 +457,18 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 	// register app's OpenAPI routes.
 	docs.RegisterOpenAPIService(Name, apiSvr.Router)
 }
+
+func (app *App) GetBaseApp()  *baseapp.BaseApp { return app.BaseApp }
+
+func (app *App) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+	return app.ScopedIBCKeeper
+}
+
+func (app *App) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+	return app.StakingKeeper
+}
+
+func (app *App) GetTxConfig() client.TxConfig { return app.txConfig }
 
 // GetMaccPerms returns a copy of the module account permissions
 //
