@@ -18,9 +18,11 @@ var (
 )
 
 var (
-	AuctionsPrefix     = collections.NewPrefix(1)
-	BidsPrefix         = collections.NewPrefix(2)
-	BidByAddressPrefix = collections.NewPrefix(3)
+	AuctionIdSeqPrefix = collections.NewPrefix(1)
+	BidIdSeqPrefix     = collections.NewPrefix(2)
+	AuctionsPrefix     = collections.NewPrefix(3)
+	BidsPrefix         = collections.NewPrefix(4)
+	BidByAddressPrefix = collections.NewPrefix(5)
 )
 
 func KeyPrefix(p string) []byte {

@@ -48,7 +48,7 @@ message MsgUpdateParamsResponse {}
 // MsgBid is the Msg/Bid request type.
 message MsgBid {
   option (cosmos.msg.v1.signer) = "bidder";
-  option (amino.name) = "reserve/x/oracle/MsgBid";
+  option (amino.name) = "reserve/x/auction/MsgBid";
 
   // bidder is the address that submitting the bid entry.
   string bidder = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
@@ -74,10 +74,10 @@ message MsgBidResponse {
 // MsgCancelBid is the Msg/CancelBid request type.
 message MsgCancelBid {
   option (cosmos.msg.v1.signer) = "bidder";
-  option (amino.name) = "reserve/x/oracle/MsgUpdateBid";
+  option (amino.name) = "reserve/x/auction/MsgCancelBid";
 
   // bid_id is the unique id.
-  string bid_id = 1;
+  uint64 bid_id = 1;
 
   // bidding auction id 
   uint64 auction_id = 2;

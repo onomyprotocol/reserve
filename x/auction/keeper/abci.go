@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -23,50 +22,35 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		return nil
 	}
 
-	k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionDurations))
+	k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods))
 
 	// TODO: check vault module for liquidate vault
 
 	// loop through all auctions
 	err = k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
-		// check if auction is ended or a bidder won
-		if auction.EndTime.After(currentTime) ||
-			auction.Status == types.AuctionStatus_AUCTION_STATUS_EXPIRED ||
-			auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED {
-			if auction.FinalBid == nil ||
-				auction.FinalBid.Bidder == "" ||
-				auction.FinalBid.Amount.IsZero() {
-				// TODO: notify vault module about auction without winner
-			}
+		bidQueue, err := k.Bids.Get(ctx, auction.AuctionId)
+		if err != nil {
+			return true, err
+		}
 
-			bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(auction.FinalBid.Bidder)
-			if err != nil {
-				err := k.revertFinishedStatus(ctx, auction, currentTime)
-				return err == nil, err
-			}
+		needCleanup := false
+		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED {
+			// TODO: notify vault that the debt goal has been reached
 
-			spendable := k.bankKeeper.SpendableCoins(ctx, bidderAddr)
-			if spendable.AmountOf(auction.FinalBid.Amount.Denom).LT(auction.FinalBid.Amount.Amount) {
-				// if bidder does not have enough token to pay, revert the status of auction
-				err := k.revertFinishedStatus(ctx, auction, currentTime)
-				return err == nil, err
-			}
+			needCleanup = true
+			// skip other logic
+		} else if auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL {
+			// TODO: notify vault out of collatheral to auction
 
-			// send the bid amount to auction module
-			err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidderAddr, types.ModuleName, sdk.NewCoins(auction.FinalBid.Amount))
-			if err != nil {
-				err := k.revertFinishedStatus(ctx, auction, currentTime)
-				return err == nil, err
-			}
+			needCleanup = true
+		} else if auction.EndTime.After(currentTime) {
+			// TODO: notify vault that the auction has ended
 
-			// send the liquidate assets to auction winner
-			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAddr, auction.Items)
-			if err != nil {
-				err := k.revertFinishedStatus(ctx, auction, currentTime)
-				return err == nil, err
-			}
+			needCleanup = true
+		}
 
-			// TODO: notify vault module about the winner and return raised token from the auction
+		if needCleanup {
+			k.refundBidders(ctx, bidQueue)
 
 			// clear the auction afterward
 			err = k.DeleteAuction(ctx, auction.AuctionId)
@@ -74,7 +58,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 				return true, err
 			}
 
-			// skip other logic
 			return false, nil
 		}
 
@@ -97,21 +80,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 		}
 
-		highestBid, amt, err := k.checkBidEntry(ctx, auction)
-		if err != nil {
-			return true, err
-		}
-		if highestBid == "" || amt.Amount.IsZero() {
-			return false, nil
-		}
-
-		// update status and final bid
-		auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
-		auction.FinalBid = &types.Bid{
-			Bidder: highestBid,
-			Amount: amt,
-		}
-		err = k.Auctions.Set(ctx, auctionId, auction)
+		err = k.fillBids(ctx, auction, bidQueue)
 		if err != nil {
 			return true, err
 		}
@@ -125,53 +94,85 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	return nil
 }
 
-func (k Keeper) revertFinishedStatus(ctx context.Context, auction types.Auction, currTime time.Time) error {
-	auction.FinalBid = nil
-	if currTime.After(auction.EndTime) {
-		auction.Status = types.AuctionStatus_AUCTION_STATUS_EXPIRED
-	} else {
-		auction.Status = types.AuctionStatus_AUCTION_STATUS_ACTIVE
-	}
-
-	return k.Auctions.Set(ctx, auction.AuctionId, auction)
-}
-
-func (k Keeper) checkBidEntry(ctx context.Context, auction types.Auction) (highestBidder string, amt sdk.Coin, err error) {
-	denom := auction.InitialPrice.Denom
-
-	bidQueue, err := k.Bids.Get(ctx, auction.AuctionId)
-	if err != nil {
-		return "", sdk.NewCoin(denom, sdkmath.ZeroInt()), err
-	}
+func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue types.BidQueue) error {
+	itemDenom := auction.Item.Denom
 
 	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
 	if err != nil {
-		return "", sdk.NewCoin(denom, sdkmath.ZeroInt()), err
+		return err
 	}
 
-	currentPriceAmt := sdkmath.LegacyNewDecFromInt(auction.InitialPrice.Amount).Mul(currentRate).RoundInt()
+	for i, bid := range bidQueue.Bids {
+		if bid.IsHandle {
+			continue
+		}
 
-	maxBidder := struct {
-		addr string
-		amt  sdkmath.Int
-	}{
-		addr: "",
-		amt:  currentPriceAmt,
-	}
-	for addr, bid := range bidQueue.Bids {
-		// get the highest bid that greater or equal the current price
-		if bid.Amount.Amount.GT(maxBidder.amt) {
-			maxBidder.addr = addr
-			maxBidder.amt = bid.Amount.Amount
+		if currentRate.Mul(auction.InitialPrice.Amount.ToLegacyDec()).TruncateInt().LTE(bid.Amount.Amount) {
+			bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(bid.Bidder)
+			if err != nil {
+				continue
+			}
+
+			receiveRate, err := sdkmath.LegacyNewDecFromStr(bid.ReciveRate)
+			if err != nil {
+				continue
+			}
+
+			receivePrice := receiveRate.Mul(auction.InitialPrice.Amount.ToLegacyDec()).TruncateInt()
+			receiveAmt := bid.Amount.Amount.Quo(receivePrice)
+			receiveCoin := sdk.NewCoin(itemDenom, receiveAmt)
+			// if out of collatheral
+			if auction.Item.Amount.LT(receiveAmt) {
+				auction.Status = types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL
+				continue
+			}
+
+			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAddr, sdk.NewCoins(receiveCoin))
+			if err != nil {
+				continue
+			}
+
+			// update auction collatheral
+			auction.Item = auction.Item.Sub(receiveCoin)
+
+			auction.TokenRaised = auction.TokenRaised.Add(bid.Amount)
+
+			if auction.TokenRaised.IsGTE(auction.TargetGoal) {
+				auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
+			}
+
+			bidQueue.Bids[i].IsHandle = true
+		}
+
+		// update auction status
+		err = k.Auctions.Set(ctx, auction.AuctionId, auction)
+		if err != nil {
+			return err
 		}
 	}
 
-	if maxBidder.addr == "" {
-		return "", sdk.NewCoin(denom, sdkmath.ZeroInt()), err
+	// update bid queue
+	err = k.Bids.Set(ctx, auction.AuctionId, bidQueue)
+	if err != nil {
+		return err
 	}
 
-	return maxBidder.addr, sdk.NewCoin(denom, maxBidder.amt), nil
+	return nil
 
+}
+
+func (k Keeper) refundBidders(ctx context.Context, bidQueue types.BidQueue) error {
+	for _, bid := range bidQueue.Bids {
+		if bid.IsHandle {
+			continue
+		}
+
+		err := k.refundToken(ctx, sdk.NewCoins(bid.Amount), bid.Bidder)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (k Keeper) discountRate(auction types.Auction, params types.Params) (string, error) {

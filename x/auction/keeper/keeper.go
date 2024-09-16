@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -33,14 +32,19 @@ type (
 		// timestamp of lastest auction period
 		lastestAuctionPeriod collections.Item[time.Time]
 
+		AuctionIdSeq collections.Sequence
+
+		// bid id seq by auction id
+		BidIdSeq collections.Map[uint64, uint64]
+
 		// Auctions maps auction id with auction struct
 		Auctions collections.Map[uint64, types.Auction]
 
 		// Bids maps auction id with bids queue
 		Bids collections.Map[uint64, types.BidQueue]
 
-		// BidByAddress maps bidder address + auction id to a bid entry
-		BidByAddress collections.Map[collections.Pair[uint64, sdk.AccAddress], types.Bid]
+		// BidByAddress maps bidder auction id + address to a bid entry
+		BidByAddress collections.Map[collections.Pair[uint64, sdk.AccAddress], types.Bids]
 	}
 )
 
@@ -61,9 +65,11 @@ func NewKeeper(
 		storeService: storeService,
 		authority:    authority,
 		logger:       logger,
+		AuctionIdSeq: collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
+		BidIdSeq:     collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
 		Auctions:     collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
 		Bids:         collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
-		BidByAddress: collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bid](cdc)),
+		BidByAddress: collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bids](cdc)),
 	}
 }
 
@@ -86,6 +92,12 @@ func (k Keeper) DeleteAuction(ctx context.Context, auctionId uint64) error {
 
 	// clear the bid queue
 	err = k.Bids.Remove(ctx, auctionId)
+	if err != nil {
+		return fmt.Errorf("failed to remove bid queue: %s", err)
+	}
+
+	// clear the bid seq tracking
+	err = k.BidIdSeq.Remove(ctx, auctionId)
 	if err != nil {
 		return fmt.Errorf("failed to remove bid queue: %s", err)
 	}
@@ -115,27 +127,29 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 		return err
 	}
 
-	_, has = bidQueue.Bids[bid.Bidder]
-	if has {
-		return fmt.Errorf("bid entry already exist for address %s and auction %v", bid.Bidder, auctionId)
-	}
+	bid.Index = uint64(len(bidQueue.Bids))
 
-	bidQueue.Bids[bid.Bidder] = &bid
+	bidQueue.Bids = append(bidQueue.Bids, &bid)
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
 	if err != nil {
 		return err
 	}
 
-	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bid)
+	bids, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidderAddr))
+	if err != nil {
+		return err
+	}
+	bids.Bids = append(bids.Bids, &bid)
+	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return k.lockedToken(ctx, sdk.NewCoins(bid.Amount), bid.Bidder)
 }
 
-// UpdateBidEntry udpdate existing bid entry for the given auction id
-func (k Keeper) UpdateBidEntry(ctx context.Context, auctionId uint64, bidderAddr sdk.AccAddress, updatedBid types.Bid) error {
+// CancelBidEntry cancel existing bid entry for the given auction id
+func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64) error {
 	has, err := k.Auctions.Has(ctx, auctionId)
 	if err != nil {
 		return err
@@ -144,46 +158,49 @@ func (k Keeper) UpdateBidEntry(ctx context.Context, auctionId uint64, bidderAddr
 		return fmt.Errorf("cannot bid for non-existing/expired auction with id: %v", auctionId)
 	}
 
-	has = k.authKeeper.HasAccount(ctx, bidderAddr)
-	if !has {
-		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address %s: account does not exist", updatedBid.Bidder)
-	}
-
 	bidQueue, err := k.Bids.Get(ctx, auctionId)
 	if err != nil {
 		return err
 	}
 
-	currBid, has := bidQueue.Bids[updatedBid.Bidder]
-	if !has {
-		return fmt.Errorf("bid entry does not exist for address %s and auction %v", updatedBid.Bidder, auctionId)
+	var refundAddr string
+	var refundAmt sdk.Coin
+	for i, bid := range bidQueue.Bids {
+		if bid.BidId == bidId {
+			bid.IsHandle = true
+			bidQueue.Bids[i] = bid
+			refundAddr = bid.Bidder
+			refundAmt = bid.Amount
+			break
+		}
 	}
 
-	// locked additional amount when bidder raise the amount
-	// or refund amount when bidder lower the amount
-	if currBid.Amount.Amount.Equal(updatedBid.Amount.Amount) {
-		return errors.New("updated bidding amount must be different from the current bidding amount")
-	}
-
-	// update the entry
-	bidQueue.Bids[currBid.Bidder] = currBid
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
 	if err != nil {
 		return err
 	}
 
-	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), *currBid)
+	if refundAddr == "" || refundAmt.IsNil() {
+		return fmt.Errorf("cannot find bid entry with id %v for auction %v", bidId, auctionId)
+	}
+
+	return k.refundToken(ctx, sdk.NewCoins(refundAmt), refundAddr)
+}
+
+func (k Keeper) lockedToken(ctx context.Context, amt sdk.Coins, bidderAdrr string) error {
+	bidderAcc, err := k.authKeeper.AddressCodec().StringToBytes(bidderAdrr)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidderAcc, types.ModuleName, amt)
 }
 
-func (k Keeper) lockedToken(ctx context.Context, amt sdk.Coins, bidderAdrr sdk.AccAddress) error {
-	return k.bankKeeper.SendCoinsFromAccountToModule(ctx, bidderAdrr, types.ModuleName, amt)
-}
+func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr string) error {
+	bidderAcc, err := k.authKeeper.AddressCodec().StringToBytes(bidderAdrr)
+	if err != nil {
+		return err
+	}
 
-func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr sdk.AccAddress) error {
-	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAdrr, amt)
+	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAcc, amt)
 }

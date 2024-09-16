@@ -36,12 +36,27 @@ func (k msgServer) UpdateParams(ctx context.Context, req *types.MsgUpdateParams)
 func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidResponse, error) {
 	bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(msg.Bidder)
 	if err != nil {
+		return &types.MsgBidResponse{
+			Response: "Failed to submit bid",
+		}, err
+	}
+	bidIdSeq, err := k.BidIdSeq.Get(ctx, msg.AuctionId)
+	if err != nil {
+		return nil, err
+	}
+
+	newBidId := bidIdSeq + 1
+	err = k.BidIdSeq.Set(ctx, msg.AuctionId, newBidId)
+	if err != nil {
 		return nil, err
 	}
 
 	bid := types.Bid{
-		Bidder: msg.Bidder,
-		Amount: msg.Amount,
+		BidId:      newBidId,
+		Bidder:     msg.Bidder,
+		Amount:     msg.Amount,
+		ReciveRate: msg.ReciveRate,
+		IsHandle:   false,
 	}
 	err = k.AddBidEntry(ctx, msg.AuctionId, bidderAddr, bid)
 	if err != nil {
@@ -53,28 +68,22 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 		sdk.NewAttribute(types.AttributeKeyBidEntry, fmt.Sprintf("bidder %s has submit an entry with amount: %s", msg.Bidder, msg.Amount.String())),
 	))
 
-	return &types.MsgBidResponse{}, nil
+	return &types.MsgBidResponse{
+		Response: "Bid Accepted",
+	}, nil
 }
 
-func (k msgServer) UpdateBid(ctx context.Context, msg *types.MsgUpdateBid) (*types.MsgUpdateBidResponse, error) {
-	bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(msg.Bidder)
-	if err != nil {
-		return nil, err
-	}
+func (k msgServer) CancelBid(ctx context.Context, msg *types.MsgCancelBid) (*types.MsgCancelBidResponse, error) {
 
-	bid := types.Bid{
-		Bidder: msg.Bidder,
-		Amount: msg.Amount,
-	}
-	err = k.UpdateBidEntry(ctx, msg.AuctionId, bidderAddr, bid)
+	err := k.CancelBidEntry(ctx, msg.AuctionId, msg.BidId)
 	if err != nil {
 		return nil, err
 	}
 
 	sdk.UnwrapSDKContext(ctx).EventManager().EmitEvent(sdk.NewEvent(
 		types.EventUpdateBid,
-		sdk.NewAttribute(types.AttributeKeyBidEntry, fmt.Sprintf("bidder %s has update their entry to amount: %s", msg.Bidder, msg.Amount.String())),
+		sdk.NewAttribute(types.AttributeKeyBidEntry, fmt.Sprintf("cancel bid id %v for auction %v", msg.BidId, msg.AuctionId)),
 	))
 
-	return &types.MsgUpdateBidResponse{}, nil
+	return &types.MsgCancelBidResponse{}, nil
 }
