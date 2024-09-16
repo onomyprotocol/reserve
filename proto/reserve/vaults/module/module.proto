@@ -4,6 +4,8 @@ package reserve.vaults.module;
 
 import "cosmos/app/v1alpha1/module.proto";
 
+option go_package = "github.com/onomyprotocol/reserve/x/vaults/types";
+
 message Module {
   option (cosmos.app.v1alpha1.module) = {
     go_import : "github.com/onomyprotocol/reserve/x/vaults"

@@ -163,7 +163,7 @@ func (k *Keeper) RepayDebt(
 		burnAmount = vault.Debt
 	}
 
-	err = k.bankKeeper.BurnCoins(ctx, sender, sdk.NewCoins(burnAmount))
+	err = k.bankKeeper.BurnCoins(ctx, sender.String(), sdk.NewCoins(burnAmount))
 	if err != nil {
 		return err
 	}

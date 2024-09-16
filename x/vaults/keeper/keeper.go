@@ -45,7 +45,7 @@ func NewKeeper(
 		accountKeeper:  ak,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		VaultsManager:  collections.NewMap(sb, types.VaultManagerKey, "vault-managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
+		VaultsManager:  collections.NewMap(sb, types.VaultManagerKey, "vault_managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
 		Vaults:         collections.NewMap(sb, types.VaultKey, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
 		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKey, "sequence"),
 	}
@@ -56,6 +56,11 @@ func NewKeeper(
 	}
 	k.Schema = schema
 	return &k
+}
+
+// GetAuthority returns the module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }
 
 func (k *Keeper) ActiveCollateralAsset(

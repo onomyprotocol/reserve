@@ -77,7 +77,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
+
+	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
 	"github.com/onomyprotocol/reserve/docs"
 )
@@ -142,6 +143,7 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 
 	OracleKeeper oraclemodulekeeper.Keeper
+	VaultsKeeper vaultskeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -295,6 +297,7 @@ func New(
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
 		&app.OracleKeeper,
+		&app.VaultsKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
