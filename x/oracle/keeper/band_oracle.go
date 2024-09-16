@@ -78,10 +78,10 @@ func (k Keeper) GetBandCallDataRecord(ctx sdk.Context, clientID uint64) *types.C
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandCallDataRecordKey(clientID))
 	if err != nil {
-		return nil
+		return &types.CalldataRecord{}
 	}
 	if bz == nil {
-		return nil
+		return &types.CalldataRecord{}
 	}
 	k.cdc.MustUnmarshal(bz, &callDataRecord)
 	return &callDataRecord
@@ -140,10 +140,10 @@ func (k Keeper) GetBandOracleRequest(ctx sdk.Context, requestID uint64) *types.B
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandOracleRequestIDKey(requestID))
 	if err != nil {
-		return nil
+		return &types.BandOracleRequest{}
 	}
 	if bz == nil {
-		return nil
+		return &types.BandOracleRequest{}
 	}
 
 	k.cdc.MustUnmarshal(bz, &bandOracleRequest)
@@ -180,10 +180,10 @@ func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPr
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
 	if err != nil {
-		return nil
+		return &types.BandPriceState{}
 	}
 	if bz == nil {
-		return nil
+		return &types.BandPriceState{}
 	}
 
 	k.cdc.MustUnmarshal(bz, &priceState)
