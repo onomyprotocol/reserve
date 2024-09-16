@@ -22,6 +22,9 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
+	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.True(t, price.IsNil())
+
 	bandPriceState := &types.BandPriceState{
 		Symbol: "ATOM",
 		Rate:        math.NewInt(10),
@@ -35,6 +38,10 @@ func TestBandPriceState(t *testing.T) {
 
 	data = app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
 	require.Equal(t, bandPriceState, data)
+
+	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	expect := math.LegacyNewDec(10)
+	require.Equal(t, &expect, price)
 
 	states = app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 1, len(states))

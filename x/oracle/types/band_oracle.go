@@ -13,6 +13,7 @@ import (
 const (
 	BandPriceMultiplier uint64 = 1000000000 // 1e9
 	MaxDataSize                = 256        // 256B
+	QuoteUSD                   = "USD"
 )
 
 type RequestID int64

@@ -215,6 +215,34 @@ func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState 
 	return priceStates
 }
 
+// GetPrice fetches band ibc prices for a given pair in math.LegacyDec
+func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
+	// query ref by using GetBandPriceState
+	basePriceState := k.GetBandPriceState(ctx, base)
+	if basePriceState == nil {
+		return nil
+	}
+
+	if quote == types.QuoteUSD {
+		return &basePriceState.PriceState.Price
+	}
+
+	quotePriceState := k.GetBandPriceState(ctx, quote)
+	if quotePriceState == nil {
+		return nil
+	}
+
+	baseRate := basePriceState.Rate.ToLegacyDec()
+	quoteRate := quotePriceState.Rate.ToLegacyDec()
+
+	if baseRate.IsNil() || quoteRate.IsNil() || !baseRate.IsPositive() || !quoteRate.IsPositive() {
+		return nil
+	}
+
+	price := baseRate.Quo(quoteRate)
+	return &price
+}
+
 // RequestBandOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
 func (k *Keeper) RequestBandOraclePrices(
 	ctx sdk.Context,
