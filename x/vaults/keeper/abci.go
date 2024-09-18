@@ -15,7 +15,11 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) error {
 	}
 
 	k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
-		if k.ShouldLiquidate(ctx, vault, )
+		liquidated, err := k.ShouldLiquidate(ctx, vault)
+		if err != nil && liquidated {
+
+		}
+
 	})
 
 	// TODO: Check liquidate

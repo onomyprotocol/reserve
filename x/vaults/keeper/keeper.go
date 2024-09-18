@@ -17,6 +17,7 @@ type Keeper struct {
 	storeService  storetypes.KVStoreService
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
+	oracleKeeper  types.OracleKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -35,6 +36,7 @@ func NewKeeper(
 	storeService storetypes.KVStoreService,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
+	ok types.OracleKeeper,
 	authority string,
 ) *Keeper {
 	sb := collections.NewSchemaBuilder(storeService)
@@ -43,6 +45,7 @@ func NewKeeper(
 		cdc:            cdc,
 		storeService:   storeService,
 		accountKeeper:  ak,
+		oracleKeeper:   ok,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vault_managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
@@ -104,13 +107,4 @@ func (k *Keeper) IsActived(
 ) bool {
 	has, _ := k.VaultsManager.Has(ctx, denom)
 	return has
-}
-
-func (k *Keeper) GetPrice(
-	ctx context.Context,
-	denom string,
-) math.LegacyDec {
-
-	// TODO: Call price module api
-	return math.LegacyNewDec(1)
 }

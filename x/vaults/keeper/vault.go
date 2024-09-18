@@ -30,7 +30,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.GetPrice(ctx, denom)
+	price := k.oracleKeeper.GetPrice(ctx, denom)
 	// TODO: recalculate with denom decimal?
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(price)
 	ratio := collateralValue.QuoInt(mint.Amount)
@@ -257,16 +257,19 @@ func (k *Keeper) UpdateVaultsDebt(
 func (k *Keeper) ShouldLiquidate(
 	ctx context.Context,
 	vault types.Vault,
-	price math.LegacyDec,
-	liquidationRatio math.LegacyDec,
 ) (bool, error) {
 	// Only liquidate OPEN vault
 	if vault.Status != 0 {
 		return false, nil
 	}
 
+	price := k.oracleKeeper.GetPrice(ctx, vault.CollateralLocked.Denom)
+
 	collateralValue := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(price)
 	ratio := collateralValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
+
+	liquidationRatio := k.GetParams(ctx).Liq
+
 	if ratio.LTE(liquidationRatio) {
 		return true, nil
 	}

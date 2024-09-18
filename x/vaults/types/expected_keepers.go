@@ -3,6 +3,7 @@ package types // noalias
 import (
 	context "context"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -23,4 +24,8 @@ type BankKeeper interface {
 	SendCoinsFromAccountToModule(ctx context.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error
 	MintCoins(ctx context.Context, name string, amt sdk.Coins) error
 	BurnCoins(ctx context.Context, name string, amt sdk.Coins) error
+}
+
+type OracleKeeper interface {
+	GetPrice(ctx context.Context, denom string) math.LegacyDec
 }
