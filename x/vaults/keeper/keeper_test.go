@@ -33,7 +33,8 @@ func TestKeeperTestSuite(t *testing.T) {
 func (s *KeeperTestSuite) TestParams() {
 	s.SetupTest()
 
-	s.k.SetParams(s.Ctx, types.DefaultParams())
+	err := s.k.SetParams(s.Ctx, types.DefaultParams())
+	s.Require().NoError(err)
 
 	p := s.k.GetParams(s.Ctx)
 	s.Require().Equal(p.MintingFee, types.DefaultMintingFee)

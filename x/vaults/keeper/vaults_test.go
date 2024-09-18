@@ -47,8 +47,10 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
 				s.Require().NoError(err)
 
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
 			},
 			denom:      denom,
 			owner:      s.TestAccs[0],
@@ -100,8 +102,10 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 				err = s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
 			},
 			vaultID: 0,
 			sender:  s.TestAccs[0],
@@ -152,8 +156,10 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 				err = s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
 			},
 			vaultId:    0,
 			sender:     s.TestAccs[0],
@@ -204,8 +210,10 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 				err = s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
 			},
 			vaultId:    0,
 			sender:     s.TestAccs[0],
@@ -253,7 +261,8 @@ func (s *KeeperTestSuite) TestUpdateVaultsDebt() {
 				// update params
 				uP := types.DefaultParams()
 				uP.StabilityFee = feeStabilityUpdate
-				s.k.SetParams(s.Ctx, uP)
+				err = s.k.SetParams(s.Ctx, uP)
+				s.Require().NoError(err)
 			},
 			vaultId: 0,
 		},
@@ -307,8 +316,10 @@ func (s *KeeperTestSuite) TestGetLiquidateVaults() {
 				err = s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
 			},
 			vaultId:    0,
 			sender:     s.TestAccs[0],

@@ -70,7 +70,10 @@ func (a AppModule) ExportGenesis(_ sdk.Context, cdc codec.JSONCodec) json.RawMes
 func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) {
 	var genesisState types.GenesisState
 	marshaler.MustUnmarshalJSON(message, &genesisState)
-	a.keeper.InitGenesis(ctx, genesisState)
+	err := a.keeper.InitGenesis(ctx, genesisState)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (AppModule) ConsensusVersion() uint64 { return consensusVersion }
