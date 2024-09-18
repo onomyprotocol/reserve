@@ -338,7 +338,7 @@ func New(
 	app.App = appBuilder.Build(db, traceStore, baseAppOptions...)
 
 	// Register legacy modules
-	if err := app.registerIBCModules(appOpts); err != nil {
+	if err := app.registerIBCModules(); err != nil {
 		return nil, err
 	}
 

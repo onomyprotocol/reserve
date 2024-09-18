@@ -26,7 +26,7 @@ func (k *Keeper) CreateNewVault(
 
 	// Check if expect min less than MinInitialDebt
 	if mint.Amount.LT(params.MinInitialDebt) {
-		return fmt.Errorf("initial mint should be greater than min. Got %d, expected %d", mint, params.MinInitialDebt)
+		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint, params.MinInitialDebt)
 	}
 
 	// Calculate collateral ratio
@@ -210,7 +210,7 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	if vault.CollateralLocked.Amount.LT(collateral.Amount) {
-		fmt.Errorf("%d exeed locked amount: %d", collateral.Amount, vault.CollateralLocked.Amount)
+		return fmt.Errorf("%d exeed locked amount: %d", collateral.Amount, vault.CollateralLocked.Amount)
 	}
 
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)

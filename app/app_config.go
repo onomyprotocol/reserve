@@ -123,6 +123,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		oraclemoduletypes.ModuleName,
+		vaultsmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
