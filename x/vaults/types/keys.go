@@ -8,8 +8,8 @@ const (
 )
 
 var (
-	ParamsKey        = collections.NewPrefix(1)
-	VaultKey         = collections.NewPrefix(2)
-	VaultManagerKey  = collections.NewPrefix(3)
-	VaultSequenceKey = collections.NewPrefix(4)
+	ParamsKey              = collections.NewPrefix(1)
+	VaultKeyPrefix         = collections.NewPrefix(2)
+	VaultManagerKeyPrefix  = collections.NewPrefix(3)
+	VaultSequenceKeyPrefix = collections.NewPrefix(4)
 )

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: cosmos/vaults/tx.proto
+// source: reserve/vaults/tx.proto
 
 package vaults
 
@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_ActiveCollateral_FullMethodName = "/cosmos.vaults.Msg/ActiveCollateral"
-	Msg_CreateVault_FullMethodName      = "/cosmos.vaults.Msg/CreateVault"
-	Msg_Deposit_FullMethodName          = "/cosmos.vaults.Msg/Deposit"
-	Msg_Withdraw_FullMethodName         = "/cosmos.vaults.Msg/Withdraw"
-	Msg_Mint_FullMethodName             = "/cosmos.vaults.Msg/Mint"
-	Msg_Repay_FullMethodName            = "/cosmos.vaults.Msg/Repay"
+	Msg_UpdateParams_FullMethodName     = "/reserve.vaults.Msg/UpdateParams"
+	Msg_ActiveCollateral_FullMethodName = "/reserve.vaults.Msg/ActiveCollateral"
+	Msg_CreateVault_FullMethodName      = "/reserve.vaults.Msg/CreateVault"
+	Msg_Deposit_FullMethodName          = "/reserve.vaults.Msg/Deposit"
+	Msg_Withdraw_FullMethodName         = "/reserve.vaults.Msg/Withdraw"
+	Msg_Mint_FullMethodName             = "/reserve.vaults.Msg/Mint"
+	Msg_Repay_FullMethodName            = "/reserve.vaults.Msg/Repay"
 )
 
 // MsgClient is the client API for Msg service.
@@ -33,6 +34,9 @@ const (
 //
 // Msg defines the vaults Msg service.
 type MsgClient interface {
+	// UpdateParams defines a (governance) operation for updating the module
+	// parameters. The authority defaults to the x/gov module account.
+	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
 	// ActiveCollateral defines a method for enable a collateral asset
 	ActiveCollateral(ctx context.Context, in *MsgActiveCollateral, opts ...grpc.CallOption) (*MsgActiveCollateralResponse, error)
 	// CreateVault defines a method for creating a new vault and mint token
@@ -44,7 +48,7 @@ type MsgClient interface {
 	// Mint defines a method for minting more tokens
 	Mint(ctx context.Context, in *MsgMint, opts ...grpc.CallOption) (*MsgMintResponse, error)
 	// Repay defines a method for reducing debt by burning tokens
-	Repay(ctx context.Context, in *MsgRepay, opts ...grpc.CallOption) (*MsgMintResponse, error)
+	Repay(ctx context.Context, in *MsgRepay, opts ...grpc.CallOption) (*MsgRepayResponse, error)
 }
 
 type msgClient struct {
@@ -53,6 +57,16 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc.ClientConnInterface) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgUpdateParamsResponse)
+	err := c.cc.Invoke(ctx, Msg_UpdateParams_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) ActiveCollateral(ctx context.Context, in *MsgActiveCollateral, opts ...grpc.CallOption) (*MsgActiveCollateralResponse, error) {
@@ -105,9 +119,9 @@ func (c *msgClient) Mint(ctx context.Context, in *MsgMint, opts ...grpc.CallOpti
 	return out, nil
 }
 
-func (c *msgClient) Repay(ctx context.Context, in *MsgRepay, opts ...grpc.CallOption) (*MsgMintResponse, error) {
+func (c *msgClient) Repay(ctx context.Context, in *MsgRepay, opts ...grpc.CallOption) (*MsgRepayResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(MsgMintResponse)
+	out := new(MsgRepayResponse)
 	err := c.cc.Invoke(ctx, Msg_Repay_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -121,6 +135,9 @@ func (c *msgClient) Repay(ctx context.Context, in *MsgRepay, opts ...grpc.CallOp
 //
 // Msg defines the vaults Msg service.
 type MsgServer interface {
+	// UpdateParams defines a (governance) operation for updating the module
+	// parameters. The authority defaults to the x/gov module account.
+	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
 	// ActiveCollateral defines a method for enable a collateral asset
 	ActiveCollateral(context.Context, *MsgActiveCollateral) (*MsgActiveCollateralResponse, error)
 	// CreateVault defines a method for creating a new vault and mint token
@@ -132,7 +149,7 @@ type MsgServer interface {
 	// Mint defines a method for minting more tokens
 	Mint(context.Context, *MsgMint) (*MsgMintResponse, error)
 	// Repay defines a method for reducing debt by burning tokens
-	Repay(context.Context, *MsgRepay) (*MsgMintResponse, error)
+	Repay(context.Context, *MsgRepay) (*MsgRepayResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -143,6 +160,9 @@ type MsgServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMsgServer struct{}
 
+func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
 func (UnimplementedMsgServer) ActiveCollateral(context.Context, *MsgActiveCollateral) (*MsgActiveCollateralResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ActiveCollateral not implemented")
 }
@@ -158,7 +178,7 @@ func (UnimplementedMsgServer) Withdraw(context.Context, *MsgWithdraw) (*MsgWithd
 func (UnimplementedMsgServer) Mint(context.Context, *MsgMint) (*MsgMintResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Mint not implemented")
 }
-func (UnimplementedMsgServer) Repay(context.Context, *MsgRepay) (*MsgMintResponse, error) {
+func (UnimplementedMsgServer) Repay(context.Context, *MsgRepay) (*MsgRepayResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Repay not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
@@ -180,6 +200,24 @@ func RegisterMsgServer(s grpc.ServiceRegistrar, srv MsgServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&Msg_ServiceDesc, srv)
+}
+
+func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateParams)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateParams(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_UpdateParams_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateParams(ctx, req.(*MsgUpdateParams))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_ActiveCollateral_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -294,9 +332,13 @@ func _Msg_Repay_Handler(srv interface{}, ctx context.Context, dec func(interface
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Msg_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "cosmos.vaults.Msg",
+	ServiceName: "reserve.vaults.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UpdateParams",
+			Handler:    _Msg_UpdateParams_Handler,
+		},
 		{
 			MethodName: "ActiveCollateral",
 			Handler:    _Msg_ActiveCollateral_Handler,
@@ -323,5 +365,5 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "cosmos/vaults/tx.proto",
+	Metadata: "reserve/vaults/tx.proto",
 }

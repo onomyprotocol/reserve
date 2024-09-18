@@ -3,6 +3,8 @@ package vaults
 
 import (
 	_ "cosmossdk.io/api/amino"
+	_ "cosmossdk.io/api/cosmos/base/v1beta1"
+	_ "cosmossdk.io/api/reserve/oracle"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
@@ -16,20 +18,24 @@ import (
 )
 
 var (
-	md_Params                     protoreflect.MessageDescriptor
-	fd_Params_minting_fee         protoreflect.FieldDescriptor
-	fd_Params_stability_fee       protoreflect.FieldDescriptor
-	fd_Params_liquidation_penalty protoreflect.FieldDescriptor
-	fd_Params_min_initial_debt    protoreflect.FieldDescriptor
+	md_Params                         protoreflect.MessageDescriptor
+	fd_Params_minting_fee             protoreflect.FieldDescriptor
+	fd_Params_stability_fee           protoreflect.FieldDescriptor
+	fd_Params_liquidation_penalty     protoreflect.FieldDescriptor
+	fd_Params_min_initial_debt        protoreflect.FieldDescriptor
+	fd_Params_recalculate_debt_period protoreflect.FieldDescriptor
+	fd_Params_liquidate_period        protoreflect.FieldDescriptor
 )
 
 func init() {
-	file_cosmos_vaults_params_proto_init()
-	md_Params = File_cosmos_vaults_params_proto.Messages().ByName("Params")
+	file_reserve_vaults_params_proto_init()
+	md_Params = File_reserve_vaults_params_proto.Messages().ByName("Params")
 	fd_Params_minting_fee = md_Params.Fields().ByName("minting_fee")
 	fd_Params_stability_fee = md_Params.Fields().ByName("stability_fee")
 	fd_Params_liquidation_penalty = md_Params.Fields().ByName("liquidation_penalty")
 	fd_Params_min_initial_debt = md_Params.Fields().ByName("min_initial_debt")
+	fd_Params_recalculate_debt_period = md_Params.Fields().ByName("recalculate_debt_period")
+	fd_Params_liquidate_period = md_Params.Fields().ByName("liquidate_period")
 }
 
 var _ protoreflect.Message = (*fastReflection_Params)(nil)
@@ -41,7 +47,7 @@ func (x *Params) ProtoReflect() protoreflect.Message {
 }
 
 func (x *Params) slowProtoReflect() protoreflect.Message {
-	mi := &file_cosmos_vaults_params_proto_msgTypes[0]
+	mi := &file_reserve_vaults_params_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -121,6 +127,18 @@ func (x *fastReflection_Params) Range(f func(protoreflect.FieldDescriptor, proto
 			return
 		}
 	}
+	if x.RecalculateDebtPeriod != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.RecalculateDebtPeriod)
+		if !f(fd_Params_recalculate_debt_period, value) {
+			return
+		}
+	}
+	if x.LiquidatePeriod != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.LiquidatePeriod)
+		if !f(fd_Params_liquidate_period, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -136,19 +154,23 @@ func (x *fastReflection_Params) Range(f func(protoreflect.FieldDescriptor, proto
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_Params) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
+	case "reserve.vaults.Params.minting_fee":
 		return x.MintingFee != ""
-	case "cosmos.vaults.Params.stability_fee":
+	case "reserve.vaults.Params.stability_fee":
 		return x.StabilityFee != ""
-	case "cosmos.vaults.Params.liquidation_penalty":
+	case "reserve.vaults.Params.liquidation_penalty":
 		return x.LiquidationPenalty != ""
-	case "cosmos.vaults.Params.min_initial_debt":
+	case "reserve.vaults.Params.min_initial_debt":
 		return x.MinInitialDebt != ""
+	case "reserve.vaults.Params.recalculate_debt_period":
+		return x.RecalculateDebtPeriod != uint64(0)
+	case "reserve.vaults.Params.liquidate_period":
+		return x.LiquidatePeriod != uint64(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -160,19 +182,23 @@ func (x *fastReflection_Params) Has(fd protoreflect.FieldDescriptor) bool {
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
+	case "reserve.vaults.Params.minting_fee":
 		x.MintingFee = ""
-	case "cosmos.vaults.Params.stability_fee":
+	case "reserve.vaults.Params.stability_fee":
 		x.StabilityFee = ""
-	case "cosmos.vaults.Params.liquidation_penalty":
+	case "reserve.vaults.Params.liquidation_penalty":
 		x.LiquidationPenalty = ""
-	case "cosmos.vaults.Params.min_initial_debt":
+	case "reserve.vaults.Params.min_initial_debt":
 		x.MinInitialDebt = ""
+	case "reserve.vaults.Params.recalculate_debt_period":
+		x.RecalculateDebtPeriod = uint64(0)
+	case "reserve.vaults.Params.liquidate_period":
+		x.LiquidatePeriod = uint64(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -184,23 +210,29 @@ func (x *fastReflection_Params) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_Params) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
+	case "reserve.vaults.Params.minting_fee":
 		value := x.MintingFee
 		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Params.stability_fee":
+	case "reserve.vaults.Params.stability_fee":
 		value := x.StabilityFee
 		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Params.liquidation_penalty":
+	case "reserve.vaults.Params.liquidation_penalty":
 		value := x.LiquidationPenalty
 		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Params.min_initial_debt":
+	case "reserve.vaults.Params.min_initial_debt":
 		value := x.MinInitialDebt
 		return protoreflect.ValueOfString(value)
+	case "reserve.vaults.Params.recalculate_debt_period":
+		value := x.RecalculateDebtPeriod
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.vaults.Params.liquidate_period":
+		value := x.LiquidatePeriod
+		return protoreflect.ValueOfUint64(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -216,19 +248,23 @@ func (x *fastReflection_Params) Get(descriptor protoreflect.FieldDescriptor) pro
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
+	case "reserve.vaults.Params.minting_fee":
 		x.MintingFee = value.Interface().(string)
-	case "cosmos.vaults.Params.stability_fee":
+	case "reserve.vaults.Params.stability_fee":
 		x.StabilityFee = value.Interface().(string)
-	case "cosmos.vaults.Params.liquidation_penalty":
+	case "reserve.vaults.Params.liquidation_penalty":
 		x.LiquidationPenalty = value.Interface().(string)
-	case "cosmos.vaults.Params.min_initial_debt":
+	case "reserve.vaults.Params.min_initial_debt":
 		x.MinInitialDebt = value.Interface().(string)
+	case "reserve.vaults.Params.recalculate_debt_period":
+		x.RecalculateDebtPeriod = value.Uint()
+	case "reserve.vaults.Params.liquidate_period":
+		x.LiquidatePeriod = value.Uint()
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -244,19 +280,23 @@ func (x *fastReflection_Params) Set(fd protoreflect.FieldDescriptor, value proto
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_Params) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
-		panic(fmt.Errorf("field minting_fee of message cosmos.vaults.Params is not mutable"))
-	case "cosmos.vaults.Params.stability_fee":
-		panic(fmt.Errorf("field stability_fee of message cosmos.vaults.Params is not mutable"))
-	case "cosmos.vaults.Params.liquidation_penalty":
-		panic(fmt.Errorf("field liquidation_penalty of message cosmos.vaults.Params is not mutable"))
-	case "cosmos.vaults.Params.min_initial_debt":
-		panic(fmt.Errorf("field min_initial_debt of message cosmos.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.minting_fee":
+		panic(fmt.Errorf("field minting_fee of message reserve.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.stability_fee":
+		panic(fmt.Errorf("field stability_fee of message reserve.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.liquidation_penalty":
+		panic(fmt.Errorf("field liquidation_penalty of message reserve.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.min_initial_debt":
+		panic(fmt.Errorf("field min_initial_debt of message reserve.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.recalculate_debt_period":
+		panic(fmt.Errorf("field recalculate_debt_period of message reserve.vaults.Params is not mutable"))
+	case "reserve.vaults.Params.liquidate_period":
+		panic(fmt.Errorf("field liquidate_period of message reserve.vaults.Params is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -265,19 +305,23 @@ func (x *fastReflection_Params) Mutable(fd protoreflect.FieldDescriptor) protore
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_Params) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.Params.minting_fee":
+	case "reserve.vaults.Params.minting_fee":
 		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Params.stability_fee":
+	case "reserve.vaults.Params.stability_fee":
 		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Params.liquidation_penalty":
+	case "reserve.vaults.Params.liquidation_penalty":
 		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Params.min_initial_debt":
+	case "reserve.vaults.Params.min_initial_debt":
 		return protoreflect.ValueOfString("")
+	case "reserve.vaults.Params.recalculate_debt_period":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.vaults.Params.liquidate_period":
+		return protoreflect.ValueOfUint64(uint64(0))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Params"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.Params does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.Params does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -287,7 +331,7 @@ func (x *fastReflection_Params) NewField(fd protoreflect.FieldDescriptor) protor
 func (x *fastReflection_Params) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in cosmos.vaults.Params", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.Params", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -358,6 +402,12 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
+		if x.RecalculateDebtPeriod != 0 {
+			n += 1 + runtime.Sov(uint64(x.RecalculateDebtPeriod))
+		}
+		if x.LiquidatePeriod != 0 {
+			n += 1 + runtime.Sov(uint64(x.LiquidatePeriod))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -386,6 +436,16 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.LiquidatePeriod != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.LiquidatePeriod))
+			i--
+			dAtA[i] = 0x30
+		}
+		if x.RecalculateDebtPeriod != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.RecalculateDebtPeriod))
+			i--
+			dAtA[i] = 0x28
 		}
 		if len(x.MinInitialDebt) > 0 {
 			i -= len(x.MinInitialDebt)
@@ -592,6 +652,44 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 				}
 				x.MinInitialDebt = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field RecalculateDebtPeriod", wireType)
+				}
+				x.RecalculateDebtPeriod = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.RecalculateDebtPeriod |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field LiquidatePeriod", wireType)
+				}
+				x.LiquidatePeriod = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.LiquidatePeriod |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -635,8 +733,8 @@ var (
 )
 
 func init() {
-	file_cosmos_vaults_params_proto_init()
-	md_VaultMamagerParams = File_cosmos_vaults_params_proto.Messages().ByName("VaultMamagerParams")
+	file_reserve_vaults_params_proto_init()
+	md_VaultMamagerParams = File_reserve_vaults_params_proto.Messages().ByName("VaultMamagerParams")
 	fd_VaultMamagerParams_min_collateral_ratio = md_VaultMamagerParams.Fields().ByName("min_collateral_ratio")
 	fd_VaultMamagerParams_liquidation_ratio = md_VaultMamagerParams.Fields().ByName("liquidation_ratio")
 	fd_VaultMamagerParams_max_debt = md_VaultMamagerParams.Fields().ByName("max_debt")
@@ -651,7 +749,7 @@ func (x *VaultMamagerParams) ProtoReflect() protoreflect.Message {
 }
 
 func (x *VaultMamagerParams) slowProtoReflect() protoreflect.Message {
-	mi := &file_cosmos_vaults_params_proto_msgTypes[1]
+	mi := &file_reserve_vaults_params_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -740,17 +838,17 @@ func (x *fastReflection_VaultMamagerParams) Range(f func(protoreflect.FieldDescr
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_VaultMamagerParams) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
 		return x.MinCollateralRatio != ""
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
 		return x.LiquidationRatio != ""
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultMamagerParams.max_debt":
 		return x.MaxDebt != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -762,17 +860,17 @@ func (x *fastReflection_VaultMamagerParams) Has(fd protoreflect.FieldDescriptor)
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultMamagerParams) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
 		x.MinCollateralRatio = ""
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
 		x.LiquidationRatio = ""
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultMamagerParams.max_debt":
 		x.MaxDebt = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -784,20 +882,20 @@ func (x *fastReflection_VaultMamagerParams) Clear(fd protoreflect.FieldDescripto
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_VaultMamagerParams) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
 		value := x.MinCollateralRatio
 		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
 		value := x.LiquidationRatio
 		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultMamagerParams.max_debt":
 		value := x.MaxDebt
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -813,17 +911,17 @@ func (x *fastReflection_VaultMamagerParams) Get(descriptor protoreflect.FieldDes
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultMamagerParams) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
 		x.MinCollateralRatio = value.Interface().(string)
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
 		x.LiquidationRatio = value.Interface().(string)
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultMamagerParams.max_debt":
 		x.MaxDebt = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -839,17 +937,17 @@ func (x *fastReflection_VaultMamagerParams) Set(fd protoreflect.FieldDescriptor,
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_VaultMamagerParams) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
-		panic(fmt.Errorf("field min_collateral_ratio of message cosmos.vaults.VaultMamagerParams is not mutable"))
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
-		panic(fmt.Errorf("field liquidation_ratio of message cosmos.vaults.VaultMamagerParams is not mutable"))
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
-		panic(fmt.Errorf("field max_debt of message cosmos.vaults.VaultMamagerParams is not mutable"))
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+		panic(fmt.Errorf("field min_collateral_ratio of message reserve.vaults.VaultMamagerParams is not mutable"))
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+		panic(fmt.Errorf("field liquidation_ratio of message reserve.vaults.VaultMamagerParams is not mutable"))
+	case "reserve.vaults.VaultMamagerParams.max_debt":
+		panic(fmt.Errorf("field max_debt of message reserve.vaults.VaultMamagerParams is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -858,17 +956,17 @@ func (x *fastReflection_VaultMamagerParams) Mutable(fd protoreflect.FieldDescrip
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_VaultMamagerParams) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
 		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
 		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultMamagerParams.max_debt":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -878,7 +976,7 @@ func (x *fastReflection_VaultMamagerParams) NewField(fd protoreflect.FieldDescri
 func (x *fastReflection_VaultMamagerParams) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in cosmos.vaults.VaultMamagerParams", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.VaultMamagerParams", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -1175,1170 +1273,11 @@ func (x *fastReflection_VaultMamagerParams) ProtoMethods() *protoiface.Methods {
 	}
 }
 
-var (
-	md_VaultMamager                protoreflect.MessageDescriptor
-	fd_VaultMamager_params         protoreflect.FieldDescriptor
-	fd_VaultMamager_denom          protoreflect.FieldDescriptor
-	fd_VaultMamager_mint_available protoreflect.FieldDescriptor
-)
-
-func init() {
-	file_cosmos_vaults_params_proto_init()
-	md_VaultMamager = File_cosmos_vaults_params_proto.Messages().ByName("VaultMamager")
-	fd_VaultMamager_params = md_VaultMamager.Fields().ByName("params")
-	fd_VaultMamager_denom = md_VaultMamager.Fields().ByName("denom")
-	fd_VaultMamager_mint_available = md_VaultMamager.Fields().ByName("mint_available")
-}
-
-var _ protoreflect.Message = (*fastReflection_VaultMamager)(nil)
-
-type fastReflection_VaultMamager VaultMamager
-
-func (x *VaultMamager) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_VaultMamager)(x)
-}
-
-func (x *VaultMamager) slowProtoReflect() protoreflect.Message {
-	mi := &file_cosmos_vaults_params_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-var _fastReflection_VaultMamager_messageType fastReflection_VaultMamager_messageType
-var _ protoreflect.MessageType = fastReflection_VaultMamager_messageType{}
-
-type fastReflection_VaultMamager_messageType struct{}
-
-func (x fastReflection_VaultMamager_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_VaultMamager)(nil)
-}
-func (x fastReflection_VaultMamager_messageType) New() protoreflect.Message {
-	return new(fastReflection_VaultMamager)
-}
-func (x fastReflection_VaultMamager_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamager
-}
-
-// Descriptor returns message descriptor, which contains only the protobuf
-// type information for the message.
-func (x *fastReflection_VaultMamager) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamager
-}
-
-// Type returns the message type, which encapsulates both Go and protobuf
-// type information. If the Go type information is not needed,
-// it is recommended that the message descriptor be used instead.
-func (x *fastReflection_VaultMamager) Type() protoreflect.MessageType {
-	return _fastReflection_VaultMamager_messageType
-}
-
-// New returns a newly allocated and mutable empty message.
-func (x *fastReflection_VaultMamager) New() protoreflect.Message {
-	return new(fastReflection_VaultMamager)
-}
-
-// Interface unwraps the message reflection interface and
-// returns the underlying ProtoMessage interface.
-func (x *fastReflection_VaultMamager) Interface() protoreflect.ProtoMessage {
-	return (*VaultMamager)(x)
-}
-
-// Range iterates over every populated field in an undefined order,
-// calling f for each field descriptor and value encountered.
-// Range returns immediately if f returns false.
-// While iterating, mutating operations may only be performed
-// on the current field descriptor.
-func (x *fastReflection_VaultMamager) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.Params != nil {
-		value := protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-		if !f(fd_VaultMamager_params, value) {
-			return
-		}
-	}
-	if x.Denom != "" {
-		value := protoreflect.ValueOfString(x.Denom)
-		if !f(fd_VaultMamager_denom, value) {
-			return
-		}
-	}
-	if x.MintAvailable != "" {
-		value := protoreflect.ValueOfString(x.MintAvailable)
-		if !f(fd_VaultMamager_mint_available, value) {
-			return
-		}
-	}
-}
-
-// Has reports whether a field is populated.
-//
-// Some fields have the property of nullability where it is possible to
-// distinguish between the default value of a field and whether the field
-// was explicitly populated with the default value. Singular message fields,
-// member fields of a oneof, and proto2 scalar fields are nullable. Such
-// fields are populated only if explicitly set.
-//
-// In other cases (aside from the nullable cases above),
-// a proto3 scalar field is populated if it contains a non-zero value, and
-// a repeated field is populated if it is non-empty.
-func (x *fastReflection_VaultMamager) Has(fd protoreflect.FieldDescriptor) bool {
-	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		return x.Params != nil
-	case "cosmos.vaults.VaultMamager.denom":
-		return x.Denom != ""
-	case "cosmos.vaults.VaultMamager.mint_available":
-		return x.MintAvailable != ""
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", fd.FullName()))
-	}
-}
-
-// Clear clears the field such that a subsequent Has call reports false.
-//
-// Clearing an extension field clears both the extension type and value
-// associated with the given field number.
-//
-// Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Clear(fd protoreflect.FieldDescriptor) {
-	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		x.Params = nil
-	case "cosmos.vaults.VaultMamager.denom":
-		x.Denom = ""
-	case "cosmos.vaults.VaultMamager.mint_available":
-		x.MintAvailable = ""
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", fd.FullName()))
-	}
-}
-
-// Get retrieves the value for a field.
-//
-// For unpopulated scalars, it returns the default value, where
-// the default value of a bytes scalar is guaranteed to be a copy.
-// For unpopulated composite types, it returns an empty, read-only view
-// of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_VaultMamager) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
-	switch descriptor.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		value := x.Params
-		return protoreflect.ValueOfMessage(value.ProtoReflect())
-	case "cosmos.vaults.VaultMamager.denom":
-		value := x.Denom
-		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.VaultMamager.mint_available":
-		value := x.MintAvailable
-		return protoreflect.ValueOfString(value)
-	default:
-		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", descriptor.FullName()))
-	}
-}
-
-// Set stores the value for a field.
-//
-// For a field belonging to a oneof, it implicitly clears any other field
-// that may be currently set within the same oneof.
-// For extension fields, it implicitly stores the provided ExtensionType.
-// When setting a composite type, it is unspecified whether the stored value
-// aliases the source's memory in any way. If the composite value is an
-// empty, read-only value, then it panics.
-//
-// Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
-	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		x.Params = value.Message().Interface().(*VaultMamagerParams)
-	case "cosmos.vaults.VaultMamager.denom":
-		x.Denom = value.Interface().(string)
-	case "cosmos.vaults.VaultMamager.mint_available":
-		x.MintAvailable = value.Interface().(string)
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", fd.FullName()))
-	}
-}
-
-// Mutable returns a mutable reference to a composite type.
-//
-// If the field is unpopulated, it may allocate a composite value.
-// For a field belonging to a oneof, it implicitly clears any other field
-// that may be currently set within the same oneof.
-// For extension fields, it implicitly stores the provided ExtensionType
-// if not already stored.
-// It panics if the field does not contain a composite type.
-//
-// Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		if x.Params == nil {
-			x.Params = new(VaultMamagerParams)
-		}
-		return protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-	case "cosmos.vaults.VaultMamager.denom":
-		panic(fmt.Errorf("field denom of message cosmos.vaults.VaultMamager is not mutable"))
-	case "cosmos.vaults.VaultMamager.mint_available":
-		panic(fmt.Errorf("field mint_available of message cosmos.vaults.VaultMamager is not mutable"))
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", fd.FullName()))
-	}
-}
-
-// NewField returns a new value that is assignable to the field
-// for the given descriptor. For scalars, this returns the default value.
-// For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_VaultMamager) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	switch fd.FullName() {
-	case "cosmos.vaults.VaultMamager.params":
-		m := new(VaultMamagerParams)
-		return protoreflect.ValueOfMessage(m.ProtoReflect())
-	case "cosmos.vaults.VaultMamager.denom":
-		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.VaultMamager.mint_available":
-		return protoreflect.ValueOfString("")
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.VaultMamager"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.VaultMamager does not contain field %s", fd.FullName()))
-	}
-}
-
-// WhichOneof reports which field within the oneof is populated,
-// returning nil if none are populated.
-// It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_VaultMamager) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
-	switch d.FullName() {
-	default:
-		panic(fmt.Errorf("%s is not a oneof field in cosmos.vaults.VaultMamager", d.FullName()))
-	}
-	panic("unreachable")
-}
-
-// GetUnknown retrieves the entire list of unknown fields.
-// The caller may only mutate the contents of the RawFields
-// if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_VaultMamager) GetUnknown() protoreflect.RawFields {
-	return x.unknownFields
-}
-
-// SetUnknown stores an entire list of unknown fields.
-// The raw fields must be syntactically valid according to the wire format.
-// An implementation may panic if this is not the case.
-// Once stored, the caller must not mutate the content of the RawFields.
-// An empty RawFields may be passed to clear the fields.
-//
-// SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) SetUnknown(fields protoreflect.RawFields) {
-	x.unknownFields = fields
-}
-
-// IsValid reports whether the message is valid.
-//
-// An invalid message is an empty, read-only value.
-//
-// An invalid message often corresponds to a nil pointer of the concrete
-// message type, but the details are implementation dependent.
-// Validity is not part of the protobuf data model, and may not
-// be preserved in marshaling or other operations.
-func (x *fastReflection_VaultMamager) IsValid() bool {
-	return x != nil
-}
-
-// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
-// This method may return nil.
-//
-// The returned methods type is identical to
-// "google.golang.org/protobuf/runtime/protoiface".Methods.
-// Consult the protoiface package documentation for details.
-func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
-	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*VaultMamager)
-		if x == nil {
-			return protoiface.SizeOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Size:              0,
-			}
-		}
-		options := runtime.SizeInputToOptions(input)
-		_ = options
-		var n int
-		var l int
-		_ = l
-		if x.Params != nil {
-			l = options.Size(x.Params)
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		l = len(x.Denom)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		l = len(x.MintAvailable)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		if x.unknownFields != nil {
-			n += len(x.unknownFields)
-		}
-		return protoiface.SizeOutput{
-			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-			Size:              n,
-		}
-	}
-
-	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamager)
-		if x == nil {
-			return protoiface.MarshalOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Buf:               input.Buf,
-			}, nil
-		}
-		options := runtime.MarshalInputToOptions(input)
-		_ = options
-		size := options.Size(x)
-		dAtA := make([]byte, size)
-		i := len(dAtA)
-		_ = i
-		var l int
-		_ = l
-		if x.unknownFields != nil {
-			i -= len(x.unknownFields)
-			copy(dAtA[i:], x.unknownFields)
-		}
-		if len(x.MintAvailable) > 0 {
-			i -= len(x.MintAvailable)
-			copy(dAtA[i:], x.MintAvailable)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.MintAvailable)))
-			i--
-			dAtA[i] = 0x1a
-		}
-		if len(x.Denom) > 0 {
-			i -= len(x.Denom)
-			copy(dAtA[i:], x.Denom)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Denom)))
-			i--
-			dAtA[i] = 0x12
-		}
-		if x.Params != nil {
-			encoded, err := options.Marshal(x.Params)
-			if err != nil {
-				return protoiface.MarshalOutput{
-					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-					Buf:               input.Buf,
-				}, err
-			}
-			i -= len(encoded)
-			copy(dAtA[i:], encoded)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
-			i--
-			dAtA[i] = 0xa
-		}
-		if input.Buf != nil {
-			input.Buf = append(input.Buf, dAtA...)
-		} else {
-			input.Buf = dAtA
-		}
-		return protoiface.MarshalOutput{
-			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-			Buf:               input.Buf,
-		}, nil
-	}
-	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamager)
-		if x == nil {
-			return protoiface.UnmarshalOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Flags:             input.Flags,
-			}, nil
-		}
-		options := runtime.UnmarshalInputToOptions(input)
-		_ = options
-		dAtA := input.Buf
-		l := len(dAtA)
-		iNdEx := 0
-		for iNdEx < l {
-			preIndex := iNdEx
-			var wire uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				wire |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			fieldNum := int32(wire >> 3)
-			wireType := int(wire & 0x7)
-			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamager: wiretype end group for non-group")
-			}
-			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamager: illegal tag %d (wire type %d)", fieldNum, wire)
-			}
-			switch fieldNum {
-			case 1:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Params", wireType)
-				}
-				var msglen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					msglen |= int(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				if msglen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + msglen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				if x.Params == nil {
-					x.Params = &VaultMamagerParams{}
-				}
-				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Params); err != nil {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
-				}
-				iNdEx = postIndex
-			case 2:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Denom", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.Denom = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
-			case 3:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MintAvailable", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.MintAvailable = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
-			default:
-				iNdEx = preIndex
-				skippy, err := runtime.Skip(dAtA[iNdEx:])
-				if err != nil {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
-				}
-				if (skippy < 0) || (iNdEx+skippy) < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if (iNdEx + skippy) > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				if !options.DiscardUnknown {
-					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
-				}
-				iNdEx += skippy
-			}
-		}
-
-		if iNdEx > l {
-			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-		}
-		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
-	}
-	return &protoiface.Methods{
-		NoUnkeyedLiterals: struct{}{},
-		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
-		Size:              size,
-		Marshal:           marshal,
-		Unmarshal:         unmarshal,
-		Merge:             nil,
-		CheckInitialized:  nil,
-	}
-}
-
-var (
-	md_Vault                   protoreflect.MessageDescriptor
-	fd_Vault_owner             protoreflect.FieldDescriptor
-	fd_Vault_debt              protoreflect.FieldDescriptor
-	fd_Vault_collateral_locked protoreflect.FieldDescriptor
-	fd_Vault_status            protoreflect.FieldDescriptor
-)
-
-func init() {
-	file_cosmos_vaults_params_proto_init()
-	md_Vault = File_cosmos_vaults_params_proto.Messages().ByName("Vault")
-	fd_Vault_owner = md_Vault.Fields().ByName("owner")
-	fd_Vault_debt = md_Vault.Fields().ByName("debt")
-	fd_Vault_collateral_locked = md_Vault.Fields().ByName("collateral_locked")
-	fd_Vault_status = md_Vault.Fields().ByName("status")
-}
-
-var _ protoreflect.Message = (*fastReflection_Vault)(nil)
-
-type fastReflection_Vault Vault
-
-func (x *Vault) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_Vault)(x)
-}
-
-func (x *Vault) slowProtoReflect() protoreflect.Message {
-	mi := &file_cosmos_vaults_params_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-var _fastReflection_Vault_messageType fastReflection_Vault_messageType
-var _ protoreflect.MessageType = fastReflection_Vault_messageType{}
-
-type fastReflection_Vault_messageType struct{}
-
-func (x fastReflection_Vault_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_Vault)(nil)
-}
-func (x fastReflection_Vault_messageType) New() protoreflect.Message {
-	return new(fastReflection_Vault)
-}
-func (x fastReflection_Vault_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_Vault
-}
-
-// Descriptor returns message descriptor, which contains only the protobuf
-// type information for the message.
-func (x *fastReflection_Vault) Descriptor() protoreflect.MessageDescriptor {
-	return md_Vault
-}
-
-// Type returns the message type, which encapsulates both Go and protobuf
-// type information. If the Go type information is not needed,
-// it is recommended that the message descriptor be used instead.
-func (x *fastReflection_Vault) Type() protoreflect.MessageType {
-	return _fastReflection_Vault_messageType
-}
-
-// New returns a newly allocated and mutable empty message.
-func (x *fastReflection_Vault) New() protoreflect.Message {
-	return new(fastReflection_Vault)
-}
-
-// Interface unwraps the message reflection interface and
-// returns the underlying ProtoMessage interface.
-func (x *fastReflection_Vault) Interface() protoreflect.ProtoMessage {
-	return (*Vault)(x)
-}
-
-// Range iterates over every populated field in an undefined order,
-// calling f for each field descriptor and value encountered.
-// Range returns immediately if f returns false.
-// While iterating, mutating operations may only be performed
-// on the current field descriptor.
-func (x *fastReflection_Vault) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.Owner != "" {
-		value := protoreflect.ValueOfString(x.Owner)
-		if !f(fd_Vault_owner, value) {
-			return
-		}
-	}
-	if x.Debt != "" {
-		value := protoreflect.ValueOfString(x.Debt)
-		if !f(fd_Vault_debt, value) {
-			return
-		}
-	}
-	if x.CollateralLocked != "" {
-		value := protoreflect.ValueOfString(x.CollateralLocked)
-		if !f(fd_Vault_collateral_locked, value) {
-			return
-		}
-	}
-	if x.Status != 0 {
-		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.Status))
-		if !f(fd_Vault_status, value) {
-			return
-		}
-	}
-}
-
-// Has reports whether a field is populated.
-//
-// Some fields have the property of nullability where it is possible to
-// distinguish between the default value of a field and whether the field
-// was explicitly populated with the default value. Singular message fields,
-// member fields of a oneof, and proto2 scalar fields are nullable. Such
-// fields are populated only if explicitly set.
-//
-// In other cases (aside from the nullable cases above),
-// a proto3 scalar field is populated if it contains a non-zero value, and
-// a repeated field is populated if it is non-empty.
-func (x *fastReflection_Vault) Has(fd protoreflect.FieldDescriptor) bool {
-	switch fd.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		return x.Owner != ""
-	case "cosmos.vaults.Vault.debt":
-		return x.Debt != ""
-	case "cosmos.vaults.Vault.collateral_locked":
-		return x.CollateralLocked != ""
-	case "cosmos.vaults.Vault.status":
-		return x.Status != 0
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", fd.FullName()))
-	}
-}
-
-// Clear clears the field such that a subsequent Has call reports false.
-//
-// Clearing an extension field clears both the extension type and value
-// associated with the given field number.
-//
-// Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Vault) Clear(fd protoreflect.FieldDescriptor) {
-	switch fd.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		x.Owner = ""
-	case "cosmos.vaults.Vault.debt":
-		x.Debt = ""
-	case "cosmos.vaults.Vault.collateral_locked":
-		x.CollateralLocked = ""
-	case "cosmos.vaults.Vault.status":
-		x.Status = 0
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", fd.FullName()))
-	}
-}
-
-// Get retrieves the value for a field.
-//
-// For unpopulated scalars, it returns the default value, where
-// the default value of a bytes scalar is guaranteed to be a copy.
-// For unpopulated composite types, it returns an empty, read-only view
-// of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_Vault) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
-	switch descriptor.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		value := x.Owner
-		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Vault.debt":
-		value := x.Debt
-		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Vault.collateral_locked":
-		value := x.CollateralLocked
-		return protoreflect.ValueOfString(value)
-	case "cosmos.vaults.Vault.status":
-		value := x.Status
-		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
-	default:
-		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", descriptor.FullName()))
-	}
-}
-
-// Set stores the value for a field.
-//
-// For a field belonging to a oneof, it implicitly clears any other field
-// that may be currently set within the same oneof.
-// For extension fields, it implicitly stores the provided ExtensionType.
-// When setting a composite type, it is unspecified whether the stored value
-// aliases the source's memory in any way. If the composite value is an
-// empty, read-only value, then it panics.
-//
-// Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Vault) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
-	switch fd.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		x.Owner = value.Interface().(string)
-	case "cosmos.vaults.Vault.debt":
-		x.Debt = value.Interface().(string)
-	case "cosmos.vaults.Vault.collateral_locked":
-		x.CollateralLocked = value.Interface().(string)
-	case "cosmos.vaults.Vault.status":
-		x.Status = (VaultStatus)(value.Enum())
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", fd.FullName()))
-	}
-}
-
-// Mutable returns a mutable reference to a composite type.
-//
-// If the field is unpopulated, it may allocate a composite value.
-// For a field belonging to a oneof, it implicitly clears any other field
-// that may be currently set within the same oneof.
-// For extension fields, it implicitly stores the provided ExtensionType
-// if not already stored.
-// It panics if the field does not contain a composite type.
-//
-// Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Vault) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	switch fd.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		panic(fmt.Errorf("field owner of message cosmos.vaults.Vault is not mutable"))
-	case "cosmos.vaults.Vault.debt":
-		panic(fmt.Errorf("field debt of message cosmos.vaults.Vault is not mutable"))
-	case "cosmos.vaults.Vault.collateral_locked":
-		panic(fmt.Errorf("field collateral_locked of message cosmos.vaults.Vault is not mutable"))
-	case "cosmos.vaults.Vault.status":
-		panic(fmt.Errorf("field status of message cosmos.vaults.Vault is not mutable"))
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", fd.FullName()))
-	}
-}
-
-// NewField returns a new value that is assignable to the field
-// for the given descriptor. For scalars, this returns the default value.
-// For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_Vault) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
-	switch fd.FullName() {
-	case "cosmos.vaults.Vault.owner":
-		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Vault.debt":
-		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Vault.collateral_locked":
-		return protoreflect.ValueOfString("")
-	case "cosmos.vaults.Vault.status":
-		return protoreflect.ValueOfEnum(0)
-	default:
-		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.Vault"))
-		}
-		panic(fmt.Errorf("message cosmos.vaults.Vault does not contain field %s", fd.FullName()))
-	}
-}
-
-// WhichOneof reports which field within the oneof is populated,
-// returning nil if none are populated.
-// It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_Vault) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
-	switch d.FullName() {
-	default:
-		panic(fmt.Errorf("%s is not a oneof field in cosmos.vaults.Vault", d.FullName()))
-	}
-	panic("unreachable")
-}
-
-// GetUnknown retrieves the entire list of unknown fields.
-// The caller may only mutate the contents of the RawFields
-// if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_Vault) GetUnknown() protoreflect.RawFields {
-	return x.unknownFields
-}
-
-// SetUnknown stores an entire list of unknown fields.
-// The raw fields must be syntactically valid according to the wire format.
-// An implementation may panic if this is not the case.
-// Once stored, the caller must not mutate the content of the RawFields.
-// An empty RawFields may be passed to clear the fields.
-//
-// SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_Vault) SetUnknown(fields protoreflect.RawFields) {
-	x.unknownFields = fields
-}
-
-// IsValid reports whether the message is valid.
-//
-// An invalid message is an empty, read-only value.
-//
-// An invalid message often corresponds to a nil pointer of the concrete
-// message type, but the details are implementation dependent.
-// Validity is not part of the protobuf data model, and may not
-// be preserved in marshaling or other operations.
-func (x *fastReflection_Vault) IsValid() bool {
-	return x != nil
-}
-
-// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
-// This method may return nil.
-//
-// The returned methods type is identical to
-// "google.golang.org/protobuf/runtime/protoiface".Methods.
-// Consult the protoiface package documentation for details.
-func (x *fastReflection_Vault) ProtoMethods() *protoiface.Methods {
-	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*Vault)
-		if x == nil {
-			return protoiface.SizeOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Size:              0,
-			}
-		}
-		options := runtime.SizeInputToOptions(input)
-		_ = options
-		var n int
-		var l int
-		_ = l
-		l = len(x.Owner)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		l = len(x.Debt)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		l = len(x.CollateralLocked)
-		if l > 0 {
-			n += 1 + l + runtime.Sov(uint64(l))
-		}
-		if x.Status != 0 {
-			n += 1 + runtime.Sov(uint64(x.Status))
-		}
-		if x.unknownFields != nil {
-			n += len(x.unknownFields)
-		}
-		return protoiface.SizeOutput{
-			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-			Size:              n,
-		}
-	}
-
-	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*Vault)
-		if x == nil {
-			return protoiface.MarshalOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Buf:               input.Buf,
-			}, nil
-		}
-		options := runtime.MarshalInputToOptions(input)
-		_ = options
-		size := options.Size(x)
-		dAtA := make([]byte, size)
-		i := len(dAtA)
-		_ = i
-		var l int
-		_ = l
-		if x.unknownFields != nil {
-			i -= len(x.unknownFields)
-			copy(dAtA[i:], x.unknownFields)
-		}
-		if x.Status != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.Status))
-			i--
-			dAtA[i] = 0x20
-		}
-		if len(x.CollateralLocked) > 0 {
-			i -= len(x.CollateralLocked)
-			copy(dAtA[i:], x.CollateralLocked)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.CollateralLocked)))
-			i--
-			dAtA[i] = 0x1a
-		}
-		if len(x.Debt) > 0 {
-			i -= len(x.Debt)
-			copy(dAtA[i:], x.Debt)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Debt)))
-			i--
-			dAtA[i] = 0x12
-		}
-		if len(x.Owner) > 0 {
-			i -= len(x.Owner)
-			copy(dAtA[i:], x.Owner)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Owner)))
-			i--
-			dAtA[i] = 0xa
-		}
-		if input.Buf != nil {
-			input.Buf = append(input.Buf, dAtA...)
-		} else {
-			input.Buf = dAtA
-		}
-		return protoiface.MarshalOutput{
-			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-			Buf:               input.Buf,
-		}, nil
-	}
-	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*Vault)
-		if x == nil {
-			return protoiface.UnmarshalOutput{
-				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-				Flags:             input.Flags,
-			}, nil
-		}
-		options := runtime.UnmarshalInputToOptions(input)
-		_ = options
-		dAtA := input.Buf
-		l := len(dAtA)
-		iNdEx := 0
-		for iNdEx < l {
-			preIndex := iNdEx
-			var wire uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-				}
-				if iNdEx >= l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				wire |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			fieldNum := int32(wire >> 3)
-			wireType := int(wire & 0x7)
-			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Vault: wiretype end group for non-group")
-			}
-			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: Vault: illegal tag %d (wire type %d)", fieldNum, wire)
-			}
-			switch fieldNum {
-			case 1:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Owner", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.Owner = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
-			case 2:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Debt", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.Debt = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
-			case 3:
-				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field CollateralLocked", wireType)
-				}
-				var stringLen uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					stringLen |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				intStringLen := int(stringLen)
-				if intStringLen < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				postIndex := iNdEx + intStringLen
-				if postIndex < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if postIndex > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				x.CollateralLocked = string(dAtA[iNdEx:postIndex])
-				iNdEx = postIndex
-			case 4:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
-				}
-				x.Status = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.Status |= VaultStatus(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			default:
-				iNdEx = preIndex
-				skippy, err := runtime.Skip(dAtA[iNdEx:])
-				if err != nil {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
-				}
-				if (skippy < 0) || (iNdEx+skippy) < 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
-				}
-				if (iNdEx + skippy) > l {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-				}
-				if !options.DiscardUnknown {
-					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
-				}
-				iNdEx += skippy
-			}
-		}
-
-		if iNdEx > l {
-			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-		}
-		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
-	}
-	return &protoiface.Methods{
-		NoUnkeyedLiterals: struct{}{},
-		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
-		Size:              size,
-		Marshal:           marshal,
-		Unmarshal:         unmarshal,
-		Merge:             nil,
-		CheckInitialized:  nil,
-	}
-}
-
 // Code generated by protoc-gen-go. DO NOT EDIT.
 // versions:
 // 	protoc-gen-go v1.27.0
 // 	protoc        (unknown)
-// source: cosmos/vaults/params.proto
+// source: reserve/vaults/params.proto
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
@@ -2347,86 +1286,24 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// VaultStatus is the status of a vault.
-type VaultStatus int32
-
-const (
-	// ACTIVE - vault is in use and can be changed
-	VaultStatus_ACTIVE VaultStatus = 0
-	// LIQUIDATING - vault is being liquidated by the vault manager, and cannot be
-	// changed by the user. If liquidation fails, vaults may remain in this state.
-	// An upgrade might be able to recover them.
-	VaultStatus_LIQUIDATING VaultStatus = 1
-	// TRANSFER - vault is able to be transferred (payments and debits frozen until
-	// it has a new owner)
-	VaultStatus_TRANSFER VaultStatus = 2
-	// CLOSED - vault was closed by the user and all assets have been paid out
-	VaultStatus_CLOSED VaultStatus = 3
-	// LIQUIDATED - vault was closed by the manager, with remaining assets paid to owner
-	VaultStatus_LIQUIDATED VaultStatus = 4
-)
-
-// Enum value maps for VaultStatus.
-var (
-	VaultStatus_name = map[int32]string{
-		0: "ACTIVE",
-		1: "LIQUIDATING",
-		2: "TRANSFER",
-		3: "CLOSED",
-		4: "LIQUIDATED",
-	}
-	VaultStatus_value = map[string]int32{
-		"ACTIVE":      0,
-		"LIQUIDATING": 1,
-		"TRANSFER":    2,
-		"CLOSED":      3,
-		"LIQUIDATED":  4,
-	}
-)
-
-func (x VaultStatus) Enum() *VaultStatus {
-	p := new(VaultStatus)
-	*p = x
-	return p
-}
-
-func (x VaultStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (VaultStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_cosmos_vaults_params_proto_enumTypes[0].Descriptor()
-}
-
-func (VaultStatus) Type() protoreflect.EnumType {
-	return &file_cosmos_vaults_params_proto_enumTypes[0]
-}
-
-func (x VaultStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use VaultStatus.Descriptor instead.
-func (VaultStatus) EnumDescriptor() ([]byte, []int) {
-	return file_cosmos_vaults_params_proto_rawDescGZIP(), []int{0}
-}
-
 // Params defines the parameters for the module.
 type Params struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MintingFee         string `protobuf:"bytes,1,opt,name=minting_fee,json=mintingFee,proto3" json:"minting_fee,omitempty"`
-	StabilityFee       string `protobuf:"bytes,2,opt,name=stability_fee,json=stabilityFee,proto3" json:"stability_fee,omitempty"`
-	LiquidationPenalty string `protobuf:"bytes,3,opt,name=liquidation_penalty,json=liquidationPenalty,proto3" json:"liquidation_penalty,omitempty"`
-	MinInitialDebt     string `protobuf:"bytes,4,opt,name=min_initial_debt,json=minInitialDebt,proto3" json:"min_initial_debt,omitempty"`
+	MintingFee            string `protobuf:"bytes,1,opt,name=minting_fee,json=mintingFee,proto3" json:"minting_fee,omitempty"`
+	StabilityFee          string `protobuf:"bytes,2,opt,name=stability_fee,json=stabilityFee,proto3" json:"stability_fee,omitempty"`
+	LiquidationPenalty    string `protobuf:"bytes,3,opt,name=liquidation_penalty,json=liquidationPenalty,proto3" json:"liquidation_penalty,omitempty"`
+	MinInitialDebt        string `protobuf:"bytes,4,opt,name=min_initial_debt,json=minInitialDebt,proto3" json:"min_initial_debt,omitempty"`
+	RecalculateDebtPeriod uint64 `protobuf:"varint,5,opt,name=recalculate_debt_period,json=recalculateDebtPeriod,proto3" json:"recalculate_debt_period,omitempty"`
+	LiquidatePeriod       uint64 `protobuf:"varint,6,opt,name=liquidate_period,json=liquidatePeriod,proto3" json:"liquidate_period,omitempty"`
 }
 
 func (x *Params) Reset() {
 	*x = Params{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_cosmos_vaults_params_proto_msgTypes[0]
+		mi := &file_reserve_vaults_params_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2440,7 +1317,7 @@ func (*Params) ProtoMessage() {}
 
 // Deprecated: Use Params.ProtoReflect.Descriptor instead.
 func (*Params) Descriptor() ([]byte, []int) {
-	return file_cosmos_vaults_params_proto_rawDescGZIP(), []int{0}
+	return file_reserve_vaults_params_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Params) GetMintingFee() string {
@@ -2471,6 +1348,20 @@ func (x *Params) GetMinInitialDebt() string {
 	return ""
 }
 
+func (x *Params) GetRecalculateDebtPeriod() uint64 {
+	if x != nil {
+		return x.RecalculateDebtPeriod
+	}
+	return 0
+}
+
+func (x *Params) GetLiquidatePeriod() uint64 {
+	if x != nil {
+		return x.LiquidatePeriod
+	}
+	return 0
+}
+
 // VaultParams defines the parameters for each collateral vault type.
 type VaultMamagerParams struct {
 	state         protoimpl.MessageState
@@ -2485,7 +1376,7 @@ type VaultMamagerParams struct {
 func (x *VaultMamagerParams) Reset() {
 	*x = VaultMamagerParams{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_cosmos_vaults_params_proto_msgTypes[1]
+		mi := &file_reserve_vaults_params_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2499,7 +1390,7 @@ func (*VaultMamagerParams) ProtoMessage() {}
 
 // Deprecated: Use VaultMamagerParams.ProtoReflect.Descriptor instead.
 func (*VaultMamagerParams) Descriptor() ([]byte, []int) {
-	return file_cosmos_vaults_params_proto_rawDescGZIP(), []int{1}
+	return file_reserve_vaults_params_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *VaultMamagerParams) GetMinCollateralRatio() string {
@@ -2523,263 +1414,117 @@ func (x *VaultMamagerParams) GetMaxDebt() string {
 	return ""
 }
 
-// VaultMamager defines the manager of each collateral vault type.
-type VaultMamager struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
+var File_reserve_vaults_params_proto protoreflect.FileDescriptor
 
-	Params        *VaultMamagerParams `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
-	Denom         string              `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
-	MintAvailable string              `protobuf:"bytes,3,opt,name=mint_available,json=mintAvailable,proto3" json:"mint_available,omitempty"`
-}
-
-func (x *VaultMamager) Reset() {
-	*x = VaultMamager{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cosmos_vaults_params_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *VaultMamager) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VaultMamager) ProtoMessage() {}
-
-// Deprecated: Use VaultMamager.ProtoReflect.Descriptor instead.
-func (*VaultMamager) Descriptor() ([]byte, []int) {
-	return file_cosmos_vaults_params_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *VaultMamager) GetParams() *VaultMamagerParams {
-	if x != nil {
-		return x.Params
-	}
-	return nil
-}
-
-func (x *VaultMamager) GetDenom() string {
-	if x != nil {
-		return x.Denom
-	}
-	return ""
-}
-
-func (x *VaultMamager) GetMintAvailable() string {
-	if x != nil {
-		return x.MintAvailable
-	}
-	return ""
-}
-
-type Vault struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Owner            string      `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-	Debt             string      `protobuf:"bytes,2,opt,name=debt,proto3" json:"debt,omitempty"`
-	CollateralLocked string      `protobuf:"bytes,3,opt,name=collateral_locked,json=collateralLocked,proto3" json:"collateral_locked,omitempty"`
-	Status           VaultStatus `protobuf:"varint,4,opt,name=status,proto3,enum=cosmos.vaults.VaultStatus" json:"status,omitempty"`
-}
-
-func (x *Vault) Reset() {
-	*x = Vault{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_cosmos_vaults_params_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Vault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Vault) ProtoMessage() {}
-
-// Deprecated: Use Vault.ProtoReflect.Descriptor instead.
-func (*Vault) Descriptor() ([]byte, []int) {
-	return file_cosmos_vaults_params_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *Vault) GetOwner() string {
-	if x != nil {
-		return x.Owner
-	}
-	return ""
-}
-
-func (x *Vault) GetDebt() string {
-	if x != nil {
-		return x.Debt
-	}
-	return ""
-}
-
-func (x *Vault) GetCollateralLocked() string {
-	if x != nil {
-		return x.CollateralLocked
-	}
-	return ""
-}
-
-func (x *Vault) GetStatus() VaultStatus {
-	if x != nil {
-		return x.Status
-	}
-	return VaultStatus_ACTIVE
-}
-
-var File_cosmos_vaults_params_proto protoreflect.FileDescriptor
-
-var file_cosmos_vaults_params_proto_rawDesc = []byte{
-	0x0a, 0x1a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f,
-	0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0d, 0x63, 0x6f,
-	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x1a, 0x14, 0x67, 0x6f, 0x67,
-	0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
-	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x11, 0x61, 0x6d,
-	0x69, 0x6e, 0x6f, 0x2f, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
-	0xa5, 0x03, 0x0a, 0x06, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x57, 0x0a, 0x0b, 0x6d, 0x69,
-	0x6e, 0x74, 0x69, 0x6e, 0x67, 0x5f, 0x66, 0x65, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73,
-	0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63,
-	0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44,
-	0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0a, 0x6d, 0x69, 0x6e, 0x74, 0x69, 0x6e, 0x67,
-	0x46, 0x65, 0x65, 0x12, 0x5b, 0x0a, 0x0d, 0x73, 0x74, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79,
-	0x5f, 0x66, 0x65, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00,
-	0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f,
-	0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2,
-	0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0,
-	0x2a, 0x01, 0x52, 0x0c, 0x73, 0x74, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x46, 0x65, 0x65,
-	0x12, 0x67, 0x0a, 0x13, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f,
-	0x70, 0x65, 0x6e, 0x61, 0x6c, 0x74, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8,
-	0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b,
-	0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44,
-	0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63,
-	0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69,
-	0x6f, 0x6e, 0x50, 0x65, 0x6e, 0x61, 0x6c, 0x74, 0x79, 0x12, 0x5a, 0x0a, 0x10, 0x6d, 0x69, 0x6e,
-	0x5f, 0x69, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x6c, 0x5f, 0x64, 0x65, 0x62, 0x74, 0x18, 0x04, 0x20,
-	0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73,
-	0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49,
-	0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74,
-	0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x6d, 0x69, 0x6e, 0x49, 0x6e, 0x69, 0x74, 0x69, 0x61,
-	0x6c, 0x44, 0x65, 0x62, 0x74, 0x3a, 0x20, 0xe8, 0xa0, 0x1f, 0x01, 0x8a, 0xe7, 0xb0, 0x2a, 0x17,
-	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x78, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
-	0x2f, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x22, 0xb0, 0x02, 0x0a, 0x12, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67, 0x65, 0x72, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x68,
-	0x0a, 0x14, 0x6d, 0x69, 0x6e, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x61, 0x74, 0x65, 0x72, 0x61, 0x6c,
-	0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde,
+var file_reserve_vaults_params_proto_rawDesc = []byte{
+	0x0a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x72,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x1a, 0x14, 0x67,
+	0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x6f, 0x72, 0x61,
+	0x63, 0x6c, 0x65, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x1a, 0x11, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2f, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x1a, 0x1e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x62, 0x61, 0x73, 0x65,
+	0x2f, 0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2f, 0x63, 0x6f, 0x69, 0x6e, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x88,
+	0x04, 0x0a, 0x06, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x57, 0x0a, 0x0b, 0x6d, 0x69, 0x6e,
+	0x74, 0x69, 0x6e, 0x67, 0x5f, 0x66, 0x65, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36,
+	0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64,
+	0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79,
+	0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65,
+	0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0a, 0x6d, 0x69, 0x6e, 0x74, 0x69, 0x6e, 0x67, 0x46,
+	0x65, 0x65, 0x12, 0x5b, 0x0a, 0x0d, 0x73, 0x74, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x5f,
+	0x66, 0x65, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda,
+	0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f,
+	0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4,
+	0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a,
+	0x01, 0x52, 0x0c, 0x73, 0x74, 0x61, 0x62, 0x69, 0x6c, 0x69, 0x74, 0x79, 0x46, 0x65, 0x65, 0x12,
+	0x67, 0x0a, 0x13, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x70,
+	0x65, 0x6e, 0x61, 0x6c, 0x74, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde,
 	0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e,
 	0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65,
 	0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8,
-	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x6d, 0x69, 0x6e, 0x43, 0x6f, 0x6c, 0x6c, 0x61, 0x74, 0x65,
-	0x72, 0x61, 0x6c, 0x52, 0x61, 0x74, 0x69, 0x6f, 0x12, 0x63, 0x0a, 0x11, 0x6c, 0x69, 0x71, 0x75,
-	0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73,
-	0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c,
-	0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d,
-	0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x6c, 0x69, 0x71,
-	0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x61, 0x74, 0x69, 0x6f, 0x12, 0x4b, 0x0a,
-	0x08, 0x6d, 0x61, 0x78, 0x5f, 0x64, 0x65, 0x62, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73,
-	0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4,
-	0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a,
-	0x01, 0x52, 0x07, 0x6d, 0x61, 0x78, 0x44, 0x65, 0x62, 0x74, 0x22, 0xc3, 0x01, 0x0a, 0x0c, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67, 0x65, 0x72, 0x12, 0x44, 0x0a, 0x06, 0x70,
-	0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x21, 0x2e, 0x63, 0x6f,
-	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67, 0x65, 0x72, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09,
-	0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d,
-	0x73, 0x12, 0x14, 0x0a, 0x05, 0x64, 0x65, 0x6e, 0x6f, 0x6d, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x05, 0x64, 0x65, 0x6e, 0x6f, 0x6d, 0x12, 0x57, 0x0a, 0x0e, 0x6d, 0x69, 0x6e, 0x74, 0x5f,
-	0x61, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42,
-	0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73,
-	0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4,
-	0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a,
-	0x01, 0x52, 0x0d, 0x6d, 0x69, 0x6e, 0x74, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65,
-	0x22, 0x90, 0x02, 0x0a, 0x05, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x12, 0x2e, 0x0a, 0x05, 0x6f, 0x77,
-	0x6e, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x18, 0xd2, 0xb4, 0x2d, 0x14, 0x63,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x53, 0x74, 0x72,
-	0x69, 0x6e, 0x67, 0x52, 0x05, 0x6f, 0x77, 0x6e, 0x65, 0x72, 0x12, 0x44, 0x0a, 0x04, 0x64, 0x65,
-	0x62, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde,
-	0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d,
-	0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
-	0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x04, 0x64, 0x65, 0x62, 0x74,
-	0x12, 0x5d, 0x0a, 0x11, 0x63, 0x6f, 0x6c, 0x6c, 0x61, 0x74, 0x65, 0x72, 0x61, 0x6c, 0x5f, 0x6c,
-	0x6f, 0x63, 0x6b, 0x65, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f,
-	0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69,
-	0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f,
-	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x63,
-	0x6f, 0x6c, 0x6c, 0x61, 0x74, 0x65, 0x72, 0x61, 0x6c, 0x4c, 0x6f, 0x63, 0x6b, 0x65, 0x64, 0x12,
-	0x32, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0e, 0x32,
-	0x1a, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e,
-	0x56, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x06, 0x73, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x2a, 0xa1, 0x01, 0x0a, 0x0b, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x53, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x41, 0x43, 0x54, 0x49, 0x56, 0x45, 0x10, 0x00, 0x1a,
-	0x0a, 0x8a, 0x9d, 0x20, 0x06, 0x61, 0x63, 0x74, 0x69, 0x76, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x4c,
-	0x49, 0x51, 0x55, 0x49, 0x44, 0x41, 0x54, 0x49, 0x4e, 0x47, 0x10, 0x01, 0x1a, 0x0f, 0x8a, 0x9d,
-	0x20, 0x0b, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x12, 0x1a, 0x0a,
-	0x08, 0x54, 0x52, 0x41, 0x4e, 0x53, 0x46, 0x45, 0x52, 0x10, 0x02, 0x1a, 0x0c, 0x8a, 0x9d, 0x20,
-	0x08, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x66, 0x65, 0x72, 0x12, 0x16, 0x0a, 0x06, 0x43, 0x4c, 0x4f,
-	0x53, 0x45, 0x44, 0x10, 0x03, 0x1a, 0x0a, 0x8a, 0x9d, 0x20, 0x06, 0x63, 0x6c, 0x6f, 0x73, 0x65,
-	0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x4c, 0x49, 0x51, 0x55, 0x49, 0x44, 0x41, 0x54, 0x45, 0x44, 0x10,
-	0x04, 0x1a, 0x0e, 0x8a, 0x9d, 0x20, 0x0a, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x65,
-	0x64, 0x1a, 0x04, 0x88, 0xa3, 0x1e, 0x00, 0x42, 0x95, 0x01, 0x0a, 0x11, 0x63, 0x6f, 0x6d, 0x2e,
-	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x0b, 0x50,
-	0x61, 0x72, 0x61, 0x6d, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1e, 0x63, 0x6f,
-	0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x63,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xa2, 0x02, 0x03, 0x43,
-	0x56, 0x58, 0xaa, 0x02, 0x0d, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0xca, 0x02, 0x0d, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5c, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0xe2, 0x02, 0x19, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5c, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02,
-	0x0e, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x50, 0x65, 0x6e, 0x61, 0x6c, 0x74, 0x79, 0x12, 0x5a, 0x0a, 0x10, 0x6d, 0x69, 0x6e, 0x5f,
+	0x69, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x6c, 0x5f, 0x64, 0x65, 0x62, 0x74, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d,
+	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e,
+	0x74, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0e, 0x6d, 0x69, 0x6e, 0x49, 0x6e, 0x69, 0x74, 0x69, 0x61, 0x6c,
+	0x44, 0x65, 0x62, 0x74, 0x12, 0x36, 0x0a, 0x17, 0x72, 0x65, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c,
+	0x61, 0x74, 0x65, 0x5f, 0x64, 0x65, 0x62, 0x74, 0x5f, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x18,
+	0x05, 0x20, 0x01, 0x28, 0x04, 0x52, 0x15, 0x72, 0x65, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c, 0x61,
+	0x74, 0x65, 0x44, 0x65, 0x62, 0x74, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x12, 0x29, 0x0a, 0x10,
+	0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x65, 0x5f, 0x70, 0x65, 0x72, 0x69, 0x6f, 0x64,
+	0x18, 0x06, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0f, 0x6c, 0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74,
+	0x65, 0x50, 0x65, 0x72, 0x69, 0x6f, 0x64, 0x3a, 0x20, 0xe8, 0xa0, 0x1f, 0x01, 0x8a, 0xe7, 0xb0,
+	0x2a, 0x17, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x78, 0x2f, 0x76, 0x61, 0x75, 0x6c,
+	0x74, 0x73, 0x2f, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x22, 0xb0, 0x02, 0x0a, 0x12, 0x56, 0x61,
+	0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67, 0x65, 0x72, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73,
+	0x12, 0x68, 0x0a, 0x14, 0x6d, 0x69, 0x6e, 0x5f, 0x63, 0x6f, 0x6c, 0x6c, 0x61, 0x74, 0x65, 0x72,
+	0x61, 0x6c, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36,
+	0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64,
+	0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79,
+	0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65,
+	0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x12, 0x6d, 0x69, 0x6e, 0x43, 0x6f, 0x6c, 0x6c, 0x61,
+	0x74, 0x65, 0x72, 0x61, 0x6c, 0x52, 0x61, 0x74, 0x69, 0x6f, 0x12, 0x63, 0x0a, 0x11, 0x6c, 0x69,
+	0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x36, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63,
+	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68,
+	0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x44, 0x65, 0x63, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x10, 0x6c,
+	0x69, 0x71, 0x75, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x61, 0x74, 0x69, 0x6f, 0x12,
+	0x4b, 0x0a, 0x08, 0x6d, 0x61, 0x78, 0x5f, 0x64, 0x65, 0x62, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
+	0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74,
+	0xd2, 0xb4, 0x2d, 0x0a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x49, 0x6e, 0x74, 0xa8, 0xe7,
+	0xb0, 0x2a, 0x01, 0x52, 0x07, 0x6d, 0x61, 0x78, 0x44, 0x65, 0x62, 0x74, 0x42, 0x9b, 0x01, 0x0a,
+	0x12, 0x63, 0x6f, 0x6d, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x42, 0x0b, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f,
+	0x50, 0x01, 0x5a, 0x1f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f,
+	0x2f, 0x61, 0x70, 0x69, 0x2f, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0xa2, 0x02, 0x03, 0x52, 0x56, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65,
+	0x72, 0x76, 0x65, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xca, 0x02, 0x0e, 0x52, 0x65, 0x73,
+	0x65, 0x72, 0x76, 0x65, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xe2, 0x02, 0x1a, 0x52, 0x65,
+	0x73, 0x65, 0x72, 0x76, 0x65, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x47, 0x50, 0x42,
+	0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65, 0x72,
+	0x76, 0x65, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
-	file_cosmos_vaults_params_proto_rawDescOnce sync.Once
-	file_cosmos_vaults_params_proto_rawDescData = file_cosmos_vaults_params_proto_rawDesc
+	file_reserve_vaults_params_proto_rawDescOnce sync.Once
+	file_reserve_vaults_params_proto_rawDescData = file_reserve_vaults_params_proto_rawDesc
 )
 
-func file_cosmos_vaults_params_proto_rawDescGZIP() []byte {
-	file_cosmos_vaults_params_proto_rawDescOnce.Do(func() {
-		file_cosmos_vaults_params_proto_rawDescData = protoimpl.X.CompressGZIP(file_cosmos_vaults_params_proto_rawDescData)
+func file_reserve_vaults_params_proto_rawDescGZIP() []byte {
+	file_reserve_vaults_params_proto_rawDescOnce.Do(func() {
+		file_reserve_vaults_params_proto_rawDescData = protoimpl.X.CompressGZIP(file_reserve_vaults_params_proto_rawDescData)
 	})
-	return file_cosmos_vaults_params_proto_rawDescData
+	return file_reserve_vaults_params_proto_rawDescData
 }
 
-var file_cosmos_vaults_params_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_cosmos_vaults_params_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_cosmos_vaults_params_proto_goTypes = []interface{}{
-	(VaultStatus)(0),           // 0: cosmos.vaults.VaultStatus
-	(*Params)(nil),             // 1: cosmos.vaults.Params
-	(*VaultMamagerParams)(nil), // 2: cosmos.vaults.VaultMamagerParams
-	(*VaultMamager)(nil),       // 3: cosmos.vaults.VaultMamager
-	(*Vault)(nil),              // 4: cosmos.vaults.Vault
+var file_reserve_vaults_params_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_reserve_vaults_params_proto_goTypes = []interface{}{
+	(*Params)(nil),             // 0: reserve.vaults.Params
+	(*VaultMamagerParams)(nil), // 1: reserve.vaults.VaultMamagerParams
 }
-var file_cosmos_vaults_params_proto_depIdxs = []int32{
-	2, // 0: cosmos.vaults.VaultMamager.params:type_name -> cosmos.vaults.VaultMamagerParams
-	0, // 1: cosmos.vaults.Vault.status:type_name -> cosmos.vaults.VaultStatus
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+var file_reserve_vaults_params_proto_depIdxs = []int32{
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_cosmos_vaults_params_proto_init() }
-func file_cosmos_vaults_params_proto_init() {
-	if File_cosmos_vaults_params_proto != nil {
+func init() { file_reserve_vaults_params_proto_init() }
+func file_reserve_vaults_params_proto_init() {
+	if File_reserve_vaults_params_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_cosmos_vaults_params_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_reserve_vaults_params_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Params); i {
 			case 0:
 				return &v.state
@@ -2791,32 +1536,8 @@ func file_cosmos_vaults_params_proto_init() {
 				return nil
 			}
 		}
-		file_cosmos_vaults_params_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_reserve_vaults_params_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VaultMamagerParams); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_cosmos_vaults_params_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VaultMamager); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_cosmos_vaults_params_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Vault); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2832,19 +1553,18 @@ func file_cosmos_vaults_params_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_cosmos_vaults_params_proto_rawDesc,
-			NumEnums:      1,
-			NumMessages:   4,
+			RawDescriptor: file_reserve_vaults_params_proto_rawDesc,
+			NumEnums:      0,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_cosmos_vaults_params_proto_goTypes,
-		DependencyIndexes: file_cosmos_vaults_params_proto_depIdxs,
-		EnumInfos:         file_cosmos_vaults_params_proto_enumTypes,
-		MessageInfos:      file_cosmos_vaults_params_proto_msgTypes,
+		GoTypes:           file_reserve_vaults_params_proto_goTypes,
+		DependencyIndexes: file_reserve_vaults_params_proto_depIdxs,
+		MessageInfos:      file_reserve_vaults_params_proto_msgTypes,
 	}.Build()
-	File_cosmos_vaults_params_proto = out.File
-	file_cosmos_vaults_params_proto_rawDesc = nil
-	file_cosmos_vaults_params_proto_goTypes = nil
-	file_cosmos_vaults_params_proto_depIdxs = nil
+	File_reserve_vaults_params_proto = out.File
+	file_reserve_vaults_params_proto_rawDesc = nil
+	file_reserve_vaults_params_proto_goTypes = nil
+	file_reserve_vaults_params_proto_depIdxs = nil
 }

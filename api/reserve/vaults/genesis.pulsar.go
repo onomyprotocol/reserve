@@ -124,8 +124,8 @@ var (
 )
 
 func init() {
-	file_cosmos_vaults_genesis_proto_init()
-	md_GenesisState = File_cosmos_vaults_genesis_proto.Messages().ByName("GenesisState")
+	file_reserve_vaults_genesis_proto_init()
+	md_GenesisState = File_reserve_vaults_genesis_proto.Messages().ByName("GenesisState")
 	fd_GenesisState_params = md_GenesisState.Fields().ByName("params")
 	fd_GenesisState_vault_managers = md_GenesisState.Fields().ByName("vault_managers")
 	fd_GenesisState_vaults = md_GenesisState.Fields().ByName("vaults")
@@ -140,7 +140,7 @@ func (x *GenesisState) ProtoReflect() protoreflect.Message {
 }
 
 func (x *GenesisState) slowProtoReflect() protoreflect.Message {
-	mi := &file_cosmos_vaults_genesis_proto_msgTypes[0]
+	mi := &file_reserve_vaults_genesis_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -229,17 +229,17 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 // a repeated field is populated if it is non-empty.
 func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		return x.Params != nil
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		return len(x.VaultManagers) != 0
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		return len(x.Vaults) != 0
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -251,17 +251,17 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 // Clear is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		x.Params = nil
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		x.VaultManagers = nil
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		x.Vaults = nil
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -273,16 +273,16 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 // of the value; to obtain a mutable reference, use Mutable.
 func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		value := x.Params
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		if len(x.VaultManagers) == 0 {
 			return protoreflect.ValueOfList(&_GenesisState_2_list{})
 		}
 		listValue := &_GenesisState_2_list{list: &x.VaultManagers}
 		return protoreflect.ValueOfList(listValue)
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		if len(x.Vaults) == 0 {
 			return protoreflect.ValueOfList(&_GenesisState_3_list{})
 		}
@@ -290,9 +290,9 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 		return protoreflect.ValueOfList(listValue)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -308,21 +308,21 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 // Set is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		x.Params = value.Message().Interface().(*Params)
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		lv := value.List()
 		clv := lv.(*_GenesisState_2_list)
 		x.VaultManagers = *clv.list
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		lv := value.List()
 		clv := lv.(*_GenesisState_3_list)
 		x.Vaults = *clv.list
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -338,18 +338,18 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 // Mutable is a mutating operation and unsafe for concurrent use.
 func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		if x.Params == nil {
 			x.Params = new(Params)
 		}
 		return protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		if x.VaultManagers == nil {
 			x.VaultManagers = []*VaultMamager{}
 		}
 		value := &_GenesisState_2_list{list: &x.VaultManagers}
 		return protoreflect.ValueOfList(value)
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		if x.Vaults == nil {
 			x.Vaults = []*Vault{}
 		}
@@ -357,9 +357,9 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		return protoreflect.ValueOfList(value)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -368,20 +368,20 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 // For lists, maps, and messages, this returns a new, empty, mutable value.
 func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "cosmos.vaults.GenesisState.params":
+	case "reserve.vaults.GenesisState.params":
 		m := new(Params)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
-	case "cosmos.vaults.GenesisState.vault_managers":
+	case "reserve.vaults.GenesisState.vault_managers":
 		list := []*VaultMamager{}
 		return protoreflect.ValueOfList(&_GenesisState_2_list{list: &list})
-	case "cosmos.vaults.GenesisState.vaults":
+	case "reserve.vaults.GenesisState.vaults":
 		list := []*Vault{}
 		return protoreflect.ValueOfList(&_GenesisState_3_list{list: &list})
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: cosmos.vaults.GenesisState"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
 		}
-		panic(fmt.Errorf("message cosmos.vaults.GenesisState does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.GenesisState does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -391,7 +391,7 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 func (x *fastReflection_GenesisState) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in cosmos.vaults.GenesisState", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.GenesisState", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -729,7 +729,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 // versions:
 // 	protoc-gen-go v1.27.0
 // 	protoc        (unknown)
-// source: cosmos/vaults/genesis.proto
+// source: reserve/vaults/genesis.proto
 
 const (
 	// Verify that this generated code is sufficiently up-to-date.
@@ -753,7 +753,7 @@ type GenesisState struct {
 func (x *GenesisState) Reset() {
 	*x = GenesisState{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_cosmos_vaults_genesis_proto_msgTypes[0]
+		mi := &file_reserve_vaults_genesis_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -767,7 +767,7 @@ func (*GenesisState) ProtoMessage() {}
 
 // Deprecated: Use GenesisState.ProtoReflect.Descriptor instead.
 func (*GenesisState) Descriptor() ([]byte, []int) {
-	return file_cosmos_vaults_genesis_proto_rawDescGZIP(), []int{0}
+	return file_reserve_vaults_genesis_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *GenesisState) GetParams() *Params {
@@ -791,65 +791,67 @@ func (x *GenesisState) GetVaults() []*Vault {
 	return nil
 }
 
-var File_cosmos_vaults_genesis_proto protoreflect.FileDescriptor
+var File_reserve_vaults_genesis_proto protoreflect.FileDescriptor
 
-var file_cosmos_vaults_genesis_proto_rawDesc = []byte{
-	0x0a, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2f,
-	0x67, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0d, 0x63,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x1a, 0x14, 0x67, 0x6f,
-	0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x1a, 0x1a, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74,
-	0x73, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x11,
-	0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2f, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x22, 0xd0, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61,
-	0x74, 0x65, 0x12, 0x38, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0b, 0x32, 0x15, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c,
+var file_reserve_vaults_genesis_proto_rawDesc = []byte{
+	0x0a, 0x1c, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73,
+	0x2f, 0x67, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e,
+	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x1a, 0x14,
+	0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61,
+	0x75, 0x6c, 0x74, 0x73, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x1a, 0x11, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2f, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1a, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61,
+	0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x22, 0xd3, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74,
+	0x65, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c,
 	0x74, 0x73, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8,
-	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x4d, 0x0a, 0x0e,
+	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x4e, 0x0a, 0x0e,
 	0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x18, 0x02,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61,
-	0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67, 0x65,
-	0x72, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0d, 0x76, 0x61,
-	0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x12, 0x37, 0x0a, 0x06, 0x76,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x63, 0x6f,
-	0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c,
-	0x74, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x76, 0x61,
-	0x75, 0x6c, 0x74, 0x73, 0x42, 0x96, 0x01, 0x0a, 0x11, 0x63, 0x6f, 0x6d, 0x2e, 0x63, 0x6f, 0x73,
-	0x6d, 0x6f, 0x73, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65,
-	0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1e, 0x63, 0x6f, 0x73, 0x6d,
-	0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x63, 0x6f, 0x73,
-	0x6d, 0x6f, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xa2, 0x02, 0x03, 0x43, 0x56, 0x58,
-	0xaa, 0x02, 0x0d, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73,
-	0xca, 0x02, 0x0d, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73,
-	0xe2, 0x02, 0x19, 0x43, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73,
-	0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0e, 0x43,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67,
+	0x65, 0x72, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0d, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x12, 0x38, 0x0a, 0x06,
+	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x72,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61,
+	0x75, 0x6c, 0x74, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06,
+	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x9c, 0x01, 0x0a, 0x12, 0x63, 0x6f, 0x6d, 0x2e, 0x72,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x0c, 0x47,
+	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1f, 0x63,
+	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f,
+	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xa2, 0x02,
+	0x03, 0x52, 0x56, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x56,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0xca, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x5c,
+	0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xe2, 0x02, 0x1a, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65,
+	0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64,
+	0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x3a, 0x3a, 0x56,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_cosmos_vaults_genesis_proto_rawDescOnce sync.Once
-	file_cosmos_vaults_genesis_proto_rawDescData = file_cosmos_vaults_genesis_proto_rawDesc
+	file_reserve_vaults_genesis_proto_rawDescOnce sync.Once
+	file_reserve_vaults_genesis_proto_rawDescData = file_reserve_vaults_genesis_proto_rawDesc
 )
 
-func file_cosmos_vaults_genesis_proto_rawDescGZIP() []byte {
-	file_cosmos_vaults_genesis_proto_rawDescOnce.Do(func() {
-		file_cosmos_vaults_genesis_proto_rawDescData = protoimpl.X.CompressGZIP(file_cosmos_vaults_genesis_proto_rawDescData)
+func file_reserve_vaults_genesis_proto_rawDescGZIP() []byte {
+	file_reserve_vaults_genesis_proto_rawDescOnce.Do(func() {
+		file_reserve_vaults_genesis_proto_rawDescData = protoimpl.X.CompressGZIP(file_reserve_vaults_genesis_proto_rawDescData)
 	})
-	return file_cosmos_vaults_genesis_proto_rawDescData
+	return file_reserve_vaults_genesis_proto_rawDescData
 }
 
-var file_cosmos_vaults_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_cosmos_vaults_genesis_proto_goTypes = []interface{}{
-	(*GenesisState)(nil), // 0: cosmos.vaults.GenesisState
-	(*Params)(nil),       // 1: cosmos.vaults.Params
-	(*VaultMamager)(nil), // 2: cosmos.vaults.VaultMamager
-	(*Vault)(nil),        // 3: cosmos.vaults.Vault
+var file_reserve_vaults_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_reserve_vaults_genesis_proto_goTypes = []interface{}{
+	(*GenesisState)(nil), // 0: reserve.vaults.GenesisState
+	(*Params)(nil),       // 1: reserve.vaults.Params
+	(*VaultMamager)(nil), // 2: reserve.vaults.VaultMamager
+	(*Vault)(nil),        // 3: reserve.vaults.Vault
 }
-var file_cosmos_vaults_genesis_proto_depIdxs = []int32{
-	1, // 0: cosmos.vaults.GenesisState.params:type_name -> cosmos.vaults.Params
-	2, // 1: cosmos.vaults.GenesisState.vault_managers:type_name -> cosmos.vaults.VaultMamager
-	3, // 2: cosmos.vaults.GenesisState.vaults:type_name -> cosmos.vaults.Vault
+var file_reserve_vaults_genesis_proto_depIdxs = []int32{
+	1, // 0: reserve.vaults.GenesisState.params:type_name -> reserve.vaults.Params
+	2, // 1: reserve.vaults.GenesisState.vault_managers:type_name -> reserve.vaults.VaultMamager
+	3, // 2: reserve.vaults.GenesisState.vaults:type_name -> reserve.vaults.Vault
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -857,14 +859,15 @@ var file_cosmos_vaults_genesis_proto_depIdxs = []int32{
 	0, // [0:3] is the sub-list for field type_name
 }
 
-func init() { file_cosmos_vaults_genesis_proto_init() }
-func file_cosmos_vaults_genesis_proto_init() {
-	if File_cosmos_vaults_genesis_proto != nil {
+func init() { file_reserve_vaults_genesis_proto_init() }
+func file_reserve_vaults_genesis_proto_init() {
+	if File_reserve_vaults_genesis_proto != nil {
 		return
 	}
-	file_cosmos_vaults_params_proto_init()
+	file_reserve_vaults_params_proto_init()
+	file_reserve_vaults_vault_proto_init()
 	if !protoimpl.UnsafeEnabled {
-		file_cosmos_vaults_genesis_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_reserve_vaults_genesis_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GenesisState); i {
 			case 0:
 				return &v.state
@@ -881,18 +884,18 @@ func file_cosmos_vaults_genesis_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_cosmos_vaults_genesis_proto_rawDesc,
+			RawDescriptor: file_reserve_vaults_genesis_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_cosmos_vaults_genesis_proto_goTypes,
-		DependencyIndexes: file_cosmos_vaults_genesis_proto_depIdxs,
-		MessageInfos:      file_cosmos_vaults_genesis_proto_msgTypes,
+		GoTypes:           file_reserve_vaults_genesis_proto_goTypes,
+		DependencyIndexes: file_reserve_vaults_genesis_proto_depIdxs,
+		MessageInfos:      file_reserve_vaults_genesis_proto_msgTypes,
 	}.Build()
-	File_cosmos_vaults_genesis_proto = out.File
-	file_cosmos_vaults_genesis_proto_rawDesc = nil
-	file_cosmos_vaults_genesis_proto_goTypes = nil
-	file_cosmos_vaults_genesis_proto_depIdxs = nil
+	File_reserve_vaults_genesis_proto = out.File
+	file_reserve_vaults_genesis_proto_rawDesc = nil
+	file_reserve_vaults_genesis_proto_goTypes = nil
+	file_reserve_vaults_genesis_proto_depIdxs = nil
 }

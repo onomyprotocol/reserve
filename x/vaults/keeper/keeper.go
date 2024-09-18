@@ -45,9 +45,9 @@ func NewKeeper(
 		accountKeeper:  ak,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		VaultsManager:  collections.NewMap(sb, types.VaultManagerKey, "vault_managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
-		Vaults:         collections.NewMap(sb, types.VaultKey, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
-		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKey, "sequence"),
+		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vault_managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
+		Vaults:         collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
+		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
 	}
 
 	schema, err := sb.Build()
