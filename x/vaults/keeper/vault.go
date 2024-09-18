@@ -76,7 +76,6 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-
 	// Update vault manager
 	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoins[0].Amount)
 	return k.VaultsManager.Set(ctx, denom, vm)
@@ -163,7 +162,12 @@ func (k *Keeper) RepayDebt(
 		burnAmount = vault.Debt
 	}
 
-	err = k.bankKeeper.BurnCoins(ctx, sender.String(), sdk.NewCoins(burnAmount))
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(burnAmount))
+	if err != nil {
+		return err
+	}
+
+	err = k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burnAmount))
 	if err != nil {
 		return err
 	}
@@ -243,11 +247,12 @@ func (k *Keeper) UpdateVaultsDebt(
 	params := k.GetParams(ctx)
 	fee := params.StabilityFee
 
-	return k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+	return k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		if vault.Status == 0 {
 			debtAmount := vault.Debt.Amount
 			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fee)).TruncateInt()
 			vault.Debt.Amount = newDebtAmount
+			k.Vaults.Set(ctx, id, vault)
 		}
 
 		return false, nil
