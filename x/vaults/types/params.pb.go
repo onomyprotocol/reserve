@@ -38,12 +38,13 @@ const (
 	// changed by the user. If liquidation fails, vaults may remain in this state.
 	// An upgrade might be able to recover them.
 	LIQUIDATING VaultStatus = 1
-	// TRANSFER - vault is able to be transferred (payments and debits frozen until
-	// it has a new owner)
+	// TRANSFER - vault is able to be transferred (payments and debits frozen
+	// until it has a new owner)
 	TRANSFER VaultStatus = 2
 	// CLOSED - vault was closed by the user and all assets have been paid out
 	CLOSED VaultStatus = 3
-	// LIQUIDATED - vault was closed by the manager, with remaining assets paid to owner
+	// LIQUIDATED - vault was closed by the manager, with remaining assets paid to
+	// owner
 	LIQUIDATED VaultStatus = 4
 )
 
