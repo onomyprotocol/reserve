@@ -26,7 +26,7 @@ func (k *Keeper) CreateNewVault(
 
 	// Check if expect min less than MinInitialDebt
 	if mint.Amount.LT(params.MinInitialDebt) {
-		return fmt.Errorf("initial mint should be greater than min. Got %d, expected %d", mint.Amount, params.MinInitialDebt)
+		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint, params.MinInitialDebt)
 	}
 
 	// Calculate collateral ratio
@@ -76,7 +76,6 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-
 	// Update vault manager
 	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoins[0].Amount)
 	return k.VaultsManager.Set(ctx, denom, vm)
@@ -163,14 +162,22 @@ func (k *Keeper) RepayDebt(
 		burnAmount = vault.Debt
 	}
 
-	err = k.bankKeeper.BurnCoins(ctx, sender.String(), sdk.NewCoins(burnAmount))
+	err = k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, sdk.NewCoins(burnAmount))
+	if err != nil {
+		return err
+	}
+
+	err = k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burnAmount))
 	if err != nil {
 		return err
 	}
 
 	// Update vault debt
 	vault.Debt = vault.Debt.Sub(burnAmount)
-	k.SetVault(ctx, vault)
+	err = k.SetVault(ctx, vault)
+	if err != nil {
+		return err
+	}
 
 	vm.MintAvailable = vm.MintAvailable.Add(burnAmount.Amount)
 	return k.VaultsManager.Set(ctx, vm.Denom, vm)
@@ -210,7 +217,7 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	if vault.CollateralLocked.Amount.LT(collateral.Amount) {
-		fmt.Errorf("%d exeed locked amount: %d", collateral.Amount, vault.CollateralLocked.Amount)
+		return fmt.Errorf("%d exeed locked amount: %d", collateral.Amount, vault.CollateralLocked.Amount)
 	}
 
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
@@ -243,14 +250,16 @@ func (k *Keeper) UpdateVaultsDebt(
 	params := k.GetParams(ctx)
 	fee := params.StabilityFee
 
-	return k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+	return k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
+		var err error
 		if vault.Status == 0 {
 			debtAmount := vault.Debt.Amount
 			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fee)).TruncateInt()
 			vault.Debt.Amount = newDebtAmount
+			err = k.Vaults.Set(ctx, id, vault)
 		}
 
-		return false, nil
+		return false, err
 	})
 }
 

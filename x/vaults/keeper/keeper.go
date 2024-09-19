@@ -58,6 +58,11 @@ func NewKeeper(
 	return &k
 }
 
+// GetAuthority returns the module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
+}
+
 func (k *Keeper) ActiveCollateralAsset(
 	ctx context.Context,
 	denom string,
