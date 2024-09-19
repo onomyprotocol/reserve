@@ -10,7 +10,7 @@ import (
 //
 // CONTRACT: old coins from the FeeCollectionKeeper need to be transferred through
 // a genesis port script to the new fee collector account
-func (k Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error {
+func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error {
 	err := k.SetParams(ctx, data.Params)
 	if err != nil {
 		return err

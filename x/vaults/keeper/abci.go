@@ -13,7 +13,5 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) error {
 		k.UpdateVaultsDebt(ctx)
 	}
 
-	// TODO: Check liquidate
-
 	return nil
 }

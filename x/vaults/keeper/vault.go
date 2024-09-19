@@ -26,7 +26,7 @@ func (k *Keeper) CreateNewVault(
 
 	// Check if expect min less than MinInitialDebt
 	if mint.Amount.LT(params.MinInitialDebt) {
-		return fmt.Errorf("initial mint should be greater than min. Got %d, expected %d", mint, params.MinInitialDebt)
+		return fmt.Errorf("initial mint should be greater than min. Got %d, expected %d", mint.Amount, params.MinInitialDebt)
 	}
 
 	// Calculate collateral ratio
@@ -163,7 +163,7 @@ func (k *Keeper) RepayDebt(
 		burnAmount = vault.Debt
 	}
 
-	err = k.bankKeeper.BurnCoins(ctx, sender, sdk.NewCoins(burnAmount))
+	err = k.bankKeeper.BurnCoins(ctx, sender.String(), sdk.NewCoins(burnAmount))
 	if err != nil {
 		return err
 	}

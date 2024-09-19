@@ -44,6 +44,8 @@ message Params {
 
   uint64 recalculate_debt_period = 5;
   uint64 liquidate_period = 6;
+
+  string mint_denom = 7;
 }
 
 // VaultParams defines the parameters for each collateral vault type.
