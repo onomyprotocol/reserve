@@ -79,6 +79,7 @@ import (
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
+	vaults "github.com/onomyprotocol/reserve/x/vaults/module"
 
 	"github.com/onomyprotocol/reserve/docs"
 )
@@ -180,6 +181,7 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
+		vaults.ActiveCollateralAssetProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 

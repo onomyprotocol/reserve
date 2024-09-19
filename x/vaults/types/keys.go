@@ -4,6 +4,7 @@ import "cosmossdk.io/collections"
 
 const (
 	ModuleName        = "vaults"
+	RouterKey         = ModuleName
 	ReserveModuleName = "reserve"
 )
 
