@@ -44,6 +44,8 @@ message Params {
 
   uint64 recalculate_debt_period = 5;
   uint64 liquidate_period = 6;
+
+  string mint_denom = 7;
 }
 
 // VaultParams defines the parameters for each collateral vault type.
@@ -89,18 +91,18 @@ enum VaultStatus {
   option (gogoproto.goproto_enum_prefix) = false;
 
   // ACTIVE - vault is in use and can be changed
-  ACTIVE = 0 [(gogoproto.enumvalue_customname) = "active"];
+  ACTIVE = 0 [(gogoproto.enumvalue_customname) = "ACTIVE"];
   // LIQUIDATING - vault is being liquidated by the vault manager, and cannot be
   // changed by the user. If liquidation fails, vaults may remain in this state.
   // An upgrade might be able to recover them.
-  LIQUIDATING = 1 [(gogoproto.enumvalue_customname) = "liquidating"];
+  LIQUIDATING = 1 [(gogoproto.enumvalue_customname) = "LIQUIDATING"];
   // TRANSFER - vault is able to be transferred (payments and debits frozen until
   // it has a new owner)
-  TRANSFER = 2 [(gogoproto.enumvalue_customname) = "transfer"];
+  TRANSFER = 2 [(gogoproto.enumvalue_customname) = "TRANSFER"];
   // CLOSED - vault was closed by the user and all assets have been paid out
-  CLOSED = 3 [(gogoproto.enumvalue_customname) = "closed"];
+  CLOSED = 3 [(gogoproto.enumvalue_customname) = "CLOSED"];
   // LIQUIDATED - vault was closed by the manager, with remaining assets paid to owner
-  LIQUIDATED = 4 [(gogoproto.enumvalue_customname) = "liquidated"];
+  LIQUIDATED = 4 [(gogoproto.enumvalue_customname) = "LIQUIDATED"];
 }
 
 message Vault {

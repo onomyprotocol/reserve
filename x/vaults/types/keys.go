@@ -3,7 +3,11 @@ package types
 import "cosmossdk.io/collections"
 
 const (
-	ModuleName        = "vaults"
+	ModuleName = "vaults"
+
+	// StoreKey is the string store representation
+	StoreKey = ModuleName
+
 	RouterKey         = ModuleName
 	ReserveModuleName = "reserve"
 )
