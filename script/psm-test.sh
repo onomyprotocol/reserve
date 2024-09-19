@@ -114,7 +114,7 @@ screen -S onomy3 -t onomy3 -d -m reserved start --home=$HOME/.reserved/validator
 
 # submit proposal add usdt
 sleep 7
-reserved tx gov submit-legacy-proposal add-stable-coin "d" "d" "usdt" "100000000000000000000000000000" "1" "0.001" "0.001" $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1)  10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from validator1 -y --chain-id testing-1 --fees 20stake
+reserved tx gov submit-legacy-proposal add-stable-coin "d" "d" "usdt" "100000000000000000000000000000" "1" "0.001" "0.001" 10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from validator1 -y --chain-id testing-1 --fees 20stake
 
 # vote
 sleep 7
