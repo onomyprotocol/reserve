@@ -29,7 +29,8 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 
 		// create new auction for this vault
 		for _, vault := range liquidatedVaults {
-			auction, err := k.NewAuction(ctx, currentTime, vault.InitialPrice, vault.Collatheral, vault.Collatheral)
+			//calcualte initial price and target price
+			auction, err := k.NewAuction(ctx, currentTime, k.calculateInitAuctionPrice(ctx, vault.CollateralLocked), vault.CollateralLocked, vault.Debt)
 			if err != nil {
 				return err
 			}

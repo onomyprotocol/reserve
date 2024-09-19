@@ -3,8 +3,11 @@ package types
 import (
 	"context"
 
+	"cosmossdk.io/math"
+
 	addresscodec "cosmossdk.io/core/address"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	vaulttypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 type LiquidateVaults struct {
@@ -39,7 +42,10 @@ type ParamSubspace interface {
 }
 
 type VaultKeeper interface {
-	GetLiquidatedVaults(ctx context.Context) ([]LiquidateVaults, error)
-
+	GetLiquidatedVaults(ctx context.Context) ([]vaulttypes.Vault, error)
 	NotifyVault(ctx context.Context, tokenRaised, collatheralUnsold sdk.Coin, isReachedGoal bool) error
+}
+
+type OracleKeeper interface {
+	GetPrice(ctx context.Context, denom string) math.LegacyDec
 }

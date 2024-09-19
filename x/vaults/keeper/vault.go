@@ -100,7 +100,7 @@ func (k *Keeper) MintCoin(
 	params := k.GetParams(ctx)
 
 	lockedCoin := vault.CollateralLocked
-	price := k.GetPrice(ctx, lockedCoin.Denom)
+	price := k.oracleKeeper.GetPrice(ctx, lockedCoin.Denom)
 	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(price)
 
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(params.MintingFee).TruncateInt()
@@ -219,7 +219,7 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.GetPrice(ctx, collateral.Denom)
+	price := k.oracleKeeper.GetPrice(ctx, collateral.Denom)
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(price)
 	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
@@ -268,9 +268,13 @@ func (k *Keeper) ShouldLiquidate(
 	collateralValue := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(price)
 	ratio := collateralValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
-	liquidationRatio := k.GetParams(ctx).Liq
+	// get vault manager
+	vaultManager, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
+	if err != nil {
+		return false, err
+	}
 
-	if ratio.LTE(liquidationRatio) {
+	if ratio.LTE(vaultManager.Params.LiquidationRatio) {
 		return true, nil
 	}
 	return false, nil
@@ -278,25 +282,11 @@ func (k *Keeper) ShouldLiquidate(
 
 func (k *Keeper) GetLiquidateVaults(
 	ctx context.Context,
-) ([]types.Vault, map[string]math.LegacyDec, error) {
+) ([]types.Vault, error) {
 	var liquidateVaults []types.Vault
-	liquidationRatios := make(map[string]math.LegacyDec)
-	prices := make(map[string]math.LegacyDec)
 
-	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
-		price := k.GetPrice(ctx, vm.Denom)
-		prices[vm.Denom] = price
-		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
-
-		return false, nil
-	})
-	if err != nil {
-		return nil, nil, err
-	}
-
-	err = k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
-		denom := vault.CollateralLocked.Denom
-		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault, prices[denom], liquidationRatios[denom])
+	err := k.Vaults.Walk(ctx, nil, func(key uint64, vault types.Vault) (bool, error) {
+		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault)
 		if shouldLiquidate && err != nil {
 			liquidateVaults = append(liquidateVaults, vault)
 		}
@@ -304,10 +294,10 @@ func (k *Keeper) GetLiquidateVaults(
 		return false, nil
 	})
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return liquidateVaults, prices, nil
+	return liquidateVaults, nil
 }
 
 func (k *Keeper) GetVault(

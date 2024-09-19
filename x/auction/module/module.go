@@ -177,6 +177,7 @@ type ModuleInputs struct {
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
+	OracleKeeper  types.OracleKeeper
 	BankKeeper    types.BankKeeper
 	VaultKeeper   types.VaultKeeper
 }
@@ -200,6 +201,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.AccountKeeper,
 		in.BankKeeper,
 		in.VaultKeeper,
+		in.OracleKeeper,
 		in.Logger,
 		authority.String(),
 	)

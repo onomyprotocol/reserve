@@ -22,9 +22,10 @@ type (
 		logger       log.Logger
 
 		// keepers
-		authKeeper  types.AccountKeeper
-		bankKeeper  types.BankKeeper
-		vaultKeeper types.VaultKeeper
+		authKeeper   types.AccountKeeper
+		bankKeeper   types.BankKeeper
+		vaultKeeper  types.VaultKeeper
+		oracleKeeper types.OracleKeeper
 
 		// the address capable of executing a MsgUpdateParams message. Typically, this
 		// should be the x/gov module account.
@@ -55,6 +56,7 @@ func NewKeeper(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	vk types.VaultKeeper,
+	ok types.OracleKeeper,
 	logger log.Logger,
 	authority string,
 
@@ -72,6 +74,7 @@ func NewKeeper(
 		authKeeper:   ak,
 		bankKeeper:   bk,
 		vaultKeeper:  vk,
+		oracleKeeper: ok,
 		AuctionIdSeq: collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
 		BidIdSeq:     collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
 		Auctions:     collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
@@ -210,4 +213,11 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 	}
 
 	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAcc, amt)
+}
+
+// TODO: allow multiple currency denom: EUR, JPY
+func (k Keeper) calculateInitAuctionPrice(ctx context.Context, collateralAsset sdk.Coin) sdk.Coin {
+	rate := k.oracleKeeper.GetPrice(ctx, collateralAsset.Denom)
+	amount := collateralAsset.Amount.ToLegacyDec().Mul(rate)
+	return sdk.NewCoin("nomUSD", amount.RoundInt())
 }

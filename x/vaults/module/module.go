@@ -16,6 +16,7 @@ import (
 	"cosmossdk.io/log"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+
 	// govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -163,6 +164,7 @@ type ModuleInputs struct {
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
+	OracleKeeper  types.OracleKeeper
 }
 
 type ModuleOutputs struct {
@@ -186,6 +188,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		// in.Logger,
 		in.AccountKeeper,
 		in.BankKeeper,
+		in.OracleKeeper,
 		authority.String(),
 	)
 	m := NewAppModule(
