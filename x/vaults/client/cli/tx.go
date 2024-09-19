@@ -17,8 +17,8 @@ import (
 
 func NewCmdSubmitActiveCollateralProposal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "active-collateral [title] [description] [denom] [min-collateral-ratio] [liquidation-ratio] [max-debt] [proposer] [deposit]",
-		Args:  cobra.ExactArgs(8),
+		Use:   "active-collateral [title] [description] [denom] [min-collateral-ratio] [liquidation-ratio] [max-debt] [deposit]",
+		Args:  cobra.ExactArgs(7),
 		Short: "Active collateral proposal",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -39,18 +39,17 @@ func NewCmdSubmitActiveCollateralProposal() *cobra.Command {
 			if !ok {
 				return fmt.Errorf("value %s cannot constructs Int from string", args[5])
 			}
-			from := sdk.MustAccAddressFromBech32(args[6])
 
 			content := types.NewActiveCollateralProposal(
 				args[0], args[1], args[2], minCollateralRatio, liquidationRatio, maxDebt,
 			)
 
-			deposit, err := sdk.ParseCoinsNormalized(args[7])
+			deposit, err := sdk.ParseCoinsNormalized(args[6])
 			if err != nil {
 				return err
 			}
 
-			msg, err := govtypes.NewMsgSubmitProposal(&content, deposit, from)
+			msg, err := govtypes.NewMsgSubmitProposal(&content, deposit, clientCtx.GetFromAddress())
 			if err != nil {
 				return err
 			}
