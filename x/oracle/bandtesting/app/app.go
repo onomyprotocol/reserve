@@ -290,6 +290,8 @@ func NewBandApp(
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedOracleKeeper := app.CapabilityKeeper.ScopeToModule(bandoracletypes.ModuleName)
 
+	app.CapabilityKeeper.Seal()
+
 	// add keepers
 	app.AccountKeeper = authkeeper.NewAccountKeeper(
 		appCodec,
@@ -594,7 +596,7 @@ func NewBandApp(
 		}
 	}
 
-	app.CapabilityKeeper.Seal()
+	// app.CapabilityKeeper.Seal()
 
 	app.ScopedIBCKeeper = scopedIBCKeeper
 	app.ScopedTransferKeeper = scopedTransferKeeper

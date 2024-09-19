@@ -49,3 +49,16 @@ func DefaultBandParams() BandParams {
 func (p Params) Validate() error {
 	return nil
 }
+
+func DefaultTestBandIbcParams() *BandParams {
+	return &BandParams{
+		// block request interval to send Band IBC prices
+		IbcRequestInterval: 10,
+		// band IBC source channel
+		IbcSourceChannel: "channel-0",
+		// band IBC version
+		IbcVersion: "bandchain-1",
+		// band IBC portID
+		IbcPortId: "oracle",
+	}
+}
