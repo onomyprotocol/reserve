@@ -70,7 +70,7 @@ func (k *Keeper) CreateNewVault(
 		Owner:            owner.String(),
 		Debt:             mintedCoins[0],
 		CollateralLocked: collateral,
-		Status:           0,
+		Status:           types.ACTIVE,
 	}
 	err = k.SetVault(ctx, vault)
 	if err != nil {
@@ -314,6 +314,75 @@ func (k *Keeper) GetLiquidateVaults(
 	}
 
 	return liquidateVaults, prices, nil
+}
+
+func (k *Keeper) Liquidate(
+	ctx context.Context,
+	vault types.Vault,
+	sold sdk.Coin,
+	collateralRemain sdk.Coin,
+) error {
+	debt := vault.Debt.Amount
+	params := k.GetParams(ctx)
+
+	// Sold amount enough to cover debt
+	if sold.Amount.GTE(debt) {
+		// Burn debt
+		err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(vault.Debt))
+		if err != nil {
+			return err
+		}
+
+		// If remain sold, send to reserve
+		remain := sold.Sub(vault.Debt)
+		if remain.Amount.GT(math.ZeroInt()) {
+			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(remain))
+			if err != nil {
+				return err
+			}
+		}
+
+		// Take the liquidation penalty and send back to vault owner
+		if collateralRemain.Amount.GT(math.ZeroInt()) {
+			price := k.GetPrice(ctx, collateralRemain.Denom)
+			//TODO: decimal
+			penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(price).Mul(params.LiquidationPenalty).TruncateInt()
+			if penaltyAmount.GTE(collateralRemain.Amount) {
+				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(collateralRemain))
+				if err != nil {
+					return err
+				}
+				return nil
+			} else {
+				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(collateralRemain.Denom, penaltyAmount)))
+				if err != nil {
+					return err
+				}
+				err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.MustAccAddressFromBech32(vault.Owner), sdk.NewCoins(sdk.NewCoin(collateralRemain.Denom, collateralRemain.Amount.Sub(penaltyAmount))))
+				if err != nil {
+					return err
+				}
+				return nil
+			}
+		}
+
+	} else {
+		// does not raise enough to cover nomUSD debt
+
+		// Burn sold amount
+		err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(sold))
+		if err != nil {
+			return err
+		}
+
+		// No collateral remain
+		if collateralRemain.Amount.Equal(math.ZeroInt()) {
+			//TODO: send shortfall to reserve
+			return nil
+		} else {
+
+		}
+	}
 }
 
 func (k *Keeper) GetVault(
