@@ -95,7 +95,7 @@ func (im IBCModule) OnChanOpenTry(
 		}
 	}
 
-	return types.Version, nil
+	return bandParams.IbcVersion, nil
 }
 
 // OnChanOpenAck implements the IBCModule interface

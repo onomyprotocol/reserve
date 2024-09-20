@@ -13,8 +13,6 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
 	testifysuite "github.com/stretchr/testify/suite"
 
-	//"github.com/cosmos/cosmos-sdk/types/module/testutil"
-	"github.com/onomyprotocol/reserve/app"
 	reserveapp "github.com/onomyprotocol/reserve/app"
 	simapp "github.com/onomyprotocol/reserve/app"
 	bandapp "github.com/onomyprotocol/reserve/x/oracle/bandtesting/app"
@@ -146,7 +144,7 @@ func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 
 func (suite *PriceRelayTestSuite) TearDownTest() {
 	for _, chain := range suite.coordinator.Chains {
-		if app, ok := chain.App.(*app.App); ok {
+		if app, ok := chain.App.(*reserveapp.App); ok {
 			simapp.Cleanup(app) // cleanup old instance first
 		}
 	}
