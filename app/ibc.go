@@ -38,6 +38,7 @@ import (
 
 	oracle "github.com/onomyprotocol/reserve/x/oracle"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.
@@ -205,6 +206,8 @@ func RegisterIBC(registry cdctypes.InterfaceRegistry) map[string]appmodule.AppMo
 		capabilitytypes.ModuleName:  capability.AppModule{},
 		ibctm.ModuleName:            ibctm.AppModule{},
 		solomachine.ModuleName:      solomachine.AppModule{},
+
+		oraclemoduletypes.ModuleName: oraclemodule.AppModule{},
 	}
 
 	for name, m := range modules {
