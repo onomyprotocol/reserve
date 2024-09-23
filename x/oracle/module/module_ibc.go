@@ -5,6 +5,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"strconv"
+	"strings"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -47,6 +48,10 @@ func (im IBCModule) OnChanOpenInit(
 	}
 
 	bandParams := im.keeper.GetBandParams(ctx)
+
+	if strings.TrimSpace(version) == "" {
+		version = bandParams.IbcVersion
+	}
 
 	if version != bandParams.IbcVersion {
 		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, bandParams.IbcVersion)
