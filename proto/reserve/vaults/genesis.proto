@@ -11,9 +11,12 @@ option go_package = "github.com/onomyprotocol/reserve/x/vaults/types";
 message GenesisState {
 
   // params defines all the parameters of the module.
-  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  Params params = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  repeated VaultMamager vault_managers = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  repeated VaultMamager vault_managers = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  repeated Vault vaults = 3 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  repeated Vault vaults = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }

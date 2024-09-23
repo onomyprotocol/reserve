@@ -48,7 +48,7 @@ func NewKeeper(
 		oracleKeeper:   ok,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vault_managers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
+		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
 		Vaults:         collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
 		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
 	}

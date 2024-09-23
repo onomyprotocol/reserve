@@ -4,7 +4,6 @@ package vaults
 import (
 	_ "cosmossdk.io/api/amino"
 	_ "cosmossdk.io/api/cosmos/base/v1beta1"
-	_ "cosmossdk.io/api/reserve/oracle"
 	fmt "fmt"
 	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"

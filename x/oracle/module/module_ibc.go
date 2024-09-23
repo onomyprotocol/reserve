@@ -142,7 +142,7 @@ func (im IBCModule) OnRecvPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	var ack channeltypes.Acknowledgement
+	// var ack channeltypes.Acknowledgement
 
 	// this line is used by starport scaffolding # oracle/packet/module/recv
 
@@ -160,7 +160,7 @@ func (im IBCModule) OnRecvPacket(
 	}
 
 	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
-	return ack
+	// return ack
 }
 
 // OnAcknowledgementPacket implements the IBCModule interface
@@ -182,7 +182,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
-	var eventType string
+	// var eventType string
 
 	// Dispatch packet
 	switch packet := modulePacketData.Packet.(type) {
@@ -192,32 +192,32 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return errorsmod.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
 	}
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			eventType,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-			sdk.NewAttribute(types.AttributeKeyAck, fmt.Sprintf("%v", ack)),
-		),
-	)
+	// ctx.EventManager().EmitEvent(
+	// 	sdk.NewEvent(
+	// 		eventType,
+	// 		sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+	// 		sdk.NewAttribute(types.AttributeKeyAck, fmt.Sprintf("%v", ack)),
+	// 	),
+	// )
 
-	switch resp := ack.Response.(type) {
-	case *channeltypes.Acknowledgement_Result:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				eventType,
-				sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
-			),
-		)
-	case *channeltypes.Acknowledgement_Error:
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				eventType,
-				sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
-			),
-		)
-	}
+	// switch resp := ack.Response.(type) {
+	// case *channeltypes.Acknowledgement_Result:
+	// 	ctx.EventManager().EmitEvent(
+	// 		sdk.NewEvent(
+	// 			eventType,
+	// 			sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
+	// 		),
+	// 	)
+	// case *channeltypes.Acknowledgement_Error:
+	// 	ctx.EventManager().EmitEvent(
+	// 		sdk.NewEvent(
+	// 			eventType,
+	// 			sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
+	// 		),
+	// 	)
+	// }
 
-	return nil
+	// return nil
 }
 
 // OnTimeoutPacket implements the IBCModule interface
@@ -239,5 +239,5 @@ func (im IBCModule) OnTimeoutPacket(
 		return errorsmod.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
 	}
 
-	return nil
+	// return nil
 }

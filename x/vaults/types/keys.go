@@ -4,6 +4,10 @@ import "cosmossdk.io/collections"
 
 const (
 	ModuleName        = "vaults"
+
+	// StoreKey is the string store representation
+	StoreKey = ModuleName
+	
 	ReserveModuleName = "reserve"
 )
 

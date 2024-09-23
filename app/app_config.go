@@ -6,6 +6,7 @@ import (
 	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
 	vaultsmoduletypes "github.com/onomyprotocol/reserve/x/vaults/types"
 
@@ -123,6 +124,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		oraclemoduletypes.ModuleName,
+		vaultsmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -306,7 +308,7 @@ var (
 			},
 			{
 				Name:   vaultsmoduletypes.ModuleName,
-				Config: appconfig.WrapAny(&vaultsmoduletypes.Module{}),
+				Config: appconfig.WrapAny(&vaultmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

@@ -10,9 +10,8 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) error {
 	params := k.GetParams(ctx)
 	// TODO: Recalculate debt
 	if height%int64(params.RecalculateDebtPeriod) == 0 {
-		k.UpdateVaultsDebt(ctx)
+		return k.UpdateVaultsDebt(ctx)
 	}
 
-	// TODO: Check liquidate
 	return nil
 }

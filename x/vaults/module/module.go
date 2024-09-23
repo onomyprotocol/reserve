@@ -30,6 +30,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
+	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 )
 
 const consensusVersion uint64 = 1
@@ -71,7 +72,10 @@ func (a AppModule) ExportGenesis(_ sdk.Context, cdc codec.JSONCodec) json.RawMes
 func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) {
 	var genesisState types.GenesisState
 	marshaler.MustUnmarshalJSON(message, &genesisState)
-	a.keeper.InitGenesis(ctx, genesisState)
+	err := a.keeper.InitGenesis(ctx, genesisState)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (AppModule) ConsensusVersion() uint64 { return consensusVersion }
@@ -148,7 +152,7 @@ func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 
 func init() {
 	appmodule.Register(
-		&types.Module{},
+		&modulev1.Module{},
 		appmodule.Provide(ProvideModule),
 	)
 }
@@ -159,7 +163,7 @@ type ModuleInputs struct {
 	AddressCodec address.Codec
 	StoreService store.KVStoreService
 	Cdc          codec.Codec
-	Config       *types.Module
+	Config       *modulev1.Module
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
