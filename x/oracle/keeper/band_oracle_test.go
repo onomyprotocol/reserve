@@ -17,13 +17,13 @@ func TestBandPriceState(t *testing.T) {
 
 	// Band price state is nil now
 	data := app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
-	require.Equal(t, &types.BandPriceState{}, data)
+	require.Nil(t, data)
 
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
 	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
-	require.True(t, price.IsNil())
+	require.Nil(t, price)
 
 	bandPriceState := &types.BandPriceState{
 		Symbol: "ATOM",
@@ -52,7 +52,7 @@ func TestBandOracleRequest(t *testing.T) {
 	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
 	
 	req := app.OracleKeeper.GetBandOracleRequest(ctx, 1)
-	require.Equal(t, &types.BandOracleRequest{}, req)
+	require.Nil(t, req)
 
 	reqs := app.OracleKeeper.GetAllBandOracleRequests(ctx)
 	require.Equal(t, 0, len(reqs))
@@ -115,7 +115,7 @@ func TestBandCallDataRecord(t *testing.T) {
 	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
 
 	record := app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
-	require.Equal(t, &types.CalldataRecord{}, record)
+	require.Nil(t, record)
 
 	recordA := &types.CalldataRecord{
 		ClientId: 1,
@@ -130,5 +130,5 @@ func TestBandCallDataRecord(t *testing.T) {
 	require.NoError(t, err)
 
 	record = app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
-	require.Equal(t, &types.CalldataRecord{}, record)
+	require.Nil(t, record)
 }

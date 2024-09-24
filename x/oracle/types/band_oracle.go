@@ -37,6 +37,12 @@ func (p OracleRequestPacketData) GetBytes() []byte {
 	return sdk.MustSortJSON(cdc.MustMarshalJSON(&p))
 }
 
+// GetBytes returns the bytes representation of this oracle response packet data.
+func (p OracleResponsePacketData) GetBytes() []byte {
+	cdc := codec.NewProtoCodec(codectypes.NewInterfaceRegistry())
+	return sdk.MustSortJSON(cdc.MustMarshalJSON(&p))
+}
+
 // GetCalldata gets the Band IBC request call data based on the symbols and multiplier.
 func (r *BandOracleRequest) GetCalldata(legacyScheme bool) []byte {
 	if legacyScheme {

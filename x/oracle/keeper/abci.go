@@ -20,6 +20,7 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 }
 
 func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
+	// TODO: check logic flow for this
 	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
 	if len(bandOracleRequests) == 0 {
@@ -32,6 +33,7 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 			ctx.Logger().Error(err.Error())
 		}
 	}
+	// TODO: Clean call data record after each 1000 blocks
 }
 
 func (k *Keeper) EndBlocker(ctx context.Context) {
