@@ -332,13 +332,11 @@ func (k *Keeper) ProcessBandOraclePrices(
 
 	input, err := types.DecodeOracleInput(callRecord.Calldata)
 	if err != nil {
-		println("dcmmm")
 		return err
 	}
 
 	output, err := types.DecodeOracleOutput(packet.Result)
 	if err != nil {
-		println("check 4")
 		return err
 	}
 
