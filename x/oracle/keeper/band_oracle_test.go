@@ -3,12 +3,13 @@ package keeper_test
 import (
 	"testing"
 	"time"
+
 	"cosmossdk.io/math"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
-	"github.com/onomyprotocol/reserve/app"
-	"github.com/stretchr/testify/require"
-	"github.com/onomyprotocol/reserve/x/oracle/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/onomyprotocol/reserve/app"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBandPriceState(t *testing.T) {
@@ -26,7 +27,7 @@ func TestBandPriceState(t *testing.T) {
 	require.Nil(t, price)
 
 	bandPriceState := &types.BandPriceState{
-		Symbol: "ATOM",
+		Symbol:      "ATOM",
 		Rate:        math.NewInt(10),
 		ResolveTime: 1,
 		Request_ID:  1,
@@ -50,7 +51,7 @@ func TestBandPriceState(t *testing.T) {
 func TestBandOracleRequest(t *testing.T) {
 	app := app.Setup(t, false)
 	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
-	
+
 	req := app.OracleKeeper.GetBandOracleRequest(ctx, 1)
 	require.Nil(t, req)
 
@@ -131,4 +132,78 @@ func TestBandCallDataRecord(t *testing.T) {
 
 	record = app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
 	require.Nil(t, record)
+}
+
+func TestGetPrice(t *testing.T) {
+	app := app.Setup(t, false)
+	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
+
+	// Case 1: Base, quote price, does not exist, expect nil
+	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.Nil(t, price)
+
+	// Case 2: Set base price state for ATOM
+	bandPriceStateATOM := &types.BandPriceState{
+		Symbol:      "ATOM",
+		Rate:        math.NewInt(10),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+	}
+	err := app.OracleKeeper.SetBandPriceState(ctx, "ATOM", bandPriceStateATOM)
+	require.NoError(t, err)
+
+	// // Case 3: Set quote price state for USD
+	bandPriceStateUSD := &types.BandPriceState{
+		Symbol:      "USD",
+		Rate:        math.NewInt(1),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(1), 1),
+	}
+	err = app.OracleKeeper.SetBandPriceState(ctx, "USD", bandPriceStateUSD)
+	require.NoError(t, err)
+
+	// Case 4: Base price is invalid (rate is zero), expect nil
+	invalidPriceState := &types.BandPriceState{
+		Symbol:      "ATOM",
+		Rate:        math.NewInt(0), // Invalid base rate
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(0), 1),
+	}
+	err = app.OracleKeeper.SetBandPriceState(ctx, "ATOM", invalidPriceState)
+	require.NoError(t, err)
+
+	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.Nil(t, price)
+
+	// Case 5: Quote price is invalid (rate is zero), expect nil
+	invalidQuoteState := &types.BandPriceState{
+		Symbol:      "USD",
+		Rate:        math.NewInt(0), // Invalid quote rate
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(0), 1),
+	}
+	err = app.OracleKeeper.SetBandPriceState(ctx, "USD", invalidQuoteState)
+	require.NoError(t, err)
+
+	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.Nil(t, price)
+
+	// Case 6: Reset to valid state for both ATOM and USD, expect valid price (10)
+	err = app.OracleKeeper.SetBandPriceState(ctx, "ATOM", bandPriceStateATOM)
+	require.NoError(t, err)
+	err = app.OracleKeeper.SetBandPriceState(ctx, "USD", bandPriceStateUSD)
+	require.NoError(t, err)
+
+	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	expect := math.LegacyNewDec(10)
+	require.Equal(t, &expect, price)
+
+	// Case 7: Reverse price (USD to ATOM), expect 0.1
+	price = app.OracleKeeper.GetPrice(ctx, "USD", "ATOM")
+	expect = math.LegacyNewDec(1).Quo(math.LegacyNewDec(10)) // 0.1
+	require.Equal(t, &expect, price)
 }
