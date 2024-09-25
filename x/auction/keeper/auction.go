@@ -14,6 +14,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 	startTime time.Time,
 	initialPrice, item,
 	targetGoal sdk.Coin,
+	vaultId uint64,
 ) (*types.Auction, error) {
 	auctionId, err := k.AuctionIdSeq.Next(ctx)
 	if err != nil {
@@ -45,5 +46,6 @@ func (k Keeper) NewAuction(ctx context.Context,
 		LastDiscountTime: startTime,
 		Status:           types.AuctionStatus_AUCTION_STATUS_ACTIVE,
 		TargetGoal:       targetGoal,
+		VaultId:          vaultId,
 	}, nil
 }
