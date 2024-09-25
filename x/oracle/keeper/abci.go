@@ -28,6 +28,10 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 	}
 
 	for _, req := range bandOracleRequests {
+		println("checking request .......")
+		for _, symbol := range req.Symbols {
+			println("With symbols: ", symbol)
+		}
 		err := k.RequestBandOraclePrices(ctx, req)
 		if err != nil {
 			ctx.Logger().Error(err.Error())
