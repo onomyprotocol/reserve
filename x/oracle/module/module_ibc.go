@@ -167,7 +167,7 @@ func (im IBCModule) OnRecvPacket(
 		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
 	}
-
+	println("Process OnrecvPacket ..........")
 	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}

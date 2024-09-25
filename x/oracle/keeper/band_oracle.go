@@ -377,7 +377,7 @@ func (k *Keeper) updateBandPriceStates(
 			multiplier = input.PriceMultiplier()
 			price      = math.LegacyNewDec(int64(rate)).Quo(math.LegacyNewDec(int64(multiplier)))
 		)
-
+		println("Checking symbol: %s and price: %s", symbol, price.String())
 		if price.IsZero() {
 			continue
 		}

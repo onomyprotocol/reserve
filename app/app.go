@@ -78,7 +78,8 @@ import (
 	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
+
+	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
 	"github.com/onomyprotocol/reserve/docs"
 )
@@ -144,6 +145,7 @@ type App struct {
 	ScopedOracleKeeper        capabilitykeeper.ScopedKeeper
 
 	OracleKeeper oraclemodulekeeper.Keeper
+	VaultsKeeper vaultskeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -297,6 +299,7 @@ func New(
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
 		// &app.OracleKeeper,
+		&app.VaultsKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
@@ -337,7 +340,7 @@ func New(
 	app.App = appBuilder.Build(db, traceStore, baseAppOptions...)
 
 	// Register legacy modules
-	if err := app.registerIBCModules(appOpts); err != nil {
+	if err := app.registerIBCModules(); err != nil {
 		return nil, err
 	}
 

@@ -100,6 +100,10 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 	return cli.GetTxCmd()
 }
 
+// GetQueryCmd returns no root query command for the oracle module.
+func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
+}
 // ----------------------------------------------------------------------------
 // AppModule
 // ----------------------------------------------------------------------------
