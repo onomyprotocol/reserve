@@ -286,7 +286,8 @@ func (m *MsgCreateVaultResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgCreateVaultResponse proto.InternalMessageInfo
 
-// MsgDeposit defines a SDK message for depositing collateral assets to the vault.
+// MsgDeposit defines a SDK message for depositing collateral assets to the
+// vault.
 type MsgDeposit struct {
 	VaultId uint64     `protobuf:"varint,1,opt,name=vault_id,json=vaultId,proto3" json:"vault_id,omitempty"`
 	Sender  string     `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
@@ -363,7 +364,8 @@ func (m *MsgDepositResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgDepositResponse proto.InternalMessageInfo
 
-// MsgWithdraw defines a SDK message for withdrawing collateral assets out of the vault.
+// MsgWithdraw defines a SDK message for withdrawing collateral assets out of
+// the vault.
 type MsgWithdraw struct {
 	VaultId uint64     `protobuf:"varint,1,opt,name=vault_id,json=vaultId,proto3" json:"vault_id,omitempty"`
 	Sender  string     `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
@@ -693,7 +695,8 @@ type MsgClient interface {
 	CreateVault(ctx context.Context, in *MsgCreateVault, opts ...grpc.CallOption) (*MsgCreateVaultResponse, error)
 	// Deposit defines a method for depositing collateral assets to vault
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
-	// Withdraw defines a method for withdrawing collateral assets out of the vault
+	// Withdraw defines a method for withdrawing collateral assets out of the
+	// vault
 	Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.CallOption) (*MsgWithdrawResponse, error)
 	// Mint defines a method for minting more tokens
 	Mint(ctx context.Context, in *MsgMint, opts ...grpc.CallOption) (*MsgMintResponse, error)
@@ -783,7 +786,8 @@ type MsgServer interface {
 	CreateVault(context.Context, *MsgCreateVault) (*MsgCreateVaultResponse, error)
 	// Deposit defines a method for depositing collateral assets to vault
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
-	// Withdraw defines a method for withdrawing collateral assets out of the vault
+	// Withdraw defines a method for withdrawing collateral assets out of the
+	// vault
 	Withdraw(context.Context, *MsgWithdraw) (*MsgWithdrawResponse, error)
 	// Mint defines a method for minting more tokens
 	Mint(context.Context, *MsgMint) (*MsgMintResponse, error)

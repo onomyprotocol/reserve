@@ -29,6 +29,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
+	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 )
 
 const consensusVersion uint64 = 1
@@ -150,7 +151,7 @@ func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 
 func init() {
 	appmodule.Register(
-		&types.Module{},
+		&modulev1.Module{},
 		appmodule.Provide(ProvideModule),
 	)
 }
@@ -161,7 +162,7 @@ type ModuleInputs struct {
 	AddressCodec address.Codec
 	StoreService store.KVStoreService
 	Cdc          codec.Codec
-	Config       *types.Module
+	Config       *modulev1.Module
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
