@@ -9,13 +9,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/onomyprotocol/reserve/testutil/sample"
-	oraclesimulation "github.com/onomyprotocol/reserve/x/oracle/simulation"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // avoid unused import issue
 var (
-	_ = oraclesimulation.FindAccount
 	_ = rand.Rand{}
 	_ = sample.AccAddress
 	_ = sdk.AccAddress{}
@@ -34,7 +32,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	oracleGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
-		PortId: types.PortID,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&oracleGenesis)
