@@ -20,6 +20,7 @@ message GenesisState {
   repeated BandOracleRequest band_oracle_requests = 3;
   uint64 band_latest_client_id = 4;
   repeated CalldataRecord calldata_records = 5;
+  uint64 band_latest_request_id = 11;
 }
 
 message BandOracleRequest {

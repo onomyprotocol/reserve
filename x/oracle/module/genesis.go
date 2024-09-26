@@ -36,7 +36,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 			}
 		}
 	}
- 
+
 	if genState.BandLatestClientId != 0 {
 		k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
 	}
@@ -44,16 +44,21 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, record := range genState.CalldataRecords {
 		k.SetBandCallDataRecord(ctx, record)
 	}
+
+	if genState.BandLatestRequestId != 0 {
+		k.SetBandLatestRequestID(ctx, genState.BandLatestRequestId)
+	}
 }
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
-		Params:             k.GetParams(ctx),
-		BandParams:         k.GetBandParams(ctx),
-		BandPriceStates:    k.GetAllBandPriceStates(ctx),
-		BandOracleRequests: k.GetAllBandOracleRequests(ctx),
-		BandLatestClientId: k.GetBandLatestClientID(ctx),
-		CalldataRecords:    k.GetAllBandCalldataRecords(ctx),
+		Params:              k.GetParams(ctx),
+		BandParams:          k.GetBandParams(ctx),
+		BandPriceStates:     k.GetAllBandPriceStates(ctx),
+		BandOracleRequests:  k.GetAllBandOracleRequests(ctx),
+		BandLatestClientId:  k.GetBandLatestClientID(ctx),
+		CalldataRecords:     k.GetAllBandCalldataRecords(ctx),
+		BandLatestRequestId: k.GetBandLatestRequestID(ctx),
 	}
 }
