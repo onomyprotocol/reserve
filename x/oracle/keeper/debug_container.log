@@ -1,0 +1,245 @@
+Initializing logger
+Registering providers
+ Failed registering providers because of: no module registered for type URL /reserve.oracle.module.Module, did you forget to import github.com/onomyprotocol/reserve/x/oracle: find more information on how to make a module ready for app wiring: https://docs.cosmos.network/main/building-modules/depinject
+
+registered modules are:
+  cosmos.feegrant.module.v1.Module
+  cosmos.params.module.v1.Module
+  cosmos.evidence.module.v1.Module
+  cosmos.app.runtime.v1alpha1.Module
+  cosmos.tx.config.v1.Config
+  cosmos.mint.module.v1.Module
+  cosmos.nft.module.v1.Module
+  cosmos.group.module.v1.Module
+  cosmos.circuit.module.v1.Module
+  cosmos.staking.module.v1.Module
+  cosmos.distribution.module.v1.Module
+  cosmos.slashing.module.v1.Module
+  cosmos.gov.module.v1.Module
+  cosmos.consensus.module.v1.Module
+  cosmos.bank.module.v1.Module
+  cosmos.vesting.module.v1.Module
+  cosmos.upgrade.module.v1.Module
+  cosmos.authz.module.v1.Module
+  reserve.vaults.module.Module
+  cosmos.auth.module.v1.Module
+  cosmos.genutil.module.v1.Module
+  cosmos.crisis.module.v1.Module
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+cosmossdk.io/depinject/appconfig.Compose.Error.func9(0x1400008a4e8?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:166 +0x2c
+cosmossdk.io/depinject.containerConfig.apply(0x8?, 0x8?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.AppConfig.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x30?, 0x1400069e008?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+github.com/onomyprotocol/reserve/app.AppConfig.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:176 +0x74
+cosmossdk.io/depinject.containerConfig.apply(0x30?, 0x1400069e008?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:176 +0x74
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+ Error: no module registered for type URL /reserve.oracle.module.Module, did you forget to import github.com/onomyprotocol/reserve/x/oracle: find more information on how to make a module ready for app wiring: https://docs.cosmos.network/main/building-modules/depinject
+
+registered modules are:
+  cosmos.feegrant.module.v1.Module
+  cosmos.params.module.v1.Module
+  cosmos.evidence.module.v1.Module
+  cosmos.app.runtime.v1alpha1.Module
+  cosmos.tx.config.v1.Config
+  cosmos.mint.module.v1.Module
+  cosmos.nft.module.v1.Module
+  cosmos.group.module.v1.Module
+  cosmos.circuit.module.v1.Module
+  cosmos.staking.module.v1.Module
+  cosmos.distribution.module.v1.Module
+  cosmos.slashing.module.v1.Module
+  cosmos.gov.module.v1.Module
+  cosmos.consensus.module.v1.Module
+  cosmos.bank.module.v1.Module
+  cosmos.vesting.module.v1.Module
+  cosmos.upgrade.module.v1.Module
+  cosmos.authz.module.v1.Module
+  reserve.vaults.module.Module
+  cosmos.auth.module.v1.Module
+  cosmos.genutil.module.v1.Module
+  cosmos.crisis.module.v1.Module
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+cosmossdk.io/depinject/appconfig.Compose.Error.func9(0x1400008a4e8?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:166 +0x2c
+cosmossdk.io/depinject.containerConfig.apply(0x8?, 0x8?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.AppConfig.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x30?, 0x1400069e008?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+github.com/onomyprotocol/reserve/app.AppConfig.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:176 +0x74
+cosmossdk.io/depinject.containerConfig.apply(0x30?, 0x1400069e008?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:174 +0x64
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+goroutine 11 [running]:
+cosmossdk.io/depinject.getStackTrace()
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:193 +0x38
+github.com/onomyprotocol/reserve/app.New.Configs.func1(0x140010be070)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:176 +0x74
+cosmossdk.io/depinject.containerConfig.apply(0x140000b4468?, 0x0?)
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/config.go:186 +0x28
+cosmossdk.io/depinject.doInject(0x14000fe8360, {0x103caf048, 0x140010ea880}, {0x103c78ce0?, 0x14000694400?}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:74 +0x228
+cosmossdk.io/depinject.inject({0x103caf048, 0x140010ea880}, {0x103c78ce0, 0x14000694400}, {0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:45 +0x218
+cosmossdk.io/depinject.Inject({0x103c787c0, 0x14000694180}, {0x140010b3c80, 0x17, 0x17})
+	/Users/hung/go/pkg/mod/cosmossdk.io/depinject@v1.0.0/inject.go:19 +0x68
+github.com/onomyprotocol/reserve/app.New({0x103cb57b8, 0x1057ac900}, {0x103cc7a60, 0x14000694100}, {0x0, 0x0}, 0x1, {0x103c78660, 0x140010e4090}, {0x0, ...})
+	/Users/hung/Documents/GitHub/reserve/app/app.go:278 +0x4f8
+github.com/onomyprotocol/reserve/app.setup(0x1, 0x5)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:43 +0x264
+github.com/onomyprotocol/reserve/app.SetupWithGenesisValSet(0x140010d04e0, 0x140010e46c0, {0x1400008b558, 0x1, 0x1}, {0x140010e4060, 0x1, 0x1})
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:123 +0x50
+github.com/onomyprotocol/reserve/app.Setup(0x140010d04e0, 0x0?)
+	/Users/hung/Documents/GitHub/reserve/app/test_helpers.go:111 +0x2f4
+command-line-arguments_test.TestBandPriceState(0x140010d04e0)
+	/Users/hung/Documents/GitHub/reserve/x/oracle/keeper/band_oracle_test.go:16 +0x2c
+testing.tRunner(0x140010d04e0, 0x103c66f40)
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1689 +0xec
+created by testing.(*T).Run in goroutine 1
+	/opt/homebrew/Cellar/go/1.22.1/libexec/src/testing/testing.go:1742 +0x318
+
+ Saved graph of container to /Users/hung/Documents/GitHub/reserve/x/oracle/keeper/debug_container.dot

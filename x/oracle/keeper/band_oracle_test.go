@@ -6,6 +6,7 @@ import (
 
 	"cosmossdk.io/math"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/app"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"github.com/stretchr/testify/require"
@@ -26,7 +27,7 @@ func TestBandPriceState(t *testing.T) {
 	require.Nil(t, price)
 
 	bandPriceState := &types.BandPriceState{
-		Symbol: "ATOM",
+		Symbol:      "ATOM",
 		Rate:        math.NewInt(10),
 		ResolveTime: 1,
 		Request_ID:  1,
@@ -165,60 +166,60 @@ func TestGetPrice(t *testing.T) {
 	expectedPrice01 := math.LegacyNewDec(1).Quo(math.LegacyNewDec(10)) // 0.1
 
 	tests := []struct {
-		name           string
-		baseSymbol     string
-		quoteSymbol    string
-		basePriceState *types.BandPriceState
+		name            string
+		baseSymbol      string
+		quoteSymbol     string
+		basePriceState  *types.BandPriceState
 		quotePriceState *types.BandPriceState
-		expectedPrice  *math.LegacyDec
-		expectNil      bool
+		expectedPrice   *math.LegacyDec
+		expectNil       bool
 	}{
 		// Fail cases first
 		{
-			name:           "Base, quote price do not exist, expect nil",
-			baseSymbol:     "ATOM",
-			quoteSymbol:    "USD",
-			basePriceState: nil,
+			name:            "Base, quote price do not exist, expect nil",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "USD",
+			basePriceState:  nil,
 			quotePriceState: nil,
-			expectedPrice:  nil,
-			expectNil:      true,
+			expectedPrice:   nil,
+			expectNil:       true,
 		},
 		{
-			name:           "Base price is invalid (rate is zero), expect nil",
-			baseSymbol:     "ATOM",
-			quoteSymbol:    "USD",
-			basePriceState: invalidPriceStateATOM,
+			name:            "Base price is invalid (rate is zero), expect nil",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "USD",
+			basePriceState:  invalidPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:  nil,
-			expectNil:      true,
+			expectedPrice:   nil,
+			expectNil:       true,
 		},
 		// Pass cases
 		{
-			name:           "Valid base price (ATOM), quote does not exist, expect 10",
-			baseSymbol:     "ATOM",
-			quoteSymbol:    "USD",
-			basePriceState: bandPriceStateATOM,
+			name:            "Valid base price (ATOM), quote does not exist, expect 10",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "USD",
+			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
-			expectedPrice:  &expectedPrice10, 
-			expectNil:      false,
+			expectedPrice:   &expectedPrice10,
+			expectNil:       false,
 		},
 		{
-			name:           "Valid base and quote price, expect 10 for ATOM/USD",
-			baseSymbol:     "ATOM",
-			quoteSymbol:    "USD",
-			basePriceState: bandPriceStateATOM,
+			name:            "Valid base and quote price, expect 10 for ATOM/USD",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "USD",
+			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:  &expectedPrice10, 
-			expectNil:      false,
+			expectedPrice:   &expectedPrice10,
+			expectNil:       false,
 		},
 		{
-			name:           "Reverse price (USD to ATOM), expect 0.1",
-			baseSymbol:     "USD",
-			quoteSymbol:    "ATOM",
-			basePriceState: bandPriceStateUSD,
+			name:            "Reverse price (USD to ATOM), expect 0.1",
+			baseSymbol:      "USD",
+			quoteSymbol:     "ATOM",
+			basePriceState:  bandPriceStateUSD,
 			quotePriceState: bandPriceStateATOM,
-			expectedPrice:  &expectedPrice01, 
-			expectNil:      false,
+			expectedPrice:   &expectedPrice01,
+			expectNil:       false,
 		},
 	}
 
