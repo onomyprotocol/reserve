@@ -39,7 +39,6 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		NewRequestBandRatesTxCmd(),
-		NewAuthorizeBandOracleRequestProposalTxCmd(),
 		NewUpdateBandOracleRequestProposalTxCmd(),
 		NewDeleteBandOracleRequestProposalTxCmd(),
 	)
@@ -84,61 +83,6 @@ func NewRequestBandRatesTxCmd() *cobra.Command {
 
 	flags.AddTxFlagsToCmd(cmd)
 
-	return cmd
-}
-
-func NewAuthorizeBandOracleRequestProposalTxCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "authorize-band-oracle-request-proposal [flags]",
-		Args:  cobra.ExactArgs(1),
-		Short: "Submit a proposal to authorize a Band Oracle IBC Request.",
-		Long: `Submit a proposal to authorize a Band Oracle IBC Request.
-			Example:
-			$ %s tx oracle authorize-band-oracle-request-proposal 23 --symbols "BTC,ETH,USDT,USDC" --requested-validator-count 4 --sufficient-validator-count 3 --min-source-count 3 --prepare-gas 20000 --fee-limit "1000uband" --execute-gas 400000 --from mykey
-		`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			content, err := authorizeBandOracleRequestProposalArgsToContent(cmd, args)
-			if err != nil {
-				return err
-			}
-
-			from := clientCtx.GetFromAddress()
-
-			depositStr, err := cmd.Flags().GetString(govcli.FlagDeposit)
-			if err != nil {
-				return err
-			}
-			deposit, err := sdk.ParseCoinsNormalized(depositStr)
-			if err != nil {
-				return err
-			}
-
-			msg, err := govtypes.NewMsgSubmitProposal(content, deposit, from)
-			if err != nil {
-				return err
-			}
-
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	cmd.Flags().StringSlice(flagSymbols, []string{}, "Symbols used in calling the oracle script")
-	cmd.Flags().Uint64(flagPrepareGas, 50000, "Prepare gas used in fee counting for prepare request")
-	cmd.Flags().Uint64(flagExecuteGas, 300000, "Execute gas used in fee counting for execute request")
-	cmd.Flags().String(flagFeeLimit, "", "the maximum tokens that will be paid to all data source providers")
-	cmd.Flags().Uint64(flagRequestedValidatorCount, 4, "Requested Validator Count")
-	cmd.Flags().Uint64(flagSufficientValidatorCount, 10, "Sufficient Validator Count")
-	cmd.Flags().Uint64(flagMinSourceCount, 3, "Min Source Count")
-	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
-	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
-	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
-
-	flags.AddTxFlagsToCmd(cmd)
 	return cmd
 }
 
@@ -243,85 +187,6 @@ func NewDeleteBandOracleRequestProposalTxCmd() *cobra.Command {
 
 	flags.AddTxFlagsToCmd(cmd)
 	return cmd
-}
-
-func authorizeBandOracleRequestProposalArgsToContent(
-	cmd *cobra.Command,
-	args []string,
-) (govtypes.Content, error) {
-	title, err := cmd.Flags().GetString(govcli.FlagTitle)
-	if err != nil {
-		return nil, err
-	}
-
-	description, err := cmd.Flags().GetString(govcli.FlagDescription)
-	if err != nil {
-		return nil, err
-	}
-
-	int64OracleScriptID, err := strconv.ParseInt(args[0], 10, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	askCount, err := cmd.Flags().GetUint64(flagRequestedValidatorCount)
-	if err != nil {
-		return nil, err
-	}
-
-	minCount, err := cmd.Flags().GetUint64(flagSufficientValidatorCount)
-	if err != nil {
-		return nil, err
-	}
-
-	minSourceCount, err := cmd.Flags().GetUint64(flagMinSourceCount)
-	if err != nil {
-		return nil, err
-	}
-
-	symbols, err := cmd.Flags().GetStringSlice(flagSymbols)
-	if err != nil {
-		return nil, err
-	}
-
-	prepareGas, err := cmd.Flags().GetUint64(flagPrepareGas)
-	if err != nil {
-		return nil, err
-	}
-
-	executeGas, err := cmd.Flags().GetUint64(flagExecuteGas)
-	if err != nil {
-		return nil, err
-	}
-
-	coinStr, err := cmd.Flags().GetString(flagFeeLimit)
-	if err != nil {
-		return nil, err
-	}
-
-	feeLimit, err := sdk.ParseCoinsNormalized(coinStr)
-	if err != nil {
-		return nil, err
-	}
-
-	content := &types.AuthorizeBandOracleRequestProposal{
-		Title:       title,
-		Description: description,
-		Request: types.BandOracleRequest{
-			OracleScriptId: int64OracleScriptID,
-			Symbols:        symbols,
-			AskCount:       askCount,
-			MinCount:       minCount,
-			FeeLimit:       feeLimit,
-			PrepareGas:     prepareGas,
-			ExecuteGas:     executeGas,
-			MinSourceCount: minSourceCount,
-		},
-	}
-	if err := content.ValidateBasic(); err != nil {
-		return nil, err
-	}
-	return content, nil
 }
 
 func updateBandOracleRequestProposalArgsToContent(

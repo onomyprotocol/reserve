@@ -1,18 +1,29 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-const (
+var (
 	// Each value below is the default value for each parameter when generating the default
 	// genesis file.
 	DefaultBandRequestInterval = int64(1) // every 1 block
 	DefaultBandSourceChannel   = "channel-0"
 	DefaultBandVersion         = "bandchain-1"
 	DefaultBandPortID          = "oracle"
+
+	// DefaultBandOracleRequestParams
+	// TODO: Check these params
+	DefaultAskCount       = uint64(16)
+	DefaultMinCount       = uint64(10)
+	DefaultFeeLimit       = sdk.Coins{sdk.NewCoin("uband", sdkmath.NewInt(100))}
+	DefaultPrepareGas     = uint64(20000)
+	DefaultExecuteGas     = uint64(100000)
+	DefaultMinSourceCount = uint64(3)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -42,6 +53,18 @@ func DefaultBandParams() BandParams {
 		IbcSourceChannel:   DefaultBandSourceChannel,
 		IbcVersion:         DefaultBandVersion,
 		IbcPortId:          DefaultBandPortID,
+	}
+}
+
+// DefaultBandOracelRequestParams return the default BandOracelRequestParams
+func DefaultBandOracelRequestParams() BandOracleRequestParams {
+	return BandOracleRequestParams{
+		AskCount:       DefaultAskCount,
+		MinCount:       DefaultMinCount,
+		FeeLimit:       DefaultFeeLimit,
+		PrepareGas:     DefaultPrepareGas,
+		ExecuteGas:     DefaultExecuteGas,
+		MinSourceCount: DefaultMinSourceCount,
 	}
 }
 
