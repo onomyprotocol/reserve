@@ -153,6 +153,13 @@ func TestGetPrice(t *testing.T) {
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(1), 1),
 	}
+	bandPriceStateNOM := &types.BandPriceState{
+		Symbol:      "NOM",
+		Rate:        math.NewInt(2),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(2), 1),
+	}
 	invalidPriceStateATOM := &types.BandPriceState{
 		Symbol:      "ATOM",
 		Rate:        math.NewInt(0), // Invalid base rate
@@ -163,6 +170,7 @@ func TestGetPrice(t *testing.T) {
 
 	// Create variables for expected prices
 	expectedPrice10 := math.LegacyNewDec(10)
+	expectedPrice05 := math.LegacyNewDec(5)   // For ATOM/NOM (10/2)
 	expectedPrice01 := math.LegacyNewDec(1).Quo(math.LegacyNewDec(10)) // 0.1
 
 	tests := []struct {
@@ -193,14 +201,32 @@ func TestGetPrice(t *testing.T) {
 			expectedPrice:   nil,
 			expectNil:       true,
 		},
-		// Pass cases
+		// Pass cases with different quotes
+		{
+			name:            "Valid base price (ATOM), quote NOM does not exist, expect nil",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "NOM",
+			basePriceState:  bandPriceStateATOM,
+			quotePriceState: nil,
+			expectedPrice:   nil, // Since NOM doesn't exist, expect nil
+			expectNil:       true,
+		},
+		{
+			name:            "Valid base price (ATOM), valid quote price (NOM), expect 5 for ATOM/NOM",
+			baseSymbol:      "ATOM",
+			quoteSymbol:     "NOM",
+			basePriceState:  bandPriceStateATOM,
+			quotePriceState: bandPriceStateNOM,
+			expectedPrice:   &expectedPrice05, // 10/2 = 5
+			expectNil:       false,
+		},
 		{
 			name:            "Valid base price (ATOM), quote does not exist, expect 10",
 			baseSymbol:      "ATOM",
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
-			expectedPrice:   &expectedPrice10,
+			expectedPrice:   &expectedPrice10, // Since quote = USD, we return base price directly
 			expectNil:       false,
 		},
 		{
@@ -209,7 +235,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:   &expectedPrice10,
+			expectedPrice:   &expectedPrice10, 
 			expectNil:       false,
 		},
 		{
