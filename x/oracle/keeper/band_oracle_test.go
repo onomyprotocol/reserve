@@ -198,6 +198,13 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			expectedError: false,
 			expectedRate:  100,
 		},
+		{
+			name:          "Fail when ClientID is not a valid integer",
+			clientID:      "invalid-id", 
+			calldata:      nil,
+			oracleOutput:  nil,
+			expectedError: true,
+		},
 	}
 
 	// Iterate over each test case
