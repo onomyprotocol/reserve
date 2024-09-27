@@ -277,7 +277,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx sdk.Context, symbol string, 
 func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
-	if basePriceState == nil {
+	if basePriceState == nil || basePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -286,7 +286,7 @@ func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
 	}
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
-	if quotePriceState == nil {
+	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
 		return nil
 	}
 
