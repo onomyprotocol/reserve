@@ -182,7 +182,7 @@ func TestGetPrice(t *testing.T) {
 		expectedPrice   *math.LegacyDec
 		expectNil       bool
 	}{
-		// Fail cases first
+		// Return nil cases first
 		{
 			name:            "Base, quote price do not exist, expect nil",
 			baseSymbol:      "ATOM",
@@ -201,7 +201,6 @@ func TestGetPrice(t *testing.T) {
 			expectedPrice:   nil,
 			expectNil:       true,
 		},
-		// Pass cases with different quotes
 		{
 			name:            "Valid base price (ATOM), quote NOM does not exist, expect nil",
 			baseSymbol:      "ATOM",
@@ -211,6 +210,7 @@ func TestGetPrice(t *testing.T) {
 			expectedPrice:   nil, // Since NOM doesn't exist, expect nil
 			expectNil:       true,
 		},
+		// return a valid price
 		{
 			name:            "Valid base price (ATOM), valid quote price (NOM), expect 5 for ATOM/NOM",
 			baseSymbol:      "ATOM",
