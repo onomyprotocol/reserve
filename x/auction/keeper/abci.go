@@ -79,7 +79,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			needCleanup = true
 			// skip other logic
 		}
-		
+
 		if needCleanup {
 			k.refundBidders(ctx, bidQueue)
 
@@ -141,6 +141,11 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 		return err
 	}
 
+	vault, err := k.vaultKeeper.GetVault(ctx, auction.VaultId)
+	if err != nil {
+		return err
+	}
+
 	for i, bid := range bidQueue.Bids {
 		if bid.IsHandle {
 			continue
@@ -166,7 +171,7 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 				continue
 			}
 
-			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAddr, sdk.NewCoins(receiveCoin))
+			err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
 			if err != nil {
 				continue
 			}
