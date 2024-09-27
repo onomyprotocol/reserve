@@ -71,10 +71,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
 			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
 
-			// err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, true)
-			// if err != nil {
-			// 	return true, err
-			// }
+			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ModuleName, sdk.NewCoins(liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold))
+			if err != nil {
+				return true, err
+			}
 
 			needCleanup = true
 			// skip other logic
