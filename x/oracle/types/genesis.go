@@ -10,6 +10,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 		BandParams: DefaultBandParams(),
+		BandOracleRequestParams: DefaultBandOracelRequestParams(),
 	}
 }
 

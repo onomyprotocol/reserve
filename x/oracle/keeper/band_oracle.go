@@ -41,6 +41,31 @@ func (k Keeper) GetBandParams(ctx sdk.Context) types.BandParams {
 	return bandParams
 }
 
+// SetBandOracleRequestParams sets the Band Oracle request params in the state
+func (k Keeper) SetBandOracleRequestParams(ctx sdk.Context, bandOracleRequestParams types.BandOracleRequestParams)  error{
+	bz := k.cdc.MustMarshal(&bandOracleRequestParams)
+	store := k.storeService.OpenKVStore(ctx)
+	return store.Set(types.BandOracleRequestParamsKey, bz)
+}
+
+// GetBandParams gets the Band params stored in the state
+func (k Keeper) GetBandOracleRequestParams(ctx sdk.Context) types.BandOracleRequestParams {
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.BandParamsKey)
+
+	if err != nil {
+		return types.DefaultGenesis().BandOracleRequestParams
+	}
+
+	if bz == nil {
+		return types.DefaultGenesis().BandOracleRequestParams
+	}
+
+	var bandOracleRequestParams types.BandOracleRequestParams
+	k.cdc.MustUnmarshal(bz, &bandOracleRequestParams)
+	return bandOracleRequestParams
+}
+
 // SetBandCallData sets the Band IBC oracle request call data
 func (k Keeper) SetBandCallDataRecord(ctx sdk.Context, record *types.CalldataRecord) error {
 	bz := k.cdc.MustMarshal(record)
@@ -112,6 +137,7 @@ func (k Keeper) GetBandLatestRequestID(ctx sdk.Context) uint64 {
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.LatestRequestIDKey)
 	if err != nil {
+		// TODO: should we return 0 here?
 		return 0
 	}
 	if bz == nil {
@@ -215,11 +241,43 @@ func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState 
 	return priceStates
 }
 
+// AddNewSymbolToBandOracleRequest adds a new symbol to the bandOracle request
+func (k Keeper) AddNewSymbolToBandOracleRequest(ctx sdk.Context, symbol string, oracleScriptId int64) error{
+	allBandOracleRequests := k.GetAllBandOracleRequests(ctx)
+	// check if new symbol's oracle script id is existing
+	for _, req := range allBandOracleRequests {
+		if req.OracleScriptId == oracleScriptId {
+			req.Symbols = append(req.Symbols, symbol)
+			k.SetBandOracleRequest(ctx, *req)
+			return nil
+		}
+	}
+
+	bandOracleRequestParams := k.GetBandOracleRequestParams(ctx)
+	requestID := k.GetBandLatestRequestID(ctx) + 1
+	newBandOracleRequest := types.BandOracleRequest{
+		RequestId: requestID,
+		OracleScriptId: oracleScriptId,
+		Symbols: []string{symbol},
+		AskCount: bandOracleRequestParams.AskCount,
+		MinCount: bandOracleRequestParams.MinCount,
+		FeeLimit: bandOracleRequestParams.FeeLimit,
+		PrepareGas: bandOracleRequestParams.PrepareGas,
+		ExecuteGas: bandOracleRequestParams.ExecuteGas,
+		MinSourceCount: bandOracleRequestParams.MinSourceCount,
+	}
+
+	k.SetBandOracleRequest(ctx, newBandOracleRequest)
+
+	k.SetBandLatestRequestID(ctx, requestID)
+	return nil
+}
+
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
-	if basePriceState == nil {
+	if basePriceState == nil || basePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -228,7 +286,7 @@ func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
 	}
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
-	if quotePriceState == nil {
+	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
 		return nil
 	}
 

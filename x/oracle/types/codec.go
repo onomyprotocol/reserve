@@ -16,7 +16,6 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRequestBandRates{}, "oracle/MsgRequestBandRates", nil)
 
 	cdc.RegisterConcrete(&UpdateBandParamsProposal{}, "oracle/UpdateBandParamsProposal", nil)
-	cdc.RegisterConcrete(&AuthorizeBandOracleRequestProposal{}, "oracle/AuthorizeBandOracleRequestProposal", nil)
 	cdc.RegisterConcrete(&UpdateBandOracleRequestProposal{}, "oracle/UpdateBandOracleRequestProposal", nil)
 	cdc.RegisterConcrete(&DeleteBandOracleRequestProposal{}, "oracle/DeleteBandOracleRequestProposal", nil)
 }
@@ -29,7 +28,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 
 	registry.RegisterImplementations((*govtypes.Content)(nil),
 		&UpdateBandParamsProposal{},
-		&AuthorizeBandOracleRequestProposal{},
 		&UpdateBandOracleRequestProposal{},
 		&DeleteBandOracleRequestProposal{},
 	)
