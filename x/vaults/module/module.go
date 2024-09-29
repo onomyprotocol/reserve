@@ -29,6 +29,7 @@ import (
 	"cosmossdk.io/core/appmodule"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 )
@@ -168,7 +169,7 @@ type ModuleInputs struct {
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
-	OracleKeeper  types.OracleKeeper
+	OracleKeeper  oraclekeeper.Keeper
 }
 
 type ModuleOutputs struct {
