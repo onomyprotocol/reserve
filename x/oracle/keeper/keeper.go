@@ -77,7 +77,7 @@ func (k Keeper) Logger(ctx context.Context) log.Logger {
 // ----------------------------------------------------------------------------
 
 // ChanCloseInit defines a wrapper function for the channel Keeper's function.
-func (k Keeper) ChanCloseInit(ctx context.Context, portID, channelID string) error {
+func (k *Keeper) ChanCloseInit(ctx context.Context, portID, channelID string) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	capName := host.ChannelCapabilityPath(portID, channelID)
 	chanCap, ok := k.ScopedKeeper().GetCapability(sdkCtx, capName)
