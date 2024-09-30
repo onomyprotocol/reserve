@@ -17,7 +17,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	// govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 
@@ -28,10 +28,10 @@ import (
 
 	"cosmossdk.io/core/appmodule"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/onomyprotocol/reserve/x/vaults/keeper"
-	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-	"github.com/onomyprotocol/reserve/x/vaults/types"
 	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 const consensusVersion uint64 = 1
@@ -175,9 +175,9 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	PsmKeeper keeper.Keeper
-	Module    appmodule.AppModule
-	// GovHandler govv1beta1.HandlerRoute
+	PsmKeeper  keeper.Keeper
+	Module     appmodule.AppModule
+	GovHandler govv1beta1.HandlerRoute
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -203,7 +203,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	// govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewStablecoinProposalHandler(&k)}
+	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewVaultsProposalHandler(k)}
 
-	return ModuleOutputs{PsmKeeper: *k, Module: m} //GovHandler: govHandler}
+	return ModuleOutputs{PsmKeeper: *k, Module: m, GovHandler: govHandler}
 }
