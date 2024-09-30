@@ -61,6 +61,11 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenInit() {
 				Version:        oracletypes.DefaultTestBandIbcParams().IbcVersion,
 			}
 
+			onomyapp := suite.chainO.App.(*reserveapp.App)
+
+			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
+			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
+
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
 
@@ -142,6 +147,11 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenTry() {
 			}
 			counterpartyVersion = oracletypes.DefaultTestBandIbcParams().IbcVersion
 
+			onomyapp := suite.chainO.App.(*reserveapp.App)
+
+			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
+			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
+
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
 
@@ -198,6 +208,11 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenAck() {
 			suite.coordinator.SetupConnections(path)
 			path.EndpointA.ChannelID = ibctesting.FirstChannelID
 			counterpartyVersion = oracletypes.DefaultTestBandIbcParams().IbcVersion
+
+			onomyapp := suite.chainO.App.(*reserveapp.App)
+
+			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
+			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
 
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
@@ -288,6 +303,11 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 
 			// prepare expected ack
 			expectedAck := channeltypes.NewResultAcknowledgement([]byte{byte(1)})
+
+			onomyapp := suite.chainO.App.(*reserveapp.App)
+
+			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
+			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
 
 			// get module
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(

@@ -10,6 +10,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 )
 
 type Keeper struct {
@@ -17,7 +18,7 @@ type Keeper struct {
 	storeService  storetypes.KVStoreService
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
-	oracleKeeper  types.OracleKeeper
+	oracleKeeper  oraclekeeper.Keeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -36,7 +37,7 @@ func NewKeeper(
 	storeService storetypes.KVStoreService,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	ok types.OracleKeeper,
+	ok oraclekeeper.Keeper,
 	authority string,
 ) *Keeper {
 	sb := collections.NewSchemaBuilder(storeService)

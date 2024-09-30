@@ -31,6 +31,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 )
 
 const consensusVersion uint64 = 1
@@ -168,7 +169,7 @@ type ModuleInputs struct {
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
-	OracleKeeper  types.OracleKeeper
+	OracleKeeper  oraclekeeper.Keeper
 }
 
 type ModuleOutputs struct {

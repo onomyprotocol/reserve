@@ -3,12 +3,12 @@ package app
 import (
 	"time"
 
-	// oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
-	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
-	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
-	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
-	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
-	vaultsmoduletypes "github.com/onomyprotocol/reserve/x/vaults/types"
+	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+    _ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
+    oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+    vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
+    _ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
+    vaultsmoduletypes "github.com/onomyprotocol/reserve/x/vaults/types"
 
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"
 	appv1alpha1 "cosmossdk.io/api/cosmos/app/v1alpha1"
@@ -302,10 +302,10 @@ var (
 				Name:   circuittypes.ModuleName,
 				Config: appconfig.WrapAny(&circuitmodulev1.Module{}),
 			},
-			// {
-			// 	Name:   oraclemoduletypes.ModuleName,
-			// 	Config: appconfig.WrapAny(&oraclemodulev1.Module{}),
-			// },
+			{
+				Name:   oraclemoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&oraclemodulev1.Module{}),
+			},
 			{
 				Name:   vaultsmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&vaultmodulev1.Module{}),

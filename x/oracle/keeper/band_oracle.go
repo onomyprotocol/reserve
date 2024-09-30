@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 	"strconv"
+	"context"
 	math "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	prefix "cosmossdk.io/store/prefix"
@@ -201,7 +202,7 @@ func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleReq
 }
 
 // GetBandPriceState reads the stored band ibc price state.
-func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPriceState {
+func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.BandPriceState {
 	var priceState types.BandPriceState
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
@@ -274,7 +275,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx sdk.Context, symbol string, 
 }
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
-func (k *Keeper) GetPrice(ctx sdk.Context, base, quote string) *math.LegacyDec {
+func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil {
@@ -318,7 +319,7 @@ func (k *Keeper) RequestBandOraclePrices(
 	}
 
 	// retrieve the dynamic capability for this channel
-	channelCap, ok := k.scopedKeeper.GetCapability(ctx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
+	channelCap, ok := k.ScopedKeeper().GetCapability(ctx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
 	if !ok {
 		return errorsmod.Wrap(channeltypes.ErrChannelCapabilityNotFound, "module does not own channel capability")
 	}

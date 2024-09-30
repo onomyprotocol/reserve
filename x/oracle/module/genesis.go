@@ -27,7 +27,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.BandParams.IbcPortId != "" {
 		k.SetPort(ctx, genState.BandParams.IbcPortId)
 		// Only try to bind to port if it is not already bound, since we may already own port capability
-		if !k.IsBound(ctx, genState.BandParams.IbcPortId) {
+		if !k.ShouldBound(ctx, genState.BandParams.IbcPortId) {
 			// module binds to the port on InitChain
 			// and claims the returned capability
 			err := k.BindPort(ctx, genState.BandParams.IbcPortId)
