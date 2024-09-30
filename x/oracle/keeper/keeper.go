@@ -30,9 +30,9 @@ type (
 		// should be the x/gov module account.
 		authority string
 
-		ibcKeeperFn func() *ibckeeper.Keeper
+		ibcKeeperFn        func() *ibckeeper.Keeper
 		capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper
-		// scopedKeeper capabilitykeeper.ScopedKeeper
+		scopedKeeper       exported.ScopedKeeper
 	}
 )
 
@@ -43,7 +43,6 @@ func NewKeeper(
 	authority string,
 	ibcKeeperFn func() *ibckeeper.Keeper,
 	capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
-	// scopedKeeper capabilitykeeper.ScopedKeeper,
 
 ) Keeper {
 	if _, err := sdk.AccAddressFromBech32(authority); err != nil {
@@ -51,15 +50,15 @@ func NewKeeper(
 	}
 
 	return Keeper{
-		cdc:          cdc,
-		storeService: storeService,
-		authority:    authority,
-		logger:       logger,
-		ibcKeeperFn:  ibcKeeperFn,
+		cdc:                cdc,
+		storeService:       storeService,
+		authority:          authority,
+		logger:             logger,
+		ibcKeeperFn:        ibcKeeperFn,
 		capabilityScopedFn: capabilityScopedFn,
-		// scopedKeeper: scopedKeeper,
 	}
 }
+
 
 // GetAuthority returns the module's authority.
 func (k Keeper) GetAuthority() string {
@@ -88,7 +87,7 @@ func (k *Keeper) ChanCloseInit(ctx context.Context, portID, channelID string) er
 }
 
 // ShouldBound checks if the IBC app module can be bound to the desired port
-func (k Keeper) ShouldBound(ctx context.Context, portID string) bool {
+func (k *Keeper) ShouldBound(ctx context.Context, portID string) bool {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	scopedKeeper := k.ScopedKeeper()
 	if scopedKeeper == nil {
@@ -100,40 +99,43 @@ func (k Keeper) ShouldBound(ctx context.Context, portID string) bool {
 
 // BindPort defines a wrapper function for the port Keeper's function in
 // order to expose it to module's InitGenesis function
-func (k Keeper) BindPort(ctx context.Context, portID string) error {
+func (k *Keeper) BindPort(ctx context.Context, portID string) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	cap := k.ibcKeeperFn().PortKeeper.BindPort(sdkCtx, portID)
 	return k.ClaimCapability(ctx, cap, host.PortPath(portID))
 }
 
 // GetPort returns the portID for the IBC app module. Used in ExportGenesis
-func (k Keeper) GetPort(ctx context.Context) string {
+func (k *Keeper) GetPort(ctx context.Context) string {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, []byte{})
 	return string(store.Get(types.PortKey))
 }
 
 // SetPort sets the portID for the IBC app module. Used in InitGenesis
-func (k Keeper) SetPort(ctx context.Context, portID string) {
+func (k *Keeper) SetPort(ctx context.Context, portID string) {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, []byte{})
 	store.Set(types.PortKey, []byte(portID))
 }
 
 // AuthenticateCapability wraps the scopedKeeper's AuthenticateCapability function
-func (k Keeper) AuthenticateCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) bool {
+func (k *Keeper) AuthenticateCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) bool {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	return k.ScopedKeeper().AuthenticateCapability(sdkCtx, cap, name)
 }
 
 // ClaimCapability allows the IBC app module to claim a capability that core IBC
 // passes to it
-func (k Keeper) ClaimCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) error {
+func (k *Keeper) ClaimCapability(ctx context.Context, cap *capabilitytypes.Capability, name string) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	return k.ScopedKeeper().ClaimCapability(sdkCtx, cap, name)
 }
 
 // ScopedKeeper returns the ScopedKeeper
-func (k Keeper) ScopedKeeper() exported.ScopedKeeper {
-	return k.capabilityScopedFn(types.ModuleName)
+func (k *Keeper) ScopedKeeper() exported.ScopedKeeper {
+	if k.scopedKeeper == nil && k.capabilityScopedFn != nil {
+		k.scopedKeeper = k.capabilityScopedFn(types.ModuleName)
+	}
+	return k.scopedKeeper
 }
