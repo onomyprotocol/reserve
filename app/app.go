@@ -440,13 +440,15 @@ func (app *App) GetIBCKeeper() *ibckeeper.Keeper {
 }
 
 // GetCapabilityScopedKeeper returns the capability scoped keeper.
-func (app *App) GetCapabilityScopedKeeper(moduleName string) *capabilitykeeper.ScopedKeeper {
+func (app *App) GetCapabilityScopedKeeper(moduleName string) capabilitykeeper.ScopedKeeper {
 	sk, ok := app.ScopedKeepers[moduleName]
+	println("check module: ", moduleName)
 	if !ok {
+		println("go to module: ", moduleName)
 		sk = app.CapabilityKeeper.ScopeToModule(moduleName)
 		app.ScopedKeepers[moduleName] = sk
 	}
-	return &sk
+	return sk
 }
 
 // SimulationManager implements the SimulationApp interface.
