@@ -219,5 +219,5 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 func (k Keeper) calculateInitAuctionPrice(ctx context.Context, collateralAsset sdk.Coin) sdk.Coin {
 	rate := k.oracleKeeper.GetPrice(ctx, collateralAsset.Denom)
 	amount := collateralAsset.Amount.ToLegacyDec().Mul(rate)
-	return sdk.NewCoin("nomUSD", amount.RoundInt())
+	return sdk.NewCoin("nomUSD", amount.TruncateInt())
 }

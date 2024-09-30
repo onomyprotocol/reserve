@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"fmt"
+
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
@@ -278,6 +280,250 @@ func (s *KeeperTestSuite) TestUpdateVaultsDebt() {
 			vault, err := s.k.GetVault(s.Ctx, t.vaultId)
 			s.Require().NoError(err)
 			s.Require().Equal(expectDebtAmount.String(), vault.Debt.Amount.String())
+		})
+	}
+}
+
+func (s *KeeperTestSuite) TestLiquidate() {
+	// s.SetupTest()
+
+	vaultOwnerAddr := sdk.AccAddress([]byte("addr1_______________"))
+
+	tests := []struct {
+		name               string
+		liquidation        types.Liquidation
+		expVaultStatus     []types.VaultStatus
+		shortfallAmount    sdk.Coin
+		moduleBalances     sdk.Coins
+		reserveBalances    sdk.Coins
+		vaultOwnerBalances sdk.Coins
+	}{
+		{
+			name: "single vault - sold all, enough to cover debt",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold all at price 7,
+				// Sold = 35
+				// Remain collateral = 0
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(35_000_000)),
+						RemainCollateral: sdk.NewCoin("atom", math.ZeroInt()),
+					},
+				},
+			},
+			expVaultStatus: []types.VaultStatus{types.LIQUIDATED},
+			reserveBalances: sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, math.NewInt(10_000_000))),
+		},
+		{
+			name: "single vault - sold all, not enough to cover debt",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold all at price 4,
+				// Sold = 20
+				// Remain collateral = 0
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(20_000_000)),
+						RemainCollateral: sdk.NewCoin("atom", math.ZeroInt()),
+					},
+				},
+			},
+			expVaultStatus:  []types.VaultStatus{types.LIQUIDATED},
+			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom, math.NewInt(5_000_000)),
+		},
+		{
+			name: "single vault - remain collateral, enough to cover debt",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold 1 at 7
+				// Sold 2 at 6.5
+				// Sold 1 at 6
+				// Sold = 26
+				// Remain collateral = 1
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(26_000_000)),
+						RemainCollateral: sdk.NewCoin("atom", math.NewInt(1_000_000)),
+					},
+				},
+			},
+			expVaultStatus: []types.VaultStatus{types.LIQUIDATED},
+			reserveBalances: sdk.NewCoins(
+				sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1_000_000)),
+				sdk.NewCoin("atom", math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt()), // (25/7)*0.05
+			),
+			vaultOwnerBalances: sdk.NewCoins(
+				sdk.NewCoin("atom", math.NewInt(1_000_000).Sub(math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt())),
+			), // remain - penalty
+		},
+		{
+			name: "single vault - remain collateral, not enough to cover debt, can reconstitute vault",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold = 0
+				// Remain collateral = 5
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.ZeroInt()),
+						RemainCollateral: sdk.NewCoin("atom", math.NewInt(5_000_000)),
+					},
+				},
+			},
+			expVaultStatus: []types.VaultStatus{types.ACTIVE},
+			reserveBalances: sdk.NewCoins(
+				// penalty
+				sdk.NewCoin("atom", math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt()), // (25/7)*0.05
+			),
+		},
+		{
+			name: "single vault - remain collateral, not enough to cover debt, can reconstitute vault",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold = 0
+				// Remain collateral = 5
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.ZeroInt()),
+						RemainCollateral: sdk.NewCoin("atom", math.NewInt(5_000_000)),
+					},
+				},
+			},
+			expVaultStatus: []types.VaultStatus{types.ACTIVE},
+			reserveBalances: sdk.NewCoins(
+				// penalty
+				sdk.NewCoin("atom", math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt()), // (25/7)*0.05
+			),
+		},
+		{
+			name: "single vault - remain collateral, not enough to cover debt, can not reconstitute vault",
+			liquidation: types.Liquidation{
+				Denom: "atom",
+				LiquidatingVaults: []*types.Vault{
+					{
+						Owner:            vaultOwnerAddr.String(),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
+						Status:           types.LIQUIDATING,
+						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
+					},
+				},
+				// Sold 1 at 7
+				// Sold = 7
+				// Remain collateral = 4
+				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
+					0: {
+						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(7_000_000)),
+						RemainCollateral: sdk.NewCoin("atom", math.NewInt(4_000_000)),
+					},
+				},
+			},
+			expVaultStatus: []types.VaultStatus{types.LIQUIDATED},
+			reserveBalances: sdk.NewCoins(
+				// penalty
+				sdk.NewCoin("atom", math.NewInt(4_000_000)), // (25/7)*0.05
+			),
+			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom, math.NewInt(18_000_000)),
+		},
+	}
+	for _, t := range tests {
+		s.Run(t.name, func() {
+			s.SetupTest()
+
+			for _, vault := range t.liquidation.LiquidatingVaults {
+				vaultId, vaultAddr := s.App.VaultsKeeper.GetVaultIdAndAddress(s.Ctx)
+				fmt.Println("vaultId", vaultId)
+				vault.Id = vaultId
+				vault.Address = vaultAddr.String()
+
+				err := s.App.VaultsKeeper.SetVault(s.Ctx, *vault)
+				s.Require().NoError(err)
+
+				// Fund collateral locked for vault
+				lockCoins := sdk.NewCoins(t.liquidation.VaultLiquidationStatus[vaultId].RemainCollateral)
+				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, lockCoins)
+				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, vaultAddr, lockCoins)
+
+				// Fund sold coins to vault Module
+				soldCoins := sdk.NewCoins(t.liquidation.VaultLiquidationStatus[vaultId].Sold)
+				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, soldCoins)
+			}
+
+			err, isShortfall, shortfallAmount := s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
+			fmt.Println("errrrr", err, isShortfall, shortfallAmount)
+
+			if t.reserveBalances != nil {
+				reserveModuleAddr := s.App.AccountKeeper.GetModuleAddress(types.ReserveModuleName)
+				reserveBalance := s.App.BankKeeper.GetAllBalances(s.Ctx, reserveModuleAddr)
+				fmt.Println("reserve balances", reserveBalance)
+				fmt.Println("test case reserve balances", t.reserveBalances)
+				// t.reserveBalances.Sort()
+				s.Require().Equal(reserveBalance, t.reserveBalances)
+			}
+
+			if t.vaultOwnerBalances != nil {
+				ownerBalances := s.App.BankKeeper.GetAllBalances(s.Ctx, vaultOwnerAddr)
+				s.Require().Equal(ownerBalances, t.vaultOwnerBalances)
+			}
+
+			if !t.shortfallAmount.IsNil() {
+				s.Require().True(isShortfall)
+				s.Require().Equal(t.shortfallAmount, shortfallAmount)
+			}
+
+			for i, vault := range t.liquidation.LiquidatingVaults {
+				updatedVault, err := s.App.VaultsKeeper.GetVault(s.Ctx, vault.Id)
+				fmt.Println("updated vault", updatedVault)
+				s.Require().NoError(err)
+				s.Require().Equal(updatedVault.Status, t.expVaultStatus[i])
+			}
+
+
 		})
 	}
 }
