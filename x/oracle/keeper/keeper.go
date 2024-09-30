@@ -1,13 +1,11 @@
 package keeper
 
 import (
-	"context"
 	"fmt"
 	"context"
 	"cosmossdk.io/core/store"
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"
-	"cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/runtime"
@@ -138,8 +136,4 @@ func (k *Keeper) ClaimCapability(ctx context.Context, cap *capabilitytypes.Capab
 // ScopedKeeper returns the ScopedKeeper
 func (k *Keeper) ScopedKeeper() exported.ScopedKeeper {
 	return k.capabilityScopedFn(types.ModuleName)
-}
-
-func (k *Keeper) GetPrice(ctx context.Context, denom string) math.LegacyDec {
-	return math.LegacyZeroDec()
 }

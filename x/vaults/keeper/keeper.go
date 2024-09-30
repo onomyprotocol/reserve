@@ -11,7 +11,6 @@ import (
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 )
 
 type Keeper struct {

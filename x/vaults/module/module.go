@@ -32,7 +32,6 @@ import (
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
-	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 )
 
 const consensusVersion uint64 = 1
