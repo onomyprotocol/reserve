@@ -4,7 +4,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
-	// this line is used by starport scaffolding # 1
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -20,4 +20,10 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgRepay{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+
+	registry.RegisterImplementations(
+		(*govtypes.Content)(nil),
+		&MsgActiveCollateral{},
+	)
+
 }

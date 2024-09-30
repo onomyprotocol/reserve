@@ -7,8 +7,8 @@ import (
 	"cosmossdk.io/collections"
 	storetypes "cosmossdk.io/core/store"
 	"cosmossdk.io/math"
-	"github.com/onomyprotocol/reserve/x/vaults/types"
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 )

@@ -34,6 +34,10 @@ func (k msgServer) UpdateParams(goCtx context.Context, req *types.MsgUpdateParam
 }
 
 func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCollateral) (*types.MsgActiveCollateralResponse, error) {
+	if k.authority != msg.Authority {
+		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
 	err := k.ActiveCollateralAsset(ctx, msg.Denom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt)
 	if err != nil {
 		return nil, err
