@@ -9,17 +9,19 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
-func (k *Keeper) BeginBlocker(ctx sdk.Context) {
+func (k *Keeper) BeginBlocker(ctx context.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	bandParams := k.GetBandParams(ctx)
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 
 	// Request oracle prices using band IBC in frequent intervals
-	if ctx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
+	if sdkCtx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
 		k.RequestAllBandRates(ctx)
 	}
 }
 
-func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
+func (k *Keeper) RequestAllBandRates(ctx context.Context) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	// TODO: check logic flow for this
 	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
@@ -34,7 +36,7 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 		}
 		err := k.RequestBandOraclePrices(ctx, req)
 		if err != nil {
-			ctx.Logger().Error(err.Error())
+			sdkCtx.Logger().Error(err.Error())
 		}
 	}
 	// TODO: Clean call data record after each 1000 blocks
