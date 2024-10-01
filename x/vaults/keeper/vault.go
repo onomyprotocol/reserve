@@ -119,6 +119,9 @@ func (k *Keeper) MintCoin(
 	if err != nil {
 		return err
 	}
+	if vault.Status != types.ACTIVE {
+		return fmt.Errorf("Vault is not actived")
+	}
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
 	if err != nil {
 		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
@@ -180,6 +183,9 @@ func (k *Keeper) RepayDebt(
 	if err != nil {
 		return err
 	}
+	if vault.Status != types.ACTIVE {
+		return fmt.Errorf("Vault is not actived")
+	}
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
 	if err != nil {
 		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
@@ -221,6 +227,9 @@ func (k *Keeper) DepositToVault(
 	if err != nil {
 		return err
 	}
+	if vault.Status != types.ACTIVE {
+		return fmt.Errorf("Vault is not actived")
+	}
 
 	// Lock collateral asset
 	err = k.bankKeeper.SendCoins(ctx, sender, sdk.MustAccAddressFromBech32(vault.Address), sdk.NewCoins(collateral))
@@ -242,6 +251,9 @@ func (k *Keeper) WithdrawFromVault(
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
+	}
+	if vault.Status != types.ACTIVE {
+		return fmt.Errorf("Vault is not actived")
 	}
 
 	if vault.CollateralLocked.Amount.LT(collateral.Amount) {
@@ -280,7 +292,7 @@ func (k *Keeper) UpdateVaultsDebt(
 
 	return k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		var err error
-		if vault.Status == 0 {
+		if vault.Status == types.ACTIVE {
 			debtAmount := vault.Debt.Amount
 			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fee)).TruncateInt()
 			vault.Debt.Amount = newDebtAmount
@@ -297,8 +309,8 @@ func (k *Keeper) ShouldLiquidate(
 	price math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 ) (bool, error) {
-	// Only liquidate OPEN vault
-	if vault.Status != 0 {
+	// Only liquidate ACTIVE vault
+	if vault.Status != types.ACTIVE {
 		return false, nil
 	}
 
