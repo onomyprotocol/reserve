@@ -11,26 +11,27 @@ var (
 )
 
 const (
-	ProposalTypeActiveCollateral string = "MsgActiveCollateral"
+	ProposalTypeActiveCollateralProposal string = "ActiveCollateralProposal"
 )
 
-func (m *MsgActiveCollateral) GetDescription() string {
+func (m *ActiveCollateralProposal) GetDescription() string {
 	return " "
 }
 
-func (m *MsgActiveCollateral) GetTitle() string {
+func (m *ActiveCollateralProposal) GetTitle() string {
 	return " "
 }
 
-func (m *MsgActiveCollateral) ProposalRoute() string {
+func (m *ActiveCollateralProposal) ProposalRoute() string {
 	return RouterKey
 }
 
-func (m *MsgActiveCollateral) ProposalType() string {
-	return ProposalTypeActiveCollateral
+func (m *ActiveCollateralProposal) ProposalType() string {
+	return ProposalTypeActiveCollateralProposal
 }
 
-func (a *MsgActiveCollateral) ValidateBasic() error {
+func (m *ActiveCollateralProposal) ValidateBasic() error {
+	a := m.ActiveCollateral
 	if a.Denom == "" {
 		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "empty denom")
 	}
