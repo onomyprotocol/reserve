@@ -32,8 +32,12 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint, params.MinInitialDebt)
 	}
 
+	if vm.MintAvailable.LT(mint.Amount) {
+		return fmt.Errorf("exeed max debt")
+	}
+
 	// Calculate collateral ratio
-	price := k.oracleKeeper.GetPrice(ctx, denom)
+	price := k.OracleKeeper.GetPrice(ctx, denom)
 	// TODO: recalculate with denom decimal?
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(price)
 	ratio := collateralValue.QuoInt(mint.Amount)
@@ -127,10 +131,14 @@ func (k *Keeper) MintCoin(
 		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
 	}
 
+	if vm.MintAvailable.LT(mint.Amount) {
+		return fmt.Errorf("exeed max debt")
+	}
+
 	params := k.GetParams(ctx)
 
 	lockedCoin := vault.CollateralLocked
-	price := k.oracleKeeper.GetPrice(ctx, lockedCoin.Denom)
+	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom)
 	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(price)
 
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(params.MintingFee).TruncateInt()
@@ -266,7 +274,7 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.oracleKeeper.GetPrice(ctx, collateral.Denom)
+	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom)
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(price)
 	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
@@ -332,7 +340,7 @@ func (k *Keeper) GetLiquidations(
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
-		price := k.oracleKeeper.GetPrice(ctx, vm.Denom)
+		price := k.OracleKeeper.GetPrice(ctx, vm.Denom)
 		prices[vm.Denom] = price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
 		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom)
@@ -375,16 +383,17 @@ func (k *Keeper) GetLiquidations(
 }
 
 // TODO: Separate this func
+// TODO: Update vault manager MintAvailable
 func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
 ) (error, bool, sdk.Coin) {
 	params := k.GetParams(ctx)
 
-	// Get total sold amount & collateral asset remain
-	// var (
-	// 	totalDebt, sold, totalCollateralRemain sdk.Coin
-	// )
+	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
+	if err != nil {
+		return err, false, sdk.Coin{}
+	}
 
 	totalDebt := sdk.NewCoin(params.MintDenom, math.ZeroInt())
 	sold := sdk.NewCoin(params.MintDenom, math.ZeroInt())
@@ -411,6 +420,12 @@ func (k *Keeper) Liquidate(
 	if sold.Amount.GTE(totalDebt.Amount) {
 		// Burn debt
 		err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(totalDebt))
+		if err != nil {
+			return err, false, sdk.Coin{}
+		}
+		// Increase mint available
+		vm.MintAvailable = vm.MintAvailable.Add(totalDebt.Amount)
+		err = k.VaultsManager.Set(ctx, liquidation.Denom, vm)
 		if err != nil {
 			return err, false, sdk.Coin{}
 		}
@@ -457,6 +472,12 @@ func (k *Keeper) Liquidate(
 
 		// Burn sold amount
 		err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(sold))
+		if err != nil {
+			return err, false, sdk.Coin{}
+		}
+		// Increase mint available
+		vm.MintAvailable = vm.MintAvailable.Add(sold.Amount)
+		err = k.VaultsManager.Set(ctx, liquidation.Denom, vm)
 		if err != nil {
 			return err, false, sdk.Coin{}
 		}
