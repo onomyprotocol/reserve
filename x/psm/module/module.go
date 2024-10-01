@@ -10,6 +10,7 @@ import (
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/depinject"
 	"github.com/spf13/cobra"
+
 	// "cosmossdk.io/depinject/appconfig"
 	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
@@ -237,7 +238,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewStablecoinProposalHandler(&k)}
+	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewPSMProposalHandler(&k)}
 
 	return ModuleOutputs{PsmKeeper: k, Module: m, GovHandler: govHandler}
 }

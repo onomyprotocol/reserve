@@ -78,7 +78,6 @@ import (
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
-	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
 	"github.com/onomyprotocol/reserve/docs"
@@ -184,8 +183,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
-		psm.AddStableCoinProposalHandler,
-		psm.UpdatesStableCoinProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
