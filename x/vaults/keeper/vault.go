@@ -87,6 +87,28 @@ func (k *Keeper) CreateNewVault(
 	return k.VaultsManager.Set(ctx, denom, vm)
 }
 
+func (k *Keeper) CloseVault(
+	ctx context.Context,
+	vault types.Vault,
+) error {
+	// Can not close vault if still debt remain
+	if vault.Debt.Amount.GT(math.ZeroInt()) {
+		return fmt.Errorf("debt remain: %v", vault.Debt)
+	}
+
+	// transfer all collateral locked to owner
+	lockedCoins := sdk.NewCoins(vault.CollateralLocked)
+	err := k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), sdk.MustAccAddressFromBech32(vault.Owner), lockedCoins)
+	if err != nil {
+		return err
+	}
+
+	// Update vault
+	vault.CollateralLocked.Amount = math.ZeroInt()
+	vault.Status = types.CLOSED
+	return k.SetVault(ctx, vault)
+}
+
 func (k *Keeper) MintCoin(
 	ctx context.Context,
 	vaultId uint64,
@@ -355,7 +377,6 @@ func (k *Keeper) Liquidate(
 	totalDebt := sdk.NewCoin(params.MintDenom, math.ZeroInt())
 	sold := sdk.NewCoin(params.MintDenom, math.ZeroInt())
 	totalCollateralRemain := sdk.NewCoin(liquidation.Denom, math.ZeroInt())
-
 
 	for _, vault := range liquidation.LiquidatingVaults {
 		totalDebt = totalDebt.Add(vault.Debt)

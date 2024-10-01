@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -80,4 +81,19 @@ func (k msgServer) Repay(ctx context.Context, msg *types.MsgRepay) (*types.MsgRe
 		return nil, err
 	}
 	return &types.MsgRepayResponse{}, nil
+}
+
+func (k msgServer) Close(ctx context.Context, msg *types.MsgClose) (*types.MsgCloseResponse, error) {
+	vault, err := k.GetVault(ctx, msg.VaultId)
+	if err != nil {
+		return nil, fmt.Errorf("vault %d was not found", msg.VaultId)
+	}
+	if msg.Sender != vault.Owner {
+		return nil, fmt.Errorf("%s is not vault owner, expected: %s", msg.Sender, vault.Owner)
+	}
+	err = k.CloseVault(ctx, vault)
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgCloseResponse{}, nil
 }
