@@ -127,15 +127,94 @@ func (m *MsgUpdateParamsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateParamsResponse proto.InternalMessageInfo
 
+// MsgRequestBandRates defines a SDK message for requesting data from
+// BandChain using IBC.
+type MsgRequestBandRates struct {
+	Sender    string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	RequestId uint64 `protobuf:"varint,2,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+}
+
+func (m *MsgRequestBandRates) Reset()         { *m = MsgRequestBandRates{} }
+func (m *MsgRequestBandRates) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestBandRates) ProtoMessage()    {}
+func (*MsgRequestBandRates) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2ca24ac8eaee815d, []int{2}
+}
+func (m *MsgRequestBandRates) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestBandRates) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestBandRates.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestBandRates) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestBandRates.Merge(m, src)
+}
+func (m *MsgRequestBandRates) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestBandRates) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestBandRates.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestBandRates proto.InternalMessageInfo
+
+// MsgRequestBandRatesResponse defines the Msg/RequestBandRates response type.
+type MsgRequestBandRatesResponse struct {
+}
+
+func (m *MsgRequestBandRatesResponse) Reset()         { *m = MsgRequestBandRatesResponse{} }
+func (m *MsgRequestBandRatesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestBandRatesResponse) ProtoMessage()    {}
+func (*MsgRequestBandRatesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2ca24ac8eaee815d, []int{3}
+}
+func (m *MsgRequestBandRatesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestBandRatesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestBandRatesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestBandRatesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestBandRatesResponse.Merge(m, src)
+}
+func (m *MsgRequestBandRatesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestBandRatesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestBandRatesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestBandRatesResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgUpdateParams)(nil), "reserve.oracle.MsgUpdateParams")
 	proto.RegisterType((*MsgUpdateParamsResponse)(nil), "reserve.oracle.MsgUpdateParamsResponse")
+	proto.RegisterType((*MsgRequestBandRates)(nil), "reserve.oracle.MsgRequestBandRates")
+	proto.RegisterType((*MsgRequestBandRatesResponse)(nil), "reserve.oracle.MsgRequestBandRatesResponse")
 }
 
 func init() { proto.RegisterFile("reserve/oracle/tx.proto", fileDescriptor_2ca24ac8eaee815d) }
 
 var fileDescriptor_2ca24ac8eaee815d = []byte{
-	// 343 bytes of a gzipped FileDescriptorProto
+	// 452 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2f, 0x4a, 0x2d, 0x4e,
 	0x2d, 0x2a, 0x4b, 0xd5, 0xcf, 0x2f, 0x4a, 0x4c, 0xce, 0x49, 0xd5, 0x2f, 0xa9, 0xd0, 0x2b, 0x28,
 	0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x83, 0x4a, 0xe8, 0x41, 0x24, 0xa4, 0x04, 0x13, 0x73, 0x33, 0xf3,
@@ -150,14 +229,21 @@ var fileDescriptor_2ca24ac8eaee815d = []byte{
 	0x23, 0x31, 0x3d, 0x54, 0x6f, 0xea, 0x41, 0xcc, 0x77, 0xe2, 0x3c, 0x71, 0x4f, 0x9e, 0x61, 0xc5,
 	0xf3, 0x0d, 0x5a, 0x8c, 0x41, 0x50, 0x0d, 0x56, 0xc6, 0x4d, 0xcf, 0x37, 0x68, 0x21, 0x8c, 0xea,
 	0x7a, 0xbe, 0x41, 0x4b, 0x01, 0xe6, 0xec, 0x0a, 0x98, 0xc3, 0xd1, 0xdc, 0xa9, 0x24, 0xc9, 0x25,
-	0x8e, 0x26, 0x14, 0x94, 0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0x6a, 0x94, 0xc6, 0xc5, 0xec, 0x5b,
-	0x9c, 0x2e, 0x14, 0xc1, 0xc5, 0x83, 0xe2, 0x33, 0x79, 0x74, 0x17, 0xa1, 0xe9, 0x97, 0x52, 0x27,
-	0xa0, 0x00, 0x66, 0x81, 0x14, 0x6b, 0x03, 0xc8, 0xfd, 0x4e, 0x9e, 0x27, 0x1e, 0xc9, 0x31, 0x5e,
-	0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31,
-	0xdc, 0x78, 0x2c, 0xc7, 0x10, 0xa5, 0x9f, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f,
-	0xab, 0x9f, 0x9f, 0x97, 0x9f, 0x5b, 0x09, 0x0e, 0xef, 0xe4, 0xfc, 0x1c, 0x7d, 0x0c, 0x7f, 0x95,
-	0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x15, 0x18, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0xdb,
-	0xe4, 0x20, 0x8c, 0x35, 0x02, 0x00, 0x00,
+	0x8e, 0x26, 0x14, 0x94, 0x5a, 0x5c, 0x90, 0x9f, 0x57, 0x9c, 0xaa, 0xd4, 0xc0, 0xc8, 0x25, 0xec,
+	0x5b, 0x9c, 0x1e, 0x94, 0x5a, 0x58, 0x9a, 0x5a, 0x5c, 0xe2, 0x94, 0x98, 0x97, 0x12, 0x94, 0x58,
+	0x92, 0x5a, 0x2c, 0x24, 0xc6, 0xc5, 0x56, 0x9c, 0x9a, 0x97, 0x92, 0x5a, 0x04, 0xf1, 0x57, 0x10,
+	0x94, 0x27, 0x24, 0xcb, 0xc5, 0x55, 0x04, 0x51, 0x1b, 0x9f, 0x99, 0x02, 0x76, 0x3e, 0x4b, 0x10,
+	0x27, 0x54, 0xc4, 0x33, 0xc5, 0xca, 0xa8, 0x63, 0x81, 0x3c, 0xc3, 0x8b, 0x05, 0xf2, 0x0c, 0x20,
+	0x67, 0x42, 0xf5, 0x80, 0xdc, 0x28, 0x85, 0x70, 0x19, 0xba, 0x55, 0x4a, 0xb2, 0x5c, 0xd2, 0x58,
+	0x84, 0x61, 0x2e, 0x34, 0x3a, 0xc3, 0xc8, 0xc5, 0xec, 0x5b, 0x9c, 0x2e, 0x14, 0xc1, 0xc5, 0x83,
+	0x12, 0xf8, 0xf2, 0xe8, 0x81, 0x86, 0xe6, 0x45, 0x29, 0x75, 0x02, 0x0a, 0x60, 0x36, 0x08, 0xa5,
+	0x70, 0x09, 0x60, 0xf8, 0x5f, 0x19, 0x8b, 0x66, 0x74, 0x45, 0x52, 0xda, 0x44, 0x28, 0x82, 0xd9,
+	0x22, 0xc5, 0xda, 0x00, 0x8a, 0x48, 0x27, 0xcf, 0x13, 0x8f, 0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63,
+	0x7c, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b, 0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96,
+	0x63, 0x88, 0xd2, 0x4f, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0xcf, 0xcf,
+	0xcb, 0xcf, 0xad, 0x04, 0x27, 0xbc, 0xe4, 0xfc, 0x1c, 0x7d, 0x8c, 0x08, 0x2e, 0xa9, 0x2c, 0x48,
+	0x2d, 0x4e, 0x62, 0x03, 0x2b, 0x30, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x10, 0x9a, 0x30, 0xaf,
+	0x3e, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -175,6 +261,7 @@ type MsgClient interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	RequestBandRates(ctx context.Context, in *MsgRequestBandRates, opts ...grpc.CallOption) (*MsgRequestBandRatesResponse, error)
 }
 
 type msgClient struct {
@@ -194,11 +281,21 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) RequestBandRates(ctx context.Context, in *MsgRequestBandRates, opts ...grpc.CallOption) (*MsgRequestBandRatesResponse, error) {
+	out := new(MsgRequestBandRatesResponse)
+	err := c.cc.Invoke(ctx, "/reserve.oracle.Msg/RequestBandRates", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	RequestBandRates(context.Context, *MsgRequestBandRates) (*MsgRequestBandRatesResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -207,6 +304,9 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) UpdateParams(ctx context.Context, req *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (*UnimplementedMsgServer) RequestBandRates(ctx context.Context, req *MsgRequestBandRates) (*MsgRequestBandRatesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestBandRates not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -231,6 +331,24 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_RequestBandRates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRequestBandRates)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RequestBandRates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reserve.oracle.Msg/RequestBandRates",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RequestBandRates(ctx, req.(*MsgRequestBandRates))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "reserve.oracle.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -238,6 +356,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "RequestBandRates",
+			Handler:    _Msg_RequestBandRates_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -307,6 +429,64 @@ func (m *MsgUpdateParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgRequestBandRates) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestBandRates) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestBandRates) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.RequestId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.RequestId))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRequestBandRatesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestBandRatesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestBandRatesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -334,6 +514,31 @@ func (m *MsgUpdateParams) Size() (n int) {
 }
 
 func (m *MsgUpdateParamsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgRequestBandRates) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.RequestId != 0 {
+		n += 1 + sovTx(uint64(m.RequestId))
+	}
+	return n
+}
+
+func (m *MsgRequestBandRatesResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -490,6 +695,157 @@ func (m *MsgUpdateParamsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateParamsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRequestBandRates) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestBandRates: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestBandRates: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestId", wireType)
+			}
+			m.RequestId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RequestId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRequestBandRatesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestBandRatesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestBandRatesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

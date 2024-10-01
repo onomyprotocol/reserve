@@ -1,0 +1,57 @@
+syntax = "proto3";
+package reserve.psm.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "reserve/psm/v1/params.proto";
+import "reserve/psm/v1/psm.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/onomyprotocol/reserve/psm/v1/params";
+  }
+  
+  rpc Stablecoin(QueryStablecoinRequest) returns (QueryStablecoinResponse) {
+    option (google.api.http).get = "/onomyprotocol/psm/v1/psm";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+
+message QueryStablecoinRequest {
+  string denom = 1;
+}
+
+message QueryStablecoinResponse {
+  Stablecoin stablecoin = 1 [(gogoproto.nullable) = false];
+  bytes current_total = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+  bytes swapable_quantity = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+}

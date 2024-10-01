@@ -32,7 +32,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	_ "github.com/cosmos/cosmos-sdk/x/auth" // import for side-effects
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side-effects
@@ -75,9 +74,11 @@ import (
 	ibcfeekeeper "github.com/cosmos/ibc-go/v8/modules/apps/29-fee/keeper"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-
+	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
 	"github.com/onomyprotocol/reserve/docs"
@@ -141,8 +142,11 @@ type App struct {
 	ScopedIBCTransferKeeper   capabilitykeeper.ScopedKeeper
 	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
+	// ScopedOracleKeeper        capabilitykeeper.ScopedKeeper
 
 	OracleKeeper oraclemodulekeeper.Keeper
+	PSMKeeper    psmkeeper.Keeper
 	VaultsKeeper vaultskeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
@@ -180,6 +184,8 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
+		psm.AddStableCoinProposalHandler,
+		psm.UpdatesStableCoinProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 
@@ -213,7 +219,7 @@ func New(
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) (*App, error) {
 	var (
-		app        = &App{}
+		app        = &App{ScopedKeepers: make(map[string]capabilitykeeper.ScopedKeeper)}
 		appBuilder *runtime.AppBuilder
 
 		// merge the AppConfig and other configuration in one config
@@ -297,6 +303,7 @@ func New(
 		&app.GroupKeeper,
 		&app.CircuitBreakerKeeper,
 		&app.OracleKeeper,
+		&app.PSMKeeper,
 		&app.VaultsKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
@@ -438,7 +445,12 @@ func (app *App) GetIBCKeeper() *ibckeeper.Keeper {
 
 // GetCapabilityScopedKeeper returns the capability scoped keeper.
 func (app *App) GetCapabilityScopedKeeper(moduleName string) capabilitykeeper.ScopedKeeper {
-	return app.CapabilityKeeper.ScopeToModule(moduleName)
+	sk, ok := app.ScopedKeepers[moduleName]
+	if !ok {
+		sk = app.CapabilityKeeper.ScopeToModule(moduleName)
+		app.ScopedKeepers[moduleName] = sk
+	}
+	return sk
 }
 
 // SimulationManager implements the SimulationApp interface.
@@ -458,6 +470,18 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 	// register app's OpenAPI routes.
 	docs.RegisterOpenAPIService(Name, apiSvr.Router)
 }
+
+func (app *App) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
+
+func (app *App) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
+	return app.ScopedIBCKeeper
+}
+
+func (app *App) GetStakingKeeper() ibctestingtypes.StakingKeeper {
+	return app.StakingKeeper
+}
+
+func (app *App) GetTxConfig() client.TxConfig { return app.txConfig }
 
 // GetMaccPerms returns a copy of the module account permissions
 //

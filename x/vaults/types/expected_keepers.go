@@ -29,5 +29,5 @@ type BankKeeper interface {
 }
 
 type OracleKeeper interface {
-	GetPrice(ctx context.Context, denom string) math.LegacyDec
+	GetPrice(ctx context.Context, base, quote string) *math.LegacyDec
 }

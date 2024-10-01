@@ -57,6 +57,7 @@ func OracleKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 		func(string) capabilitykeeper.ScopedKeeper {
 			return scopeModule
 		},
+		// scopedKeeper,
 	)
 
 	ctx := sdk.NewContext(stateStore, cmtproto.Header{}, false, log.NewNopLogger())
