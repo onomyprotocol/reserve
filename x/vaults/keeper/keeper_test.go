@@ -7,7 +7,9 @@ import (
 
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/keeper/mock"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
+	"cosmossdk.io/math"
 )
 
 type KeeperTestSuite struct {
@@ -21,6 +23,9 @@ type KeeperTestSuite struct {
 func (s *KeeperTestSuite) SetupTest() {
 	s.Setup()
 
+	mockOK := mock.NewMockOracleKeeper()
+	mockOK.SetPrice("atom", math.LegacyMustNewDecFromStr("8.0"))
+	s.App.VaultsKeeper.OracleKeeper = mockOK
 	s.k = s.App.VaultsKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)
 	// s.queryServer = keeper.NewQueryServerImpl(s.k)
