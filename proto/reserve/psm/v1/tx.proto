@@ -17,6 +17,8 @@ service Msg {
   // UpdateParams defines a (governance) operation for updating the module
   // parameters. The authority defaults to the x/gov module account.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+  rpc AddStableCoinProposal(MsgAddStableCoin) returns (MsgAddStableCoinResponse);
+  rpc UpdatesStableCoinProposal(MsgUpdatesStableCoin) returns (MsgUpdatesStableCoinResponse);
   rpc SwapTonomUSD(MsgSwapTonomUSD) returns (MsgSwapTonomUSDResponse);
   rpc SwapToStablecoin(MsgSwapToStablecoin) returns (MsgSwapToStablecoinResponse);
 }
@@ -63,3 +65,69 @@ message MsgSwapToStablecoin {
   ];
 }
 message MsgSwapToStablecoinResponse {}
+
+message MsgAddStableCoin {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "reserve/x/psm/MsgAddStableCoin";
+
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  string denom = 2;
+
+ bytes limit_total = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+  bytes price = 5 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  bytes fee_in = 6 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  bytes fee_out = 7 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+message MsgAddStableCoinResponse {}
+
+message MsgUpdatesStableCoin {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "reserve/x/psm/MsgUpdatesStableCoin";
+
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  string denom = 2;
+
+ bytes limit_total = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+  bytes price = 5 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  bytes fee_in = 6 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  bytes fee_out = 7 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+message MsgUpdatesStableCoinResponse {}

@@ -1,21 +1,23 @@
 package types
 
-func ConvertAddStableCoinToStablecoin(s AddStableCoinProposal) Stablecoin {
+import (
+	"cosmossdk.io/math"
+)
+
+func GetMsgStablecoin(msg getStablecoinFromMsg) Stablecoin {
 	return Stablecoin{
-		Denom:      s.Denom,
-		LimitTotal: s.LimitTotal,
-		Price:      s.Price,
-		FeeIn:      s.FeeIn,
-		FeeOut:     s.FeeOut,
+		Denom:      msg.GetDenom(),
+		LimitTotal: msg.GetLimitTotal(),
+		Price:      msg.GetPrice(),
+		FeeIn:      msg.GetFeeIn(),
+		FeeOut:     msg.GetFeeOut(),
 	}
 }
 
-func ConvertUpdateStableCoinToStablecoin(s UpdatesStableCoinProposal) Stablecoin {
-	return Stablecoin{
-		Denom:      s.Denom,
-		LimitTotal: s.UpdatesLimitTotal,
-		Price:      s.Price,
-		FeeIn:      s.FeeIn,
-		FeeOut:     s.FeeOut,
-	}
+type getStablecoinFromMsg interface {
+	GetDenom() string
+	GetLimitTotal() math.Int
+	GetPrice() math.LegacyDec
+	GetFeeIn() math.LegacyDec
+	GetFeeOut() math.LegacyDec
 }

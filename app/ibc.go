@@ -99,7 +99,7 @@ func (app *App) registerIBCModules() error {
 	govRouter := govv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
-		AddRoute(psmtypes.RouterKey, psm.NewStablecoinProposalHandler(&app.PSMKeeper))
+		AddRoute(psmtypes.RouterKey, psm.NewPSMProposalHandler(&app.PSMKeeper))
 
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.GetKey(ibcfeetypes.StoreKey),

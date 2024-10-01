@@ -234,7 +234,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewStablecoinProposalHandler(&k)}
+	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewPSMProposalHandler(&k)}
 
 	return ModuleOutputs{PsmKeeper: k, Module: m, GovHandler: govHandler}
 }

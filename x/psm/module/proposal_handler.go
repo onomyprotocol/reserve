@@ -5,26 +5,22 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
-	"github.com/onomyprotocol/reserve/x/psm/client/cli"
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
-var (
-	AddStableCoinProposalHandler     = govclient.NewProposalHandler(cli.NewCmdSubmitAddStableCoinProposal)
-	UpdatesStableCoinProposalHandler = govclient.NewProposalHandler(cli.NewCmdUpdatesStableCoinProposal)
-)
-
-func NewStablecoinProposalHandler(k *keeper.Keeper) govtypes.Handler {
+func NewPSMProposalHandler(k *keeper.Keeper) govtypes.Handler {
 	return func(ctx sdk.Context, content govtypes.Content) error {
+		msgSv := keeper.NewMsgServerImpl(*k)
 		switch c := content.(type) {
-		case *types.AddStableCoinProposal:
-			return k.AddStableCoinProposal(ctx, c)
-		case *types.UpdatesStableCoinProposal:
-			return k.UpdatesStableCoinProposal(ctx, c)
+		case *types.MsgAddStableCoin:
+			_, err := msgSv.AddStableCoinProposal(ctx, c)
+			return err
+		case *types.MsgUpdatesStableCoin:
+			_, err := msgSv.UpdatesStableCoinProposal(ctx, c)
+			return err
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized %s proposal content type: %T", types.ModuleName, c)
 		}

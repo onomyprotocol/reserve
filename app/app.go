@@ -32,7 +32,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	_ "github.com/cosmos/cosmos-sdk/x/auth" // import for side-effects
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side-effects
@@ -78,7 +77,6 @@ import (
 
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
-	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/onomyprotocol/reserve/docs"
@@ -181,8 +179,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
-		psm.AddStableCoinProposalHandler,
-		psm.UpdatesStableCoinProposalHandler,
 		// this line is used by starport scaffolding # stargate/app/govProposalHandler
 	)
 

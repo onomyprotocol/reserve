@@ -169,6 +169,54 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	return &types.MsgSwapToStablecoinResponse{}, nil
 }
 
+func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddStableCoin) (*types.MsgAddStableCoinResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	if err := msg.ValidateBasic(); err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
+	_, found := k.keeper.GetStablecoin(ctx, msg.Denom)
+	if found {
+		return &types.MsgAddStableCoinResponse{}, fmt.Errorf("%s has existed", msg.Denom)
+	}
+
+	err := k.keeper.SetStablecoin(ctx, types.GetMsgStablecoin(msg))
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventAddStablecoin,
+			sdk.NewAttribute(types.AttributeStablecoinName, msg.Denom),
+		),
+	)
+	return &types.MsgAddStableCoinResponse{}, nil
+}
+
+func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.MsgUpdatesStableCoin) (*types.MsgUpdatesStableCoinResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	if err := msg.ValidateBasic(); err != nil {
+		return &types.MsgUpdatesStableCoinResponse{}, err
+	}
+
+	_, found := k.keeper.GetStablecoin(ctx, msg.Denom)
+	if !found {
+		return &types.MsgUpdatesStableCoinResponse{}, fmt.Errorf("%s not existed", msg.Denom)
+	}
+
+	err := k.keeper.SetStablecoin(ctx, types.GetMsgStablecoin(msg))
+	if err != nil {
+		return &types.MsgUpdatesStableCoinResponse{}, err
+	}
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventAddStablecoin,
+			sdk.NewAttribute(types.AttributeStablecoinName, msg.Denom),
+		),
+	)
+	return &types.MsgUpdatesStableCoinResponse{}, nil
+}
+
 func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, denom string, amountSwap math.Int) error {
 	totalStablecoinLock, err := k.TotalStablecoinLock(ctx, denom)
 	if err != nil {

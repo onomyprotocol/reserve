@@ -16,12 +16,14 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSwapToStablecoin{},
 		&MsgSwapTonomUSD{},
 		&MsgSwapToStablecoin{},
+		&MsgAddStableCoin{},
+		&MsgUpdatesStableCoin{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 
 	registry.RegisterImplementations(
 		(*govtypes.Content)(nil),
-		&AddStableCoinProposal{},
-		&UpdatesStableCoinProposal{},
+		&MsgAddStableCoin{},
+		&MsgUpdatesStableCoin{},
 	)
 }
