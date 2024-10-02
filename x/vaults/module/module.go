@@ -97,7 +97,7 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 }
 
 func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return nil
+	return cli.GetQueryCmd()
 }
 
 func (a AppModuleBasic) RegisterLegacyAminoCodec(_ *codec.LegacyAmino) {
@@ -130,6 +130,7 @@ func (a AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
 
 func (a AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(a.keeper))
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServerImpl(a.keeper))
 }
 
 func (a AppModule) BeginBlock(_ context.Context) error {
