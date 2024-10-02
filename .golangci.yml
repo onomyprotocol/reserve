@@ -1,0 +1,6 @@
+linters-settings:
+  exclude-rules:
+    - path: "_pb.go"   
+      linters:
+        - unused
+        - staticcheck
