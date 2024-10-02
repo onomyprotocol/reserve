@@ -6,7 +6,6 @@ import (
 
 	"cosmossdk.io/collections"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -42,11 +41,10 @@ func (q queryServer) Params(ctx context.Context, req *types.QueryParamsRequest) 
 	return &types.QueryParamsResponse{Params: params}, nil
 }
 
-func (q queryServer) Stablecoin(c context.Context, req *types.QueryStablecoinRequest) (*types.QueryStablecoinResponse, error) {
+func (q queryServer) Stablecoin(ctx context.Context, req *types.QueryStablecoinRequest) (*types.QueryStablecoinResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
-	ctx := sdk.UnwrapSDKContext(c)
 
 	stablecoin, found := q.keeper.GetStablecoin(ctx, req.Denom)
 	if !found {
@@ -63,4 +61,32 @@ func (q queryServer) Stablecoin(c context.Context, req *types.QueryStablecoinReq
 		CurrentTotal:     totalStablecoinLock,
 		SwapableQuantity: stablecoin.LimitTotal.Sub(totalStablecoinLock),
 	}, nil
+}
+
+func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablecoinRequest) (*types.QueryAllStablecoinResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	allStablecoins := []*types.StablecoinResponse{}
+
+	adder := func(s types.Stablecoin) {
+		totalStablecoinLock, err := q.keeper.TotalStablecoinLock(c, s.Denom)
+		if err != nil {
+			panic(err)
+		}
+
+		newStablecoinResponse := types.StablecoinResponse{
+			Stablecoin:       s,
+			CurrentTotal:     totalStablecoinLock,
+			SwapableQuantity: s.LimitTotal.Sub(totalStablecoinLock),
+		}
+		allStablecoins = append(allStablecoins, &newStablecoinResponse)
+	}
+
+	q.keeper.IterateStablecoin(c, func(red types.Stablecoin) (stop bool) {
+		adder(red)
+		return false
+	})
+
+	return &types.QueryAllStablecoinResponse{AllStablecoinResponse: allStablecoins}, nil
 }

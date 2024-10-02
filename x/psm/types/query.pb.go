@@ -206,50 +206,184 @@ func (m *QueryStablecoinResponse) GetStablecoin() Stablecoin {
 	return Stablecoin{}
 }
 
+type QueryAllStablecoinRequest struct {
+}
+
+func (m *QueryAllStablecoinRequest) Reset()         { *m = QueryAllStablecoinRequest{} }
+func (m *QueryAllStablecoinRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllStablecoinRequest) ProtoMessage()    {}
+func (*QueryAllStablecoinRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_46bfc761c6109b8c, []int{4}
+}
+func (m *QueryAllStablecoinRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllStablecoinRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllStablecoinRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllStablecoinRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllStablecoinRequest.Merge(m, src)
+}
+func (m *QueryAllStablecoinRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllStablecoinRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllStablecoinRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllStablecoinRequest proto.InternalMessageInfo
+
+type QueryAllStablecoinResponse struct {
+	AllStablecoinResponse []*StablecoinResponse `protobuf:"bytes,1,rep,name=all_stablecoin_response,json=allStablecoinResponse,proto3" json:"all_stablecoin_response,omitempty"`
+}
+
+func (m *QueryAllStablecoinResponse) Reset()         { *m = QueryAllStablecoinResponse{} }
+func (m *QueryAllStablecoinResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllStablecoinResponse) ProtoMessage()    {}
+func (*QueryAllStablecoinResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_46bfc761c6109b8c, []int{5}
+}
+func (m *QueryAllStablecoinResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllStablecoinResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllStablecoinResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllStablecoinResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllStablecoinResponse.Merge(m, src)
+}
+func (m *QueryAllStablecoinResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllStablecoinResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllStablecoinResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllStablecoinResponse proto.InternalMessageInfo
+
+func (m *QueryAllStablecoinResponse) GetAllStablecoinResponse() []*StablecoinResponse {
+	if m != nil {
+		return m.AllStablecoinResponse
+	}
+	return nil
+}
+
+type StablecoinResponse struct {
+	Stablecoin       Stablecoin            `protobuf:"bytes,1,opt,name=stablecoin,proto3" json:"stablecoin"`
+	CurrentTotal     cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=current_total,json=currentTotal,proto3,customtype=cosmossdk.io/math.Int" json:"current_total"`
+	SwapableQuantity cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=swapable_quantity,json=swapableQuantity,proto3,customtype=cosmossdk.io/math.Int" json:"swapable_quantity"`
+}
+
+func (m *StablecoinResponse) Reset()         { *m = StablecoinResponse{} }
+func (m *StablecoinResponse) String() string { return proto.CompactTextString(m) }
+func (*StablecoinResponse) ProtoMessage()    {}
+func (*StablecoinResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_46bfc761c6109b8c, []int{6}
+}
+func (m *StablecoinResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *StablecoinResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_StablecoinResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *StablecoinResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StablecoinResponse.Merge(m, src)
+}
+func (m *StablecoinResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *StablecoinResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_StablecoinResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StablecoinResponse proto.InternalMessageInfo
+
+func (m *StablecoinResponse) GetStablecoin() Stablecoin {
+	if m != nil {
+		return m.Stablecoin
+	}
+	return Stablecoin{}
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "reserve.psm.v1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "reserve.psm.v1.QueryParamsResponse")
 	proto.RegisterType((*QueryStablecoinRequest)(nil), "reserve.psm.v1.QueryStablecoinRequest")
 	proto.RegisterType((*QueryStablecoinResponse)(nil), "reserve.psm.v1.QueryStablecoinResponse")
+	proto.RegisterType((*QueryAllStablecoinRequest)(nil), "reserve.psm.v1.QueryAllStablecoinRequest")
+	proto.RegisterType((*QueryAllStablecoinResponse)(nil), "reserve.psm.v1.QueryAllStablecoinResponse")
+	proto.RegisterType((*StablecoinResponse)(nil), "reserve.psm.v1.StablecoinResponse")
 }
 
 func init() { proto.RegisterFile("reserve/psm/v1/query.proto", fileDescriptor_46bfc761c6109b8c) }
 
 var fileDescriptor_46bfc761c6109b8c = []byte{
-	// 516 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x52, 0x41, 0x6f, 0xd3, 0x30,
-	0x18, 0x6d, 0x0a, 0x9b, 0x34, 0x33, 0x10, 0x33, 0x65, 0x74, 0x19, 0xca, 0x46, 0x40, 0x63, 0x9a,
-	0x46, 0x4c, 0xc7, 0x89, 0x1b, 0xea, 0x01, 0x69, 0xb7, 0xad, 0xc0, 0x05, 0x09, 0x55, 0x4e, 0x66,
-	0x65, 0x11, 0xb5, 0x3f, 0x37, 0x76, 0x0a, 0x3d, 0x81, 0xb8, 0x72, 0x01, 0xf1, 0x27, 0x38, 0x72,
-	0xe0, 0x47, 0xec, 0x38, 0xc1, 0x05, 0x71, 0x98, 0x50, 0x8b, 0xc4, 0xdf, 0x40, 0xb1, 0x3d, 0xca,
-	0xd2, 0x01, 0x12, 0x97, 0x28, 0xf6, 0x7b, 0xdf, 0x7b, 0xcf, 0xcf, 0x46, 0x7e, 0xce, 0x14, 0xcb,
-	0x07, 0x8c, 0x48, 0xc5, 0xc9, 0xa0, 0x45, 0xfa, 0x05, 0xcb, 0x87, 0x91, 0xcc, 0x41, 0x03, 0xbe,
-	0xe0, 0xb0, 0x48, 0x2a, 0x1e, 0x0d, 0x5a, 0xfe, 0x02, 0xe5, 0x99, 0x00, 0x62, 0xbe, 0x96, 0xe2,
-	0x37, 0x52, 0x48, 0xc1, 0xfc, 0x92, 0xf2, 0xcf, 0xed, 0x5e, 0x4d, 0x01, 0xd2, 0x1e, 0x23, 0x54,
-	0x66, 0x84, 0x0a, 0x01, 0x9a, 0xea, 0x0c, 0x84, 0x72, 0xe8, 0x46, 0x02, 0x8a, 0x83, 0x22, 0x31,
-	0x55, 0xcc, 0xfa, 0x91, 0x41, 0x2b, 0x66, 0x9a, 0xb6, 0x88, 0xa4, 0x69, 0x26, 0x0c, 0xd9, 0x71,
-	0x97, 0x2b, 0xf1, 0x24, 0xcd, 0x29, 0x3f, 0x16, 0x6a, 0x56, 0x41, 0xc5, 0x1d, 0xb2, 0x64, 0x2d,
-	0xba, 0x36, 0x99, 0x5d, 0x58, 0x28, 0x6c, 0x20, 0xbc, 0x5b, 0x7a, 0xee, 0x18, 0xa5, 0x0e, 0xeb,
-	0x17, 0x4c, 0xe9, 0x70, 0x07, 0x5d, 0x3a, 0xb1, 0xab, 0x24, 0x08, 0xc5, 0xf0, 0x5d, 0x34, 0x6b,
-	0x1d, 0x9b, 0xde, 0xaa, 0xb7, 0x7e, 0x6e, 0x6b, 0x31, 0x3a, 0x59, 0x49, 0x64, 0xf9, 0xed, 0xb9,
-	0x83, 0xa3, 0x95, 0xda, 0xfb, 0x1f, 0x1f, 0x36, 0xbc, 0x8e, 0x1b, 0x08, 0x23, 0xb4, 0x68, 0x14,
-	0x1f, 0x68, 0x1a, 0xf7, 0x58, 0x02, 0x99, 0x70, 0x5e, 0xb8, 0x81, 0x66, 0xf6, 0x98, 0x00, 0x6e,
-	0x34, 0xe7, 0x3a, 0x76, 0x11, 0xbe, 0xad, 0xa3, 0x2b, 0x53, 0x03, 0x2e, 0xc6, 0x3d, 0x84, 0xd4,
-	0xaf, 0x5d, 0x17, 0xc5, 0xaf, 0x46, 0x99, 0xcc, 0xb5, 0xcf, 0x96, 0x71, 0x3a, 0xbf, 0xcd, 0xe0,
-	0x47, 0xe8, 0x7c, 0x52, 0xe4, 0x39, 0x13, 0xba, 0xab, 0x41, 0xd3, 0x5e, 0xb3, 0xbe, 0xea, 0xad,
-	0xcf, 0xb7, 0x6f, 0x97, 0xc4, 0xaf, 0x47, 0x2b, 0x97, 0x6d, 0x45, 0x6a, 0xef, 0x69, 0x94, 0x01,
-	0xe1, 0x54, 0xef, 0x47, 0xdb, 0x42, 0x7f, 0xfa, 0x78, 0x0b, 0xb9, 0xee, 0xb6, 0x85, 0xb6, 0xc7,
-	0x9b, 0x77, 0x32, 0x0f, 0x4b, 0x15, 0xfc, 0x04, 0x2d, 0xa8, 0x67, 0x54, 0x96, 0x36, 0xdd, 0x7e,
-	0x41, 0x85, 0xce, 0xf4, 0xb0, 0x79, 0xe6, 0x3f, 0xa5, 0x2f, 0x1e, 0x4b, 0xed, 0x3a, 0xa5, 0xad,
-	0xd7, 0x75, 0x34, 0x63, 0x3a, 0xc1, 0x2f, 0xd0, 0xac, 0xad, 0x1a, 0x87, 0xd5, 0x73, 0x4f, 0xdf,
-	0xa6, 0x7f, 0xfd, 0xaf, 0x1c, 0x5b, 0x6a, 0xb8, 0xf9, 0xea, 0xf3, 0xf7, 0x77, 0xf5, 0x35, 0x7c,
-	0x83, 0x80, 0x00, 0x3e, 0x34, 0xaf, 0x23, 0x81, 0x1e, 0x39, 0xf5, 0xc5, 0xe1, 0x97, 0x1e, 0x42,
-	0x93, 0x86, 0xf1, 0xda, 0xa9, 0x0e, 0x53, 0x77, 0xed, 0xdf, 0xfc, 0x27, 0xcf, 0xa5, 0xb9, 0x66,
-	0xd2, 0x2c, 0xe3, 0xa5, 0x4a, 0x9a, 0xc9, 0xd3, 0x6e, 0xdf, 0x3f, 0x18, 0x05, 0xde, 0xe1, 0x28,
-	0xf0, 0xbe, 0x8d, 0x02, 0xef, 0xcd, 0x38, 0xa8, 0x1d, 0x8e, 0x83, 0xda, 0x97, 0x71, 0x50, 0x7b,
-	0xbc, 0x99, 0x66, 0x7a, 0xbf, 0x88, 0xa3, 0x04, 0xf8, 0x1f, 0x0e, 0xf3, 0xdc, 0x08, 0xe9, 0xa1,
-	0x64, 0x2a, 0x9e, 0x35, 0xe8, 0x9d, 0x9f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xf5, 0x8d, 0xfe, 0xa0,
-	0xfb, 0x03, 0x00, 0x00,
+	// 596 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x54, 0xbf, 0x6f, 0xd3, 0x4e,
+	0x1c, 0x8d, 0x93, 0x6f, 0x23, 0xf5, 0xda, 0x7e, 0x45, 0x8f, 0xb4, 0x4d, 0x1c, 0xe4, 0x06, 0x83,
+	0x4a, 0x88, 0x8a, 0x8f, 0x84, 0x89, 0x0d, 0x32, 0x20, 0x75, 0x6b, 0x03, 0x2c, 0x95, 0x50, 0x74,
+	0x49, 0x4f, 0xae, 0x85, 0x7d, 0xe7, 0xf8, 0x2e, 0xa1, 0x99, 0x40, 0x6c, 0x48, 0x0c, 0x20, 0x06,
+	0xfe, 0x05, 0x46, 0x06, 0xfe, 0x88, 0x8e, 0x15, 0x2c, 0x88, 0xa1, 0x42, 0x09, 0x12, 0xff, 0x06,
+	0xf2, 0xdd, 0x85, 0x90, 0xd8, 0x85, 0x8a, 0x99, 0xc5, 0xba, 0xbb, 0xf7, 0x3e, 0xef, 0xf3, 0xfc,
+	0xee, 0x07, 0x30, 0x23, 0xc2, 0x49, 0x34, 0x20, 0x28, 0xe4, 0x01, 0x1a, 0xd4, 0x51, 0xaf, 0x4f,
+	0xa2, 0xa1, 0x13, 0x46, 0x4c, 0x30, 0xf8, 0xbf, 0xc6, 0x9c, 0x90, 0x07, 0xce, 0xa0, 0x6e, 0xae,
+	0xe2, 0xc0, 0xa3, 0x0c, 0xc9, 0xaf, 0xa2, 0x98, 0x05, 0x97, 0xb9, 0x4c, 0x0e, 0x51, 0x3c, 0xd2,
+	0xab, 0x97, 0x5c, 0xc6, 0x5c, 0x9f, 0x20, 0x1c, 0x7a, 0x08, 0x53, 0xca, 0x04, 0x16, 0x1e, 0xa3,
+	0x5c, 0xa3, 0xb5, 0x2e, 0xe3, 0x01, 0xe3, 0xa8, 0x83, 0x39, 0x51, 0xfd, 0xd0, 0xa0, 0xde, 0x21,
+	0x02, 0xd7, 0x51, 0x88, 0x5d, 0x8f, 0x4a, 0xb2, 0xe6, 0x96, 0xe7, 0xec, 0x85, 0x38, 0xc2, 0xc1,
+	0x44, 0xa8, 0x38, 0x0f, 0xf2, 0x40, 0x23, 0x25, 0xd5, 0xa2, 0xad, 0x9c, 0xa9, 0x89, 0x82, 0xec,
+	0x02, 0x80, 0x7b, 0x71, 0xcf, 0x5d, 0xa9, 0xd4, 0x22, 0xbd, 0x3e, 0xe1, 0xc2, 0xde, 0x05, 0x17,
+	0x67, 0x56, 0x79, 0xc8, 0x28, 0x27, 0xf0, 0x36, 0xc8, 0xab, 0x8e, 0x45, 0xa3, 0x62, 0x54, 0x97,
+	0x1a, 0xeb, 0xce, 0x6c, 0x24, 0x8e, 0xe2, 0x37, 0x17, 0x8f, 0x4f, 0x37, 0x33, 0xef, 0xbe, 0xbf,
+	0xaf, 0x19, 0x2d, 0x5d, 0x60, 0x3b, 0x60, 0x5d, 0x2a, 0xde, 0x17, 0xb8, 0xe3, 0x93, 0x2e, 0xf3,
+	0xa8, 0xee, 0x05, 0x0b, 0x60, 0xe1, 0x80, 0x50, 0x16, 0x48, 0xcd, 0xc5, 0x96, 0x9a, 0xd8, 0xaf,
+	0xb3, 0x60, 0x23, 0x51, 0xa0, 0x6d, 0xdc, 0x01, 0x80, 0xff, 0x5c, 0xd5, 0x56, 0xcc, 0x79, 0x2b,
+	0xd3, 0xba, 0xe6, 0x7f, 0xb1, 0x9d, 0xd6, 0x2f, 0x35, 0xf0, 0x21, 0x58, 0xe9, 0xf6, 0xa3, 0x88,
+	0x50, 0xd1, 0x16, 0x4c, 0x60, 0xbf, 0x98, 0xad, 0x18, 0xd5, 0xe5, 0xe6, 0xcd, 0x98, 0xf8, 0xe5,
+	0x74, 0x73, 0x4d, 0x45, 0xc4, 0x0f, 0x1e, 0x3b, 0x1e, 0x43, 0x01, 0x16, 0x87, 0xce, 0x0e, 0x15,
+	0x1f, 0x3f, 0xdc, 0x00, 0x3a, 0xbb, 0x1d, 0x2a, 0xd4, 0xef, 0x2d, 0x6b, 0x99, 0x07, 0xb1, 0x0a,
+	0x7c, 0x04, 0x56, 0xf9, 0x13, 0x1c, 0xc6, 0x6d, 0xda, 0xbd, 0x3e, 0xa6, 0xc2, 0x13, 0xc3, 0x62,
+	0xee, 0x2f, 0xa5, 0x2f, 0x4c, 0xa4, 0xf6, 0xb4, 0x92, 0x5d, 0x06, 0x25, 0x19, 0xc9, 0x5d, 0xdf,
+	0x4f, 0xc4, 0x68, 0x1f, 0x01, 0x33, 0x0d, 0xd4, 0x91, 0xed, 0x83, 0x0d, 0xec, 0xfb, 0xed, 0x69,
+	0x04, 0xed, 0x48, 0x43, 0x45, 0xa3, 0x92, 0xab, 0x2e, 0x35, 0xec, 0xb3, 0xf3, 0x9b, 0x88, 0xb4,
+	0xd6, 0x70, 0x9a, 0xb6, 0xfd, 0x32, 0x0b, 0xe0, 0xbf, 0x5d, 0x9a, 0xec, 0x52, 0xe3, 0x6d, 0x0e,
+	0x2c, 0xc8, 0x9d, 0x80, 0x4f, 0x41, 0x5e, 0x5d, 0x08, 0x98, 0x48, 0x37, 0x79, 0xe7, 0xcc, 0x2b,
+	0xbf, 0xe5, 0xe8, 0xac, 0xb7, 0x9f, 0x7f, 0xfa, 0xf6, 0x26, 0xbb, 0x05, 0xaf, 0x22, 0x46, 0x59,
+	0x30, 0x94, 0x77, 0xb8, 0xcb, 0x7c, 0x94, 0xfa, 0x2e, 0xc0, 0x67, 0x06, 0x00, 0xd3, 0x84, 0xe1,
+	0x56, 0x6a, 0x87, 0xc4, 0x51, 0x32, 0xaf, 0xfd, 0x91, 0xa7, 0xdd, 0x5c, 0x96, 0x6e, 0xca, 0xb0,
+	0x34, 0xe7, 0x66, 0xfa, 0x00, 0xc1, 0x17, 0x06, 0x58, 0x99, 0x39, 0x92, 0xf0, 0x7a, 0xaa, 0x7a,
+	0xda, 0x99, 0x36, 0x6b, 0xe7, 0xa1, 0x9e, 0xdb, 0x4b, 0xf3, 0xde, 0xf1, 0xc8, 0x32, 0x4e, 0x46,
+	0x96, 0xf1, 0x75, 0x64, 0x19, 0xaf, 0xc6, 0x56, 0xe6, 0x64, 0x6c, 0x65, 0x3e, 0x8f, 0xad, 0xcc,
+	0xfe, 0xb6, 0xeb, 0x89, 0xc3, 0x7e, 0xc7, 0xe9, 0xb2, 0xe0, 0x8c, 0x60, 0x8f, 0xa4, 0x90, 0x18,
+	0x86, 0x84, 0x77, 0xf2, 0x12, 0xbd, 0xf5, 0x23, 0x00, 0x00, 0xff, 0xff, 0x92, 0x1d, 0x48, 0x92,
+	0x2d, 0x06, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -267,6 +401,7 @@ type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	Stablecoin(ctx context.Context, in *QueryStablecoinRequest, opts ...grpc.CallOption) (*QueryStablecoinResponse, error)
+	AllStablecoin(ctx context.Context, in *QueryAllStablecoinRequest, opts ...grpc.CallOption) (*QueryAllStablecoinResponse, error)
 }
 
 type queryClient struct {
@@ -295,11 +430,21 @@ func (c *queryClient) Stablecoin(ctx context.Context, in *QueryStablecoinRequest
 	return out, nil
 }
 
+func (c *queryClient) AllStablecoin(ctx context.Context, in *QueryAllStablecoinRequest, opts ...grpc.CallOption) (*QueryAllStablecoinResponse, error) {
+	out := new(QueryAllStablecoinResponse)
+	err := c.cc.Invoke(ctx, "/reserve.psm.v1.Query/AllStablecoin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	Stablecoin(context.Context, *QueryStablecoinRequest) (*QueryStablecoinResponse, error)
+	AllStablecoin(context.Context, *QueryAllStablecoinRequest) (*QueryAllStablecoinResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -311,6 +456,9 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 }
 func (*UnimplementedQueryServer) Stablecoin(ctx context.Context, req *QueryStablecoinRequest) (*QueryStablecoinResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Stablecoin not implemented")
+}
+func (*UnimplementedQueryServer) AllStablecoin(ctx context.Context, req *QueryAllStablecoinRequest) (*QueryAllStablecoinResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllStablecoin not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -353,6 +501,24 @@ func _Query_Stablecoin_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_AllStablecoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllStablecoinRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AllStablecoin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reserve.psm.v1.Query/AllStablecoin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AllStablecoin(ctx, req.(*QueryAllStablecoinRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "reserve.psm.v1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -364,6 +530,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Stablecoin",
 			Handler:    _Query_Stablecoin_Handler,
+		},
+		{
+			MethodName: "AllStablecoin",
+			Handler:    _Query_AllStablecoin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -509,6 +679,119 @@ func (m *QueryStablecoinResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryAllStablecoinRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllStablecoinRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllStablecoinRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllStablecoinResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllStablecoinResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllStablecoinResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.AllStablecoinResponse) > 0 {
+		for iNdEx := len(m.AllStablecoinResponse) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.AllStablecoinResponse[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *StablecoinResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StablecoinResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *StablecoinResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.SwapableQuantity.Size()
+		i -= size
+		if _, err := m.SwapableQuantity.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	{
+		size := m.CurrentTotal.Size()
+		i -= size
+		if _, err := m.CurrentTotal.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	{
+		size, err := m.Stablecoin.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -554,6 +837,45 @@ func (m *QueryStablecoinRequest) Size() (n int) {
 }
 
 func (m *QueryStablecoinResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.Stablecoin.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.CurrentTotal.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.SwapableQuantity.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllStablecoinRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryAllStablecoinResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.AllStablecoinResponse) > 0 {
+		for _, e := range m.AllStablecoinResponse {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *StablecoinResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -816,6 +1138,289 @@ func (m *QueryStablecoinResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: QueryStablecoinResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Stablecoin", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Stablecoin.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentTotal", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CurrentTotal.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SwapableQuantity", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SwapableQuantity.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllStablecoinRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllStablecoinRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllStablecoinRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllStablecoinResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllStablecoinResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllStablecoinResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AllStablecoinResponse", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.AllStablecoinResponse = append(m.AllStablecoinResponse, &StablecoinResponse{})
+			if err := m.AllStablecoinResponse[len(m.AllStablecoinResponse)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *StablecoinResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StablecoinResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StablecoinResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

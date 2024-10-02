@@ -23,11 +23,10 @@ func GetQueryCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdCheckStablecoin())
-
+	cmd.AddCommand(CmdGetAllStablecoin())
 	return cmd
 }
 
-// CmdShowParams returns CmdShowParams cobra.Command.
 func CmdCheckStablecoin() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "stablecoin [denom]",
@@ -39,6 +38,30 @@ func CmdCheckStablecoin() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Stablecoin(context.Background(), &types.QueryStablecoinRequest{Denom: args[0]})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdGetAllStablecoin() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "all-stablecoin",
+		Short: "shows info price, fee in, fee out, swapable quantity of all stablecoin",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.AllStablecoin(context.Background(), &types.QueryAllStablecoinRequest{})
 			if err != nil {
 				return err
 			}
