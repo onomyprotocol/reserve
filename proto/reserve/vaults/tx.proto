@@ -37,6 +37,9 @@ service Msg {
 
   // Repay defines a method for reducing debt by burning tokens
   rpc Repay(MsgRepay) returns (MsgRepayResponse);
+
+  // Close defines a method for close vault
+  rpc Close(MsgClose) returns (MsgCloseResponse);
 }
 
 message MsgUpdateParams {
@@ -182,3 +185,17 @@ message MsgRepay {
 
 // MsgRepayResponse defines the Msg/Mint response type.
 message MsgRepayResponse {}
+
+// MsgClose defines a SDK message for closing vault.
+message MsgClose {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgRepayResponse defines the Msg/Mint response type.
+message MsgCloseResponse {}

@@ -193,7 +193,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		// in.Logger,
 		in.AccountKeeper,
 		in.BankKeeper,
-		in.OracleKeeper,
+		&in.OracleKeeper,
 		authority.String(),
 	)
 	m := NewAppModule(
