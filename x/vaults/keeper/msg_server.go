@@ -44,7 +44,7 @@ func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCol
 }
 
 func (k msgServer) CreateVault(ctx context.Context, msg *types.MsgCreateVault) (*types.MsgCreateVaultResponse, error) {
-	err := k.CreateNewVault(ctx, msg.Denom, sdk.MustAccAddressFromBech32(msg.Owner), msg.Collateral, msg.Minted)
+	err := k.CreateNewVault(ctx, sdk.MustAccAddressFromBech32(msg.Owner), msg.Collateral, msg.Minted)
 	if err != nil {
 		return nil, err
 	}

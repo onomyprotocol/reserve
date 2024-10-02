@@ -106,7 +106,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	for _, t := range tests {
 		s.Run(t.name, func() {
 			t.setup()
-			err := s.k.CreateNewVault(s.Ctx, t.denom, t.owner, t.collateral, t.mint)
+			err := s.k.CreateNewVault(s.Ctx, t.owner, t.collateral, t.mint)
 			if t.expErr {
 				s.Require().Error(err)
 			} else {

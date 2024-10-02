@@ -14,11 +14,11 @@ import (
 
 func (k *Keeper) CreateNewVault(
 	ctx context.Context,
-	denom string,
 	owner sdk.AccAddress,
 	collateral sdk.Coin,
 	mint sdk.Coin,
 ) error {
+	denom := collateral.Denom
 	vm, err := k.GetVaultManager(ctx, denom)
 	if err != nil {
 		return fmt.Errorf("%s was not actived", denom)
@@ -29,7 +29,7 @@ func (k *Keeper) CreateNewVault(
 
 	// Check if expect min less than MinInitialDebt
 	if mint.Amount.LT(params.MinInitialDebt) {
-		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint, params.MinInitialDebt)
+		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint.Amount, params.MinInitialDebt)
 	}
 
 	if vm.MintAvailable.LT(mint.Amount) {
