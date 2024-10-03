@@ -22,6 +22,10 @@ service Msg {
   rpc ActiveCollateral(MsgActiveCollateral)
       returns (MsgActiveCollateralResponse);
 
+  // UpdatesCollateral defines a method for update a collateral asset
+  rpc UpdatesCollateral(MsgUpdatesCollateral)
+      returns (MsgUpdatesCollateralResponse);
+
   // CreateVault defines a method for creating a new vault and mint token
   rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
 
@@ -97,19 +101,52 @@ message MsgActiveCollateral {
 message MsgActiveCollateralResponse {}
 
 // MsgCreateValidator defines a SDK message for creating a new validator.
+message MsgUpdatesCollateral {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string denom = 1;
+
+  string min_collateral_ratio = 2 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string liquidation_ratio = 3 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string max_debt = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string authority = 5 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
+message MsgUpdatesCollateralResponse {}
+
+// MsgCreateValidator defines a SDK message for creating a new validator.
 message MsgCreateVault {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
   option (cosmos.msg.v1.signer) = "owner";
 
-  string denom = 1;
+  string owner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
-  string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-
-  cosmos.base.v1beta1.Coin collateral = 3
+  cosmos.base.v1beta1.Coin collateral = 2
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  cosmos.base.v1beta1.Coin minted = 4
+  cosmos.base.v1beta1.Coin minted = 3
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
