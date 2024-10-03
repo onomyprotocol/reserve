@@ -276,7 +276,6 @@ func TestGetPrice(t *testing.T) {
 	}
 }
 
-
 func TestProcessBandOraclePrices(t *testing.T) {
 	// Set up the application and context
 	app := app.Setup(t, false)
