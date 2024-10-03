@@ -44,7 +44,7 @@ func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCol
 	return &types.MsgActiveCollateralResponse{}, nil
 }
 
-// Add new Updates Collateral via gov
+// Updates Collateral via gov
 func (k msgServer) UpdatesCollateral(ctx context.Context, msg *types.MsgUpdatesCollateral) (*types.MsgUpdatesCollateralResponse, error) {
 	err := k.UpdatesCollateralAsset(ctx, msg.Denom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt)
 	if err != nil {
