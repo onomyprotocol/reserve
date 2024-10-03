@@ -8,7 +8,6 @@ import (
 	storetypes "cosmossdk.io/core/store"
 	"cosmossdk.io/math"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
-	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 )
@@ -18,7 +17,9 @@ type Keeper struct {
 	storeService  storetypes.KVStoreService
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
-	oracleKeeper  oraclekeeper.Keeper
+	// Temporarily leave it public to easily replace it with mocks.
+	// TODO: Make it private
+	OracleKeeper  types.OracleKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -37,7 +38,7 @@ func NewKeeper(
 	storeService storetypes.KVStoreService,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	ok oraclekeeper.Keeper,
+	ok types.OracleKeeper,
 	authority string,
 ) *Keeper {
 	sb := collections.NewSchemaBuilder(storeService)
@@ -46,7 +47,7 @@ func NewKeeper(
 		cdc:            cdc,
 		storeService:   storeService,
 		accountKeeper:  ak,
-		oracleKeeper:   ok,
+		OracleKeeper:   ok,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
