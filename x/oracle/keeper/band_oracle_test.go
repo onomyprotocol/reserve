@@ -291,14 +291,21 @@ func TestProcessBandOraclePrices(t *testing.T) {
 		expectedRate  int64
 	}{
 		{
-			name:          "Fail when no CallDataRecord found",
+			name:          "Fail when ClientID is not a valid integer",
+			clientID:      "invalid-id", 
+			calldata:      nil,
+			oracleOutput:  nil,
+			expectedError: true,
+		},
+		{
+			name:          "Return nil when no CallDataRecord found",
 			clientID:      "1",
 			calldata:      nil,
 			oracleOutput:  nil,
 			expectedError: false,
 		},
 		{
-			name:     "Fail when decoding OracleInput",
+			name:     "Return nil when decoding OracleInput",
 			clientID: "1",
 			calldata: &types.CalldataRecord{
 				ClientId: 1,
@@ -308,7 +315,7 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			expectedError: true,
 		},
 		{
-			name:     "Fail when decoding OracleOutput",
+			name:     "Return nil when decoding OracleOutput",
 			clientID: "1",
 			calldata: &types.CalldataRecord{
 				ClientId: 1,
@@ -338,13 +345,6 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			},
 			expectedError: false,
 			expectedRate:  100,
-		},
-		{
-			name:          "Fail when ClientID is not a valid integer",
-			clientID:      "invalid-id", 
-			calldata:      nil,
-			oracleOutput:  nil,
-			expectedError: true,
 		},
 	}
 
