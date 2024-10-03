@@ -13,6 +13,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
 		&MsgActiveCollateral{},
+		&MsgUpdatesCollateral{},
 		&MsgCreateVault{},
 		&MsgDeposit{},
 		&MsgWithdraw{},
