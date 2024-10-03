@@ -7,6 +7,7 @@ import (
 	"cosmossdk.io/math"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/onomyprotocol/reserve/app"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"github.com/onomyprotocol/reserve/x/oracle/utils"
@@ -171,7 +172,7 @@ func TestGetPrice(t *testing.T) {
 
 	// Create variables for expected prices
 	expectedPrice10 := math.LegacyNewDec(10)
-	expectedPrice05 := math.LegacyNewDec(5)   // For ATOM/NOM (10/2)
+	expectedPrice05 := math.LegacyNewDec(5)                            // For ATOM/NOM (10/2)
 	expectedPrice01 := math.LegacyNewDec(1).Quo(math.LegacyNewDec(10)) // 0.1
 
 	tests := []struct {
@@ -236,7 +237,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:   &expectedPrice10, 
+			expectedPrice:   &expectedPrice10,
 			expectNil:       false,
 		},
 		{
@@ -292,7 +293,7 @@ func TestProcessBandOraclePrices(t *testing.T) {
 	}{
 		{
 			name:          "Fail when ClientID is not a valid integer",
-			clientID:      "invalid-id", 
+			clientID:      "invalid-id",
 			calldata:      nil,
 			oracleOutput:  nil,
 			expectedError: true,
@@ -339,8 +340,8 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			},
 			oracleOutput: types.BandOutput{
 				Responses: []types.Response{
-					{Symbol: "ATOM", ResponseCode: 0, Rate: 100},
-					{Symbol: "BTC", ResponseCode: 0, Rate: 50000},
+					{Symbol: "ATOM", ResponseCode: 0, Rate: 100 * types.BandPriceMultiplier},  
+					{Symbol: "BTC", ResponseCode: 0, Rate: 50000 * types.BandPriceMultiplier}, 
 				},
 			},
 			expectedError: false,
@@ -383,12 +384,16 @@ func TestProcessBandOraclePrices(t *testing.T) {
 				require.NoError(t, err)
 
 				record := app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
-				require.Nil(t, record)
+				require.Nil(t, record, "BandCallDataRecord was not deleted after processing")
 
 				if tt.expectedRate != 0 {
 					priceState := app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
 					require.NotNil(t, priceState)
-					require.Equal(t, tt.expectedRate, priceState.Rate.Int64())
+
+					actualPrice := priceState.PriceState.Price
+
+					expectedPrice := math.LegacyNewDec(tt.expectedRate)
+					require.True(t, actualPrice.Equal(expectedPrice), "Price for ATOM did not match. Expected: %s, Got: %s", expectedPrice, actualPrice)
 				}
 			}
 		})
