@@ -81,6 +81,7 @@ func (k *Keeper) CreateNewVault(
 		Debt:             mintedCoins[0],
 		CollateralLocked: collateral,
 		Status:           types.ACTIVE,
+		Address:          vaultAddress.String(),
 	}
 	err = k.SetVault(ctx, vault)
 	if err != nil {
