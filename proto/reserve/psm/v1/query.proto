@@ -21,6 +21,10 @@ service Query {
   rpc Stablecoin(QueryStablecoinRequest) returns (QueryStablecoinResponse) {
     option (google.api.http).get = "/onomyprotocol/psm/v1/psm";
   }
+
+  rpc AllStablecoin(QueryAllStablecoinRequest) returns (QueryAllStablecoinResponse) {
+    option (google.api.http).get = "/onomyprotocol/psm/v1/psm";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -41,6 +45,29 @@ message QueryStablecoinRequest {
 }
 
 message QueryStablecoinResponse {
+  Stablecoin stablecoin = 1 [(gogoproto.nullable) = false];
+  bytes current_total = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+  bytes swapable_quantity = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+message QueryAllStablecoinRequest {
+}
+
+message QueryAllStablecoinResponse {
+ repeated StablecoinResponse all_stablecoin_response  = 1 ;
+}
+
+message StablecoinResponse {
   Stablecoin stablecoin = 1 [(gogoproto.nullable) = false];
   bytes current_total = 2 [
     (cosmos_proto.scalar)  = "cosmos.Int",

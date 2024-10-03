@@ -16,9 +16,13 @@ reserved init --chain-id=testing-1 validator2 --home=$HOME/.reserved/validator2
 reserved init --chain-id=testing-1 validator3 --home=$HOME/.reserved/validator3
 
 # create keys for all three validators
-echo $(cat ./script/mnemonic/mnemonic1)| reserved keys add validator1 --recover --keyring-backend=test --home=$HOME/.reserved/validator1
-echo $(cat ./script/mnemonic/mnemonic2)| reserved keys add validator2 --recover --keyring-backend=test --home=$HOME/.reserved/validator2
-echo $(cat ./script/mnemonic/mnemonic3)| reserved keys add validator3 --recover --keyring-backend=test --home=$HOME/.reserved/validator3
+mnemonic1="top toddler wrist parade hobby supply odor ginger resource copy square tell vanish pride volcano effort planet style transfer pipe wise bus tuition luxury"
+mnemonic2="panther giant oyster hand song region chunk coil laundry glance ball denial void ramp palm fiscal pizza soccer before upset diet valid story cement"
+mnemonic3="gap track crop knee galaxy square case resemble subway math moon mom casino trade finish exotic author comic gap margin elegant claw fire business"
+
+echo $mnemonic1| reserved keys add validator1 --recover --keyring-backend=test --home=$HOME/.reserved/validator1
+echo $mnemonic2| reserved keys add validator2 --recover --keyring-backend=test --home=$HOME/.reserved/validator2
+echo $mnemonic3| reserved keys add validator3 --recover --keyring-backend=test --home=$HOME/.reserved/validator3
 
 # create validator node with tokens to transfer to the three other nodes
 reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt --home=$HOME/.reserved/validator1 
@@ -114,9 +118,9 @@ screen -S onomy3 -t onomy3 -d -m reserved start --home=$HOME/.reserved/validator
 
 # submit proposal add usdt
 sleep 7
-reserved tx gov submit-legacy-proposal add-stable-coin "d" "d" "usdt" "100000000000000000000000000000" "1" "0.001" "0.001" 10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from validator1 -y --chain-id testing-1 --fees 20stake
+reserved tx gov submit-proposal ./script/proposal-2.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 
-# vote
+# # vote
 sleep 7
 reserved tx gov vote 1 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 reserved tx gov vote 1 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
@@ -127,8 +131,8 @@ sleep 15
 echo "========sleep=========="
 
 # check add usdt, balances
-reserved q psm stablecoin usdt
-reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
+reserved q psm  all-stablecoin
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
 # tx swap usdt to nomUSD
 echo "========swap==========="
@@ -136,11 +140,12 @@ reserved tx psm swap-to-nomUSD 100000000000000000000000000000usdt --from validat
 
 sleep 7
 # Check account after swap
-reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
 # tx swap nomUSD to usdt
 reserved tx psm swap-to-stablecoin usdt 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 # Check account after swap
-reserved q bank balances onomy1wa3u4knw74r598quvzydvca42qsmk6jrc6uj7m
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
+# killall reserved || true
