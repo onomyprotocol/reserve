@@ -305,7 +305,7 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			expectedError: false,
 		},
 		{
-			name:     "Return nil when decoding OracleInput",
+			name:     "Fail when decoding OracleInput",
 			clientID: "1",
 			calldata: &types.CalldataRecord{
 				ClientId: 1,
@@ -315,7 +315,7 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			expectedError: true,
 		},
 		{
-			name:     "Return nil when decoding OracleOutput",
+			name:     "Fail when decoding OracleOutput",
 			clientID: "1",
 			calldata: &types.CalldataRecord{
 				ClientId: 1,
