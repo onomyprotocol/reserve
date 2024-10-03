@@ -6,6 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (k *Keeper) BeginBlocker(ctx context.Context) error {
@@ -22,15 +23,20 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		// update latest auction period
 		k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods))
 
-		liquidatedVaults, err := k.vaultKeeper.GetLiquidatedVaults(ctx)
+		liquidations, err := k.vaultKeeper.GetLiquidations(ctx)
 		if err != nil {
 			return err
+		}
+
+		liquidatedVaults := make([]*vaultstypes.Vault, 0)
+		for _, liq := range liquidations {
+			liquidatedVaults = append(liquidatedVaults, liq.LiquidatingVaults...)
 		}
 
 		// create new auction for this vault
 		for _, vault := range liquidatedVaults {
 			//calcualte initial price and target price
-			auction, err := k.NewAuction(ctx, currentTime, k.calculateInitAuctionPrice(ctx, vault.CollateralLocked), vault.CollateralLocked, vault.Debt)
+			auction, err := k.NewAuction(ctx, currentTime, k.calculateInitAuctionPrice(ctx, vault.CollateralLocked), vault.CollateralLocked, vault.Debt, vault.Id)
 			if err != nil {
 				return err
 			}
@@ -43,35 +49,35 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	}
 
 	// loop through all auctions
+	// get liquidations data then distribute debt & collateral remain
+	liquidationMap := make(map[string]*vaultstypes.Liquidation)
 	err = k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
 		bidQueue, err := k.Bids.Get(ctx, auction.AuctionId)
 		if err != nil {
 			return true, err
 		}
+		vault, err := k.vaultKeeper.GetVault(ctx, auction.VaultId)
+		if err != nil {
+			return true, err
+		}
 
 		needCleanup := false
-		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED {
-			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, true)
+		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
+			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
+			auction.EndTime.After(currentTime) {
+
+			liquidationMap[auction.Item.Denom].Denom = auction.Item.Denom
+			liquidationMap[auction.Item.Denom].LiquidatingVaults = append(liquidationMap[auction.Item.Denom].LiquidatingVaults, &vault)
+			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
+			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+
+			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ModuleName, sdk.NewCoins(liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold))
 			if err != nil {
 				return true, err
 			}
 
 			needCleanup = true
 			// skip other logic
-		} else if auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL {
-			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, false)
-			if err != nil {
-				return true, err
-			}
-
-			needCleanup = true
-		} else if auction.EndTime.After(currentTime) {
-			err = k.vaultKeeper.NotifyVault(ctx, auction.TokenRaised, auction.Item, false)
-			if err != nil {
-				return true, err
-			}
-
-			needCleanup = true
 		}
 
 		if needCleanup {
@@ -112,6 +118,14 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 
 		return false, nil
 	})
+
+	// Loop through liquidationMap and liquidate
+	for _, liq := range liquidationMap {
+		err := k.vaultKeeper.Liquidate(ctx, *liq)
+		if err != nil {
+			return err
+		}
+	}
 	if err != nil {
 		return err
 	}
@@ -123,6 +137,11 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 	itemDenom := auction.Item.Denom
 
 	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
+	if err != nil {
+		return err
+	}
+
+	vault, err := k.vaultKeeper.GetVault(ctx, auction.VaultId)
 	if err != nil {
 		return err
 	}
@@ -152,7 +171,7 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 				continue
 			}
 
-			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAddr, sdk.NewCoins(receiveCoin))
+			err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
 			if err != nil {
 				continue
 			}

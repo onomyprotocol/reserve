@@ -117,6 +117,15 @@ message Vault {
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
   VaultStatus status = 5;
+
+  string liquidation_price = 6 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string address = 7 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 message VaultLiquidationStatus {
@@ -129,13 +138,6 @@ message VaultLiquidationStatus {
 
 message Liquidation {
   string denom = 1;
-
-  string mark_price = 2 [
-    (cosmos_proto.scalar) = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (amino.dont_omitempty) = true,
-    (gogoproto.nullable) = false
-  ];
 
   repeated Vault liquidating_vaults = 3;
 

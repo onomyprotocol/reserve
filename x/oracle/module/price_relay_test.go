@@ -13,6 +13,7 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
 	testifysuite "github.com/stretchr/testify/suite"
 
+	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	reserveapp "github.com/onomyprotocol/reserve/app"
 	simapp "github.com/onomyprotocol/reserve/app"
 	bandapp "github.com/onomyprotocol/reserve/x/oracle/bandtesting/app"
@@ -63,8 +64,8 @@ func (suite *PriceRelayTestSuite) SetupTest() {
 	suite.chainB = suite.coordinator.GetChain(ibctesting.GetChainID(1))
 }
 
-func NewPriceRelayPath(chainI, chainB *ibctesting.TestChain) *ibctesting.Path {
-	path := ibctesting.NewPath(chainI, chainB)
+func NewPriceRelayPath(chain0, chainB *ibctesting.TestChain) *ibctesting.Path {
+	path := ibctesting.NewPath(chain0, chainB)
 	path.EndpointA.ChannelConfig.Version = oracletypes.DefaultTestBandIbcParams().IbcVersion
 	path.EndpointA.ChannelConfig.PortID = oracletypes.DefaultTestBandIbcParams().IbcPortId
 	path.EndpointB.ChannelConfig.Version = oracletypes.DefaultTestBandIbcParams().IbcVersion
@@ -78,8 +79,13 @@ func NewPriceRelayPath(chainI, chainB *ibctesting.TestChain) *ibctesting.Path {
 func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 	// setup between chainA and chainB
 
-	path := NewPriceRelayPath(suite.chainO, suite.chainB)
+	onomyapp := suite.chainO.App.(*reserveapp.App)
 
+	portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
+	onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
+
+	path := NewPriceRelayPath(suite.chainO, suite.chainB)
+	
 	suite.coordinator.Setup(path)
 
 	timeoutHeight := clienttypes.NewHeight(1, 110)
@@ -123,8 +129,8 @@ func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 	commitment := suite.chainB.App.GetIBCKeeper().ChannelKeeper.GetPacketCommitment(suite.chainB.GetContext(), path.EndpointB.ChannelConfig.PortID, path.EndpointB.ChannelID, 1)
 	suite.Equal(expectCommitment, commitment)
 
-	injectiveApp := suite.chainO.App.(*reserveapp.App)
-	injectiveApp.OracleKeeper.SetBandOracleRequest(suite.chainO.GetContext(), oracletypes.BandOracleRequest{
+	// injectiveApp := suite.chainO.App.(*reserveapp.App)
+	onomyapp.OracleKeeper.SetBandOracleRequest(suite.chainO.GetContext(), oracletypes.BandOracleRequest{
 		RequestId:      1,
 		OracleScriptId: 1,
 		Symbols:        []string{"A"},

@@ -67,6 +67,9 @@ message Auction {
 
   // target_goal defines the debt the auction is trying to recover
   cosmos.base.v1beta1.Coin target_goal = 10 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+
+  // vault_id defines id of auction vault
+  uint64 vault_id = 11;
 }
 
 // Bid defines bid entry

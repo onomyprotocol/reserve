@@ -8,12 +8,13 @@ import (
 )
 
 var (
-	DefaultMintingFee            = math.LegacyMustNewDecFromStr("1")
-	DefaultStabilityFee          = math.LegacyMustNewDecFromStr("1")
-	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("1")
-	DefaultMinInitialDebt        = math.NewInt(1)
+	DefaultMintingFee            = math.LegacyMustNewDecFromStr("0.05")
+	DefaultStabilityFee          = math.LegacyMustNewDecFromStr("0.05")
+	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("0.05")
+	DefaultMinInitialDebt        = math.NewInt(20_000_000)
 	DefaultRecalculateDebtPeriod = uint64(1)
 	DefaultLiquidatePeriod       = uint64(1)
+	DefaultMintDenom             = "nomusd"
 
 	KeyMintingFee            = []byte("MintingFee")
 	KeyStabilityFee          = []byte("StabilityFee")
@@ -31,6 +32,7 @@ func NewParams(
 	minInitialDebt math.Int,
 	recalculateDebtPeriod uint64,
 	liquidatePeriod uint64,
+	mintDenom string,
 ) Params {
 	return Params{
 		MintingFee:            mintingFee,
@@ -39,6 +41,7 @@ func NewParams(
 		MinInitialDebt:        minInitialDebt,
 		RecalculateDebtPeriod: recalculateDebtPeriod,
 		LiquidatePeriod:       liquidatePeriod,
+		MintDenom: mintDenom,
 	}
 }
 
@@ -51,6 +54,7 @@ func DefaultParams() Params {
 		DefaultMinInitialDebt,
 		DefaultRecalculateDebtPeriod,
 		DefaultLiquidatePeriod,
+		DefaultMintDenom,
 	)
 }
 

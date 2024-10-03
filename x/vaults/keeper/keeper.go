@@ -17,7 +17,9 @@ type Keeper struct {
 	storeService  storetypes.KVStoreService
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
-	oracleKeeper  types.OracleKeeper
+	// Temporarily leave it public to easily replace it with mocks.
+	// TODO: Make it private
+	OracleKeeper  types.OracleKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -45,7 +47,7 @@ func NewKeeper(
 		cdc:            cdc,
 		storeService:   storeService,
 		accountKeeper:  ak,
-		oracleKeeper:   ok,
+		OracleKeeper:   ok,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),

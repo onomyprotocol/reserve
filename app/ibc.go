@@ -161,13 +161,14 @@ func (app *App) registerIBCModules() error {
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 
-	// oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
-	oracleStack, err := app.registerOracleModule()
-	if err != nil {
-		return err
-	}
+	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
+	// oracleStack, err := app.registerOracleModule()
+	// if err != nil {
+	// 	return err
+	// }
 
-	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleStack)
+	// ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleStack)
+	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleIBCModule)
 	// this line is used by starport scaffolding # ibc/app/module
 
 	app.IBCKeeper.SetRouter(ibcRouter)
@@ -206,7 +207,7 @@ func RegisterIBC(registry cdctypes.InterfaceRegistry) map[string]appmodule.AppMo
 		ibctm.ModuleName:            ibctm.AppModule{},
 		solomachine.ModuleName:      solomachine.AppModule{},
 
-		oraclemoduletypes.ModuleName: oraclemodule.AppModule{},
+		// oraclemoduletypes.ModuleName: oraclemodule.AppModule{},
 	}
 
 	for name, m := range modules {

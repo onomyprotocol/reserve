@@ -1,14 +1,14 @@
 package oracle
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"context"
 
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.
-func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
+func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisState) {
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		// TODO: should we panic here
 		panic(err)
@@ -27,7 +27,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.BandParams.IbcPortId != "" {
 		k.SetPort(ctx, genState.BandParams.IbcPortId)
 		// Only try to bind to port if it is not already bound, since we may already own port capability
-		if !k.IsBound(ctx, genState.BandParams.IbcPortId) {
+		if k.ShouldBound(ctx, genState.BandParams.IbcPortId) {
 			// module binds to the port on InitChain
 			// and claims the returned capability
 			err := k.BindPort(ctx, genState.BandParams.IbcPortId)
@@ -53,7 +53,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 }
 
 // ExportGenesis returns the module's exported genesis.
-func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
+func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
 		Params:                  k.GetParams(ctx),
 		BandParams:              k.GetBandParams(ctx),

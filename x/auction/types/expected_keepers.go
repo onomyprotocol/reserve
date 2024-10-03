@@ -33,6 +33,7 @@ type BankKeeper interface {
 	SendCoinsFromModuleToModule(ctx context.Context, senderModule, recipientModule string, amt sdk.Coins) error
 	SendCoinsFromModuleToAccount(ctx context.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 	SendCoinsFromAccountToModule(ctx context.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error
+	SendCoins(ctx context.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
 }
 
 // ParamSubspace defines the expected Subspace interface for parameters.
@@ -42,8 +43,9 @@ type ParamSubspace interface {
 }
 
 type VaultKeeper interface {
-	GetLiquidatedVaults(ctx context.Context) ([]vaulttypes.Vault, error)
-	NotifyVault(ctx context.Context, tokenRaised, collatheralUnsold sdk.Coin, isReachedGoal bool) error
+	GetLiquidations(ctx context.Context) ([]vaulttypes.Liquidation, error)
+	Liquidate(ctx context.Context, liquidation vaulttypes.Liquidation) error
+	GetVault(ctx context.Context, vaultId uint64) (vaulttypes.Vault, error)
 }
 
 type OracleKeeper interface {
