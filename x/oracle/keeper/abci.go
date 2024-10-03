@@ -18,6 +18,11 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	if sdkCtx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
 		k.RequestAllBandRates(ctx)
 	}
+
+	// todo: default cleanup interval (1 day)
+	if sdkCtx.BlockHeight()%24*60*60 == 0 {
+		k.CleanUpStaleBandCalldataRecords(sdkCtx)
+	}
 }
 
 func (k *Keeper) RequestAllBandRates(ctx context.Context) {
