@@ -7,7 +7,6 @@ import (
 	"cosmossdk.io/collections"
 	storetypes "cosmossdk.io/core/store"
 	"cosmossdk.io/math"
-	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -18,7 +17,9 @@ type Keeper struct {
 	storeService  storetypes.KVStoreService
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
-	oracleKeeper  oraclekeeper.Keeper
+	// Temporarily leave it public to easily replace it with mocks.
+	// TODO: Make it private
+	OracleKeeper types.OracleKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -37,7 +38,7 @@ func NewKeeper(
 	storeService storetypes.KVStoreService,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	ok oraclekeeper.Keeper,
+	ok types.OracleKeeper,
 	authority string,
 ) *Keeper {
 	sb := collections.NewSchemaBuilder(storeService)
@@ -46,7 +47,7 @@ func NewKeeper(
 		cdc:            cdc,
 		storeService:   storeService,
 		accountKeeper:  ak,
-		oracleKeeper:   ok,
+		OracleKeeper:   ok,
 		bankKeeper:     bk,
 		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
@@ -88,6 +89,28 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
+	return k.VaultsManager.Set(ctx, denom, vm)
+}
+
+func (k *Keeper) UpdatesCollateralAsset(
+	ctx context.Context,
+	denom string,
+	minCollateralRatio math.LegacyDec,
+	liquidationRatio math.LegacyDec,
+	maxDebt math.Int,
+) error {
+	// Check if asset alreay be actived
+	vm, err := k.GetVaultManager(ctx, denom)
+	if err != nil {
+		return fmt.Errorf("denom %s not activated", denom)
+	}
+	amountMinted := vm.Params.MaxDebt.Sub(vm.MintAvailable)
+
+	vm.Params.MinCollateralRatio = minCollateralRatio
+	vm.Params.LiquidationRatio = liquidationRatio
+	vm.Params.MaxDebt = maxDebt
+	vm.MintAvailable = maxDebt.Sub(amountMinted)
+
 	return k.VaultsManager.Set(ctx, denom, vm)
 }
 

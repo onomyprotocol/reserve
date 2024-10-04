@@ -15,6 +15,18 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/reserve/vaults/params";
   }
+
+  rpc QueryAllCollateral(QueryAllCollateralRequest) returns (QueryAllCollateralResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryAllVaults(QueryAllVaultsRequest) returns (QueryAllVaultsResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryVaults(QueryVaultIdRequest) returns (QueryVaultIdResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -25,4 +37,25 @@ message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+message QueryVaultIdRequest {
+  uint64 vault_id  = 1;
+}
+
+message QueryVaultIdResponse{
+  Vault vault = 1;
+}
+
+message QueryAllVaultsRequest {
+}
+
+message QueryAllVaultsResponse{
+ repeated Vault all_vault = 1;
+}
+
+message QueryAllCollateralRequest {}
+
+message QueryAllCollateralResponse{
+  repeated  VaultMamager all_vault_mamager = 1; 
 }

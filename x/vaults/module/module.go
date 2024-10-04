@@ -32,6 +32,8 @@ import (
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
+
+	"github.com/onomyprotocol/reserve/x/vaults/cli"
 )
 
 const consensusVersion uint64 = 1
@@ -91,11 +93,11 @@ func (a AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux 
 }
 
 func (a AppModuleBasic) GetTxCmd() *cobra.Command {
-	return nil
+	return cli.GetTxCmd()
 }
 
 func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return nil
+	return cli.GetQueryCmd()
 }
 
 func (a AppModuleBasic) RegisterLegacyAminoCodec(_ *codec.LegacyAmino) {
@@ -128,6 +130,7 @@ func (a AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {
 
 func (a AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(a.keeper))
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServerImpl(a.keeper))
 }
 
 func (a AppModule) BeginBlock(_ context.Context) error {
@@ -193,7 +196,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		// in.Logger,
 		in.AccountKeeper,
 		in.BankKeeper,
-		in.OracleKeeper,
+		&in.OracleKeeper,
 		authority.String(),
 	)
 	m := NewAppModule(
