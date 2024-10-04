@@ -11,6 +11,7 @@ import (
 // RegisterLegacyAminoCodec registers all necessary param module types with a given LegacyAmino codec.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&ActiveCollateralProposal{}, "reserve/ActiveCollateralProposal", nil)
+	cdc.RegisterConcrete(&UpdatesCollateralProposal{}, "reserve/UpdatesCollateralProposal", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -31,6 +32,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations(
 		(*govtypes.Content)(nil),
 		&ActiveCollateralProposal{},
+		&UpdatesCollateralProposal{},
 	)
 
 }
