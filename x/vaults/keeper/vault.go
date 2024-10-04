@@ -29,7 +29,7 @@ func (k *Keeper) CreateNewVault(
 
 	// Check if expect min less than MinInitialDebt
 	if mint.Amount.LT(params.MinInitialDebt) {
-		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint, params.MinInitialDebt)
+		return fmt.Errorf("initial mint should be greater than min. Got %v, expected %v", mint.Amount, params.MinInitialDebt)
 	}
 
 	// Calculate collateral ratio
