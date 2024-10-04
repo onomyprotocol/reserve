@@ -143,3 +143,13 @@ func (k *Keeper) ScopedKeeper() exported.ScopedKeeper {
 	}
 	return k.scopedKeeper
 }
+
+// need to delete when merging with oracle
+// func (k *Keeper) GetPrice(ctx context.Context, denom string) math.LegacyDec {
+// 	return math.LegacyZeroDec()
+// }
+
+// need to delete when merging with oracle
+// func (k *Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
+// 	return nil
+// }

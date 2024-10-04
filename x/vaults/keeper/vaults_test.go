@@ -545,7 +545,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, soldCoins)
 			}
 
-			err, isShortfall, shortfallAmount := s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
+			isShortfall, shortfallAmount, err := s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
 			fmt.Println("errrrr", err, isShortfall, shortfallAmount)
 
 			if t.reserveBalances != nil {

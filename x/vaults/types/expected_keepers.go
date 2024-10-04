@@ -29,5 +29,6 @@ type BankKeeper interface {
 }
 
 type OracleKeeper interface {
+	AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error
 	GetPrice(ctx context.Context, base, quote string) *math.LegacyDec
 }

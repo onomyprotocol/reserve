@@ -32,3 +32,7 @@ func (s *MockOracleKeeper) GetPrice(ctx context.Context, denom1 string, denom2 s
 func (s *MockOracleKeeper) SetPrice(denom string, price math.LegacyDec) {
 	s.prices[denom] = price
 }
+
+func (s *MockOracleKeeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
+	return nil
+}

@@ -16,6 +16,8 @@ func NewVaultsProposalHandler(k *keeper.Keeper) govtypes.Handler {
 		switch c := content.(type) {
 		case *types.ActiveCollateralProposal:
 			return k.ActiveCollateralAsset(ctx, c.ActiveCollateral.Denom, c.ActiveCollateral.MinCollateralRatio, c.ActiveCollateral.LiquidationRatio, c.ActiveCollateral.MaxDebt)
+		case *types.UpdatesCollateralProposal:
+			return k.UpdatesCollateralAsset(ctx, c.UpdatesCollateral.Denom, c.UpdatesCollateral.MinCollateralRatio, c.UpdatesCollateral.LiquidationRatio, c.UpdatesCollateral.MaxDebt)
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized %s proposal content type: %T", types.ModuleName, c)
 		}
