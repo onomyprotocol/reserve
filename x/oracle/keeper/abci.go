@@ -20,7 +20,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	}
 
 	// todo: default cleanup interval (1 day)
-	if sdkCtx.BlockHeight()%24*60*60 == 0 {
+	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	}
 }
@@ -44,7 +44,6 @@ func (k *Keeper) RequestAllBandRates(ctx context.Context) {
 			sdkCtx.Logger().Error(err.Error())
 		}
 	}
-	// TODO: Clean call data record after each 1000 blocks
 }
 
 func (k *Keeper) EndBlocker(ctx context.Context) {
