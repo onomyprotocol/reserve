@@ -1,7 +1,14 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+const (
+	ProposalTypeActiveCollateralProposal  string = "ActiveCollateralProposal"
+	ProposalTypeUpdatesCollateralProposal string = "UpdatesCollateralProposal"
 )
 
 var (
@@ -54,4 +61,78 @@ func NewMsgClose(vaultId uint64, sender string) MsgClose {
 		VaultId: vaultId,
 		Sender:  sender,
 	}
+}
+
+func (m *ActiveCollateralProposal) GetDescription() string {
+	return " "
+}
+
+func (m *ActiveCollateralProposal) GetTitle() string {
+	return " "
+}
+
+func (m *ActiveCollateralProposal) ProposalRoute() string {
+	return RouterKey
+}
+
+func (m *ActiveCollateralProposal) ProposalType() string {
+	return ProposalTypeActiveCollateralProposal
+}
+
+func (m *ActiveCollateralProposal) ValidateBasic() error {
+	a := m.ActiveCollateral
+	if a.Denom == "" {
+		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "empty denom")
+	}
+
+	if a.MinCollateralRatio.LT(math.LegacyZeroDec()) {
+		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
+	}
+
+	if a.LiquidationRatio.LT(math.LegacyZeroDec()) {
+		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
+	}
+
+	if a.MaxDebt.LT(math.ZeroInt()) {
+		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
+	}
+
+	return nil
+}
+
+func (m *UpdatesCollateralProposal) GetDescription() string {
+	return " "
+}
+
+func (m *UpdatesCollateralProposal) GetTitle() string {
+	return " "
+}
+
+func (m *UpdatesCollateralProposal) ProposalRoute() string {
+	return RouterKey
+}
+
+func (m *UpdatesCollateralProposal) ProposalType() string {
+	return ProposalTypeActiveCollateralProposal
+}
+
+func (m *UpdatesCollateralProposal) ValidateBasic() error {
+	a := m.UpdatesCollateral
+	if a.Denom == "" {
+		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "empty denom")
+	}
+
+	if a.MinCollateralRatio.LT(math.LegacyZeroDec()) {
+		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
+	}
+
+	if a.LiquidationRatio.LT(math.LegacyZeroDec()) {
+		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
+	}
+
+	if a.MaxDebt.LT(math.ZeroInt()) {
+		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
+	}
+
+	return nil
 }

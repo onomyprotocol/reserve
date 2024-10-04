@@ -89,6 +89,11 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, denom, 1)
+	if err != nil {
+		return err
+	}
+
 	return k.VaultsManager.Set(ctx, denom, vm)
 }
 
