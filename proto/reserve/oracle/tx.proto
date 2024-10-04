@@ -18,6 +18,8 @@ service Msg {
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
 
   rpc RequestBandRates(MsgRequestBandRates) returns (MsgRequestBandRatesResponse);
+
+  rpc SetPrice(MsgSetPrice) returns (MsgSetPriceResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -54,3 +56,19 @@ message MsgRequestBandRates {
 
 // MsgRequestBandRatesResponse defines the Msg/RequestBandRates response type.
 message MsgRequestBandRatesResponse {}
+
+message MsgSetPrice{
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "reserve/x/oracle/MsgSetPrice";
+  string denom = 1;
+
+  bytes price = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+
+  string authority = 3;
+}
+
+message MsgSetPriceResponse {}

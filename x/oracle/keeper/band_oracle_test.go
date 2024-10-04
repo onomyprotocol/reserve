@@ -23,7 +23,7 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
-	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	price := app.OracleKeeper.GetPrice1(ctx, "ATOM", "USD")
 	require.Nil(t, price)
 
 	bandPriceState := &types.BandPriceState{
@@ -40,7 +40,7 @@ func TestBandPriceState(t *testing.T) {
 	data = app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
 	require.Equal(t, bandPriceState, data)
 
-	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	price = app.OracleKeeper.GetPrice1(ctx, "ATOM", "USD")
 	expect := math.LegacyNewDec(10)
 	require.Equal(t, &expect, price)
 
@@ -170,7 +170,7 @@ func TestGetPrice(t *testing.T) {
 
 	// Create variables for expected prices
 	expectedPrice10 := math.LegacyNewDec(10)
-	expectedPrice05 := math.LegacyNewDec(5)   // For ATOM/NOM (10/2)
+	expectedPrice05 := math.LegacyNewDec(5)                            // For ATOM/NOM (10/2)
 	expectedPrice01 := math.LegacyNewDec(1).Quo(math.LegacyNewDec(10)) // 0.1
 
 	tests := []struct {
@@ -235,7 +235,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:   &expectedPrice10, 
+			expectedPrice:   &expectedPrice10,
 			expectNil:       false,
 		},
 		{
@@ -262,7 +262,7 @@ func TestGetPrice(t *testing.T) {
 			}
 
 			// Execute GetPrice
-			price := app.OracleKeeper.GetPrice(ctx, tc.baseSymbol, tc.quoteSymbol)
+			price := app.OracleKeeper.GetPrice1(ctx, tc.baseSymbol, tc.quoteSymbol)
 
 			// Check expectations
 			if tc.expectNil {

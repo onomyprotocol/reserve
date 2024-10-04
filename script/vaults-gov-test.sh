@@ -135,3 +135,8 @@ sleep 15
 reserved q gov proposals
 
 # killall reserved || true
+
+reserved tx oracle set-price nomUSD 1 --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+
+reserved tx oracle set-price fet 1.3 --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
