@@ -496,7 +496,7 @@ func (k *Keeper) updateBandPriceStates(
 	})
 }
 
-func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx sdk.Context) {
+func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx context.Context) {
 	var (
 		latestClientID         = k.GetBandLatestClientID(ctx)
 		earliestToKeepClientID = latestClientID - 1000 // todo: default max records to keep (1000)
@@ -512,7 +512,7 @@ func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx sdk.Context) {
 	}
 }
 
-func (k *Keeper) getPreviousRecordIDs(ctx sdk.Context, clientID uint64) []uint64 {
+func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []uint64 {
 	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	bandCalldataStore := prefix.NewStore(kvStore, types.BandCallDataRecordKey)
 	iter := bandCalldataStore.Iterator(nil, sdk.Uint64ToBigEndian(clientID))
