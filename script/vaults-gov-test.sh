@@ -25,15 +25,15 @@ echo $mnemonic2| reserved keys add validator2 --recover --keyring-backend=test -
 echo $mnemonic3| reserved keys add validator3 --recover --keyring-backend=test --home=$HOME/.reserved/validator3
 
 # create validator node with tokens to transfer to the three other nodes
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000atom --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000atom --home=$HOME/.reserved/validator3 
 reserved genesis gentx validator1 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator1 --chain-id=testing-1
 reserved genesis gentx validator2 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator2 --chain-id=testing-1
 reserved genesis gentx validator3 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator3 --chain-id=testing-1
@@ -139,4 +139,38 @@ reserved q gov proposals
 reserved tx oracle set-price nomUSD 1 --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 
 
+sleep 7
 reserved tx oracle set-price fet 1.3 --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7
+
+reserved tx oracle set-price atom 8.13 --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+sleep 7
+
+reserved q oracle  get-price fet
+
+reserved tx vaults create-vault 10000000atom 20000000nomUSD --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7
+reserved tx vaults create-vault 10000000atom 20000000nomUSD --from validator2 --home=$HOME/.reserved/validator2 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7
+
+reserved tx vaults mint 0 20000000nomUSD --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7 
+
+reserved tx vaults deposit 0 20000000atom --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7
+
+reserved tx vaults withdraw 0 1000atom --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+
+sleep 7
+
+reserved tx vaults repay 0 10000000000000000nomUSD --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+
+sleep 7
+
+reserved tx vaults close 0 --from validator1 --home=$HOME/.reserved/validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
