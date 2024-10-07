@@ -155,20 +155,22 @@ func (im IBCModule) OnRecvPacket(
 ) ibcexported.Acknowledgement {
 	var resp types.OracleResponsePacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &resp); err != nil {
+		println("OnRecvPacket 1")
 		return channeltypes.NewErrorAcknowledgement(errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()))
 	}
 
-	if resp.ResolveStatus != types.RESOLVE_STATUS_SUCCESS {
-		clientID, err := strconv.Atoi(resp.ClientID)
-		if err != nil {
-			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
-		}
-		// Delete the calldata corresponding to the sequence number
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
-		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
-	}
+	// if resp.ResolveStatus != types.RESOLVE_STATUS_SUCCESS {
+	// 	clientID, err := strconv.Atoi(resp.ClientID)
+	// 	if err != nil {
+	// 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
+	// 	}
+	// 	// Delete the calldata corresponding to the sequence number
+	// 	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	// 	return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
+	// }
 	println("Process OnrecvPacket ..........")
 	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
+		println("OnRecvPacket 2")
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 
@@ -184,16 +186,19 @@ func (im IBCModule) OnAcknowledgementPacket(
 ) error {
 	var ack channeltypes.Acknowledgement
 	if err := types.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
+		println("OnAcknowledgementPacket 1")
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet acknowledgement: %v", err)
 	}
 
 	var data types.OracleRequestPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &data); err != nil {
+		println("OnAcknowledgementPacket 2")
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
 	clientID, err := strconv.Atoi(data.ClientID)
 	if err != nil {
+		println("OnAcknowledgementPacket 3")
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot parse client id: %s", err.Error())
 	}
 
