@@ -101,6 +101,7 @@ func DecodeOracleOutput(data []byte) (OracleOutput, error) {
 	)
 
 	if err = utils.Decode(data, &legacyOutput); err == nil {
+		println("go to DecodeOracleOutput LegacyBandOutput")
 		return legacyOutput, nil
 	}
 
