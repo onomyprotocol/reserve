@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"testing"
+	"os"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmtjson "github.com/cometbft/cometbft/libs/json"
@@ -208,4 +209,8 @@ func initAccountWithCoins(app *App, ctx sdk.Context, addr sdk.AccAddress, coins 
 	if err != nil {
 		panic(err)
 	}
+}
+
+func Cleanup(app *App) {           // release cosmwasm instance cache lock
+	_ = os.RemoveAll(DefaultNodeHome) // remove default dir, if it was overridden during test Setup, it's a responsibility of the sender to remove the folder
 }

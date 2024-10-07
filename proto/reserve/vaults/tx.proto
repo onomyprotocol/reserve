@@ -1,0 +1,238 @@
+syntax = "proto3";
+package reserve.vaults;
+
+import "gogoproto/gogo.proto";
+import "reserve/vaults/params.proto";
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/onomyprotocol/reserve/x/vaults/types";
+
+// Msg defines the vaults Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // ActiveCollateral defines a method for enable a collateral asset
+  rpc ActiveCollateral(MsgActiveCollateral)
+      returns (MsgActiveCollateralResponse);
+
+  // UpdatesCollateral defines a method for update a collateral asset
+  rpc UpdatesCollateral(MsgUpdatesCollateral)
+      returns (MsgUpdatesCollateralResponse);
+
+  // CreateVault defines a method for creating a new vault and mint token
+  rpc CreateVault(MsgCreateVault) returns (MsgCreateVaultResponse);
+
+  // Deposit defines a method for depositing collateral assets to vault
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+
+  // Withdraw defines a method for withdrawing collateral assets out of the
+  // vault
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+
+  // Mint defines a method for minting more tokens
+  rpc Mint(MsgMint) returns (MsgMintResponse);
+
+  // Repay defines a method for reducing debt by burning tokens
+  rpc Repay(MsgRepay) returns (MsgRepayResponse);
+
+  // Close defines a method for close vault
+  rpc Close(MsgClose) returns (MsgCloseResponse);
+}
+
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "reserve/x/oracle/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless
+  // overwritten).
+  string authority = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // params defines the module parameters to update.
+  //
+  // NOTE: All parameters must be supplied.
+  Params params = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+// MsgCreateValidator defines a SDK message for creating a new validator.
+message MsgActiveCollateral {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string denom = 1;
+
+  string min_collateral_ratio = 2 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string liquidation_ratio = 3 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string max_debt = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string authority = 5 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
+message MsgActiveCollateralResponse {}
+
+// MsgCreateValidator defines a SDK message for creating a new validator.
+message MsgUpdatesCollateral {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "authority";
+
+  string denom = 1;
+
+  string min_collateral_ratio = 2 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string liquidation_ratio = 3 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string max_debt = 4 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string authority = 5 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
+message MsgUpdatesCollateralResponse {}
+
+// MsgCreateValidator defines a SDK message for creating a new validator.
+message MsgCreateVault {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "owner";
+
+  string owner = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  cosmos.base.v1beta1.Coin collateral = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+
+  cosmos.base.v1beta1.Coin minted = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgCreateVaultResponse defines the Msg/CreateVault response type.
+message MsgCreateVaultResponse {}
+
+// MsgDeposit defines a SDK message for depositing collateral assets to the
+// vault.
+message MsgDeposit {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  cosmos.base.v1beta1.Coin amount = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgDepositResponse defines the Msg/Deposit response type.
+message MsgDepositResponse {}
+
+// MsgWithdraw defines a SDK message for withdrawing collateral assets out of
+// the vault.
+message MsgWithdraw {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  cosmos.base.v1beta1.Coin amount = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgWithdrawResponse defines the Msg/Withdraw response type.
+message MsgWithdrawResponse {}
+
+// MsgMint defines a SDK message for minting more tokens.
+message MsgMint {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  cosmos.base.v1beta1.Coin amount = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgMintResponse defines the Msg/Mint response type.
+message MsgMintResponse {}
+
+// MsgRepay defines a SDK message for repay debt.
+message MsgRepay {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  cosmos.base.v1beta1.Coin amount = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+// MsgRepayResponse defines the Msg/Mint response type.
+message MsgRepayResponse {}
+
+// MsgClose defines a SDK message for closing vault.
+message MsgClose {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (cosmos.msg.v1.signer) = "sender";
+
+  uint64 vault_id = 1;
+
+  string sender = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// MsgRepayResponse defines the Msg/Mint response type.
+message MsgCloseResponse {}

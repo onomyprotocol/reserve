@@ -2,9 +2,10 @@ package oracle
 
 import (
 	"fmt"
-
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
+	"strconv"
+	"strings"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -46,8 +47,14 @@ func (im IBCModule) OnChanOpenInit(
 		return "", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
 
-	if version != types.Version {
-		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
+	bandParams := im.keeper.GetBandParams(ctx)
+
+	if strings.TrimSpace(version) == "" {
+		version = bandParams.IbcVersion
+	}
+
+	if version != bandParams.IbcVersion {
+		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, bandParams.IbcVersion)
 	}
 
 	// Claim channel capability passed back by IBC module
@@ -76,8 +83,10 @@ func (im IBCModule) OnChanOpenTry(
 		return "", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
 
-	if counterpartyVersion != types.Version {
-		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: got: %s, expected %s", counterpartyVersion, types.Version)
+	bandParams := im.keeper.GetBandParams(ctx)
+
+	if counterpartyVersion != bandParams.IbcVersion {
+		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: got: %s, expected %s", counterpartyVersion, bandParams.IbcVersion)
 	}
 
 	// Module may have already claimed capability in OnChanOpenInit in the case of crossing hellos
@@ -91,7 +100,7 @@ func (im IBCModule) OnChanOpenTry(
 		}
 	}
 
-	return types.Version, nil
+	return bandParams.IbcVersion, nil
 }
 
 // OnChanOpenAck implements the IBCModule interface
@@ -102,8 +111,10 @@ func (im IBCModule) OnChanOpenAck(
 	_,
 	counterpartyVersion string,
 ) error {
-	if counterpartyVersion != types.Version {
-		return errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: %s, expected %s", counterpartyVersion, types.Version)
+	bandParams := im.keeper.GetBandParams(ctx)
+
+	if counterpartyVersion != bandParams.IbcVersion {
+		return errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: %s, expected %s", counterpartyVersion, bandParams.IbcVersion)
 	}
 	return nil
 }
@@ -142,25 +153,26 @@ func (im IBCModule) OnRecvPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
-	// var ack channeltypes.Acknowledgement
-
-	// this line is used by starport scaffolding # oracle/packet/module/recv
-
-	var modulePacketData types.OraclePacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var resp types.OracleResponsePacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &resp); err != nil {
 		return channeltypes.NewErrorAcknowledgement(errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()))
 	}
 
-	// Dispatch packet
-	switch packet := modulePacketData.Packet.(type) {
-	// this line is used by starport scaffolding # ibc/packet/module/recv
-	default:
-		err := fmt.Errorf("unrecognized %s packet type: %T", types.ModuleName, packet)
-		return channeltypes.NewErrorAcknowledgement(err)
+	if resp.ResolveStatus != types.RESOLVE_STATUS_SUCCESS {
+		clientID, err := strconv.Atoi(resp.ClientID)
+		if err != nil {
+			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
+		}
+		// Delete the calldata corresponding to the sequence number
+		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
+	}
+	println("Process OnrecvPacket ..........")
+	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
+		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 
-	// NOTE: acknowledgement will be written synchronously during IBC handler execution.
-	// return ack
+	return channeltypes.NewResultAcknowledgement([]byte{byte(1)})
 }
 
 // OnAcknowledgementPacket implements the IBCModule interface
@@ -175,49 +187,35 @@ func (im IBCModule) OnAcknowledgementPacket(
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet acknowledgement: %v", err)
 	}
 
-	// this line is used by starport scaffolding # oracle/packet/module/ack
-
-	var modulePacketData types.OraclePacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var data types.OracleRequestPacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &data); err != nil {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
-	// var eventType string
-
-	// Dispatch packet
-	switch packet := modulePacketData.Packet.(type) {
-	// this line is used by starport scaffolding # ibc/packet/module/ack
-	default:
-		errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-		return errorsmod.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
+	clientID, err := strconv.Atoi(data.ClientID)
+	if err != nil {
+		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot parse client id: %s", err.Error())
 	}
 
-	// ctx.EventManager().EmitEvent(
-	// 	sdk.NewEvent(
-	// 		eventType,
-	// 		sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-	// 		sdk.NewAttribute(types.AttributeKeyAck, fmt.Sprintf("%v", ack)),
-	// 	),
-	// )
+	switch resp := ack.Response.(type) {
+	case *channeltypes.Acknowledgement_Result:
+		// the acknowledgement succeeded on the receiving chain so nothing
+		// needs to be executed and no error needs to be returned
+		// nolint:errcheck //ignored on purpose
+		ctx.EventManager().EmitTypedEvent(&types.EventBandAckSuccess{
+			AckResult: string(resp.Result),
+			ClientId:  int64(clientID),
+		})
+	case *channeltypes.Acknowledgement_Error:
+		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		// nolint:errcheck //ignored on purpose
+		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
+			AckError: resp.Error,
+			ClientId: int64(clientID),
+		})
+	}
 
-	// switch resp := ack.Response.(type) {
-	// case *channeltypes.Acknowledgement_Result:
-	// 	ctx.EventManager().EmitEvent(
-	// 		sdk.NewEvent(
-	// 			eventType,
-	// 			sdk.NewAttribute(types.AttributeKeyAckSuccess, string(resp.Result)),
-	// 		),
-	// 	)
-	// case *channeltypes.Acknowledgement_Error:
-	// 	ctx.EventManager().EmitEvent(
-	// 		sdk.NewEvent(
-	// 			eventType,
-	// 			sdk.NewAttribute(types.AttributeKeyAckError, resp.Error),
-	// 		),
-	// 	)
-	// }
-
-	// return nil
+	return nil
 }
 
 // OnTimeoutPacket implements the IBCModule interface
@@ -226,18 +224,22 @@ func (im IBCModule) OnTimeoutPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) error {
-	var modulePacketData types.OraclePacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var data types.OracleRequestPacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &data); err != nil {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
-	// Dispatch packet
-	switch packet := modulePacketData.Packet.(type) {
-	// this line is used by starport scaffolding # ibc/packet/module/timeout
-	default:
-		errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-		return errorsmod.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
+	clientID, err := strconv.Atoi(data.ClientID)
+	if err != nil {
+		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot parse client id: %s", err.Error())
 	}
 
-	// return nil
+	// Delete the calldata corresponding to the sequence number
+	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	// nolint:errcheck //ignored on purpose
+	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
+		ClientId: int64(clientID),
+	})
+
+	return nil
 }
