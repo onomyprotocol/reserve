@@ -203,6 +203,7 @@ func (k Keeper) GetAllBandOracleRequests(ctx context.Context) []*types.BandOracl
 
 // GetBandPriceState reads the stored band ibc price state.
 func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.BandPriceState {
+	println("go to GetBandPriceState with symbol: ", symbol)
 	var priceState types.BandPriceState
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
@@ -219,6 +220,7 @@ func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.Ba
 
 // SetBandPriceState sets the band ibc price state.
 func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState *types.BandPriceState) error{
+	println("go to SetBandPriceState with symbol: ", symbol)
 	bz := k.cdc.MustMarshal(priceState)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
