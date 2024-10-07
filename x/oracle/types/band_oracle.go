@@ -46,6 +46,7 @@ func (p OracleResponsePacketData) GetBytes() []byte {
 // GetCalldata gets the Band IBC request call data based on the symbols and multiplier.
 func (r *BandOracleRequest) GetCalldata(legacyScheme bool) []byte {
 	if legacyScheme {
+		println("go to legacyScheme")
 		return utils.MustEncode(Input{
 			Symbols:    r.Symbols,
 			Multiplier: BandPriceMultiplier,
@@ -61,6 +62,7 @@ func (r *BandOracleRequest) GetCalldata(legacyScheme bool) []byte {
 func IsLegacySchemeOracleScript(scriptID int64, params BandParams) bool {
 	for _, id := range params.LegacyOracleIds {
 		if id == scriptID {
+			println("go to Multiplier")
 			return true
 		}
 	}
