@@ -106,7 +106,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	for _, t := range tests {
 		s.Run(t.name, func() {
 			t.setup()
-			err := s.k.CreateNewVault(s.Ctx, t.denom, t.owner, t.collateral, t.mint)
+			err := s.k.CreateNewVault(s.Ctx, t.owner, t.collateral, t.mint)
 			if t.expErr {
 				s.Require().Error(err)
 			} else {
@@ -545,7 +545,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, soldCoins)
 			}
 
-			err, isShortfall, shortfallAmount := s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
+			isShortfall, shortfallAmount, err := s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
 			fmt.Println("errrrr", err, isShortfall, shortfallAmount)
 
 			if t.reserveBalances != nil {

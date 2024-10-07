@@ -19,7 +19,7 @@ type Keeper struct {
 	accountKeeper types.AccountKeeper
 	// Temporarily leave it public to easily replace it with mocks.
 	// TODO: Make it private
-	OracleKeeper  types.OracleKeeper
+	OracleKeeper types.OracleKeeper
 
 	// the address capable of executing a MsgUpdateParams message. Typically, this
 	// should be the x/gov module account.
@@ -89,6 +89,33 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, denom, 1)
+	if err != nil {
+		return err
+	}
+
+	return k.VaultsManager.Set(ctx, denom, vm)
+}
+
+func (k *Keeper) UpdatesCollateralAsset(
+	ctx context.Context,
+	denom string,
+	minCollateralRatio math.LegacyDec,
+	liquidationRatio math.LegacyDec,
+	maxDebt math.Int,
+) error {
+	// Check if asset alreay be actived
+	vm, err := k.GetVaultManager(ctx, denom)
+	if err != nil {
+		return fmt.Errorf("denom %s not activated", denom)
+	}
+	amountMinted := vm.Params.MaxDebt.Sub(vm.MintAvailable)
+
+	vm.Params.MinCollateralRatio = minCollateralRatio
+	vm.Params.LiquidationRatio = liquidationRatio
+	vm.Params.MaxDebt = maxDebt
+	vm.MintAvailable = maxDebt.Sub(amountMinted)
+
 	return k.VaultsManager.Set(ctx, denom, vm)
 }
 
