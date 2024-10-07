@@ -239,6 +239,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceSt
 	for ; iterator.Valid(); iterator.Next() {
 		var bandPriceState types.BandPriceState
 		k.cdc.MustUnmarshal(iterator.Value(), &bandPriceState)
+		println("check band price state: ", bandPriceState.String())
 		priceStates = append(priceStates, &bandPriceState)
 	}
 
