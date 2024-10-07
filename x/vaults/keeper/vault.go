@@ -587,7 +587,6 @@ func (k *Keeper) GetVaultIdAndAddress(
 	ctx context.Context,
 ) (uint64, sdk.AccAddress) {
 	id, err := k.VaultsSequence.Next(ctx)
-	fmt.Println("nextId", id, err)
 	if err != nil {
 		return 0, sdk.AccAddress{}
 	}

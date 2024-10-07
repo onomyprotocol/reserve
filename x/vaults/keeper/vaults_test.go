@@ -120,7 +120,6 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestRepayDebt() {
 	s.SetupTest()
 	var (
@@ -136,20 +135,51 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 		vaultID uint64
 		sender  sdk.AccAddress
 		mint    sdk.Coin
+		expErr  bool
 	}{
 		{
-			name: "success",
+			name: "vault is not actived",
 			setup: func() {
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
 				s.Require().NoError(err)
-
+			},
+			vaultID: 0,
+			sender:  s.TestAccs[0],
+			mint:    coin,
+			expErr:  true,
+		},
+		{
+			name: "insufficient account",
+			setup: func() {
 				vault := types.Vault{
 					Owner:            s.TestAccs[0].String(),
 					Debt:             sdk.NewCoin(denom, maxDebt),
 					CollateralLocked: sdk.NewCoin(denom, maxDebt),
 					Status:           types.ACTIVE,
 				}
-				err = s.k.SetVault(s.Ctx, vault)
+				err := s.k.SetVault(s.Ctx, vault)
+				s.Require().NoError(err)
+
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins())
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins())
+				s.Require().NoError(err)
+			},
+			vaultID: 0,
+			sender:  s.TestAccs[0],
+			mint:    coin,
+			expErr:  true,
+		},
+		{
+			name: "success",
+			setup: func() {
+				vault := types.Vault{
+					Owner:            s.TestAccs[0].String(),
+					Debt:             sdk.NewCoin(denom, maxDebt),
+					CollateralLocked: sdk.NewCoin(denom, maxDebt),
+					Status:           types.ACTIVE,
+				}
+				err := s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
 				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
@@ -166,16 +196,19 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 		s.Run(t.name, func() {
 			t.setup()
 			err := s.k.RepayDebt(s.Ctx, t.vaultID, t.sender, t.mint)
-			s.Require().NoError(err)
+			if t.expErr {
+				s.Require().Error(err)
+			} else {
+				s.Require().NoError(err)
 
-			vm, err := s.k.GetVaultManager(s.Ctx, denom)
-			s.Require().NoError(err)
-			s.Require().NotEqual(maxDebt, vm.MintAvailable)
+				vm, err := s.k.GetVaultManager(s.Ctx, denom)
+				s.Require().NoError(err)
+				s.Require().NotEqual(maxDebt, vm.MintAvailable)
+			}
 		})
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestDepositToVault() {
 	s.SetupTest()
 	var (
@@ -183,6 +216,7 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		coin          = sdk.NewCoin(denom, math.NewInt(1000))
 		coinMintToAcc = sdk.NewCoin(denom, math.NewInt(1000000))
 		maxDebt       = math.NewInt(10000)
+		osmoCoin      = sdk.NewCoin("osmo", math.NewInt(1000))
 	)
 
 	tests := []struct {
@@ -191,9 +225,10 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		vaultId    uint64
 		sender     sdk.AccAddress
 		collateral sdk.Coin
+		expErr     bool
 	}{
 		{
-			name: "success",
+			name: "vaultId 0 does not accept denom osmo",
 			setup: func() {
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
 				s.Require().NoError(err)
@@ -205,6 +240,32 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 					Status:           types.ACTIVE,
 				}
 				err = s.k.SetVault(s.Ctx, vault)
+				s.Require().NoError(err)
+
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+			},
+			vaultId:    0,
+			sender:     s.TestAccs[0],
+			collateral: osmoCoin,
+			expErr:     true,
+		},
+
+		{
+			name: "success",
+			setup: func() {
+				_, vaultAddress := s.k.GetVaultIdAndAddress(s.Ctx)
+
+				vault := types.Vault{
+					Owner:            s.TestAccs[0].String(),
+					Debt:             sdk.NewCoin(denom, maxDebt),
+					CollateralLocked: sdk.NewCoin(denom, maxDebt),
+					Status:           types.ACTIVE,
+					Address:          vaultAddress.String(),
+				}
+				err := s.k.SetVault(s.Ctx, vault)
 				s.Require().NoError(err)
 
 				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
@@ -221,16 +282,19 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		s.Run(t.name, func() {
 			t.setup()
 			err := s.k.DepositToVault(s.Ctx, t.vaultId, t.sender, t.collateral)
-			s.Require().NoError(err)
+			if t.expErr {
+				s.Require().Error(err)
+			} else {
+				s.Require().NoError(err)
 
-			vault, err := s.k.GetVault(s.Ctx, t.vaultId)
-			s.Require().NoError(err)
-			s.Require().NotEqual(maxDebt, vault.CollateralLocked)
+				vault, err := s.k.GetVault(s.Ctx, t.vaultId)
+				s.Require().NoError(err)
+				s.Require().NotEqual(maxDebt, vault.CollateralLocked)
+			}
 		})
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestWithdrawFromVault() {
 	s.SetupTest()
 	var (
@@ -246,20 +310,50 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		vaultId    uint64
 		sender     sdk.AccAddress
 		collateral sdk.Coin
+		expErr     bool
 	}{
 		{
-			name: "success",
+			name: "ratio less than min ratio",
 			setup: func() {
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
 				s.Require().NoError(err)
-
+				_, vaultAddress := s.k.GetVaultIdAndAddress(s.Ctx)
 				vault := types.Vault{
 					Owner:            s.TestAccs[0].String(),
 					Debt:             sdk.NewCoin(denom, maxDebt),
 					CollateralLocked: sdk.NewCoin(denom, maxDebt),
 					Status:           types.ACTIVE,
+					Address:          vaultAddress.String(),
 				}
 				err = s.k.SetVault(s.Ctx, vault)
+				s.Require().NoError(err)
+
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
+				s.Require().NoError(err)
+			},
+			vaultId:    0,
+			sender:     s.TestAccs[0],
+			collateral: sdk.NewCoin(denom, maxDebt),
+			expErr:     true,
+		},
+
+		{
+			name: "success",
+			setup: func() {
+				_, vaultAddress := s.k.GetVaultIdAndAddress(s.Ctx)
+				vault := types.Vault{
+					Owner:            s.TestAccs[0].String(),
+					Debt:             sdk.NewCoin(denom, maxDebt),
+					CollateralLocked: sdk.NewCoin(denom, maxDebt),
+					Status:           types.ACTIVE,
+					Address:          vaultAddress.String(),
+				}
+				err := s.k.SetVault(s.Ctx, vault)
+				s.Require().NoError(err)
+
+				err = s.App.BankKeeper.SendCoins(s.Ctx, s.TestAccs[0], vaultAddress, sdk.NewCoins(vault.CollateralLocked))
 				s.Require().NoError(err)
 
 				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
@@ -276,22 +370,25 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		s.Run(t.name, func() {
 			t.setup()
 			err := s.k.WithdrawFromVault(s.Ctx, t.vaultId, t.sender, t.collateral)
-			s.Require().NoError(err)
+			if t.expErr {
+				s.Require().Error(err)
+			} else {
+				s.Require().NoError(err)
 
-			vault, err := s.k.GetVault(s.Ctx, t.vaultId)
-			s.Require().NoError(err)
-			s.Require().NotEqual(maxDebt, vault.CollateralLocked)
+				vault, err := s.k.GetVault(s.Ctx, t.vaultId)
+				s.Require().NoError(err)
+				s.Require().NotEqual(maxDebt, vault.CollateralLocked)
+			}
 		})
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestUpdateVaultsDebt() {
 	s.SetupTest()
 	var (
 		denom              = "atom"
 		maxDebt            = math.NewInt(10000)
-		feeStabilityUpdate = math.LegacyMustNewDecFromStr("0.5")
+		feeStabilityUpdate = math.LegacyMustNewDecFromStr("0.01")
 	)
 
 	tests := []struct {
