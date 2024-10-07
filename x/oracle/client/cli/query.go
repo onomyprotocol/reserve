@@ -54,3 +54,36 @@ func GetBandPriceStates() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
+// GetPrice queries the price based on rate of base/quote
+func GetPrice() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "price [base] [quote]",
+		Short: "Get price based on rate of base/quote",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			baseDenom := args[0]
+			quoteDenom := args[1]
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			var res proto.Message
+			req := &types.QueryPriceRequest{
+				BaseDenom: baseDenom,
+				QuoteDenom: quoteDenom,
+			}
+			res, err = queryClient.Price(context.Background(), req)
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
