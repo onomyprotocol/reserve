@@ -24,6 +24,7 @@ func GetQueryCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		GetBandPriceStates(),
+		GetPrice(),
 	)
 	return cmd
 }
