@@ -5,6 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 var (
@@ -14,7 +15,7 @@ var (
 	DefaultMinInitialDebt        = math.NewInt(20_000_000)
 	DefaultRecalculateDebtPeriod = uint64(1)
 	DefaultLiquidatePeriod       = uint64(1)
-	DefaultMintDenom             = "nomusd"
+	DefaultMintDenom             = psmtypes.DenomStable
 
 	KeyMintingFee            = []byte("MintingFee")
 	KeyStabilityFee          = []byte("StabilityFee")
@@ -41,7 +42,7 @@ func NewParams(
 		MinInitialDebt:        minInitialDebt,
 		RecalculateDebtPeriod: recalculateDebtPeriod,
 		LiquidatePeriod:       liquidatePeriod,
-		MintDenom: mintDenom,
+		MintDenom:             mintDenom,
 	}
 }
 

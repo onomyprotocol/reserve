@@ -5,11 +5,11 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"cosmossdk.io/math"
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper/mock"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
-	"cosmossdk.io/math"
 )
 
 type KeeperTestSuite struct {
@@ -25,6 +25,7 @@ func (s *KeeperTestSuite) SetupTest() {
 
 	mockOK := mock.NewMockOracleKeeper()
 	mockOK.SetPrice("atom", math.LegacyMustNewDecFromStr("8.0"))
+	mockOK.SetPrice(types.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
 	s.App.VaultsKeeper.OracleKeeper = mockOK
 	s.k = s.App.VaultsKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)

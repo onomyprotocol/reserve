@@ -16,10 +16,18 @@ func NewMockOracleKeeper() *MockOracleKeeper {
 	}
 }
 
-func (s *MockOracleKeeper) GetPrice(ctx context.Context, denom string) math.LegacyDec {
-	return s.prices[denom]
+func (s *MockOracleKeeper) GetPrice(ctx context.Context, denom1 string, denom2 string) *math.LegacyDec {
+	price1, ok := s.prices[denom1]
+	if !ok {
+		panic("not found price" + denom1)
+	}
+	price2, ok := s.prices[denom2]
+	if !ok {
+		panic("not found price" + denom2)
+	}
+	p := price1.Quo(price2)
+	return &p
 }
-
 func (s *MockOracleKeeper) SetPrice(denom string, price math.LegacyDec) {
 	s.prices[denom] = price
 }
