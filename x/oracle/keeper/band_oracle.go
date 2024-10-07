@@ -470,7 +470,9 @@ func (k *Keeper) updateBandPriceStates(
 			bandPriceState.Request_ID = requestID
 			bandPriceState.PriceState.UpdatePrice(price, blockTime)
 		}
-
+		println("checking band price state process .......")
+		println("check symbol: ", symbol)
+		println("check bandPriceState: ", bandPriceState.String())
 		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
 		if err != nil {
 			k.Logger(sdkCtx).Info("Can not set band price state for symbol %v", symbol)
