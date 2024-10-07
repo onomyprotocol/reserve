@@ -52,7 +52,7 @@ func (k Keeper) SetBandOracleRequestParams(ctx context.Context, bandOracleReques
 // GetBandParams gets the Band params stored in the state
 func (k Keeper) GetBandOracleRequestParams(ctx context.Context) types.BandOracleRequestParams {
 	store := k.storeService.OpenKVStore(ctx)
-	bz, err := store.Get(types.BandParamsKey)
+	bz, err := store.Get(types.BandOracleRequestParamsKey)
 
 	if err != nil {
 		return types.DefaultGenesis().BandOracleRequestParams
