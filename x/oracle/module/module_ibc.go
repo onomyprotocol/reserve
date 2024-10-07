@@ -2,10 +2,11 @@ package oracle
 
 import (
 	"fmt"
-	"github.com/onomyprotocol/reserve/x/oracle/keeper"
-	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"strconv"
 	"strings"
+
+	"github.com/onomyprotocol/reserve/x/oracle/keeper"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -204,6 +205,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 
 	switch resp := ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Result:
+		println("go to Acknowledgement_Result")
 		// the acknowledgement succeeded on the receiving chain so nothing
 		// needs to be executed and no error needs to be returned
 		// nolint:errcheck //ignored on purpose
@@ -212,6 +214,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 			ClientId:  int64(clientID),
 		})
 	case *channeltypes.Acknowledgement_Error:
+		println("go to Acknowledgement_Error")
 		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
 		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
@@ -219,7 +222,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 			ClientId: int64(clientID),
 		})
 	}
-
+	println("go fuck yourself")
 	return nil
 }
 
@@ -245,6 +248,6 @@ func (im IBCModule) OnTimeoutPacket(
 	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
 		ClientId: int64(clientID),
 	})
-
+	println("go to OnTimeoutPacket")
 	return nil
 }
