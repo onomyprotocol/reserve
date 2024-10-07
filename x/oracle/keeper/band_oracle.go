@@ -495,3 +495,36 @@ func (k *Keeper) updateBandPriceStates(
 		ClientId:    int64(clientID),
 	})
 }
+
+func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx context.Context) {
+	var (
+		latestClientID         = k.GetBandLatestClientID(ctx)
+		earliestToKeepClientID = latestClientID - 1000 // todo: default max records to keep (1000)
+	)
+
+	if earliestToKeepClientID > latestClientID {
+		// underflow
+		return
+	}
+
+	for _, id := range k.getPreviousRecordIDs(ctx, earliestToKeepClientID) {
+		k.DeleteBandCallDataRecord(ctx, id)
+	}
+}
+
+func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []uint64 {
+	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	bandCalldataStore := prefix.NewStore(kvStore, types.BandCallDataRecordKey)
+	iter := bandCalldataStore.Iterator(nil, sdk.Uint64ToBigEndian(clientID))
+	defer iter.Close()
+
+	staleIDs := make([]uint64, 0)
+	for ; iter.Valid(); iter.Next() {
+		var record types.CalldataRecord
+		k.cdc.MustUnmarshal(iter.Value(), &record)
+
+		staleIDs = append(staleIDs, record.ClientId)
+	}
+
+	return staleIDs
+}
