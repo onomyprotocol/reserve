@@ -18,7 +18,7 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
-	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	 ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
@@ -32,7 +32,6 @@ import (
 
 var (
 	_ module.AppModuleBasic      = (*AppModule)(nil)
-	_ module.AppModuleSimulation = (*AppModule)(nil)
 	_ module.HasGenesis          = (*AppModule)(nil)
 	_ module.HasInvariants       = (*AppModule)(nil)
 	_ module.HasConsensusVersion = (*AppModule)(nil)
@@ -64,7 +63,9 @@ func (AppModuleBasic) Name() string {
 
 // RegisterLegacyAminoCodec registers the amino codec for the module, which is used
 // to marshal and unmarshal structs to/from []byte in order to persist them in the module's KVStore.
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {}
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	types.RegisterLegacyAminoCodec(cdc)
+}
 
 // RegisterInterfaces registers a module's interface types and their concrete implementations as proto.Message.
 func (a AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
@@ -99,6 +100,10 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 	return cli.GetTxCmd()
 }
 
+// GetQueryCmd returns no root query command for the oracle module.
+func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
+	return cli.GetQueryCmd()
+}
 // ----------------------------------------------------------------------------
 // AppModule
 // ----------------------------------------------------------------------------
@@ -157,13 +162,15 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block.
 // The begin block implementation is optional.
-func (am AppModule) BeginBlock(_ context.Context) error {
+func (am AppModule) BeginBlock(ctx context.Context) error {
+	am.keeper.BeginBlocker(sdk.UnwrapSDKContext(ctx))
 	return nil
 }
 
 // EndBlock contains the logic that is automatically triggered at the end of each block.
 // The end block implementation is optional.
-func (am AppModule) EndBlock(_ context.Context) error {
+func (am AppModule) EndBlock(ctx context.Context) error {
+	am.keeper.EndBlocker(sdk.UnwrapSDKContext(ctx))
 	return nil
 }
 

@@ -33,9 +33,9 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.OracleKeeper.GetPrice(ctx, denom)
+	price := k.OracleKeeper.GetPrice(ctx, denom, "USD")
 	// TODO: recalculate with denom decimal?
-	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(price)
+	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(*price)
 	ratio := collateralValue.QuoInt(mint.Amount)
 
 	if ratio.LT(vmParams.MinCollateralRatio) {
@@ -135,8 +135,8 @@ func (k *Keeper) MintCoin(
 	params := k.GetParams(ctx)
 
 	lockedCoin := vault.CollateralLocked
-	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom)
-	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(price)
+	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, "USD")
+	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(*price)
 
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(params.MintingFee).TruncateInt()
 	feeCoin := sdk.NewCoin(mint.Denom, feeAmount)
@@ -278,8 +278,8 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom)
-	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(price)
+	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, "USD")
+	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(*price)
 	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
 	if ratio.LT(vm.Params.MinCollateralRatio) {
@@ -344,8 +344,8 @@ func (k *Keeper) GetLiquidations(
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
-		price := k.OracleKeeper.GetPrice(ctx, vm.Denom)
-		prices[vm.Denom] = price
+		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, "USD")
+		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
 		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom)
 
