@@ -5,11 +5,11 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
+	"cosmossdk.io/math"
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper/mock"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
-	"cosmossdk.io/math"
 )
 
 type KeeperTestSuite struct {
