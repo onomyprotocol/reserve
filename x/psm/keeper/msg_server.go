@@ -184,6 +184,12 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
+
+	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Denom, 1)
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,

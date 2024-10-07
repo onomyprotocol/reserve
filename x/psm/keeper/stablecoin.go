@@ -121,13 +121,13 @@ func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom stri
 	return s.LimitTotal, nil
 }
 
-func (k Keeper) GetPrice(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, found := k.GetStablecoin(ctx, denom)
-	if !found {
-		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
-	}
-	return s.Price, nil
-}
+// func (k Keeper) GetPrice(ctx context.Context, denom string) (math.LegacyDec, error) {
+// 	s, found := k.GetStablecoin(ctx, denom)
+// 	if !found {
+// 		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
+// 	}
+// 	return s.Price, nil
+// }
 
 func (k Keeper) GetFeeIn(ctx context.Context, denom string) (math.LegacyDec, error) {
 	s, found := k.GetStablecoin(ctx, denom)

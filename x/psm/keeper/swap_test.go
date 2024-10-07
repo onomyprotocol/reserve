@@ -35,13 +35,15 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err = s.k.SetStablecoin(s.Ctx, sc)
 				s.Require().NoError(err)
 
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[0],
 			stablecoin:      sdk.NewCoin(usdt, math.NewInt(1000)),
@@ -55,13 +57,15 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err := s.k.SetStablecoin(s.Ctx, sc)
 				s.Require().NoError(err)
 
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[1],
 			stablecoin:      sdk.NewCoin(usdt, math.NewInt(1000)),
@@ -114,11 +118,14 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
+
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[0],
@@ -134,11 +141,14 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err := s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
+
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[1],

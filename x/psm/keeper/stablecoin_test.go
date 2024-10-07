@@ -14,16 +14,16 @@ func (s *KeeperTestSuite) TestStoreStablecoin() {
 	s1 := types.Stablecoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 	s2 := types.Stablecoin{
 		Denom:      usdc,
 		LimitTotal: limitUSDC,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	err := s.k.SetStablecoin(s.Ctx, s1)

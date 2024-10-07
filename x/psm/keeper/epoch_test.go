@@ -1,18 +1,12 @@
 package keeper_test
 
 import (
-	"context"
-
 	"cosmossdk.io/math"
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 	s.SetupTest()
-	mockOracleKeeper := MockOracleKeeper{
-		price: make(map[string]math.LegacyDec),
-	}
-	s.k.OracleKeeper = &mockOracleKeeper
 
 	tests := []struct {
 		name         string
@@ -39,6 +33,15 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 			feeIn:        math.LegacyMustNewDecFromStr("0.001"),
 			feeOut:       math.LegacyMustNewDecFromStr("0.001"),
 			priceUpdate:  math.LegacyMustNewDecFromStr("0.95"),
+			expectFeeIn:  math.LegacyMustNewDecFromStr("0.0035"),
+			expectFeeOut: math.LegacyMustNewDecFromStr("0.000"),
+		},
+		{
+			name:         "fluctuation 2",
+			priceCurrent: math.LegacyMustNewDecFromStr("1.05"),
+			feeIn:        math.LegacyMustNewDecFromStr("0.001"),
+			feeOut:       math.LegacyMustNewDecFromStr("0.001"),
+			priceUpdate:  math.LegacyMustNewDecFromStr("0.9"),
 			expectFeeIn:  math.LegacyMustNewDecFromStr("0.006"),
 			expectFeeOut: math.LegacyMustNewDecFromStr("0.000"),
 		},
@@ -49,35 +52,23 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 			sc := types.Stablecoin{
 				Denom:      usdt,
 				LimitTotal: limitUSDT,
-				Price:      t.priceCurrent,
-				FeeIn:      t.feeIn,
-				FeeOut:     t.feeOut,
+				// Price:      t.priceCurrent,
+				FeeIn:  t.feeIn,
+				FeeOut: t.feeOut,
 			}
 			err := s.k.SetStablecoin(s.Ctx, sc)
 			s.Require().NoError(err)
-			mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)
+			s.mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)
 
 			err = s.k.UpdatesStablecoinEpoch(s.Ctx)
 			s.Require().NoError(err)
 
 			scUpdate, found := s.k.GetStablecoin(s.Ctx, usdt)
 			s.Require().True(found)
-			s.Require().Equal(t.priceUpdate, scUpdate.Price)
+			// s.Require().Equal(t.priceUpdate, scUpdate.Price)
 			s.Require().Equal(t.expectFeeIn, scUpdate.FeeIn)
 			s.Require().Equal(t.expectFeeOut, scUpdate.FeeOut)
 		})
 	}
 
-}
-
-type MockOracleKeeper struct {
-	price map[string]math.LegacyDec
-}
-
-func (m MockOracleKeeper) SetPrice(ctx context.Context, denom string, price math.LegacyDec) {
-	m.price[denom] = price
-}
-
-func (m MockOracleKeeper) Price(ctx context.Context, denom string) (math.LegacyDec, error) {
-	return m.price[denom], nil
 }

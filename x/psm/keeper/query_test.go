@@ -19,9 +19,9 @@ func (s *KeeperTestSuite) TestStablecoin() {
 	sc := types.Stablecoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 	err := s.k.SetStablecoin(s.Ctx, sc)
 	s.Require().NoError(err)

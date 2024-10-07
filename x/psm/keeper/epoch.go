@@ -9,13 +9,13 @@ import (
 
 func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 	updatePrice := func(red types.Stablecoin) bool {
-		price, err := k.OracleKeeper.Price(ctx, red.Denom)
-		if err != nil {
+		price := k.OracleKeeper.GetPrice(ctx, red.Denom, types.DenomStable)
+		if price == nil {
 			return false
 		}
 
-		sc := k.stablecoinUpdate(ctx, price, red)
-		err = k.SetStablecoin(ctx, sc)
+		sc := k.stablecoinUpdate(ctx, *price, red)
+		err := k.SetStablecoin(ctx, sc)
 		if err != nil {
 			return false
 		}
@@ -56,16 +56,14 @@ func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, s
 	if err != nil {
 		panic(err)
 	}
-	deltaP := newPrice.Sub(stablecoin.Price)
+	deltaP := newPrice.Sub(math.LegacyMustNewDecFromStr("1"))
 	if deltaP.Abs().LT(params.AcceptablePriceRatio) {
-		stablecoin.Price = newPrice
 		return stablecoin
 	}
 
 	feeIn := stablecoin.FeeIn.Sub(params.AdjustmentFeeIn.Mul(deltaP))
 	feeOut := stablecoin.FeeOut.Add(params.AdjustmentFeeOut.Mul(deltaP))
 
-	stablecoin.Price = newPrice
 	stablecoin.FeeIn = math.LegacyMaxDec(feeIn, math.LegacyZeroDec())
 	stablecoin.FeeOut = math.LegacyMaxDec(feeOut, math.LegacyZeroDec())
 	return stablecoin

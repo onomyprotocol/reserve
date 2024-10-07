@@ -11,9 +11,9 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -31,9 +31,9 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -50,9 +50,9 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	proUpdates := types.MsgUpdatesStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitTotalUpdates,
-		Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		// Price:      math.LegacyMustNewDecFromStr("1"),
+		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err = s.msgServer.UpdatesStableCoinProposal(s.Ctx, &proUpdates)

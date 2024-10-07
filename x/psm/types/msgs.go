@@ -95,9 +95,9 @@ var (
 	Msg_serviceDesc   = _Msg_serviceDesc
 )
 
-func (msg MsgAddStableCoin) GetPrice() math.LegacyDec {
-	return msg.Price
-}
+// func (msg MsgAddStableCoin) GetPrice() math.LegacyDec {
+// 	return msg.Price
+// }
 
 func (msg MsgAddStableCoin) GetLimitTotal() math.Int {
 	return msg.LimitTotal
@@ -128,9 +128,9 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
 	}
 
-	if msg.Price.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
-	}
+	// if msg.Price.LT(math.LegacyZeroDec()) {
+	// 	return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
+	// }
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "feein less than zero")
@@ -143,9 +143,9 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 	return nil
 }
 
-func (msg MsgUpdatesStableCoin) GetPrice() math.LegacyDec {
-	return msg.Price
-}
+// func (msg MsgUpdatesStableCoin) GetPrice() math.LegacyDec {
+// 	return msg.Price
+// }
 
 func (msg MsgUpdatesStableCoin) GetLimitTotal() math.Int {
 	return msg.LimitTotal
@@ -167,9 +167,9 @@ func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
 	}
 
-	if msg.Price.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
-	}
+	// if msg.Price.LT(math.LegacyZeroDec()) {
+	// 	return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
+	// }
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "feein less than zero")

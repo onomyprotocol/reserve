@@ -17,11 +17,11 @@ func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amoun
 		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
-	multiplier, err := k.GetPrice(ctx, toDenom)
-	if err != nil || multiplier.IsZero() {
-		return math.Int{}, sdk.DecCoin{}, err
+	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, types.DenomStable)
+	if multiplier == nil {
+		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", toDenom, types.DenomStable)
 	}
-	amountStablecoin := amount.ToLegacyDec().Quo(multiplier)
+	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
 
 	fee, err := k.PayFeesOut(ctx, amountStablecoin.RoundInt(), toDenom)
 	if err != nil {
@@ -39,9 +39,9 @@ func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoi
 		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
-	multiplier, err := k.GetPrice(ctx, stablecoin.Denom)
-	if err != nil || multiplier.IsZero() {
-		return math.Int{}, sdk.DecCoin{}, err
+	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, types.DenomStable)
+	if multiplier == nil {
+		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", stablecoin.Denom, types.DenomStable)
 	}
 
 	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())

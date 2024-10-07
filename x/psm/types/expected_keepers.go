@@ -32,5 +32,6 @@ type ParamSubspace interface {
 }
 
 type OracleKeeper interface {
-	Price(ctx context.Context, denom string) (math.LegacyDec, error)
+	GetPrice(ctx context.Context, base, quote string) *math.LegacyDec
+	AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error
 }

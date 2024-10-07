@@ -34,11 +34,14 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
+
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
@@ -58,11 +61,14 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err := s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
+
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
@@ -120,11 +126,14 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				sc := types.Stablecoin{
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					// Price:      math.LegacyMustNewDecFromStr("1"),
+					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
 				}
 				err = s.k.SetStablecoin(s.Ctx, sc)
+				s.Require().NoError(err)
+
+				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))
