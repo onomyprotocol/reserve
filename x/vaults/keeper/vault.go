@@ -315,8 +315,7 @@ func (k *Keeper) UpdateVaultsDebt(
 	})
 }
 
-func (k *Keeper) ShouldLiquidate(
-	ctx context.Context,
+func (k *Keeper) shouldLiquidate(
 	vault types.Vault,
 	price math.LegacyDec,
 	liquidationRatio math.LegacyDec,
@@ -357,7 +356,7 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
-		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault, prices[denom], liquidationRatios[denom])
+		shouldLiquidate, err := k.shouldLiquidate(vault, prices[denom], liquidationRatios[denom])
 		if shouldLiquidate && err == nil {
 			liquidations[denom].LiquidatingVaults = append(liquidations[denom].LiquidatingVaults, &vault)
 			liquidations[denom].VaultLiquidationStatus[id] = &types.VaultLiquidationStatus{}

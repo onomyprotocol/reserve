@@ -13,6 +13,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 type (
@@ -217,7 +218,7 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 
 // TODO: allow multiple currency denom: EUR, JPY
 func (k Keeper) calculateInitAuctionPrice(ctx context.Context, collateralAsset sdk.Coin) sdk.Coin {
-	rate := k.oracleKeeper.GetPrice(ctx, collateralAsset.Denom)
-	amount := collateralAsset.Amount.ToLegacyDec().Mul(rate)
+	rate := k.oracleKeeper.GetPrice(ctx, collateralAsset.Denom, psmtypes.DenomStable)
+	amount := collateralAsset.Amount.ToLegacyDec().Mul(*rate)
 	return sdk.NewCoin("nomUSD", amount.TruncateInt())
 }
