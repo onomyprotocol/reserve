@@ -15,6 +15,7 @@ var (
 	DefaultBandSourceChannel   = "channel-0"
 	DefaultBandVersion         = "bandchain-1"
 	DefaultBandPortID          = "oracle"
+	DefaultLegacyOracleIds     = []int64{42}
 
 	// DefaultBandOracleRequestParams
 	// TODO: Check these params
@@ -53,6 +54,7 @@ func DefaultBandParams() BandParams {
 		IbcSourceChannel:   DefaultBandSourceChannel,
 		IbcVersion:         DefaultBandVersion,
 		IbcPortId:          DefaultBandPortID,
+		LegacyOracleIds:    DefaultLegacyOracleIds,
 	}
 }
 
