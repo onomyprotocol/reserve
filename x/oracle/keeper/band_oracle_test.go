@@ -136,6 +136,28 @@ func TestBandCallDataRecord(t *testing.T) {
 	require.Nil(t, record)
 }
 
+func TestCleanStaleBandCallDataRecord(t *testing.T) {
+	app := app.Setup(t, false)
+	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
+
+	for id := 0; id < 1010; id++ {
+		record := &types.CalldataRecord{
+			ClientId: uint64(id),
+			Calldata: []byte("123"),
+		}
+		err := app.OracleKeeper.SetBandCallDataRecord(ctx, record)
+		require.NoError(t, err)
+	}
+	records := app.OracleKeeper.GetAllBandCalldataRecords(ctx)
+	require.Equal(t, 1010, len(records))
+
+	err := app.OracleKeeper.SetBandLatestClientID(ctx, uint64(1010))
+	require.NoError(t, err)
+	app.OracleKeeper.CleanUpStaleBandCalldataRecords(ctx)
+	records = app.OracleKeeper.GetAllBandCalldataRecords(ctx)
+	require.Equal(t, 1000, len(records))
+}
+
 func TestGetPrice(t *testing.T) {
 	app := app.Setup(t, false)
 	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})

@@ -21,6 +21,12 @@ service Query {
     option (google.api.http).get =
         "/reserve/oracle/band_price_states";
   }
+  // Retrieves the price of base/quote
+  rpc Price(QueryPriceRequest)
+      returns (QueryPriceResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/price";
+}
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -38,7 +44,21 @@ message QueryParamsResponse {
 message QueryBandPriceStatesRequest {}
 
 // QueryBandPriceStatesResponse is the response type for the
-// Query/BandPriceStates RPC method.
+// Query/Price RPC method.
 message QueryBandPriceStatesResponse {
   repeated BandPriceState price_states = 1;
+}
+
+// QueryPriceRequest is the request type for the
+// Query/Price RPC method.
+message QueryPriceRequest {
+  string base_denom = 1;
+
+  string quote_denom = 2;
+}
+
+// QueryPriceResponse is the response type for the
+// Query/Price RPC method
+message QueryPriceResponse {
+  string price = 1;
 }
