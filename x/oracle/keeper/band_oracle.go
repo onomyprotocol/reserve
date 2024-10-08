@@ -484,7 +484,7 @@ func (k *Keeper) updateBandPriceStates(
 		if err != nil {
 			k.Logger(sdkCtx).Info("Can not set band price state for symbol %v", symbol)
 		}
-
+		println("FUCKING THIS SHIT DMMMMM")
 		symbols = append(symbols, symbol)
 		prices = append(prices, price)
 	}
