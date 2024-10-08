@@ -12,6 +12,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		panic(err)
 	}
+
+	k.LastestAuctionPeriod.Set(ctx, 0)
 }
 
 // ExportGenesis returns the module's exported genesis.
