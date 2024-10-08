@@ -484,6 +484,8 @@ func (k *Keeper) updateBandPriceStates(
 		if err != nil {
 			k.Logger(sdkCtx).Info("Can not set band price state for symbol %v", symbol)
 		}
+		data := k.GetBandPriceState(ctx, symbol)
+		println("get this shit data bro: ", data.String())
 		println("FUCKING THIS SHIT DMMMMM")
 		symbols = append(symbols, symbol)
 		prices = append(prices, price)
