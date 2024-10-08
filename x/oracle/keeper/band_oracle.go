@@ -285,6 +285,7 @@ func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyD
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
+		println("base state is nil")
 		return nil
 	}
 
