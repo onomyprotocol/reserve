@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -22,6 +23,20 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	// todo: default cleanup interval (1 day)
 	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
+	}
+	if sdkCtx.BlockHeight()%5 == 0 {
+		bandPriceState := &types.BandPriceState{
+			Symbol:      "ATOM",
+			Rate:        math.NewInt(10),
+			ResolveTime: 1,
+			Request_ID:  1,
+			PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+		}
+
+		err := k.SetBandPriceState(ctx, "ATOM", bandPriceState)
+		if err != nil {
+			println("check error:", err.Error())
+		}
 	}
 }
 
