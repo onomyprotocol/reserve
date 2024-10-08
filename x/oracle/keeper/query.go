@@ -11,6 +11,10 @@ var _ types.QueryServer = Keeper{}
 func (k Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStatesRequest) (*types.QueryBandPriceStatesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	println("go to query BandPriceStates")
+	println("================================================")
+	for _, data := range k.GetAllBandPriceStates(ctx) {
+		println("Check current band price state: ", data.String())
+	}
 	res := &types.QueryBandPriceStatesResponse{
 		PriceStates: k.GetAllBandPriceStates(ctx),
 	}
