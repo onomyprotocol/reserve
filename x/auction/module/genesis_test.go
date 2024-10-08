@@ -1,4 +1,4 @@
-package oracle_test
+package auction_test
 
 import (
 	"testing"

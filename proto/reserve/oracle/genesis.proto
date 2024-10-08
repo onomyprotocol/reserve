@@ -88,15 +88,15 @@ message BandOracleRequestParams {
 
 message BandParams {
   // block request interval to send Band IBC prices
-  int64 ibc_request_interval = 2;
+  int64 ibc_request_interval = 1;
   // band IBC source channel
-  string ibc_source_channel = 3;
+  string ibc_source_channel = 2;
   // band IBC version
-  string ibc_version = 4;
+  string ibc_version = 3;
   // band IBC portID
-  string ibc_port_id = 5;
+  string ibc_port_id = 4;
   //  legacy oracle scheme ids
-  repeated int64 legacy_oracle_ids = 6;
+  repeated int64 legacy_oracle_ids = 5;
 }
 
 message BandPriceState {

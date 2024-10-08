@@ -45,7 +45,7 @@ message MsgUpdateParamsResponse {}
 // MsgRequestBandRates defines a SDK message for requesting data from
 // BandChain using IBC.
 message MsgRequestBandRates {
-  option (amino.name) = "oracle/MsgRequestBandRates";
+  option (amino.name) = "reserve/x/oracle/MsgRequestBandRates";
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
   option (cosmos.msg.v1.signer) = "sender";

@@ -9,7 +9,7 @@ import "cosmos_proto/cosmos.proto";
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
 message UpdateBandParamsProposal {
-    option (amino.name) = "oracle/UpdateBandParamsProposal";
+    option (amino.name) = "reserve/x/oracle/UpdateBandParamsProposal";
     option (gogoproto.equal) = false;
     option (gogoproto.goproto_getters) = false;
 
@@ -22,7 +22,7 @@ message UpdateBandParamsProposal {
 }
 
 message UpdateBandOracleRequestProposal {
-    option (amino.name) = "oracle/UpdateBandOracleRequestProposal";
+    option (amino.name) = "reserve/x/oracle/UpdateBandOracleRequestProposal";
     option (gogoproto.equal) = false;
     option (gogoproto.goproto_getters) = false;
   
@@ -34,7 +34,7 @@ message UpdateBandOracleRequestProposal {
 }
 
 message DeleteBandOracleRequestProposal {
-    option (amino.name) = "oracle/UpdateBandOracleRequestProposal";
+    option (amino.name) = "reserve/x/oracle/UpdateBandOracleRequestProposal";
     option (gogoproto.equal) = false;
     option (gogoproto.goproto_getters) = false;
   

@@ -23,7 +23,7 @@ service Query {
         "/reserve/oracle/band_price_states";
   }
 
-    rpc QueryPrice(MsgGetPrice) returns (MsgGetPriceResponse);
+  rpc QueryPrice(MsgGetPrice) returns (MsgGetPriceResponse);
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

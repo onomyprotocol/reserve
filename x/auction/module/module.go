@@ -1,4 +1,4 @@
-package oracle
+package auction
 
 import (
 	"context"
@@ -127,6 +127,7 @@ func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
 // InitGenesis performs the module's genesis initialization. It returns no validator updates.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) {
+	fmt.Println("koko")
 	var genState types.GenesisState
 	// Initialize global index to index in genesis state
 	cdc.MustUnmarshalJSON(gs, &genState)
@@ -185,8 +186,8 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	OracleKeeper keeper.Keeper
-	Module       appmodule.AppModule
+	AuctionKeeper keeper.Keeper
+	Module        appmodule.AppModule
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -212,5 +213,5 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	return ModuleOutputs{OracleKeeper: k, Module: m}
+	return ModuleOutputs{AuctionKeeper: k, Module: m}
 }
