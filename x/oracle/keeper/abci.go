@@ -24,20 +24,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	}
-	if sdkCtx.BlockHeight()%5 == 0 {
-		bandPriceState := &types.BandPriceState{
-			Symbol:      "ATOM",
-			Rate:        math.NewInt(10),
-			ResolveTime: 1,
-			Request_ID:  1,
-			PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
-		}
-
-		err := k.SetBandPriceState(ctx, "ATOM", bandPriceState)
-		if err != nil {
-			println("check error:", err.Error())
-		}
-	}
 
 	for _, data := range k.GetAllBandPriceStates(ctx) {
 		println("Check data band price state for each begin block: ", data.String())
