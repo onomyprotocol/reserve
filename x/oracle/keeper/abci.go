@@ -38,6 +38,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 			println("check error:", err.Error())
 		}
 	}
+
+	for _, data := range k.GetAllBandPriceStates(ctx) {
+		println("Check data band price state for each begin block: ", data.String())
+	}
 }
 
 func (k *Keeper) RequestAllBandRates(ctx context.Context) {
