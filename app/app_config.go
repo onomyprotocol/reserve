@@ -4,10 +4,10 @@ import (
 	"time"
 
 	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
-	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
 	vaultsmoduletypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -173,7 +173,7 @@ var (
 		{Account: psmtypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 		{Account: vaultsmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
-		{Account: vaultsmoduletypes.ReserveModuleName},
+		{Account: vaultsmoduletypes.ReserveModuleName, Permissions: []string{authtypes.Burner}},
 	}
 
 	// blocked account addresses
