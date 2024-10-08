@@ -6,11 +6,15 @@ import (
 
 // EndBlocker called at every block, update validator set
 func (k *Keeper) BeginBlocker(ctx sdk.Context) error {
-	height := ctx.BlockHeight()
+	currentTime := ctx.BlockTime()
 	params := k.GetParams(ctx)
 	// TODO: Recalculate debt
-	if height%int64(params.RecalculateDebtPeriod) == 0 {
-		return k.UpdateVaultsDebt(ctx)
+	lastUpdate, err := k.LastUpdateTime.Get(ctx)
+	if err != nil {
+		return err
+	}
+	if currentTime.Sub(lastUpdate.Time) >= params.ChargingPeriod {
+		return k.UpdateVaultsDebt(ctx, lastUpdate.Time, currentTime)
 	}
 
 	return nil
