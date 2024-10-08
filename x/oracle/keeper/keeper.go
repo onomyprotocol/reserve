@@ -45,8 +45,8 @@ func NewKeeper(
 	storeService store.KVStoreService,
 	logger log.Logger,
 	authority string,
-	ibcKeeperFn func() *ibckeeper.Keeper,
-	capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
+	// ibcKeeperFn func() *ibckeeper.Keeper,
+	// capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
 
 ) Keeper {
 	if _, err := sdk.AccAddressFromBech32(authority); err != nil {
@@ -54,13 +54,13 @@ func NewKeeper(
 	}
 
 	return Keeper{
-		cdc:                cdc,
-		storeService:       storeService,
-		authority:          authority,
-		logger:             logger,
-		ibcKeeperFn:        ibcKeeperFn,
-		capabilityScopedFn: capabilityScopedFn,
-		price:              make(map[string]math.LegacyDec),
+		cdc:          cdc,
+		storeService: storeService,
+		authority:    authority,
+		logger:       logger,
+		// ibcKeeperFn:        ibcKeeperFn,
+		// capabilityScopedFn: capabilityScopedFn,
+		price: make(map[string]math.LegacyDec),
 	}
 }
 

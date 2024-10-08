@@ -15,10 +15,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
-	portkeeper "github.com/cosmos/ibc-go/v8/modules/core/05-port/keeper"
-	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
-	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	// capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	// portkeeper "github.com/cosmos/ibc-go/v8/modules/core/05-port/keeper"
+	// ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
+	// ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
@@ -37,26 +37,26 @@ func OracleKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 
 	registry := codectypes.NewInterfaceRegistry()
 	appCodec := codec.NewProtoCodec(registry)
-	capabilityKeeper := capabilitykeeper.NewKeeper(appCodec, storeKey, memStoreKey)
+	// capabilityKeeper := capabilitykeeper.NewKeeper(appCodec, storeKey, memStoreKey)
 	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
 
-	scopedKeeper := capabilityKeeper.ScopeToModule(ibcexported.ModuleName)
-	portKeeper := portkeeper.NewKeeper(scopedKeeper)
-	scopeModule := capabilityKeeper.ScopeToModule(types.ModuleName)
+	// scopedKeeper := capabilityKeeper.ScopeToModule(ibcexported.ModuleName)
+	// portKeeper := portkeeper.NewKeeper(scopedKeeper)
+	// scopeModule := capabilityKeeper.ScopeToModule(types.ModuleName)
 
 	k := keeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(storeKey),
 		log.NewNopLogger(),
 		authority.String(),
-		func() *ibckeeper.Keeper {
-			return &ibckeeper.Keeper{
-				PortKeeper: &portKeeper,
-			}
-		},
-		func(string) capabilitykeeper.ScopedKeeper {
-			return scopeModule
-		},
+		// func() *ibckeeper.Keeper {
+		// 	return &ibckeeper.Keeper{
+		// 		PortKeeper: &portKeeper,
+		// 	}
+		// },
+		// func(string) capabilitykeeper.ScopedKeeper {
+		// 	return scopeModule
+		// },
 		// scopedKeeper,
 	)
 
