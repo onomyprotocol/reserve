@@ -173,7 +173,7 @@ var (
 		{Account: psmtypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 		{Account: vaultsmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
-		{Account: vaultsmoduletypes.ReserveModuleName},
+		{Account: vaultsmoduletypes.ReserveModuleName, Permissions: []string{authtypes.Burner}},
 	}
 
 	// blocked account addresses
