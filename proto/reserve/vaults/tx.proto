@@ -94,7 +94,28 @@ message MsgActiveCollateral {
     (gogoproto.nullable) = false
   ];
 
-  string authority = 5 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string stability_fee = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string liquidation_penalty = 6 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string minting_fee = 7 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string authority = 8 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
@@ -129,7 +150,28 @@ message MsgUpdatesCollateral {
     (gogoproto.nullable) = false
   ];
 
-  string authority = 5 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string stability_fee = 5 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string liquidation_penalty = 6 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string minting_fee = 7 [
+    (cosmos_proto.scalar) = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+
+  string authority = 8 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
