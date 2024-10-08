@@ -51,4 +51,7 @@ func (k *Keeper) RequestAllBandRates(ctx context.Context) {
 }
 
 func (k *Keeper) EndBlocker(ctx context.Context) {
+	for _, data := range k.GetAllBandPriceStates(ctx) {
+		println("Check data band price state for each end block: ", data.String())
+	}
 }
