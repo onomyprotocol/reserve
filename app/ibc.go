@@ -161,7 +161,7 @@ func (app *App) registerIBCModules() error {
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 
-	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(&app.OracleKeeper), app.IBCFeeKeeper)
+	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
 	// oracleStack, err := app.registerOracleModule()
 	// if err != nil {
 	// 	return err

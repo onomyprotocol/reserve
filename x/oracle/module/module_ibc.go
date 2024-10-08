@@ -20,11 +20,11 @@ import (
 
 // IBCModule implements the ICS26 interface for interchain accounts host chains
 type IBCModule struct {
-	keeper *keeper.Keeper
+	keeper keeper.Keeper
 }
 
 // NewIBCModule creates a new IBCModule given the associated keeper
-func NewIBCModule(k *keeper.Keeper) IBCModule {
+func NewIBCModule(k keeper.Keeper) IBCModule {
 	return IBCModule{
 		keeper: k,
 	}
@@ -175,10 +175,10 @@ func (im IBCModule) OnRecvPacket(
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 
-	allData := im.keeper.GetAllBandPriceStates(ctx)
-	for _, data := range allData {
-		println("Checking data finally...: ", data.String())
-	}
+	// allData := im.keeper.GetAllBandPriceStates(ctx)
+	// for _, data := range allData {
+	// 	println("Checking data finally...: ", data.String())
+	// }
 
 	return channeltypes.NewResultAcknowledgement([]byte{byte(1)})
 }

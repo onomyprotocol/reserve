@@ -54,10 +54,12 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
+	// check error here
+	bandPriceState, _ := k.GetAllBandPriceStates(ctx)
 	return &types.GenesisState{
 		Params:                  k.GetParams(ctx),
 		BandParams:              k.GetBandParams(ctx),
-		BandPriceStates:         k.GetAllBandPriceStates(ctx),
+		BandPriceStates:         bandPriceState,
 		BandOracleRequests:      k.GetAllBandOracleRequests(ctx),
 		BandLatestClientId:      k.GetBandLatestClientID(ctx),
 		CalldataRecords:         k.GetAllBandCalldataRecords(ctx),

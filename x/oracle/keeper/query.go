@@ -12,11 +12,15 @@ func (k Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStates
 	ctx := sdk.UnwrapSDKContext(c)
 	println("go to query BandPriceStates")
 	println("================================================")
-	for _, data := range k.GetAllBandPriceStates(ctx) {
-		println("Check current band price state: ", data.String())
+	// for _, data := range k.GetAllBandPriceStates(ctx) {
+	// 	println("Check current band price state: ", data.String())
+	// }
+	data, err := k.GetAllBandPriceStates(ctx)
+	if err != nil {
+		return nil, err
 	}
 	res := &types.QueryBandPriceStatesResponse{
-		PriceStates: k.GetAllBandPriceStates(ctx),
+		PriceStates: data,
 	}
 
 	return res, nil

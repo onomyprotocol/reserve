@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	storetypes "cosmossdk.io/store/types"
 	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
 	prefix "cosmossdk.io/store/prefix"
@@ -229,14 +230,24 @@ func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceStat
 }
 
 // GetAllBandPriceStates reads all stored band price states.
-func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceState {
+func (k *Keeper) GetAllBandPriceStates(ctx context.Context) (bandPriceState []*types.BandPriceState, err error) {
 	println("go to GetAllBandPriceStates")
 	priceStates := make([]*types.BandPriceState, 0)
-	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
 
-	iterator := bandPriceStore.Iterator(nil, nil)
+	store := k.storeService.OpenKVStore(ctx)
+
+	iterator, err := store.Iterator(types.BandPriceKey, storetypes.PrefixEndBytes(types.BandPriceKey))
+	if err != nil {
+		return nil, err
+	}
 	defer iterator.Close()
+
+
+	// kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	// bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
+
+	// iterator := bandPriceStore.Iterator(nil, nil)
+	// defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
 		var bandPriceState types.BandPriceState
@@ -245,7 +256,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceSt
 		priceStates = append(priceStates, &bandPriceState)
 	}
 
-	return priceStates
+	return priceStates, nil
 }
 
 // AddNewSymbolToBandOracleRequest adds a new symbol to the bandOracle request
