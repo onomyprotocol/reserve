@@ -20,9 +20,9 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	}
 
 	// todo: default cleanup interval (1 day)
-	if sdkCtx.BlockHeight()%86400 == 0 {
-		k.CleanUpStaleBandCalldataRecords(sdkCtx)
-	}
+	// if sdkCtx.BlockHeight()%86400 == 0 {
+	// 	k.CleanUpStaleBandCalldataRecords(sdkCtx)
+	// }
 
 	bandPriceState, _ := k.GetAllBandPriceStates(ctx)
 	for _, data := range bandPriceState {
