@@ -175,6 +175,11 @@ func (im IBCModule) OnRecvPacket(
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 
+	allData := im.keeper.GetAllBandPriceStates(ctx)
+	for _, data := range allData {
+		println("Checking data finally...: ", data.String())
+	}
+
 	return channeltypes.NewResultAcknowledgement([]byte{byte(1)})
 }
 
