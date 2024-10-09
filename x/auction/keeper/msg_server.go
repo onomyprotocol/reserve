@@ -70,6 +70,7 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 
 	return &types.MsgBidResponse{
 		Response: "Bid Accepted",
+		BidId:    newBidId,
 	}, nil
 }
 
