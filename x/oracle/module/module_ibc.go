@@ -173,7 +173,6 @@ func (im IBCModule) OnRecvPacket(
 	// }
 	println("Process OnrecvPacket ..........")
 	if err := im.keeper.ProcessBandOraclePrices(wrapSdkContext, relayer, resp); err != nil {
-		println("OnRecvPacket 2")
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 

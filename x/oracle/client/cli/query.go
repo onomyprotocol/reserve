@@ -40,11 +40,12 @@ func GetBandPriceStates() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			ctx := cmd.Context()
 			queryClient := types.NewQueryClient(clientCtx)
 
 			var res proto.Message
 			req := &types.QueryBandPriceStatesRequest{}
-			res, err = queryClient.BandPriceStates(context.Background(), req)
+			res, err = queryClient.BandPriceStates(ctx, req)
 			if err != nil {
 				return err
 			}
