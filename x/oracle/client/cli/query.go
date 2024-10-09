@@ -1,14 +1,12 @@
 package cli
 
 import (
-	"fmt"
 	"context"
 
 	"github.com/cosmos/gogoproto/proto"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
@@ -42,9 +40,7 @@ func GetBandPriceStates() *cobra.Command {
 				return err
 			}
 			ctx := cmd.Context()
-			sdkContext := sdk.UnwrapSDKContext(ctx)
 			queryClient := types.NewQueryClient(clientCtx)
-			fmt.Println("check cmd context:", sdkContext)
 			var res proto.Message
 			req := &types.QueryBandPriceStatesRequest{}
 			res, err = queryClient.BandPriceStates(ctx, req)
