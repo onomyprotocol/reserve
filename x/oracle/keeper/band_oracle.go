@@ -477,10 +477,10 @@ func (k *Keeper) updateBandPriceStates(
 			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
 		}
 
+		data := k.GetBandPriceState(ctx, symbol)
+		println("check price state after set: ", data.String())
+
 		symbols = append(symbols, symbol)
-		for _, symbol := range symbols {
-			println("check symbol was saved: ", symbol)
-		}
 		prices = append(prices, price)
 	}
 
