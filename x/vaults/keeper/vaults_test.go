@@ -16,13 +16,14 @@ func (s *KeeperTestSuite) TestVaultsStore() {
 		Debt:             sdk.NewCoin("atom", math.NewInt(1000)),
 		CollateralLocked: sdk.NewCoin("atom", math.NewInt(1000)),
 		Status:           types.LIQUIDATED,
+		LiquidationPrice: math.LegacyMustNewDecFromStr("1.0"),
+		Address:          "addr1_______________",
 	}
 	err := s.k.SetVault(s.Ctx, v)
 	s.Require().NoError(err)
 
 	vault, err := s.k.GetVault(s.Ctx, 0)
 	s.Require().NoError(err)
-
 	s.Require().Equal(v, vault)
 }
 
