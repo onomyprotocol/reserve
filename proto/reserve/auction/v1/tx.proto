@@ -69,6 +69,8 @@ message MsgBid {
 // MsgBid message.
 message MsgBidResponse {
   string response = 1;
+
+  uint64 bid_id = 2;
 }
 
 // MsgCancelBid is the Msg/CancelBid request type.
