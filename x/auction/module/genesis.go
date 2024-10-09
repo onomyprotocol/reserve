@@ -1,4 +1,4 @@
-package oracle
+package auction
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
