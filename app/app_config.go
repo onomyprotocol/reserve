@@ -3,8 +3,10 @@ package app
 import (
 	"time"
 
+	auctionmodulev1 "github.com/onomyprotocol/reserve/api/reserve/auction/module"
 	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
+	auctionmoduletypes "github.com/onomyprotocol/reserve/x/auction/types"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
@@ -99,6 +101,7 @@ var (
 		// chain modules
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -125,6 +128,7 @@ var (
 		// chain modules
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -145,6 +149,7 @@ var (
 		// chain modules
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -168,6 +173,7 @@ var (
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 		{Account: vaultsmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: vaultsmoduletypes.ReserveModuleName, Permissions: []string{authtypes.Burner}},
+		{Account: auctionmoduletypes.ModuleName, Permissions: []string{authtypes.Burner, authtypes.Minter}},
 	}
 
 	// blocked account addresses
@@ -309,6 +315,10 @@ var (
 			{
 				Name:   vaultsmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&vaultmodulev1.Module{}),
+			},
+			{
+				Name:   auctionmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&auctionmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

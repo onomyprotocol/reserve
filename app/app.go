@@ -77,8 +77,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
 
+	auctionkeeper "github.com/onomyprotocol/reserve/x/auction/keeper"
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
 	"github.com/onomyprotocol/reserve/docs"
@@ -145,8 +145,9 @@ type App struct {
 	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
 	// ScopedOracleKeeper        capabilitykeeper.ScopedKeeper
 
-	OracleKeeper oraclemodulekeeper.Keeper
-	VaultsKeeper vaultskeeper.Keeper
+	OracleKeeper  oraclemodulekeeper.Keeper
+	VaultsKeeper  vaultskeeper.Keeper
+	AuctionKeeper auctionkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -467,7 +468,7 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 	docs.RegisterOpenAPIService(Name, apiSvr.Router)
 }
 
-func (app *App) GetBaseApp()  *baseapp.BaseApp { return app.BaseApp }
+func (app *App) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 func (app *App) GetScopedIBCKeeper() capabilitykeeper.ScopedKeeper {
 	return app.ScopedIBCKeeper
