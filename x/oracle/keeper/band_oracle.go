@@ -222,6 +222,7 @@ func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPr
 func (k *Keeper) SetBandPriceState(ctx sdk.Context, symbol string, priceState *types.BandPriceState) error{
 	bz := k.cdc.MustMarshal(priceState)
 	store := k.storeService.OpenKVStore(ctx)
+	println("go to SetBandPriceState")
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
 }
 
@@ -477,6 +478,9 @@ func (k *Keeper) updateBandPriceStates(
 		}
 
 		symbols = append(symbols, symbol)
+		for _, symbol := range symbols {
+			println("check symbol was saved: ", symbol)
+		}
 		prices = append(prices, price)
 	}
 
