@@ -3,6 +3,7 @@ package keeper
 import (
 	"fmt"
 	// "context"
+	"cosmossdk.io/collections"
 	"cosmossdk.io/core/store"
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"
@@ -33,6 +34,9 @@ type (
 		ibcKeeperFn        func() *ibckeeper.Keeper
 		capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper
 		scopedKeeper       exported.ScopedKeeper
+
+		Schema collections.Schema
+		BandPriceState collections.Map[string, types.BandPriceState]
 	}
 )
 
@@ -44,19 +48,28 @@ func NewKeeper(
 	ibcKeeperFn func() *ibckeeper.Keeper,
 	capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
 
-) Keeper {
+) *Keeper {
 	if _, err := sdk.AccAddressFromBech32(authority); err != nil {
 		panic(fmt.Sprintf("invalid authority address: %s", authority))
 	}
 
-	return Keeper{
+	sb := collections.NewSchemaBuilder(storeService)
+	k := Keeper{
 		cdc:                cdc,
 		storeService:       storeService,
 		authority:          authority,
 		logger:             logger,
 		ibcKeeperFn:        ibcKeeperFn,
 		capabilityScopedFn: capabilityScopedFn,
+		BandPriceState: collections.NewMap(sb, types.BandPriceKey, "bandPriceState", collections.StringKey, codec.CollValue[types.BandPriceState](cdc)),
 	}
+
+	schema, err := sb.Build()
+	if err != nil {
+		panic(err)
+	}
+	k.Schema = schema
+	return &k
 }
 
 

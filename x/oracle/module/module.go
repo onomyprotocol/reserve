@@ -229,10 +229,10 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 	)
 	m := NewAppModule(
 		in.Cdc,
-		k,
+		*k,
 		in.AccountKeeper,
 		in.BankKeeper,
 	)
 
-	return ModuleOutputs{OracleKeeper: k, Module: m}
+	return ModuleOutputs{OracleKeeper: *k, Module: m}
 }

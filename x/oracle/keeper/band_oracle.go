@@ -202,43 +202,51 @@ func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleReq
 	return bandOracleRequests
 }
 
-// GetBandPriceState reads the stored band ibc price state.
-func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPriceState {
-	var priceState types.BandPriceState
-	store := k.storeService.OpenKVStore(ctx)
-	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
-	if err != nil {
-		return nil
-	}
-	if bz == nil {
-		return nil
-	}
+// // GetBandPriceState reads the stored band ibc price state.
+// func (k *Keeper) GetBandPriceState(ctx sdk.Context, symbol string) *types.BandPriceState {
+// 	var priceState types.BandPriceState
+// 	store := k.storeService.OpenKVStore(ctx)
+// 	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
+// 	if err != nil {
+// 		return nil
+// 	}
+// 	if bz == nil {
+// 		return nil
+// 	}
 
-	k.cdc.MustUnmarshal(bz, &priceState)
-	return &priceState
-}
+// 	k.cdc.MustUnmarshal(bz, &priceState)
+// 	return &priceState
+// }
 
-// SetBandPriceState sets the band ibc price state.
-func (k *Keeper) SetBandPriceState(ctx sdk.Context, symbol string, priceState *types.BandPriceState) error{
-	bz := k.cdc.MustMarshal(priceState)
-	store := k.storeService.OpenKVStore(ctx)
-	println("go to SetBandPriceState")
-	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
-}
+// // SetBandPriceState sets the band ibc price state.
+// func (k *Keeper) SetBandPriceState(ctx sdk.Context, symbol string, priceState *types.BandPriceState) error{
+// 	bz := k.cdc.MustMarshal(priceState)
+// 	store := k.storeService.OpenKVStore(ctx)
+// 	println("go to SetBandPriceState")
+// 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
+// }
 
 // GetAllBandPriceStates reads all stored band price states.
 func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState {
+	// priceStates := make([]*types.BandPriceState, 0)
+	// kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	// bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
+
+	// iterator := bandPriceStore.Iterator(nil, nil)
+	// defer iterator.Close()
+
+	// for ; iterator.Valid(); iterator.Next() {
+	// 	var bandPriceState types.BandPriceState
+	// 	k.cdc.MustUnmarshal(iterator.Value(), &bandPriceState)
+	// 	priceStates = append(priceStates, &bandPriceState)
+	// }
 	priceStates := make([]*types.BandPriceState, 0)
-	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
-
-	iterator := bandPriceStore.Iterator(nil, nil)
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var bandPriceState types.BandPriceState
-		k.cdc.MustUnmarshal(iterator.Value(), &bandPriceState)
-		priceStates = append(priceStates, &bandPriceState)
+	err := k.BandPriceState.Walk(ctx, nil, func(_ string, value types.BandPriceState) (stop bool, err error) {
+		priceStates = append(priceStates, &value)
+		return false, nil
+	})
+	if err != nil {
+		return  nil
 	}
 
 	return priceStates
@@ -281,8 +289,8 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	// query ref by using GetBandPriceState
-	basePriceState := k.GetBandPriceState(sdkContext, base)
-	if basePriceState == nil || basePriceState.Rate.IsZero() {
+	basePriceState, _ := k.BandPriceState.Get(sdkContext, base)
+	if basePriceState == types.NilBandPriceState || basePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -290,8 +298,8 @@ func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyD
 		return &basePriceState.PriceState.Price
 	}
 
-	quotePriceState := k.GetBandPriceState(sdkContext, quote)
-	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
+	quotePriceState, _ := k.BandPriceState.Get(sdkContext, quote)
+	if quotePriceState == types.NilBandPriceState || quotePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -444,21 +452,21 @@ func (k *Keeper) updateBandPriceStates(
 			continue
 		}
 
-		bandPriceState := k.GetBandPriceState(ctx, symbol)
+		bandPriceState, _ := k.BandPriceState.Get(ctx ,symbol)
 
 		// don't update band prices with an older price
-		if bandPriceState != nil && bandPriceState.ResolveTime > resolveTime {
+		if bandPriceState != types.NilBandPriceState && bandPriceState.ResolveTime > resolveTime {
 			continue
 		}
 
 		// skip price update if the price changes beyond 100x or less than 1% of the last price
-		if bandPriceState != nil && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
+		if bandPriceState != types.NilBandPriceState && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
 			continue
 		}
 
 		blockTime := ctx.BlockTime().Unix()
-		if bandPriceState == nil {
-			bandPriceState = &types.BandPriceState{
+		if bandPriceState == types.NilBandPriceState {
+			bandPriceState = types.BandPriceState{
 				Symbol:      symbol,
 				Rate:        math.NewInt(int64(rate)),
 				ResolveTime: resolveTime,
@@ -472,12 +480,12 @@ func (k *Keeper) updateBandPriceStates(
 			bandPriceState.PriceState.UpdatePrice(price, blockTime)
 		}
 
-		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
+		err := k.BandPriceState.Set(ctx, symbol, bandPriceState)
 		if err != nil {
 			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
 		}
 
-		data := k.GetBandPriceState(ctx, symbol)
+		data, _ := k.BandPriceState.Get(ctx, symbol)
 		println("check price state after set: ", data.String())
 
 		symbols = append(symbols, symbol)

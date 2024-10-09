@@ -67,5 +67,5 @@ func OracleKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 		panic(err)
 	}
 
-	return k, ctx
+	return *k, ctx
 }

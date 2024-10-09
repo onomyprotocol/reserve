@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/collections"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -22,14 +23,15 @@ const (
 )
 
 var (
-	ParamsKey                  = []byte("p_oracle")
-	BandParamsKey              = []byte{0x01}
-	BandCallDataRecordKey      = []byte{0x02}
-	LatestClientIDKey          = []byte{0x03}
-	BandOracleRequestIDKey     = []byte{0x04}
-	BandPriceKey               = []byte{0x05}
+	ParamsKey              = []byte("p_oracle")
+	BandParamsKey          = []byte{0x01}
+	BandCallDataRecordKey  = []byte{0x02}
+	LatestClientIDKey      = []byte{0x03}
+	BandOracleRequestIDKey = []byte{0x04}
+	// BandPriceKey               = []byte{0x05}
 	LatestRequestIDKey         = []byte{0x06}
 	BandOracleRequestParamsKey = []byte{0x07}
+	BandPriceKey               = collections.NewPrefix(1)
 )
 
 var (
@@ -45,9 +47,9 @@ func GetBandOracleRequestIDKey(requestID uint64) []byte {
 	return append(BandOracleRequestIDKey, sdk.Uint64ToBigEndian(requestID)...)
 }
 
-func GetBandPriceStoreKey(symbol string) []byte {
-	return append(BandPriceKey, []byte(symbol)...)
-}
+// func GetBandPriceStoreKey(symbol string) []byte {
+// 	return append(BandPriceKey, []byte(symbol)...)
+// }
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)

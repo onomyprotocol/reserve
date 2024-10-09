@@ -16,6 +16,7 @@ const (
 	QuoteUSD                   = "USD"
 )
 
+var NilBandPriceState = BandPriceState{}
 type RequestID int64
 
 func NewOracleRequestPacketData(clientID string, calldata []byte, r *BandOracleRequest) OracleRequestPacketData {
