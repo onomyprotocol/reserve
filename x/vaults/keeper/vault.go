@@ -74,6 +74,7 @@ func (k *Keeper) CreateNewVault(
 		return err
 	}
 
+	liquidationPrice := vmParams.LiquidationRatio.MulInt(mint.Amount).QuoInt(collateral.Amount)
 	// Set vault
 	vault := types.Vault{
 		Id:               vaultId,
@@ -82,6 +83,7 @@ func (k *Keeper) CreateNewVault(
 		CollateralLocked: collateral,
 		Status:           types.ACTIVE,
 		Address:          vaultAddress.String(),
+		LiquidationPrice: liquidationPrice,
 	}
 	err = k.SetVault(ctx, vault)
 	if err != nil {
