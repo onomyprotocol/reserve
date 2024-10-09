@@ -19,7 +19,7 @@ import (
 )
 
 // SetBandParams sets the Band params in the state
-func (k Keeper) SetBandParams(ctx sdk.Context, bandParams types.BandParams)  error{
+func (k Keeper) SetBandParams(ctx sdk.Context, bandParams types.BandParams) error {
 	bz := k.cdc.MustMarshal(&bandParams)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.BandParamsKey, bz)
@@ -44,7 +44,7 @@ func (k Keeper) GetBandParams(ctx sdk.Context) types.BandParams {
 }
 
 // SetBandOracleRequestParams sets the Band Oracle request params in the state
-func (k Keeper) SetBandOracleRequestParams(ctx sdk.Context, bandOracleRequestParams types.BandOracleRequestParams)  error{
+func (k Keeper) SetBandOracleRequestParams(ctx sdk.Context, bandOracleRequestParams types.BandOracleRequestParams) error {
 	bz := k.cdc.MustMarshal(&bandOracleRequestParams)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.BandOracleRequestParamsKey, bz)
@@ -76,7 +76,7 @@ func (k Keeper) SetBandCallDataRecord(ctx sdk.Context, record *types.CalldataRec
 }
 
 // DeleteBandCallDataRecord deletes the Band IBC oracle request call data
-func (k Keeper) DeleteBandCallDataRecord(ctx sdk.Context, clientID uint64) error{
+func (k Keeper) DeleteBandCallDataRecord(ctx sdk.Context, clientID uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Delete(types.GetBandCallDataRecordKey(clientID))
 }
@@ -179,7 +179,7 @@ func (k Keeper) GetBandOracleRequest(ctx sdk.Context, requestID uint64) *types.B
 }
 
 // DeleteBandOracleRequest deletes the Band oracle request call data
-func (k Keeper) DeleteBandOracleRequest(ctx sdk.Context, requestID uint64) error{
+func (k Keeper) DeleteBandOracleRequest(ctx sdk.Context, requestID uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Delete(types.GetBandOracleRequestIDKey(requestID))
 }
@@ -240,20 +240,27 @@ func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState 
 	// 	k.cdc.MustUnmarshal(iterator.Value(), &bandPriceState)
 	// 	priceStates = append(priceStates, &bandPriceState)
 	// }
+	println("go here man")
 	priceStates := make([]*types.BandPriceState, 0)
-	err := k.BandPriceState.Walk(ctx, nil, func(_ string, value types.BandPriceState) (stop bool, err error) {
-		priceStates = append(priceStates, &value)
-		return false, nil
-	})
-	if err != nil {
-		return  nil
+	// err := k.BandPriceState.Walk(ctx, nil, func(keyy string, value types.BandPriceState) (stop bool, err error) {
+	// 	println("check data here:", value.String(), keyy)
+	// 	priceStates = append(priceStates, &value)
+	// 	return false, nil
+	// })
+	// if err != nil {
+	// 	return nil
+	// }
+	iter, _ := k.BandPriceState.Iterate(ctx, nil)
+	listBandPriceStates, _ := iter.Values()
+	for _, priceState := range listBandPriceStates{
+		println("check data: ", priceState.String())
+		priceStates = append(priceStates, &priceState)
 	}
-
 	return priceStates
 }
 
 // AddNewSymbolToBandOracleRequest adds a new symbol to the bandOracle request
-func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error{
+func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	allBandOracleRequests := k.GetAllBandOracleRequests(sdkContext)
 	// check if new symbol's oracle script id is existing
@@ -268,14 +275,14 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	bandOracleRequestParams := k.GetBandOracleRequestParams(sdkContext)
 	requestID := k.GetBandLatestRequestID(sdkContext) + 1
 	newBandOracleRequest := types.BandOracleRequest{
-		RequestId: requestID,
+		RequestId:      requestID,
 		OracleScriptId: oracleScriptId,
-		Symbols: []string{symbol},
-		AskCount: bandOracleRequestParams.AskCount,
-		MinCount: bandOracleRequestParams.MinCount,
-		FeeLimit: bandOracleRequestParams.FeeLimit,
-		PrepareGas: bandOracleRequestParams.PrepareGas,
-		ExecuteGas: bandOracleRequestParams.ExecuteGas,
+		Symbols:        []string{symbol},
+		AskCount:       bandOracleRequestParams.AskCount,
+		MinCount:       bandOracleRequestParams.MinCount,
+		FeeLimit:       bandOracleRequestParams.FeeLimit,
+		PrepareGas:     bandOracleRequestParams.PrepareGas,
+		ExecuteGas:     bandOracleRequestParams.ExecuteGas,
 		MinSourceCount: bandOracleRequestParams.MinSourceCount,
 	}
 
@@ -426,7 +433,7 @@ func (k *Keeper) updateBandPriceStates(
 	packet types.OracleResponsePacketData,
 	relayer sdk.Address,
 	clientID int,
-) {	
+) {
 	var (
 		inputSymbols = input.PriceSymbols()
 		requestID    = packet.RequestID
@@ -452,7 +459,7 @@ func (k *Keeper) updateBandPriceStates(
 			continue
 		}
 
-		bandPriceState, _ := k.BandPriceState.Get(ctx ,symbol)
+		bandPriceState, _ := k.BandPriceState.Get(ctx, symbol)
 
 		// don't update band prices with an older price
 		if bandPriceState != types.NilBandPriceState && bandPriceState.ResolveTime > resolveTime {

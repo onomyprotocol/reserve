@@ -11,8 +11,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/cosmos/ibc-go/v8/modules/core/exported"
@@ -35,7 +35,7 @@ type (
 		capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper
 		scopedKeeper       exported.ScopedKeeper
 
-		Schema collections.Schema
+		Schema         collections.Schema
 		BandPriceState collections.Map[string, types.BandPriceState]
 	}
 )
@@ -61,7 +61,7 @@ func NewKeeper(
 		logger:             logger,
 		ibcKeeperFn:        ibcKeeperFn,
 		capabilityScopedFn: capabilityScopedFn,
-		BandPriceState: collections.NewMap(sb, types.BandPriceKey, "bandPriceState", collections.StringKey, codec.CollValue[types.BandPriceState](cdc)),
+		BandPriceState:     collections.NewMap(sb, types.BandPriceKey, "band_price_state", collections.StringKey, codec.CollValue[types.BandPriceState](cdc)),
 	}
 
 	schema, err := sb.Build()
@@ -71,7 +71,6 @@ func NewKeeper(
 	k.Schema = schema
 	return &k
 }
-
 
 // GetAuthority returns the module's authority.
 func (k Keeper) GetAuthority() string {

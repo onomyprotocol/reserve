@@ -31,7 +31,7 @@ var (
 	// BandPriceKey               = []byte{0x05}
 	LatestRequestIDKey         = []byte{0x06}
 	BandOracleRequestParamsKey = []byte{0x07}
-	BandPriceKey               = collections.NewPrefix(1)
+	BandPriceKey               = collections.NewPrefix(11)
 )
 
 var (
