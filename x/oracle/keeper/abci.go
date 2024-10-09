@@ -37,6 +37,7 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
 	if len(bandOracleRequests) == 0 {
+		println("dcm deo no band requests")
 		return
 	}
 
