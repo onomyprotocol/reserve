@@ -1,17 +1,17 @@
 package keeper_test
 
 import (
-	"context"
+	// "context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
-
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	keepertest "github.com/onomyprotocol/reserve/testutil/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
-func setupMsgServer(t testing.TB) (keeper.Keeper, types.MsgServer, context.Context) {
+func setupMsgServer(t testing.TB) (keeper.Keeper, types.MsgServer, sdk.Context) {
 	k, ctx := keepertest.OracleKeeper(t)
 	return k, keeper.NewMsgServerImpl(k), ctx
 }

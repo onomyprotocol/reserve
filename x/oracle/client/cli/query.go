@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"context"
+	// "context"
 
 	"github.com/cosmos/gogoproto/proto"
 
@@ -43,7 +43,7 @@ func GetBandPriceStates() *cobra.Command {
 
 			var res proto.Message
 			req := &types.QueryBandPriceStatesRequest{}
-			res, err = queryClient.BandPriceStates(context.Background(), req)
+			res, err = queryClient.BandPriceStates(cmd.Context(), req)
 			if err != nil {
 				return err
 			}

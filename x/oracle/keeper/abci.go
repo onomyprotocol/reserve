@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"context"
+	// "context"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
@@ -9,7 +9,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
-func (k *Keeper) BeginBlocker(ctx context.Context) {
+func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	bandParams := k.GetBandParams(ctx)
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
@@ -25,8 +25,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	}
 }
 
-func (k *Keeper) RequestAllBandRates(ctx context.Context) {
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
+func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 	// TODO: check logic flow for this
 	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
@@ -41,10 +40,10 @@ func (k *Keeper) RequestAllBandRates(ctx context.Context) {
 		}
 		err := k.RequestBandOraclePrices(ctx, req)
 		if err != nil {
-			sdkCtx.Logger().Error(err.Error())
+			ctx.Logger().Error(err.Error())
 		}
 	}
 }
 
-func (k *Keeper) EndBlocker(ctx context.Context) {
+func (k *Keeper) EndBlocker(ctx sdk.Context) {
 }

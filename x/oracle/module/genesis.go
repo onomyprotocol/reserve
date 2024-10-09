@@ -1,14 +1,14 @@
 package oracle
 
 import (
-	"context"
-
+	// "context"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.
-func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisState) {
+func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		// TODO: should we panic here
 		panic(err)
@@ -53,7 +53,7 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 }
 
 // ExportGenesis returns the module's exported genesis.
-func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
+func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
 		Params:                  k.GetParams(ctx),
 		BandParams:              k.GetBandParams(ctx),
