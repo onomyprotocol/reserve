@@ -13,16 +13,16 @@ import (
 func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	bandParams := k.GetBandParams(ctx)
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
+
 
 	// Request oracle prices using band IBC in frequent intervals
-	if sdkCtx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
+	if ctx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
 		k.RequestAllBandRates(ctx)
 	}
 
 	// todo: default cleanup interval (1 day)
-	if sdkCtx.BlockHeight()%86400 == 0 {
-		k.CleanUpStaleBandCalldataRecords(sdkCtx)
+	if ctx.BlockHeight()%86400 == 0 {
+		k.CleanUpStaleBandCalldataRecords(ctx)
 	}
 
 	data := k.GetAllBandPriceStates(ctx)
@@ -37,7 +37,6 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 	bandOracleRequests := k.GetAllBandOracleRequests(ctx)
 
 	if len(bandOracleRequests) == 0 {
-		println("dcm deo no band requests")
 		return
 	}
 

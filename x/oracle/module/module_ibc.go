@@ -158,15 +158,15 @@ func (im IBCModule) OnRecvPacket(
 		return channeltypes.NewErrorAcknowledgement(errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()))
 	}
 
-	if resp.ResolveStatus != types.RESOLVE_STATUS_SUCCESS {
-		clientID, err := strconv.Atoi(resp.ClientID)
-		if err != nil {
-			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
-		}
-		// Delete the calldata corresponding to the sequence number
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
-		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
-	}
+	// if resp.ResolveStatus != types.RESOLVE_STATUS_SUCCESS {
+	// 	clientID, err := strconv.Atoi(resp.ClientID)
+	// 	if err != nil {
+	// 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
+	// 	}
+	// 	// Delete the calldata corresponding to the sequence number
+	// 	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	// 	return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
+	// }
 	println("Process OnrecvPacket ..........")
 	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
