@@ -91,10 +91,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 		{
 			name: "success",
 			setup: func() {
-				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(collateral))
-				s.Require().NoError(err)
-				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(collateral))
-				s.Require().NoError(err)
+				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(collateral))
 			},
 			denom:      "atom",
 			owner:      s.TestAccs[0],
@@ -120,7 +117,6 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestRepayDebt() {
 	s.SetupTest()
 	var (
@@ -142,6 +138,8 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 		{
 			name: "success",
 			setup: func() {
+				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
+
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty)
 				s.Require().NoError(err)
 
@@ -172,7 +170,6 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestDepositToVault() {
 	s.SetupTest()
 	var (
@@ -194,6 +191,8 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		{
 			name: "success",
 			setup: func() {
+				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
+
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty)
 				s.Require().NoError(err)
 
@@ -225,6 +224,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		denom         = "atom"
 		coin          = sdk.NewCoin(denom, math.NewInt(1000000))
 		coinMintToAcc = sdk.NewCoin(denom, math.NewInt(100000000000))
+		fund          = sdk.NewCoin(denom, math.NewInt(10000000000000))
 		maxDebt       = math.NewInt(2000000000)
 		mintedCoin    = sdk.NewCoin("nomUSD", math.NewInt(200000000))
 	)
@@ -239,11 +239,14 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		{
 			name: "success",
 			setup: func() {
+				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
+
 				err := s.k.ActiveCollateralAsset(s.Ctx, denom, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty)
 				s.Require().NoError(err)
 
 				err = s.k.CreateNewVault(s.Ctx, s.TestAccs[0], coinMintToAcc, mintedCoin)
 				s.Require().NoError(err)
+
 			},
 			vaultId:    0,
 			sender:     s.TestAccs[0],
