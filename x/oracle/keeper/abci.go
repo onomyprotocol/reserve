@@ -14,7 +14,6 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	bandParams := k.GetBandParams(ctx)
 
-
 	// Request oracle prices using band IBC in frequent intervals
 	if ctx.BlockHeight()%bandParams.IbcRequestInterval == 0 {
 		k.RequestAllBandRates(ctx)
@@ -53,4 +52,9 @@ func (k *Keeper) RequestAllBandRates(ctx sdk.Context) {
 }
 
 func (k *Keeper) EndBlocker(ctx sdk.Context) {
+	data := k.GetAllBandPriceStates(ctx)
+	println("check band price state in end block")
+	for _, state := range data {
+		println("check clmm: ", state.String())
+	}
 }
