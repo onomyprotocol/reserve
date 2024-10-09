@@ -227,7 +227,7 @@ func (k Keeper) GetAllBandOracleRequests(ctx sdk.Context) []*types.BandOracleReq
 // }
 
 // GetAllBandPriceStates reads all stored band price states.
-func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState {
+func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []types.BandPriceState {
 	// priceStates := make([]*types.BandPriceState, 0)
 	// kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	// bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
@@ -241,7 +241,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState 
 	// 	priceStates = append(priceStates, &bandPriceState)
 	// }
 	println("go here man")
-	priceStates := make([]*types.BandPriceState, 0)
+	priceStates := make([]types.BandPriceState, 0)
 	// err := k.BandPriceState.Walk(ctx, nil, func(keyy string, value types.BandPriceState) (stop bool, err error) {
 	// 	println("check data here:", value.String(), keyy)
 	// 	priceStates = append(priceStates, &value)
@@ -254,7 +254,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState 
 	listBandPriceStates, _ := iter.Values()
 	for _, priceState := range listBandPriceStates{
 		println("check data: ", priceState.String())
-		priceStates = append(priceStates, &priceState)
+		priceStates = append(priceStates, priceState)
 	}
 	return priceStates
 }

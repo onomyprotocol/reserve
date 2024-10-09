@@ -173,7 +173,7 @@ func (im IBCModule) OnRecvPacket(
 	}
 
 	data := im.keeper.GetAllBandPriceStates(ctx)
-	println("check band price state in OnRecvPacket")
+	println("check in OnRecvPacket")
 	for _, state := range data {
 		println("check state: ", state.String())
 	}

@@ -57,7 +57,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
 		Params:                  k.GetParams(ctx),
 		BandParams:              k.GetBandParams(ctx),
-		BandPriceStates:         k.GetAllBandPriceStates(ctx),
+		// BandPriceStates:         k.GetAllBandPriceStates(ctx),
 		BandOracleRequests:      k.GetAllBandOracleRequests(ctx),
 		BandLatestClientId:      k.GetBandLatestClientID(ctx),
 		CalldataRecords:         k.GetAllBandCalldataRecords(ctx),
