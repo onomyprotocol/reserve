@@ -28,7 +28,7 @@ func (k *Keeper) BeginBlocker(ctx sdk.Context) {
 	data := k.GetAllBandPriceStates(ctx)
 	println("check band price state in begin block")
 	for _, state := range data {
-		println("check state: ", state.String())
+		println("check clmm: ", state.String())
 	}
 }
 
