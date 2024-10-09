@@ -24,3 +24,20 @@ func (k Querier) Params(goCtx context.Context, req *types.QueryParamsRequest) (*
 
 	return &types.QueryParamsResponse{Params: k.GetParams(ctx)}, nil
 }
+
+func (k Querier) QueryAllAuction(ctx context.Context, req *types.QueryAllAuctionRequest) (*types.QueryAllAuctionResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	allAuction := []types.Auction{}
+
+	k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+		allAuction = append(allAuction, value)
+		return false, nil
+	})
+
+	return &types.QueryAllAuctionResponse{
+		Auctions: allAuction,
+	}, nil
+}
