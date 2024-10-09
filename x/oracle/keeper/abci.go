@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -24,8 +25,20 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	// 	k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	// }
 
-	bandPriceState, _ := k.GetAllBandPriceStates(ctx)
-	for _, data := range bandPriceState {
+	bandPriceState := &types.BandPriceState{
+		Symbol:      "ATOM",
+		Rate:        math.NewInt(10),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+	}
+
+	if sdkCtx.BlockHeight()%5 == 0 {
+		k.SetBandPriceState(ctx, "ATOM", bandPriceState)
+	}
+
+	bandPriceStates, _ := k.GetAllBandPriceStates(ctx)
+	for _, data := range bandPriceStates {
 		println("Check data band price state for each begin block: ", data.String())
 	}
 }
