@@ -41,14 +41,14 @@ func (im IBCModule) OnChanOpenInit(
 	counterparty channeltypes.Counterparty,
 	version string,
 ) (string, error) {
-
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
 	// Require portID is the portID module is bound to
-	boundPort := im.keeper.GetPort(ctx)
+	boundPort := im.keeper.GetPort(wrapSdkContext)
 	if boundPort != portID {
 		return "", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
 
-	bandParams := im.keeper.GetBandParams(ctx)
+	bandParams := im.keeper.GetBandParams(wrapSdkContext)
 
 	if strings.TrimSpace(version) == "" {
 		version = bandParams.IbcVersion
@@ -59,7 +59,7 @@ func (im IBCModule) OnChanOpenInit(
 	}
 
 	// Claim channel capability passed back by IBC module
-	if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
+	if err := im.keeper.ClaimCapability(wrapSdkContext, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
 		return "", err
 	}
 
@@ -77,14 +77,14 @@ func (im IBCModule) OnChanOpenTry(
 	counterparty channeltypes.Counterparty,
 	counterpartyVersion string,
 ) (string, error) {
-
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
 	// Require portID is the portID module is bound to
-	boundPort := im.keeper.GetPort(ctx)
+	boundPort := im.keeper.GetPort(wrapSdkContext)
 	if boundPort != portID {
 		return "", errorsmod.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
 	}
 
-	bandParams := im.keeper.GetBandParams(ctx)
+	bandParams := im.keeper.GetBandParams(wrapSdkContext)
 
 	if counterpartyVersion != bandParams.IbcVersion {
 		return "", errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: got: %s, expected %s", counterpartyVersion, bandParams.IbcVersion)
@@ -94,9 +94,9 @@ func (im IBCModule) OnChanOpenTry(
 	// (ie chainA and chainB both call ChanOpenInit before one of them calls ChanOpenTry)
 	// If module can already authenticate the capability then module already owns it so we don't need to claim
 	// Otherwise, module does not have channel capability and we must claim it from IBC
-	if !im.keeper.AuthenticateCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)) {
+	if !im.keeper.AuthenticateCapability(wrapSdkContext, chanCap, host.ChannelCapabilityPath(portID, channelID)) {
 		// Only claim channel capability passed back by IBC module if we do not already own it
-		if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
+		if err := im.keeper.ClaimCapability(wrapSdkContext, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
 			return "", err
 		}
 	}
@@ -112,7 +112,8 @@ func (im IBCModule) OnChanOpenAck(
 	_,
 	counterpartyVersion string,
 ) error {
-	bandParams := im.keeper.GetBandParams(ctx)
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
+	bandParams := im.keeper.GetBandParams(wrapSdkContext)
 
 	if counterpartyVersion != bandParams.IbcVersion {
 		return errorsmod.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: %s, expected %s", counterpartyVersion, bandParams.IbcVersion)
@@ -154,6 +155,7 @@ func (im IBCModule) OnRecvPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) ibcexported.Acknowledgement {
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
 	var resp types.OracleResponsePacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &resp); err != nil {
 		println("OnRecvPacket 1")
@@ -170,15 +172,15 @@ func (im IBCModule) OnRecvPacket(
 	// 	return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
 	// }
 	println("Process OnrecvPacket ..........")
-	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
+	if err := im.keeper.ProcessBandOraclePrices(wrapSdkContext, relayer, resp); err != nil {
 		println("OnRecvPacket 2")
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
 
-	// allData := im.keeper.GetAllBandPriceStates(ctx)
-	// for _, data := range allData {
-	// 	println("Checking data finally...: ", data.String())
-	// }
+	allData, _ := im.keeper.GetAllBandPriceStates(wrapSdkContext)
+	for _, data := range allData {
+		println("Checking data finally...: ", data.String())
+	}
 
 	return channeltypes.NewResultAcknowledgement([]byte{byte(1)})
 }
@@ -190,6 +192,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 	acknowledgement []byte,
 	relayer sdk.AccAddress,
 ) error {
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
 	var ack channeltypes.Acknowledgement
 	if err := types.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
 		println("OnAcknowledgementPacket 1")
@@ -220,7 +223,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 		})
 	case *channeltypes.Acknowledgement_Error:
 		println("go to Acknowledgement_Error")
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		im.keeper.DeleteBandCallDataRecord(wrapSdkContext, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
 		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
 			AckError: resp.Error,
@@ -237,6 +240,7 @@ func (im IBCModule) OnTimeoutPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) error {
+	wrapSdkContext := sdk.WrapSDKContext(ctx)
 	var data types.OracleRequestPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &data); err != nil {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
@@ -248,11 +252,11 @@ func (im IBCModule) OnTimeoutPacket(
 	}
 
 	// Delete the calldata corresponding to the sequence number
-	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	im.keeper.DeleteBandCallDataRecord(wrapSdkContext, uint64(clientID))
 	// nolint:errcheck //ignored on purpose
 	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
 		ClientId: int64(clientID),
 	})
-	println("go to OnTimeoutPacket")
+
 	return nil
 }
