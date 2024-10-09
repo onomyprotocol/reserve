@@ -6,9 +6,9 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
-var _ types.QueryServer = Keeper{}
+var _ types.QueryServer = &Keeper{}
 
-func (k Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStatesRequest) (*types.QueryBandPriceStatesResponse, error) {
+func (k *Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStatesRequest) (*types.QueryBandPriceStatesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	println("Check query band prices state .......")
 	data := k.GetAllBandPriceStates(ctx)
