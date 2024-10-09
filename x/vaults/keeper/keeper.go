@@ -10,6 +10,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 type Keeper struct {
@@ -25,11 +26,13 @@ type Keeper struct {
 	// should be the x/gov module account.
 	authority string
 
-	Schema         collections.Schema
-	Params         collections.Item[types.Params]
-	VaultsManager  collections.Map[string, types.VaultMamager]
-	Vaults         collections.Map[uint64, types.Vault]
-	VaultsSequence collections.Sequence
+	Schema          collections.Schema
+	Params          collections.Item[types.Params]
+	VaultsManager   collections.Map[string, types.VaultMamager]
+	Vaults          collections.Map[uint64, types.Vault]
+	VaultsSequence  collections.Sequence
+	LastUpdateTime  collections.Item[types.LastUpdate]
+	ShortfallAmount collections.Item[math.Int]
 }
 
 // NewKeeper returns a new keeper by codec and storeKey inputs.
@@ -53,6 +56,8 @@ func NewKeeper(
 		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
 		Vaults:         collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
 		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
+		LastUpdateTime: collections.NewItem(sb, types.LastUpdateKeyPrefix, "last_update", codec.CollValue[types.LastUpdate](cdc)),
+		ShortfallAmount: collections.NewItem(sb, types.ShortfallKeyPrefix, "shortfall", sdk.IntValue),
 	}
 
 	schema, err := sb.Build()
@@ -74,6 +79,9 @@ func (k *Keeper) ActiveCollateralAsset(
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 	maxDebt math.Int,
+	stabilityFee math.LegacyDec,
+	mintingFee math.LegacyDec,
+	liquidationPenalty math.LegacyDec,
 ) error {
 	// Check if asset alreay be actived
 	actived := k.IsActived(ctx, denom)
@@ -86,6 +94,9 @@ func (k *Keeper) ActiveCollateralAsset(
 			MinCollateralRatio: minCollateralRatio,
 			LiquidationRatio:   liquidationRatio,
 			MaxDebt:            maxDebt,
+			StabilityFee:       stabilityFee,
+			LiquidationPenalty: liquidationPenalty,
+			MintingFee:         mintingFee,
 		},
 		MintAvailable: maxDebt,
 	}
@@ -103,6 +114,9 @@ func (k *Keeper) UpdatesCollateralAsset(
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 	maxDebt math.Int,
+	stabilityFee math.LegacyDec,
+	mintingFee math.LegacyDec,
+	liquidationPenalty math.LegacyDec,
 ) error {
 	// Check if asset alreay be actived
 	vm, err := k.GetVaultManager(ctx, denom)
@@ -114,6 +128,10 @@ func (k *Keeper) UpdatesCollateralAsset(
 	vm.Params.MinCollateralRatio = minCollateralRatio
 	vm.Params.LiquidationRatio = liquidationRatio
 	vm.Params.MaxDebt = maxDebt
+	vm.Params.StabilityFee = stabilityFee
+	vm.Params.MintingFee = mintingFee
+	vm.Params.LiquidationPenalty = liquidationPenalty
+
 	vm.MintAvailable = maxDebt.Sub(amountMinted)
 
 	return k.VaultsManager.Set(ctx, denom, vm)

@@ -17,4 +17,6 @@ var (
 	VaultKeyPrefix         = collections.NewPrefix(2)
 	VaultManagerKeyPrefix  = collections.NewPrefix(3)
 	VaultSequenceKeyPrefix = collections.NewPrefix(4)
+	LastUpdateKeyPrefix    = collections.NewPrefix(5)
+	ShortfallKeyPrefix     = collections.NewPrefix(6)
 )
