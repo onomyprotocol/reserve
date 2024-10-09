@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/store"
@@ -32,8 +31,8 @@ type (
 		// should be the x/gov module account.
 		authority string
 
-		// timestamp of lastest auction period
-		lastestAuctionPeriod collections.Item[time.Time]
+		// timestamp of lastest auction period (Unix timestamp)
+		LastestAuctionPeriod collections.Item[int64]
 
 		AuctionIdSeq collections.Sequence
 
@@ -68,19 +67,20 @@ func NewKeeper(
 
 	sb := collections.NewSchemaBuilder(storeService)
 	return Keeper{
-		cdc:          cdc,
-		storeService: storeService,
-		authority:    authority,
-		logger:       logger,
-		authKeeper:   ak,
-		bankKeeper:   bk,
-		vaultKeeper:  vk,
-		oracleKeeper: ok,
-		AuctionIdSeq: collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
-		BidIdSeq:     collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
-		Auctions:     collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
-		Bids:         collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
-		BidByAddress: collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bids](cdc)),
+		cdc:                  cdc,
+		storeService:         storeService,
+		authority:            authority,
+		logger:               logger,
+		authKeeper:           ak,
+		bankKeeper:           bk,
+		vaultKeeper:          vk,
+		oracleKeeper:         ok,
+		LastestAuctionPeriod: collections.NewItem(sb, types.LastestAuctionPeriodPrefix, "lastest_auction_period", collections.Int64Value),
+		AuctionIdSeq:         collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
+		BidIdSeq:             collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
+		Auctions:             collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
+		Bids:                 collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
+		BidByAddress:         collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bids](cdc)),
 	}
 }
 
