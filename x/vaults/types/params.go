@@ -2,10 +2,9 @@ package types
 
 import (
 	"fmt"
+	"time"
 
 	"cosmossdk.io/math"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 var (
@@ -13,9 +12,9 @@ var (
 	DefaultStabilityFee          = math.LegacyMustNewDecFromStr("0.05")
 	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("0.05")
 	DefaultMinInitialDebt        = math.NewInt(20_000_000)
-	DefaultRecalculateDebtPeriod = uint64(1)
-	DefaultLiquidatePeriod       = uint64(1)
-	DefaultMintDenom             = psmtypes.DenomStable
+	DefaultRecalculateDebtPeriod = time.Hour
+	DefaultLiquidatePeriod       = time.Hour
+	DefaultMintDenom             = "nomUSD"
 
 	KeyMintingFee            = []byte("MintingFee")
 	KeyStabilityFee          = []byte("StabilityFee")
@@ -27,53 +26,35 @@ var (
 
 // NewParams creates a new Params instance.
 func NewParams(
-	mintingFee math.LegacyDec,
-	stabilityFee math.LegacyDec,
-	liquidationPenalty math.LegacyDec,
 	minInitialDebt math.Int,
-	recalculateDebtPeriod uint64,
-	liquidatePeriod uint64,
 	mintDenom string,
+	chargingPeriod time.Duration,
+	liquidatePeriod time.Duration,
 ) Params {
 	return Params{
-		MintingFee:            mintingFee,
-		StabilityFee:          stabilityFee,
-		LiquidationPenalty:    liquidationPenalty,
-		MinInitialDebt:        minInitialDebt,
-		RecalculateDebtPeriod: recalculateDebtPeriod,
-		LiquidatePeriod:       liquidatePeriod,
-		MintDenom:             mintDenom,
+		MinInitialDebt:  minInitialDebt,
+		LiquidatePeriod: liquidatePeriod,
+		ChargingPeriod:  chargingPeriod,
+		MintDenom:       mintDenom,
 	}
 }
 
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultMintingFee,
-		DefaultStabilityFee,
-		DefaultLiquidationPenalty,
 		DefaultMinInitialDebt,
+		DefaultMintDenom,
 		DefaultRecalculateDebtPeriod,
 		DefaultLiquidatePeriod,
-		DefaultMintDenom,
 	)
 }
 
 // Validate validates the set of params.
 func (m Params) Validate() error {
-	if err := validateMintingFee(m.MintingFee); err != nil {
-		return err
-	}
-	if err := validateStabilityFee(m.StabilityFee); err != nil {
-		return err
-	}
-	if err := validateLiquidationPenalty(m.LiquidationPenalty); err != nil {
-		return err
-	}
 	if err := validateMinInitialDebt(m.MinInitialDebt); err != nil {
 		return err
 	}
-	if err := validateRecalculateDebtPeriod(m.RecalculateDebtPeriod); err != nil {
+	if err := validateRecalculateDebtPeriod(m.ChargingPeriod); err != nil {
 		return err
 	}
 	if err := validateLiquidatePeriod(m.LiquidatePeriod); err != nil {
@@ -139,19 +120,4 @@ func validateMintingFee(i interface{}) error {
 	}
 
 	return nil
-}
-
-func ParamKeyTable() paramtypes.KeyTable {
-	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
-}
-
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMintingFee, &p.MintingFee, validateMintingFee),
-		paramtypes.NewParamSetPair(KeyStabilityFee, &p.StabilityFee, validateStabilityFee),
-		paramtypes.NewParamSetPair(KeyLiquidationPenalty, &p.LiquidationPenalty, validateLiquidationPenalty),
-		paramtypes.NewParamSetPair(KeyMinInitialDebt, &p.MinInitialDebt, validateMinInitialDebt),
-		paramtypes.NewParamSetPair(KeyRecalculateDebtPeriod, &p.RecalculateDebtPeriod, validateRecalculateDebtPeriod),
-		paramtypes.NewParamSetPair(KeyLiquidatePeriod, &p.LiquidatePeriod, validateLiquidatePeriod),
-	}
 }

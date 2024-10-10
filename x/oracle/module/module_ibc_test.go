@@ -60,12 +60,6 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenInit() {
 				ConnectionHops: []string{path.EndpointA.ConnectionID},
 				Version:        oracletypes.DefaultTestBandIbcParams().IbcVersion,
 			}
-
-			onomyapp := suite.chainO.App.(*reserveapp.App)
-
-			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
-			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
-
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
 
@@ -147,11 +141,6 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenTry() {
 			}
 			counterpartyVersion = oracletypes.DefaultTestBandIbcParams().IbcVersion
 
-			onomyapp := suite.chainO.App.(*reserveapp.App)
-
-			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
-			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
-
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
 
@@ -209,11 +198,6 @@ func (suite *PriceRelayTestSuite) TestOnChanOpenAck() {
 			path.EndpointA.ChannelID = ibctesting.FirstChannelID
 			counterpartyVersion = oracletypes.DefaultTestBandIbcParams().IbcVersion
 
-			onomyapp := suite.chainO.App.(*reserveapp.App)
-
-			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
-			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
-
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(suite.chainO.GetContext(), oracletypes.DefaultTestBandIbcParams().IbcPortId)
 			suite.Require().NoError(err)
 
@@ -238,7 +222,7 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 	var packetData []byte
 	var msg oracletypes.OracleResponsePacketData
 	var symbolsInput = oracletypes.SymbolInput{
-		Symbols: []string{"ATOM","BNB","BTC","ETH","INJ","USDT","OSMO","STX","SOL"},
+		Symbols:            []string{"ATOM", "BNB", "BTC", "ETH", "INJ", "USDT", "OSMO", "STX", "SOL"},
 		MinimumSourceCount: 1,
 	}
 	data := utils.MustEncode(symbolsInput)
@@ -303,12 +287,6 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 
 			// prepare expected ack
 			expectedAck := channeltypes.NewResultAcknowledgement([]byte{byte(1)})
-
-			onomyapp := suite.chainO.App.(*reserveapp.App)
-
-			portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
-			onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
-
 			// get module
 			module, _, err := suite.chainO.App.GetIBCKeeper().PortKeeper.LookupModuleByPort(
 				suite.chainO.GetContext(),
@@ -316,23 +294,27 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 			)
 			suite.Require().NoError(err)
 
-			// get route
+			// get routeq
 			cbs, ok := suite.chainO.App.GetIBCKeeper().Router.GetRoute(module)
 			suite.Require().True(ok)
 
-			injectiveApp := suite.chainO.App.(*reserveapp.App)
-			injectiveApp.OracleKeeper.SetBandCallDataRecord(suite.chainO.GetContext(), &oracletypes.CalldataRecord{
+			onomyApp := suite.chainO.App.(*reserveapp.App)
+			onomyApp.OracleKeeper.SetBandCallDataRecord(suite.chainO.GetContext(), &oracletypes.CalldataRecord{
 				ClientId: 1,
 				Calldata: data,
 			})
 
 			// call recv packet
 			ack := cbs.OnRecvPacket(suite.chainO.GetContext(), packet, nil)
-			
+
+			// state check blabla
 			// check result
 			if tc.expAckSuccess {
 				suite.Require().True(ack.Success())
 				suite.Require().Equal(expectedAck, ack)
+
+				price := onomyApp.OracleKeeper.GetPrice(suite.chainO.GetContext(), "ATOM", "USD")
+				suite.Require().Equal("10.822375461000000000", price.String())
 			} else {
 				suite.Require().False(ack.Success())
 			}

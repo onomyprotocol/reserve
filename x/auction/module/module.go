@@ -1,4 +1,4 @@
-package oracle
+package auction
 
 import (
 	"context"
@@ -185,8 +185,8 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	OracleKeeper keeper.Keeper
-	Module       appmodule.AppModule
+	AuctionKeeper keeper.Keeper
+	Module        appmodule.AppModule
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -212,5 +212,5 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	return ModuleOutputs{OracleKeeper: k, Module: m}
+	return ModuleOutputs{AuctionKeeper: k, Module: m}
 }

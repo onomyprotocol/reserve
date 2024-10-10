@@ -13,13 +13,10 @@ import (
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
 	testifysuite "github.com/stretchr/testify/suite"
 
-	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	reserveapp "github.com/onomyprotocol/reserve/app"
-	simapp "github.com/onomyprotocol/reserve/app"
 	bandapp "github.com/onomyprotocol/reserve/x/oracle/bandtesting/app"
 	bandoracletypes "github.com/onomyprotocol/reserve/x/oracle/bandtesting/x/oracle/types"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
-
 )
 
 type PriceRelayTestSuite struct {
@@ -81,11 +78,7 @@ func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 
 	onomyapp := suite.chainO.App.(*reserveapp.App)
 
-	portCap := onomyapp.IBCKeeper.PortKeeper.BindPort(suite.chainO.GetContext(), "oracle")
-	onomyapp.OracleKeeper.ClaimCapability(suite.chainO.GetContext(), portCap, host.PortPath("oracle")) //nolint:errcheck // checking this error isn't needed for the test
-
 	path := NewPriceRelayPath(suite.chainO, suite.chainB)
-	
 	suite.coordinator.Setup(path)
 
 	timeoutHeight := clienttypes.NewHeight(1, 110)
@@ -143,15 +136,15 @@ func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 
 	// send from chainI to chainB
 	msg := oracletypes.NewMsgRequestBandRates(suite.chainO.SenderAccount.GetAddress(), 1)
-
 	_, err = suite.chainO.SendMsgs(msg)
+
 	suite.Require().NoError(err) // message committed
 }
 
 func (suite *PriceRelayTestSuite) TearDownTest() {
 	for _, chain := range suite.coordinator.Chains {
 		if app, ok := chain.App.(*reserveapp.App); ok {
-			simapp.Cleanup(app) // cleanup old instance first
+			reserveapp.Cleanup(app) // cleanup old instance first
 		}
 	}
 }

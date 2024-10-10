@@ -43,10 +43,6 @@ func (s *KeeperTestSuite) TestParams() {
 	s.Require().NoError(err)
 
 	p := s.k.GetParams(s.Ctx)
-	s.Require().Equal(p.MintingFee, types.DefaultMintingFee)
-	s.Require().Equal(p.StabilityFee, types.DefaultStabilityFee)
-	s.Require().Equal(p.LiquidationPenalty, types.DefaultLiquidationPenalty)
 	s.Require().Equal(p.MinInitialDebt, types.DefaultMinInitialDebt)
-	s.Require().Equal(p.RecalculateDebtPeriod, types.DefaultRecalculateDebtPeriod)
 	s.Require().Equal(p.LiquidatePeriod, types.DefaultLiquidatePeriod)
 }
