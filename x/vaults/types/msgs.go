@@ -4,6 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 const (
@@ -62,6 +63,9 @@ func NewMsgClose(vaultId uint64, sender string) MsgClose {
 		Sender:  sender,
 	}
 }
+
+var _ govtypes.Content = &ActiveCollateralProposal{}
+var _ govtypes.Content = &UpdatesCollateralProposal{}
 
 func (m *ActiveCollateralProposal) GetDescription() string {
 	return " "
