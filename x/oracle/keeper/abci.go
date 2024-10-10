@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 	"time"
-
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -23,6 +23,25 @@ func BeginBlocker(ctx context.Context, k Keeper) error {
 	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	}
+
+	data1 := &types.BandPriceState{
+		Symbol:      "ATOM",
+		Rate:        math.NewInt(10),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+	}
+
+	k.SetBandPriceState(ctx, "ATOM", data1)
+	data2 := &types.BandPriceState{
+		Symbol:      "OSMO",
+		Rate:        math.NewInt(10),
+		ResolveTime: 1,
+		Request_ID:  1,
+		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+	}
+	k.SetBandPriceState(ctx, "ATOM", data2)
+
 	println("check band price state in begin block")
 	for _, bandstate := range k.GetAllBandPriceStates(sdkCtx) {
 		println("check data in begin block: ", bandstate.String())
