@@ -16,7 +16,7 @@ message GenesisState {
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
   BandParams band_params = 2 [ (gogoproto.nullable) = false ];
-  repeated BandPriceState band_price_states = 3;
+  repeated BandPriceState band_price_states = 3 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
   repeated BandOracleRequest band_oracle_requests = 4;
   uint64 band_latest_client_id = 5;
   repeated CalldataRecord calldata_records = 6;

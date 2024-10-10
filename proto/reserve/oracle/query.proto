@@ -40,5 +40,5 @@ message QueryBandPriceStatesRequest {}
 // QueryBandPriceStatesResponse is the response type for the
 // Query/BandPriceStates RPC method.
 message QueryBandPriceStatesResponse {
-  repeated BandPriceState price_states = 1;
+  repeated BandPriceState price_states = 1 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
