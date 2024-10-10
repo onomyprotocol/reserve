@@ -36,8 +36,8 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
 	oracle "github.com/onomyprotocol/reserve/x/oracle"
-	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
+	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.
@@ -159,16 +159,9 @@ func (app *App) registerIBCModules() error {
 	ibcRouter := porttypes.NewRouter().
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule).
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
-		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
+		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
+		AddRoute(oraclemoduletypes.ModuleName, oraclemodule.NewIBCModule(app.OracleKeeper))
 
-	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
-	// oracleStack, err := app.registerOracleModule()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleStack)
-	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleIBCModule)
 	// this line is used by starport scaffolding # ibc/app/module
 
 	app.IBCKeeper.SetRouter(ibcRouter)
