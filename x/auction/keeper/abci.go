@@ -14,7 +14,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	params := k.GetParams(ctx)
 
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
-	lastAuctionPeriods_unix, err := k.LastestAuctionPeriod.Get(ctx)
+	lastAuctionPeriods_unix, err := k.lastestAuctionPeriod.Get(ctx)
 	if err != nil {
 		return err
 	}
@@ -22,7 +22,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	// check if has reached the next auction periods
 	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
 		// update latest auction period
-		err := k.LastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
+		err := k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
 		if err != nil {
 			return err
 		}
