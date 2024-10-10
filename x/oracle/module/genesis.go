@@ -15,7 +15,7 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 	}
 
 	for _, bandPriceState := range genState.BandPriceStates {
-		k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
+		k.SetBandPriceState(ctx, bandPriceState.Symbol, *bandPriceState)
 	}
 
 	for _, bandOracleRequest := range genState.BandOracleRequests {

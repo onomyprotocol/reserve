@@ -9,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	prefix "cosmossdk.io/store/prefix"
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
+	storetypes "cosmossdk.io/store/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	errorsmod "cosmossdk.io/errors"
@@ -202,35 +203,34 @@ func (k Keeper) GetAllBandOracleRequests(ctx context.Context) []*types.BandOracl
 }
 
 // GetBandPriceState reads the stored band ibc price state.
-func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.BandPriceState {
-	var priceState types.BandPriceState
+func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) (priceState types.BandPriceState, err error) {
 	store := k.storeService.OpenKVStore(ctx)
 	bz, err := store.Get(types.GetBandPriceStoreKey(symbol))
 	if err != nil {
-		return nil
-	}
-	if bz == nil {
-		return nil
+		return
 	}
 
-	k.cdc.MustUnmarshal(bz, &priceState)
-	return &priceState
+	err = k.cdc.Unmarshal(bz, &priceState)
+	return
 }
 
 // SetBandPriceState sets the band ibc price state.
-func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState *types.BandPriceState) error{
-	bz := k.cdc.MustMarshal(priceState)
+func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState types.BandPriceState) error{
 	store := k.storeService.OpenKVStore(ctx)
+	bz, err := k.cdc.Marshal(&priceState)
+	if err != nil {
+		return err
+	}
+
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
 }
 
 // GetAllBandPriceStates reads all stored band price states.
 func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceState {
 	priceStates := make([]*types.BandPriceState, 0)
-	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
 
-	iterator := bandPriceStore.Iterator(nil, nil)
+	store := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	iterator := storetypes.KVStorePrefixIterator(store, types.BandPriceKey)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -277,8 +277,8 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
-	basePriceState := k.GetBandPriceState(ctx, base)
-	if basePriceState == nil || basePriceState.Rate.IsZero() {
+	basePriceState, _ := k.GetBandPriceState(ctx, base)
+	if basePriceState == types.NilPriceState || basePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -286,8 +286,8 @@ func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyD
 		return &basePriceState.PriceState.Price
 	}
 
-	quotePriceState := k.GetBandPriceState(ctx, quote)
-	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
+	quotePriceState, _ := k.GetBandPriceState(ctx, quote)
+	if quotePriceState == types.NilPriceState || quotePriceState.Rate.IsZero() {
 		return nil
 	}
 
@@ -443,21 +443,21 @@ func (k *Keeper) updateBandPriceStates(
 			continue
 		}
 
-		bandPriceState := k.GetBandPriceState(ctx, symbol)
+		bandPriceState, _ := k.GetBandPriceState(ctx, symbol)
 
 		// don't update band prices with an older price
-		if bandPriceState != nil && bandPriceState.ResolveTime > resolveTime {
+		if bandPriceState != types.NilPriceState && bandPriceState.ResolveTime > resolveTime {
 			continue
 		}
 
 		// skip price update if the price changes beyond 100x or less than 1% of the last price
-		if bandPriceState != nil && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
+		if bandPriceState != types.NilPriceState && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
 			continue
 		}
 
 		blockTime := sdkCtx.BlockTime().Unix()
-		if bandPriceState == nil {
-			bandPriceState = &types.BandPriceState{
+		if bandPriceState == types.NilPriceState {
+			bandPriceState = types.BandPriceState{
 				Symbol:      symbol,
 				Rate:        math.NewInt(int64(rate)),
 				ResolveTime: resolveTime,

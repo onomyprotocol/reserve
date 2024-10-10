@@ -23,6 +23,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	}
+	println("Checking data at begin block")
+	for _, data := range k.GetAllBandPriceStates(ctx) {
+		println("got state: ", data.String())
+	}
 }
 
 func (k *Keeper) RequestAllBandRates(ctx context.Context) {
@@ -47,4 +51,8 @@ func (k *Keeper) RequestAllBandRates(ctx context.Context) {
 }
 
 func (k *Keeper) EndBlocker(ctx context.Context) {
+	println("Checking data at end block")
+	for _, data := range k.GetAllBandPriceStates(ctx) {
+		println("got state: ", data.String())
+	}
 }
