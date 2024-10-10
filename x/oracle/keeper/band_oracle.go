@@ -421,7 +421,7 @@ func (k *Keeper) ProcessBandOraclePrices(
 	k.updateBandPriceStates(ctx, input, output, packet, relayer, clientID)
 
 	// Delete the calldata corresponding to the sequence number
-	k.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	// k.DeleteBandCallDataRecord(ctx, uint64(clientID))
 
 	return nil
 }
