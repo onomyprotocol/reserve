@@ -5,6 +5,7 @@ import (
 
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.
@@ -54,10 +55,11 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	return &types.GenesisState{
 		Params:                  k.GetParams(ctx),
 		BandParams:              k.GetBandParams(ctx),
-		BandPriceStates:         k.GetAllBandPriceStates(ctx),
+		BandPriceStates:         k.GetAllBandPriceStates(sdkCtx),
 		BandOracleRequests:      k.GetAllBandOracleRequests(ctx),
 		BandLatestClientId:      k.GetBandLatestClientID(ctx),
 		CalldataRecords:         k.GetAllBandCalldataRecords(ctx),

@@ -225,7 +225,7 @@ func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceStat
 }
 
 // GetAllBandPriceStates reads all stored band price states.
-func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceState {
+func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState {
 	priceStates := make([]*types.BandPriceState, 0)
 	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
