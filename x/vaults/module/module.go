@@ -17,8 +17,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
-
 	abci "github.com/cometbft/cometbft/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -178,9 +176,8 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	PsmKeeper  keeper.Keeper
-	Module     appmodule.AppModule
-	GovHandler govv1beta1.HandlerRoute
+	PsmKeeper keeper.Keeper
+	Module    appmodule.AppModule
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -206,7 +203,5 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.BankKeeper,
 	)
 
-	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewVaultsProposalHandler(k)}
-
-	return ModuleOutputs{PsmKeeper: *k, Module: m, GovHandler: govHandler}
+	return ModuleOutputs{PsmKeeper: *k, Module: m}
 }
