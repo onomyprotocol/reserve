@@ -42,6 +42,7 @@ func NewKeeper(
 
 	bankKeeper types.BankKeeper,
 	accountKeeper types.AccountKeeper,
+	oracleKeeper types.OracleKeeper,
 ) Keeper {
 	// if _, err := addressCodec.StringToBytes(authority); err != nil {
 	// 	panic(fmt.Sprintf("invalid authority address %s: %s", authority, err))
@@ -58,6 +59,7 @@ func NewKeeper(
 
 		BankKeeper:    bankKeeper,
 		AccountKeeper: accountKeeper,
+		OracleKeeper:  oracleKeeper,
 		Params:        collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		// this line is used by starport scaffolding # collection/instantiate
 	}
