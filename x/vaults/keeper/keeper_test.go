@@ -25,6 +25,7 @@ func (s *KeeperTestSuite) SetupTest() {
 
 	mockOK := mock.NewMockOracleKeeper()
 	mockOK.SetPrice("atom", math.LegacyMustNewDecFromStr("8.0"))
+	mockOK.SetPrice(types.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
 	s.App.VaultsKeeper.OracleKeeper = mockOK
 	s.k = s.App.VaultsKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)
