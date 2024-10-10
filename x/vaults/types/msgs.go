@@ -4,11 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const (
-	ProposalTypeActiveCollateralProposal  string = "ActiveCollateralProposal"
-	ProposalTypeUpdatesCollateralProposal string = "UpdatesCollateralProposal"
-)
-
 var (
 	Query_serviceDesc = _Query_serviceDesc
 )
