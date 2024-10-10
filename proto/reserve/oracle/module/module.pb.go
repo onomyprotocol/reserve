@@ -4,7 +4,6 @@
 package reserve_oracle_module
 
 import (
-	_ "cosmos/app/v1alpha1"
 	fmt "fmt"
 	proto "github.com/cosmos/gogoproto/proto"
 	io "io"
