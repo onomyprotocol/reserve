@@ -241,7 +241,6 @@ func (k Keeper) GetAllBandPriceStates(ctx sdk.Context) []types.BandPriceState {
 	// 	priceStates = append(priceStates, &bandPriceState)
 	// }
 	println("go here man")
-	priceStates := make([]types.BandPriceState, 0)
 	// err := k.BandPriceState.Walk(ctx, nil, func(keyy string, value types.BandPriceState) (stop bool, err error) {
 	// 	println("check data here:", value.String(), keyy)
 	// 	priceStates = append(priceStates, &value)
@@ -250,12 +249,12 @@ func (k Keeper) GetAllBandPriceStates(ctx sdk.Context) []types.BandPriceState {
 	// if err != nil {
 	// 	return nil
 	// }
-	iter, _ := k.BandPriceState.Iterate(ctx, nil)
-	listBandPriceStates, _ := iter.Values()
-	for _, priceState := range listBandPriceStates{
-		println("check data: ", priceState.String())
-		priceStates = append(priceStates, priceState)
-	}
+	priceStates := make([]types.BandPriceState, 0)
+	k.BandPriceState.Walk(ctx, nil, func(key string, value types.BandPriceState) (stop bool, err error) {
+		priceStates = append(priceStates, value)
+		return false, nil
+	})
+
 	return priceStates
 }
 
