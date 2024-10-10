@@ -13,7 +13,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		panic(err)
 	}
 
-	k.LastestAuctionPeriod.Set(ctx, 0)
+	k.LastestAuctionPeriod.Set(ctx, ctx.BlockTime().Unix())
 }
 
 // ExportGenesis returns the module's exported genesis.
