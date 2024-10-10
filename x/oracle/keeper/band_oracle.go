@@ -222,6 +222,11 @@ func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.Ba
 
 // SetBandPriceState sets the band ibc price state.
 func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState *types.BandPriceState) error {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	fmt.Println("============GasConfig====================")
+	fmt.Println(sdkCtx.KVGasConfig())
+	fmt.Println("=============GasConfig===================")
+
 	bz := k.cdc.MustMarshal(priceState)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)

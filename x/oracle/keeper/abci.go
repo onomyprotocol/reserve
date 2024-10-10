@@ -35,6 +35,7 @@ func BeginBlocker(ctx context.Context, k Keeper) error {
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
 	}
 
+	
 	k.SetBandPriceState(ctx, "ATOM", data1)
 	data2 := &types.BandPriceState{
 		Symbol:      "OSMO",
