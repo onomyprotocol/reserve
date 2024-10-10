@@ -4,6 +4,7 @@ import (
 	"time"
 
 	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	psmmodulev1 "github.com/onomyprotocol/reserve/api/reserve/psm/module/v1"
 	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
@@ -318,7 +319,7 @@ var (
 			},
 			{
 				Name:   psmtypes.ModuleName,
-				Config: appconfig.WrapAny(&psmtypes.Module{}),
+				Config: appconfig.WrapAny(&psmmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

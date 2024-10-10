@@ -23,7 +23,8 @@ import (
 
 	// this line is used by starport scaffolding # 1
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
-
+	psmmodulev1 "github.com/onomyprotocol/reserve/api/reserve/psm/module/v1"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/client/cli"
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
@@ -186,7 +187,7 @@ func (am AppModule) IsAppModule() {}
 
 func init() {
 	appmodule.Register(
-		&types.Module{},
+		&psmmodulev1.Module{},
 		appmodule.Provide(ProvideModule),
 	)
 }
@@ -197,12 +198,12 @@ type ModuleInputs struct {
 	AddressCodec address.Codec
 	StoreService store.KVStoreService
 	Cdc          codec.Codec
-	Config       *types.Module
+	Config       *psmmodulev1.Module
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
 	BankKeeper    types.BankKeeper
-	OracleKeeper  types.OracleKeeper
+	OracleKeeper  oraclekeeper.Keeper
 }
 
 type ModuleOutputs struct {
@@ -227,7 +228,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		authority.String(),
 		in.BankKeeper,
 		in.AccountKeeper,
-		in.OracleKeeper,
+		&in.OracleKeeper,
 	)
 	m := NewAppModule(
 		in.Cdc,
