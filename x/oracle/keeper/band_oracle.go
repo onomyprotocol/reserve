@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"time"
 
+	storetypes "cosmossdk.io/store/types"
+
 	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
 	prefix "cosmossdk.io/store/prefix"
@@ -229,9 +231,8 @@ func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceStat
 func (k *Keeper) GetAllBandPriceStates(ctx sdk.Context) []*types.BandPriceState {
 	priceStates := make([]*types.BandPriceState, 0)
 	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandPriceStore := prefix.NewStore(kvStore, types.BandPriceKey)
+	iterator := storetypes.KVStorePrefixIterator(kvStore, types.BandPriceKey)
 
-	iterator := bandPriceStore.Iterator(nil, nil)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
