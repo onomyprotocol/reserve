@@ -328,8 +328,7 @@ func (k *Keeper) UpdateVaultsDebt(
 	return k.LastUpdateTime.Set(ctx, types.LastUpdate{Time: sdkCtx.BlockTime()})
 }
 
-func (k *Keeper) ShouldLiquidate(
-	ctx context.Context,
+func (k *Keeper) shouldLiquidate(
 	vault types.Vault,
 	price math.LegacyDec,
 	liquidationRatio math.LegacyDec,
@@ -352,8 +351,11 @@ func (k *Keeper) GetLiquidations(
 	ctx context.Context,
 ) ([]*types.Liquidation, error) {
 
+	// denom to liquidationRatios
 	liquidationRatios := make(map[string]math.LegacyDec)
+	// denom to price
 	prices := make(map[string]math.LegacyDec)
+	// denom to Liquidation
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
@@ -370,7 +372,7 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
-		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault, prices[denom], liquidationRatios[denom])
+		shouldLiquidate, err := k.shouldLiquidate(vault, prices[denom], liquidationRatios[denom])
 		if shouldLiquidate && err == nil {
 			liquidations[denom].LiquidatingVaults = append(liquidations[denom].LiquidatingVaults, &vault)
 			liquidations[denom].VaultLiquidationStatus[id] = &types.VaultLiquidationStatus{}
