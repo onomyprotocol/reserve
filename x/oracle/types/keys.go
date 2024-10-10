@@ -24,14 +24,14 @@ const (
 
 var (
 	ParamsKey              = []byte("p_oracle")
-	BandParamsKey          = []byte{0x01}
-	BandCallDataRecordKey  = []byte{0x02}
-	LatestClientIDKey      = []byte{0x03}
-	BandOracleRequestIDKey = []byte{0x04}
+	BandParamsKey          = []byte{1}
+	BandCallDataRecordKey  = []byte{2}
+	LatestClientIDKey      = []byte{3}
+	BandOracleRequestIDKey = []byte{4}
 	// BandPriceKey               = []byte{0x05}
-	LatestRequestIDKey         = []byte{0x06}
-	BandOracleRequestParamsKey = []byte{0x07}
-	BandPriceKey               = collections.NewPrefix(11)
+	LatestRequestIDKey         = []byte{5}
+	BandOracleRequestParamsKey = []byte{6}
+	BandPriceKey               = collections.NewPrefix(7)
 )
 
 var (
