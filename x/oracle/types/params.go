@@ -11,7 +11,7 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 var (
 	// Each value below is the default value for each parameter when generating the default
 	// genesis file.
-	DefaultBandRequestInterval = int64(1) // every 1 block
+	DefaultBandRequestInterval = int64(5) // every 5 blocks
 	DefaultBandSourceChannel   = "channel-0"
 	DefaultBandVersion         = "bandchain-1"
 	DefaultBandPortID          = "oracle"
