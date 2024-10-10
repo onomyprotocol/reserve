@@ -18,11 +18,12 @@ var (
 )
 
 var (
-	AuctionIdSeqPrefix = collections.NewPrefix(1)
-	BidIdSeqPrefix     = collections.NewPrefix(2)
-	AuctionsPrefix     = collections.NewPrefix(3)
-	BidsPrefix         = collections.NewPrefix(4)
-	BidByAddressPrefix = collections.NewPrefix(5)
+	AuctionIdSeqPrefix         = collections.NewPrefix(1)
+	BidIdSeqPrefix             = collections.NewPrefix(2)
+	AuctionsPrefix             = collections.NewPrefix(3)
+	BidsPrefix                 = collections.NewPrefix(4)
+	BidByAddressPrefix         = collections.NewPrefix(5)
+	LastestAuctionPeriodPrefix = collections.NewPrefix(6)
 )
 
 func KeyPrefix(p string) []byte {
