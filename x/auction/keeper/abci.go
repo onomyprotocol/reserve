@@ -126,7 +126,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 
 	// Loop through liquidationMap and liquidate
 	for _, liq := range liquidationMap {
-		_, _, err := k.vaultKeeper.Liquidate(ctx, *liq)
+		err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {
 			return err
 		}
