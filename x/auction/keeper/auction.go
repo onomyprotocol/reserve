@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (k Keeper) NewAuction(ctx context.Context,
@@ -46,6 +48,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 		LastDiscountTime: startTime,
 		Status:           types.AuctionStatus_AUCTION_STATUS_ACTIVE,
 		TargetGoal:       targetGoal,
+		TokenRaised:      sdk.NewCoin(vaultstypes.DefaultMintDenom, math.ZeroInt()),
 		VaultId:          vaultId,
 	}, nil
 }

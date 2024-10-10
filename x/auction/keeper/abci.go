@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	sdkmath "cosmossdk.io/math"
@@ -20,6 +21,9 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	}
 	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
 	// check if has reached the next auction periods
+	fmt.Println("lastAuctionPeriods", lastAuctionPeriods)
+	fmt.Println("params.AuctionPeriods", params.AuctionPeriods)
+	fmt.Println("currentTime", currentTime)
 	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
 		// update latest auction period
 		err := k.LastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
@@ -28,8 +32,13 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		liquidations, err := k.vaultKeeper.GetLiquidations(ctx)
+		fmt.Println("liquidations", liquidations)
 		if err != nil {
 			return err
+		}
+		if len(liquidations) > 0 {
+			fmt.Println()
+			fmt.Println(liquidations[0].LiquidatingVaults[0].LiquidationPrice.String())
 		}
 
 		liquidatedVaults := make([]*vaultstypes.Vault, 0)
@@ -44,14 +53,23 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			if err != nil {
 				return err
 			}
-
+			fmt.Println("+++++1", auction.AuctionId)
 			err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+			if err != nil {
+				return err
+			}
+			b, err := k.Auctions.Has(ctx, auction.AuctionId)
+			if b {
+				fmt.Println("hasssssssssss")
+			}
+			err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{})
 			if err != nil {
 				return err
 			}
 		}
 	}
-
+	fmt.Println()
+	fmt.Println("okkkkkkkkkkk")
 	// loop through all auctions
 	// get liquidations data then distribute debt & collateral remain
 	liquidationMap := make(map[string]*vaultstypes.Liquidation)
@@ -70,12 +88,23 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
 			auction.EndTime.After(currentTime) {
 
-			liquidationMap[auction.Item.Denom].Denom = auction.Item.Denom
-			liquidationMap[auction.Item.Denom].LiquidatingVaults = append(liquidationMap[auction.Item.Denom].LiquidatingVaults, &vault)
-			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
-			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+			var liquidation_tmp vaultstypes.Liquidation
+			liquidation_tmp.Denom = auction.Item.Denom
+			liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
+
+			liquidation_tmp.VaultLiquidationStatus = make(map[uint64]*vaultstypes.VaultLiquidationStatus)
+
+			var vaultLiquidationStatus_tmp vaultstypes.VaultLiquidationStatus
+
+			vaultLiquidationStatus_tmp.Sold = auction.TokenRaised
+			vaultLiquidationStatus_tmp.RemainCollateral = auction.Item
+
+			liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultLiquidationStatus_tmp
+
+			liquidationMap[auction.Item.Denom] = &liquidation_tmp
 
 			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ModuleName, sdk.NewCoins(liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold))
+
 			if err != nil {
 				return true, err
 			}
@@ -88,6 +117,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			k.refundBidders(ctx, bidQueue)
 
 			// clear the auction afterward
+			fmt.Println("xoa heetttttttt", auction.AuctionId)
 			err = k.DeleteAuction(ctx, auction.AuctionId)
 			if err != nil {
 				return true, err
