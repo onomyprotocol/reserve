@@ -21,8 +21,8 @@ func NewParams() Params {
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
 	return Params{
-		AuctionPeriods: time.Second * 60,
-		ReduceStep:     time.Second * 5,
+		AuctionPeriods: time.Second * 30,
+		ReduceStep:     time.Second * 30,
 		StartingRate:   "1.5",
 		LowestRate:     "0.5",
 		DiscountRate:   "0.1",

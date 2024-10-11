@@ -21,10 +21,11 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	}
 	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
 	// check if has reached the next auction periods
-	fmt.Println("lastAuctionPeriods", lastAuctionPeriods)
-	fmt.Println("params.AuctionPeriods", params.AuctionPeriods)
-	fmt.Println("currentTime", currentTime)
-	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
+	fmt.Println("sumtime", lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
+	fmt.Println("currentTime", currentTime.Unix())
+	// lastAuctionPeriods.Add(params.AuctionPeriods) > currentTime
+	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
+		fmt.Println("dem 123")
 		// update latest auction period
 		err := k.LastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
 		if err != nil {
@@ -49,27 +50,29 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		// create new auction for this vault
 		for _, vault := range liquidatedVaults {
 			//calcualte initial price and target price
-			auction, err := k.NewAuction(ctx, currentTime, k.calculateInitAuctionPrice(ctx, vault.CollateralLocked), vault.CollateralLocked, vault.Debt, vault.Id)
+			auction, err := k.GetNewAuction(ctx, currentTime, k.calculateInitAuctionPrice(ctx, vault.CollateralLocked), vault.CollateralLocked, vault.Debt, vault.Id)
 			if err != nil {
 				return err
 			}
 			fmt.Println("+++++1", auction.AuctionId)
-			err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+
+			found, err := k.Auctions.Has(ctx, auction.AuctionId)
+			if !found {
+				err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+				if err != nil {
+					return err
+				}
+				err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{})
+				if err != nil {
+					return err
+				}
+			}
 			if err != nil {
 				return err
 			}
-			b, err := k.Auctions.Has(ctx, auction.AuctionId)
-			if b {
-				fmt.Println("hasssssssssss")
-			}
-			err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{})
-			if err != nil {
-				return err
-			}
+
 		}
 	}
-	fmt.Println()
-	fmt.Println("okkkkkkkkkkk")
 	// loop through all auctions
 	// get liquidations data then distribute debt & collateral remain
 	liquidationMap := make(map[string]*vaultstypes.Liquidation)
@@ -84,9 +87,18 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		needCleanup := false
+
+		// true
+		// 1728641755
+		// 1728641705
+		fmt.Println()
+		fmt.Println("mmmmmmm")
+		fmt.Println(auction.Status)
+		fmt.Println(auction.EndTime.Unix())
+		fmt.Println(currentTime.Unix())
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
-			auction.EndTime.After(currentTime) {
+			auction.EndTime.Before(currentTime) {
 
 			var liquidation_tmp vaultstypes.Liquidation
 			liquidation_tmp.Denom = auction.Item.Denom
@@ -155,6 +167,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 
 	// Loop through liquidationMap and liquidate
 	for _, liq := range liquidationMap {
+		fmt.Println("liquidateeeeeeeeeeeeeeeeee")
 		_, _, err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {
 			return err
