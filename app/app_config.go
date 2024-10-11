@@ -11,7 +11,6 @@ import (
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 
 	_ "github.com/onomyprotocol/reserve/x/auction/module" // import for side-effects
-	auctionmoduletypes "github.com/onomyprotocol/reserve/x/auction/types"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
