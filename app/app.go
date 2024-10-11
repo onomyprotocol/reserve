@@ -58,7 +58,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "cosmos"
+	AccountAddressPrefix = "onomy"
 	AppName              = "reserve"
 )
 
