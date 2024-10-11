@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"cosmossdk.io/math"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
@@ -12,8 +13,8 @@ import (
 
 func (k Keeper) NewAuction(ctx context.Context,
 	startTime time.Time,
-	initialPrice, item,
-	targetGoal sdk.Coin,
+	initialPrice math.LegacyDec, 
+	item, targetGoal sdk.Coin,
 	vaultId uint64,
 ) (*types.Auction, error) {
 	auctionId, err := k.AuctionIdSeq.Next(ctx)
@@ -40,7 +41,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 		StartTime:        startTime,
 		EndTime:          endTime,
 		AuctionId:        auctionId,
-		InitialPrice:     initialPrice,
+		InitialPrice:     initialPrice.String(),
 		Item:             item,
 		CurrentRate:      params.StartingRate,
 		LastDiscountTime: startTime,
