@@ -76,11 +76,13 @@ message MsgCancelBid {
   option (cosmos.msg.v1.signer) = "bidder";
   option (amino.name) = "reserve/x/auction/MsgCancelBid";
 
+  string bidder = 1;
+
   // bid_id is the unique id.
-  uint64 bid_id = 1;
+  uint64 bid_id = 2;
 
   // bidding auction id 
-  uint64 auction_id = 2;
+  uint64 auction_id = 3;
 }
 
 // MsgCancelBidResponse defines the response structure for executing a

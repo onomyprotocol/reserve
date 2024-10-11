@@ -23,6 +23,8 @@ import (
 	"github.com/onomyprotocol/reserve/x/auction/client/cli"
 	"github.com/onomyprotocol/reserve/x/auction/keeper"
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 )
 
 var (
@@ -117,9 +119,7 @@ func NewAppModule(
 // RegisterServices registers a gRPC query service to respond to the module-specific gRPC queries
 func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
-	types.RegisterQueryServer(cfg.QueryServer(), keeper.Querier{
-		Keeper: am.keeper,
-	})
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServerImpl(am.keeper))
 }
 
 // RegisterInvariants registers the invariants of the module. If an invariant deviates from its predicted value, the InvariantRegistry triggers appropriate logic (most often the chain will be halted)
@@ -177,9 +177,9 @@ type ModuleInputs struct {
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
-	OracleKeeper  types.OracleKeeper
 	BankKeeper    types.BankKeeper
-	VaultKeeper   types.VaultKeeper
+	OracleKeeper  oraclekeeper.Keeper
+	VaultKeeper   vaultskeeper.Keeper
 }
 
 type ModuleOutputs struct {
@@ -200,8 +200,8 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.StoreService,
 		in.AccountKeeper,
 		in.BankKeeper,
-		in.VaultKeeper,
-		in.OracleKeeper,
+		&in.VaultKeeper,
+		&in.OracleKeeper,
 		in.Logger,
 		authority.String(),
 	)
