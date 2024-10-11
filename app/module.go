@@ -72,6 +72,8 @@ import (
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 
+	auction "github.com/onomyprotocol/reserve/x/auction/module"
+	auctiontypes "github.com/onomyprotocol/reserve/x/auction/types"
 	oracle "github.com/onomyprotocol/reserve/x/oracle/module"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psm "github.com/onomyprotocol/reserve/x/psm/module"
@@ -94,6 +96,7 @@ var maccPerms = map[string][]string{
 	psmtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 	oracletypes.ModuleName:      nil,
 	vaultstypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
+	auctiontypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
 }
 
 func appModules(
@@ -124,6 +127,7 @@ func appModules(
 		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 		vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
+		auction.NewAppModule(appCodec, app.AuctionKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 
 }
@@ -169,6 +173,7 @@ func orderBeginBlockers() []string {
 		psmtypes.ModuleName,
 		vaultstypes.ModuleName,
 		oracletypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
@@ -198,6 +203,7 @@ func orderEndBlockers() []string {
 		psmtypes.ModuleName,
 		vaultstypes.ModuleName,
 		oracletypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
@@ -227,6 +233,7 @@ func orderInitBlockers() []string {
 		psmtypes.ModuleName,
 		vaultstypes.ModuleName,
 		oracletypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
@@ -252,5 +259,6 @@ func simulationModules(
 		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		// oracle.NewAppModule(appCodec,app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 		// vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
+		// auction.NewAppModule(appCodec, app.AuctionKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 }

@@ -62,6 +62,9 @@ import (
 
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
+
+	auctionkeeper "github.com/onomyprotocol/reserve/x/auction/keeper"
+	auctiontypes "github.com/onomyprotocol/reserve/x/auction/types"
 )
 
 type AppKeepers struct {
@@ -94,9 +97,10 @@ type AppKeepers struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
-	PsmKeeper    psmkeeper.Keeper
-	VaultsKeeper vaultskeeper.Keeper
-	OracleKeeper oraclekeeper.Keeper
+	PsmKeeper     psmkeeper.Keeper
+	VaultsKeeper  vaultskeeper.Keeper
+	OracleKeeper  oraclekeeper.Keeper
+	AuctionKeeper auctionkeeper.Keeper
 }
 
 func NewAppKeeper(
@@ -238,6 +242,17 @@ func NewAppKeeper(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
+	appKeepers.AuctionKeeper = auctionkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(appKeepers.keys[auctiontypes.ModuleName]),
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		&appKeepers.VaultsKeeper,
+		&appKeepers.OracleKeeper,
+		logger,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(appKeepers.keys[distrtypes.StoreKey]),
@@ -370,6 +385,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(psmtypes.ModuleName).WithKeyTable(psmtypes.ParamKeyTable())
 	paramsKeeper.Subspace(vaultstypes.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName).WithKeyTable(oracletypes.ParamKeyTable())
+	paramsKeeper.Subspace(auctiontypes.ModuleName).WithKeyTable(auctiontypes.ParamKeyTable())
 
 	return paramsKeeper
 }
