@@ -2,13 +2,10 @@ package keeper
 
 import (
 	"context"
-	"fmt"
-	"strconv"
-	"time"
-
 	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
 	prefix "cosmossdk.io/store/prefix"
+	"fmt"
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -16,6 +13,8 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
+	"strconv"
+	"time"
 )
 
 // SetBandParams sets the Band params in the state
@@ -53,7 +52,7 @@ func (k Keeper) SetBandOracleRequestParams(ctx context.Context, bandOracleReques
 // GetBandParams gets the Band params stored in the state
 func (k Keeper) GetBandOracleRequestParams(ctx context.Context) types.BandOracleRequestParams {
 	store := k.storeService.OpenKVStore(ctx)
-	bz, err := store.Get(types.BandOracleRequestParamsKey)
+	bz, err := store.Get(types.BandParamsKey)
 
 	if err != nil {
 		return types.DefaultGenesis().BandOracleRequestParams
@@ -244,7 +243,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceSt
 }
 
 // AddNewSymbolToBandOracleRequest adds a new symbol to the bandOracle request
-func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
+func (k Keeper) AddNewSymbolToBandOracleRequest1(ctx context.Context, symbol string, oracleScriptId int64) error {
 	allBandOracleRequests := k.GetAllBandOracleRequests(ctx)
 	// check if new symbol's oracle script id is existing
 	for _, req := range allBandOracleRequests {
@@ -276,7 +275,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 }
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
-func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
+func (k *Keeper) GetPrice1(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
@@ -377,7 +376,7 @@ func (k *Keeper) RequestBandOraclePrices(
 }
 
 func (k *Keeper) ProcessBandOraclePrices(
-	ctx sdk.Context,
+	ctx context.Context,
 	relayer sdk.Address,
 	packet types.OracleResponsePacketData,
 ) error {
@@ -411,13 +410,14 @@ func (k *Keeper) ProcessBandOraclePrices(
 }
 
 func (k *Keeper) updateBandPriceStates(
-	ctx sdk.Context,
+	ctx context.Context,
 	input types.OracleInput,
 	output types.OracleOutput,
 	packet types.OracleResponsePacketData,
 	relayer sdk.Address,
 	clientID int,
 ) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	var (
 		inputSymbols = input.PriceSymbols()
 		requestID    = packet.RequestID
@@ -455,7 +455,7 @@ func (k *Keeper) updateBandPriceStates(
 			continue
 		}
 
-		blockTime := ctx.BlockTime().Unix()
+		blockTime := sdkCtx.BlockTime().Unix()
 		if bandPriceState == nil {
 			bandPriceState = &types.BandPriceState{
 				Symbol:      symbol,
@@ -473,7 +473,7 @@ func (k *Keeper) updateBandPriceStates(
 
 		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
 		if err != nil {
-			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
+			k.Logger(sdkCtx).Info("Can not set band price state for symbol %v", symbol)
 		}
 
 		symbols = append(symbols, symbol)
@@ -486,7 +486,7 @@ func (k *Keeper) updateBandPriceStates(
 
 	// emit SetBandPriceEvent event
 	// nolint:errcheck //ignored on purpose
-	ctx.EventManager().EmitTypedEvent(&types.SetBandPriceEvent{
+	sdkCtx.EventManager().EmitTypedEvent(&types.SetBandPriceEvent{
 		Relayer:     relayer.String(),
 		Symbols:     symbols,
 		Prices:      prices,
@@ -494,37 +494,4 @@ func (k *Keeper) updateBandPriceStates(
 		RequestId:   packet.RequestID,
 		ClientId:    int64(clientID),
 	})
-}
-
-func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx context.Context) {
-	var (
-		latestClientID         = k.GetBandLatestClientID(ctx)
-		earliestToKeepClientID = latestClientID - 1000 // todo: default max records to keep (1000)
-	)
-
-	if earliestToKeepClientID > latestClientID {
-		// underflow
-		return
-	}
-
-	for _, id := range k.getPreviousRecordIDs(ctx, earliestToKeepClientID) {
-		k.DeleteBandCallDataRecord(ctx, id)
-	}
-}
-
-func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []uint64 {
-	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
-	bandCalldataStore := prefix.NewStore(kvStore, types.BandCallDataRecordKey)
-	iter := bandCalldataStore.Iterator(nil, sdk.Uint64ToBigEndian(clientID))
-	defer iter.Close()
-
-	staleIDs := make([]uint64, 0)
-	for ; iter.Valid(); iter.Next() {
-		var record types.CalldataRecord
-		k.cdc.MustUnmarshal(iter.Value(), &record)
-
-		staleIDs = append(staleIDs, record.ClientId)
-	}
-
-	return staleIDs
 }
