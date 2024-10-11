@@ -313,7 +313,7 @@ func NewAppKeeper(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		appKeepers.IBCKeeper.ChannelKeeper,
 		appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.ScopedIBCKeeper,
+		appKeepers.ScopedOracleKeeper,
 	)
 
 	appKeepers.PsmKeeper = psmkeeper.NewKeeper(

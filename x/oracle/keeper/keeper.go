@@ -77,7 +77,7 @@ func (k Keeper) Logger(ctx context.Context) log.Logger {
 // ----------------------------------------------------------------------------
 
 // ChanCloseInit defines a wrapper function for the channel Keeper's function
-func (k *Keeper) ChanCloseInit(ctx sdk.Context, portID, channelID string) error {
+func (k Keeper) ChanCloseInit(ctx sdk.Context, portID, channelID string) error {
 	capName := ibchost.ChannelCapabilityPath(portID, channelID)
 	chanCap, ok := k.scopedKeeper.GetCapability(ctx, capName)
 	if !ok {
@@ -94,21 +94,21 @@ func (k Keeper) IsBound(ctx sdk.Context, portID string) bool {
 
 // BindPort defines a wrapper function for the ort Keeper's function in
 // order to expose it to module's InitGenesis function
-func (k *Keeper) BindPort(ctx sdk.Context, portID string) error {
+func (k Keeper) BindPort(ctx sdk.Context, portID string) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	cap := k.portKeeper.BindPort(sdkCtx, portID)
 	return k.ClaimCapability(ctx, cap, host.PortPath(portID))
 }
 
 // GetPort returns the portID for the IBC app module. Used in ExportGenesis
-func (k *Keeper) GetPort(ctx sdk.Context) string {
+func (k Keeper) GetPort(ctx sdk.Context) string {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, []byte{})
 	return string(store.Get(types.PortKey))
 }
 
 // SetPort sets the portID for the IBC app module. Used in InitGenesis
-func (k *Keeper) SetPort(ctx sdk.Context, portID string) {
+func (k Keeper) SetPort(ctx sdk.Context, portID string) {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, []byte{})
 	store.Set(types.PortKey, []byte(portID))
