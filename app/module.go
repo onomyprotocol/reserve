@@ -31,6 +31,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
+
 	// "github.com/cosmos/cosmos-sdk/x/staking"
 
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
@@ -71,9 +72,11 @@ import (
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 
+	oracle "github.com/onomyprotocol/reserve/x/oracle/module"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
+	vaults "github.com/onomyprotocol/reserve/x/vaults/module"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
@@ -117,8 +120,10 @@ func appModules(
 		sdkparams.NewAppModule(app.ParamsKeeper),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
-		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		genutil.NewAppModule(app.AccountKeeper, app.StakingKeeper, app, txConfig),
+		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
+		oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
+		vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 
 }
@@ -238,12 +243,14 @@ func simulationModules(
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil, app.GetSubspace(minttypes.ModuleName)),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
-		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(distrtypes.ModuleName)),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper, app.GetSubspace(slashingtypes.ModuleName), app.interfaceRegistry),
 		sdkparams.NewAppModule(app.ParamsKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		ibc.NewAppModule(app.IBCKeeper),
+		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
+		// oracle.NewAppModule(appCodec,app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
+		// vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 }
