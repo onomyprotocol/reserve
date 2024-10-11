@@ -14,7 +14,6 @@ const (
 
 var (
 	Query_serviceDesc = _Query_serviceDesc
-	Msg_serviceDesc   = _Msg_serviceDesc
 )
 
 func NewMsgCreateVault(owner string, collateral, minted sdk.Coin) MsgCreateVault {
