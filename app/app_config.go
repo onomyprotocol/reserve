@@ -9,6 +9,7 @@ import (
 	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
 
+	_ "github.com/onomyprotocol/reserve/x/auction/module" // import for side-effects
 	auctionmoduletypes "github.com/onomyprotocol/reserve/x/auction/types"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
