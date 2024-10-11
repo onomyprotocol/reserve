@@ -40,8 +40,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		// create new auction for this vault
 		for _, vault := range liquidatedVaults {
 			//calcualte initial price and target price
-			initAuctionPrice := k.calculateInitAuctionPrice(ctx, vault.CollateralLocked, vault.Debt)
-			auction, err := k.NewAuction(ctx, currentTime, initAuctionPrice, vault.CollateralLocked, vault.Debt, vault.Id)
+			auction, err := k.NewAuction(ctx, currentTime, vault.LiquidationPrice, vault.CollateralLocked, vault.Debt, vault.Id)
 			if err != nil {
 				return err
 			}
@@ -156,19 +155,24 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 			continue
 		}
 
-		if currentRate.Mul(auction.InitialPrice.Amount.ToLegacyDec()).TruncateInt().LTE(bid.Amount.Amount) {
+		initPrices, err := sdkmath.LegacyNewDecFromStr(auction.InitialPrice)
+		if err != nil {
+			continue
+		}
+
+		receivePrice, err := sdkmath.LegacyNewDecFromStr(bid.RecivePrice)
+		if err != nil {
+			continue
+		}
+
+		// Only handle bid if: (rate * init price) <= receive price
+		if currentRate.Mul(initPrices).LTE(receivePrice) {
 			bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(bid.Bidder)
 			if err != nil {
 				continue
 			}
 
-			receiveRate, err := sdkmath.LegacyNewDecFromStr(bid.ReciveRate)
-			if err != nil {
-				continue
-			}
-
-			receivePrice := receiveRate.Mul(auction.InitialPrice.Amount.ToLegacyDec()).TruncateInt()
-			receiveAmt := bid.Amount.Amount.Quo(receivePrice)
+			receiveAmt := bid.Amount.Amount.ToLegacyDec().Quo(receivePrice).TruncateInt()
 			receiveCoin := sdk.NewCoin(itemDenom, receiveAmt)
 			// if out of collatheral
 			if auction.Item.Amount.LT(receiveAmt) {
