@@ -76,8 +76,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	ibctestingtypes "github.com/cosmos/ibc-go/v8/testing/types"
 
+	auctionkeeper "github.com/onomyprotocol/reserve/x/auction/keeper"
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-
 	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 
@@ -147,9 +147,10 @@ type App struct {
 	ScopedKeepers             map[string]capabilitykeeper.ScopedKeeper
 	// ScopedOracleKeeper        capabilitykeeper.ScopedKeeper
 
-	OracleKeeper oraclemodulekeeper.Keeper
-	VaultsKeeper vaultskeeper.Keeper
-	PSMKeeper    psmkeeper.Keeper
+	OracleKeeper  oraclemodulekeeper.Keeper
+	VaultsKeeper  vaultskeeper.Keeper
+	PSMKeeper     psmkeeper.Keeper
+	Auctionkeeper auctionkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -305,6 +306,7 @@ func New(
 		&app.OracleKeeper,
 		&app.VaultsKeeper,
 		&app.PSMKeeper,
+		&app.Auctionkeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)

@@ -3,12 +3,14 @@ package app
 import (
 	"time"
 
+	auctionmodulev1 "github.com/onomyprotocol/reserve/api/reserve/auction/module"
 	oraclemodulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	psmmodulev1 "github.com/onomyprotocol/reserve/api/reserve/psm/module/v1"
 	vaultmodulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	_ "github.com/onomyprotocol/reserve/x/oracle/module" // import for side-effects
-	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
+	auctionmoduletypes "github.com/onomyprotocol/reserve/x/auction/types"
+	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 	_ "github.com/onomyprotocol/reserve/x/vaults/module" // import for side-effects
 	vaultsmoduletypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -103,6 +105,7 @@ var (
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
 		psmtypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -130,6 +133,7 @@ var (
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
 		psmtypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -151,6 +155,7 @@ var (
 		oraclemoduletypes.ModuleName,
 		vaultsmoduletypes.ModuleName,
 		psmtypes.ModuleName,
+		auctionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -175,6 +180,7 @@ var (
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 		{Account: vaultsmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: vaultsmoduletypes.ReserveModuleName, Permissions: []string{authtypes.Burner}},
+		{Account: auctionmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 	}
 
 	// blocked account addresses
@@ -320,6 +326,10 @@ var (
 			{
 				Name:   psmtypes.ModuleName,
 				Config: appconfig.WrapAny(&psmmodulev1.Module{}),
+			},
+			{
+				Name:   auctionmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&auctionmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},
