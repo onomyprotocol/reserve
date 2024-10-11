@@ -17,7 +17,7 @@ import (
 
 	"github.com/cosmos/ibc-go/modules/capability"
 
-	// ibcfee "github.com/cosmos/ibc-go/v8/modules/apps/29-fee"
+	ibcfee "github.com/cosmos/ibc-go/v8/modules/apps/29-fee"
 
 	// ibc "github.com/cosmos/ibc-go/v8/modules/core"
 
@@ -39,6 +39,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/consensus"
+	consensustypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
@@ -60,7 +61,6 @@ import (
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	authz "github.com/cosmos/cosmos-sdk/x/authz"
-	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	genutil "github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
@@ -72,9 +72,11 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 	psm "github.com/onomyprotocol/reserve/x/psm/module"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
+	vaultsmodule "github.com/onomyprotocol/reserve/x/vaults/module"
 )
 
 var maccPerms = map[string][]string{
@@ -86,10 +88,9 @@ var maccPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:            {authtypes.Burner},
 	// liquiditytypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	ibcfeetypes.ModuleName:      nil,
 	psmtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	oracletypes.ModuleName:      nil,
 	vaultstypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
 }
 
@@ -100,6 +101,7 @@ func appModules(
 	skipGenesisInvariants bool,
 ) []module.AppModule {
 	return []module.AppModule{
+		genutil.NewAppModule(app.AccountKeeper, app.StakingKeeper, app, txConfig),
 		auth.NewAppModule(appCodec, app.AccountKeeper, nil, app.GetSubspace(authtypes.ModuleName)),
 		vesting.NewAppModule(app.AccountKeeper, app.BankKeeper),
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper, app.GetSubspace(banktypes.ModuleName)),
@@ -113,12 +115,16 @@ func appModules(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AccountKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
+		ibc.NewAppModule(app.IBCKeeper),
+		ibcfee.NewAppModule(app.IBCFeeKeeper),
 		ibctm.NewAppModule(),
 		sdkparams.NewAppModule(app.ParamsKeeper),
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
-		genutil.NewAppModule(app.AccountKeeper, app.StakingKeeper, app, txConfig),
+		vaultsmodule.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
+		oraclemodule.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
+
 	}
 
 }
@@ -139,89 +145,89 @@ func newBasicManagerFromManager(app *App) module.BasicManager {
 	return basicManager
 }
 
+// During begin block slashing happens after distr.BeginBlocker so that
+// there is nothing left over in the validator fee pool, so as to keep the
+// CanWithdrawInvariant invariant.
+// NOTE: staking module is required if HistoricalEntries param > 0
+// NOTE: capability module's beginblocker must come before any modules using capabilities (e.g. IBC)
 func orderBeginBlockers() []string {
 	return []string{
-		capabilitytypes.ModuleName,
-		minttypes.ModuleName,
-		distrtypes.ModuleName,
-		slashingtypes.ModuleName,
-		evidencetypes.ModuleName,
-		stakingtypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		govtypes.ModuleName,
-		crisistypes.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
-		icatypes.ModuleName,
-		ibcfeetypes.ModuleName,
-		genutiltypes.ModuleName,
-		authz.ModuleName,
-		feegrant.ModuleName,
-		paramstypes.ModuleName,
-		vestingtypes.ModuleName,
-		consensusparamtypes.ModuleName,
-		psmtypes.ModuleName,
-		vaultstypes.ModuleName,
-		oracletypes.ModuleName,
+			// cosmos sdk modules
+			minttypes.ModuleName,
+			distrtypes.ModuleName,
+			slashingtypes.ModuleName,
+			evidencetypes.ModuleName,
+			stakingtypes.ModuleName,
+			authz.ModuleName,
+			genutiltypes.ModuleName,
+			// ibc modules
+			capabilitytypes.ModuleName,
+			ibcexported.ModuleName,
+			ibctransfertypes.ModuleName,
+			icatypes.ModuleName,
+			ibcfeetypes.ModuleName,
+			// chain modules
+			oracletypes.ModuleName,
+			vaultstypes.ModuleName,
+			psmtypes.ModuleName,
 	}
 }
 
 func orderEndBlockers() []string {
 	return []string{
-		crisistypes.ModuleName,
-		govtypes.ModuleName,
-		stakingtypes.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
-		icatypes.ModuleName,
-		capabilitytypes.ModuleName,
-		ibcfeetypes.ModuleName,
-		authtypes.ModuleName,
-		banktypes.ModuleName,
-		distrtypes.ModuleName,
-		slashingtypes.ModuleName,
-		minttypes.ModuleName,
-		genutiltypes.ModuleName,
-		evidencetypes.ModuleName,
-		authz.ModuleName,
-		feegrant.ModuleName,
-		paramstypes.ModuleName,
-		upgradetypes.ModuleName,
-		vestingtypes.ModuleName,
-		consensusparamtypes.ModuleName,
-		psmtypes.ModuleName,
-		vaultstypes.ModuleName,
-		oracletypes.ModuleName,
+	// cosmos sdk modules
+	crisistypes.ModuleName,
+	govtypes.ModuleName,
+	stakingtypes.ModuleName,
+	feegrant.ModuleName,
+	genutiltypes.ModuleName,
+	// ibc modules
+	ibcexported.ModuleName,
+	ibctransfertypes.ModuleName,
+	capabilitytypes.ModuleName,
+	icatypes.ModuleName,
+	ibcfeetypes.ModuleName,
+	// chain modules
+	oracletypes.ModuleName,
+	vaultstypes.ModuleName,
+	psmtypes.ModuleName,
 	}
 }
 
+// NOTE: The genutils module must occur after staking so that pools are
+// properly initialized with tokens from genesis accounts.
+// NOTE: The genutils module must also occur after auth so that it can access the params from auth.
+// NOTE: Capability module must occur first so that it can initialize any capabilities
+// so that other modules that want to create or claim capabilities afterwards in InitChain
+// can do so safely.
 func orderInitBlockers() []string {
 	return []string{
+		// cosmos-sdk/ibc modules
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
-		govtypes.ModuleName,
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
+		govtypes.ModuleName,
 		minttypes.ModuleName,
-		genutiltypes.ModuleName,
-		ibctransfertypes.ModuleName,
+		crisistypes.ModuleName,
 		ibcexported.ModuleName,
-		icatypes.ModuleName,
-		ibcfeetypes.ModuleName,
+		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		authz.ModuleName,
+		ibctransfertypes.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		consensusparamtypes.ModuleName,
-		crisistypes.ModuleName,
-		psmtypes.ModuleName,
-		vaultstypes.ModuleName,
+		consensustypes.ModuleName,
+		// chain modules
 		oracletypes.ModuleName,
+		vaultstypes.ModuleName,
+		psmtypes.ModuleName,
 	}
 }
 

@@ -316,20 +316,20 @@ func (k *Keeper) RequestBandOraclePrices(
 
 	calldata := req.GetCalldata(types.IsLegacySchemeOracleScript(req.OracleScriptId, bandParams))
 
-	sourceChannelEnd, found := k.ibcKeeperFn().ChannelKeeper.GetChannel(sdkCtx, sourcePortID, sourceChannel)
+	sourceChannelEnd, found := k.channelKeeper.GetChannel(sdkCtx, sourcePortID, sourceChannel)
 	if !found {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unknown channel %s port %s", sourceChannel, sourcePortID)
 	}
 
 	// retrieve the dynamic capability for this channel
-	channelCap, ok := k.ScopedKeeper().GetCapability(sdkCtx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
+	channelCap, ok := k.scopedKeeper.GetCapability(sdkCtx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
 	if !ok {
 		return errorsmod.Wrap(channeltypes.ErrChannelCapabilityNotFound, "module does not own channel capability")
 	}
 
 	destinationPort := sourceChannelEnd.Counterparty.PortId
 	destinationChannel := sourceChannelEnd.Counterparty.ChannelId
-	sequence, found := k.ibcKeeperFn().ChannelKeeper.GetNextSequenceSend(sdkCtx, sourcePortID, sourceChannel)
+	sequence, found := k.channelKeeper.GetNextSequenceSend(sdkCtx, sourcePortID, sourceChannel)
 
 	if !found {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unknown sequence number for channel %s port %s", sourceChannel, sourcePortID)
@@ -351,7 +351,7 @@ func (k *Keeper) RequestBandOraclePrices(
 	)
 
 	// Send packet to IBC, authenticating with channelCap
-	_, err = k.ibcKeeperFn().ChannelKeeper.SendPacket(
+	_, err = k.channelKeeper.SendPacket(
 		sdkCtx,
 		channelCap,
 		packet.SourcePort,

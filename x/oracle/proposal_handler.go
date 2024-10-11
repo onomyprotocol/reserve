@@ -34,7 +34,7 @@ func handleUpdateBandParamsProposal(ctx sdk.Context, k keeper.Keeper, p *types.U
 
 	k.SetPort(ctx, p.BandParams.IbcPortId)
 	// Only try to bind to port if it is not already bound, since we may already own port capability
-	if k.ShouldBound(ctx, p.BandParams.IbcPortId) {
+	if !k.IsBound(ctx, p.BandParams.IbcPortId) {
 		// module binds to the port on InitChain
 		// and claims the returned capability
 		err := k.BindPort(ctx, p.BandParams.IbcPortId)
