@@ -68,10 +68,10 @@ func (s *KeeperTestSuite) SetupTest() {
 	}
 	mockOracleKeeper.SetPrice(s.Ctx, types.DenomStable, math.LegacyMustNewDecFromStr("1"))
 
-	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
+	s.App.PsmKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper
 
-	s.k = s.App.PSMKeeper
+	s.k = s.App.PsmKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)
 	s.queryServer = keeper.NewQueryServerImpl(s.k)
 }

@@ -37,7 +37,7 @@ func (suite *PriceRelayTestSuite) SetupTest() {
 	ibctesting.DefaultTestingAppInit = func() (ibctesting.TestingApp, map[string]json.RawMessage) {
 		db := dbm.NewMemDB()
 		encCdc := bandapp.MakeEncodingConfig()
-		app, _ := reserveapp.New(log.NewNopLogger(), db, nil, true, simtestutil.EmptyAppOptions{})
+		app := reserveapp.NewApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, reserveapp.DefaultNodeHome, simtestutil.EmptyAppOptions{})
 		genesisState := app.DefaultGenesis()
 		oracleGenesis := oracletypes.DefaultGenesis()
 		oracleGenesis.BandParams = *oracletypes.DefaultTestBandIbcParams()
