@@ -145,6 +145,16 @@ func NewAppKeeper(
 		appKeepers.tkeys[paramstypes.TStoreKey],
 	)
 
+	// UpgradeKeeper must be created before IBCKeeper
+	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(
+		skipUpgradeHeights,
+		runtime.NewKVStoreService(appKeepers.keys[upgradetypes.StoreKey]),
+		appCodec,
+		homePath,
+		bApp,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
 	// set the BaseApp's parameter store
 	appKeepers.ConsensusParamsKeeper = consensusparamkeeper.NewKeeper(
 		appCodec,
@@ -168,16 +178,6 @@ func NewAppKeeper(
 	// Applications that wish to enforce statically created ScopedKeepers should call `Seal` after creating
 	// their scoped modules in `NewApp` with `ScopeToModule`
 	appKeepers.CapabilityKeeper.Seal()
-
-	appKeepers.CrisisKeeper = crisiskeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(appKeepers.keys[crisistypes.StoreKey]),
-		invCheckPeriod,
-		appKeepers.BankKeeper,
-		authtypes.FeeCollectorName,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		appKeepers.AccountKeeper.AddressCodec(),
-	)
 
 	// Add normal keepers
 	appKeepers.AccountKeeper = authkeeper.NewAccountKeeper(
@@ -206,6 +206,8 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 	)
 
+	appKeepers.AuthzKeeper = appKeepers.AuthzKeeper.SetBankKeeper(appKeepers.BankKeeper)
+
 	appKeepers.FeeGrantKeeper = feegrantkeeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(appKeepers.keys[feegrant.StoreKey]),
@@ -220,6 +222,88 @@ func NewAppKeeper(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		authcodec.NewBech32Codec(sdk.GetConfig().GetBech32ValidatorAddrPrefix()),
 		authcodec.NewBech32Codec(sdk.GetConfig().GetBech32ConsensusAddrPrefix()),
+	)
+
+	// mint keeper must be created after provider keeper
+	appKeepers.MintKeeper = mintkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(appKeepers.keys[minttypes.StoreKey]),
+		appKeepers.StakingKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		authtypes.FeeCollectorName,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(appKeepers.keys[distrtypes.StoreKey]),
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.StakingKeeper,
+		authtypes.FeeCollectorName,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.SlashingKeeper = slashingkeeper.NewKeeper(
+		appCodec,
+		legacyAmino,
+		runtime.NewKVStoreService(appKeepers.keys[slashingtypes.StoreKey]),
+		appKeepers.StakingKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.CrisisKeeper = crisiskeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(appKeepers.keys[crisistypes.StoreKey]),
+		invCheckPeriod,
+		appKeepers.BankKeeper,
+		authtypes.FeeCollectorName,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		appKeepers.AccountKeeper.AddressCodec(),
+	)
+
+	// register the staking hooks
+	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
+	appKeepers.StakingKeeper.SetHooks(
+		stakingtypes.NewMultiStakingHooks(
+			appKeepers.DistrKeeper.Hooks(),
+			appKeepers.SlashingKeeper.Hooks(),
+		),
+	)
+
+	// UpgradeKeeper must be created before IBCKeeper
+	appKeepers.IBCKeeper = ibckeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[ibcexported.StoreKey],
+		appKeepers.GetSubspace(ibcexported.ModuleName),
+		appKeepers.StakingKeeper,
+		appKeepers.UpgradeKeeper,
+		appKeepers.ScopedIBCKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[ibcfeetypes.StoreKey],
+		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with IBC middleware
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+	)
+
+	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
+		appCodec,
+		appKeepers.GetKey(ibctransfertypes.StoreKey),
+		appKeepers.GetSubspace(ibctransfertypes.ModuleName),
+		appKeepers.IBCFeeKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.ScopedTransferKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
 	appKeepers.OracleKeeper = oraclekeeper.NewKeeper(
@@ -250,77 +334,6 @@ func NewAppKeeper(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
-	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(appKeepers.keys[distrtypes.StoreKey]),
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.StakingKeeper,
-		authtypes.FeeCollectorName,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	appKeepers.SlashingKeeper = slashingkeeper.NewKeeper(
-		appCodec,
-		legacyAmino,
-		runtime.NewKVStoreService(appKeepers.keys[slashingtypes.StoreKey]),
-		appKeepers.StakingKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	// register the staking hooks
-	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
-	appKeepers.StakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(
-			appKeepers.DistrKeeper.Hooks(),
-			appKeepers.SlashingKeeper.Hooks(),
-		),
-	)
-
-	// UpgradeKeeper must be created before IBCKeeper
-	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(
-		skipUpgradeHeights,
-		runtime.NewKVStoreService(appKeepers.keys[upgradetypes.StoreKey]),
-		appCodec,
-		homePath,
-		bApp,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	appKeepers.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[ibcfeetypes.StoreKey],
-		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with IBC middleware
-		appKeepers.IBCKeeper.ChannelKeeper,
-		appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-	)
-
-	appKeepers.TransferKeeper = ibctransferkeeper.NewKeeper(
-		appCodec,
-		appKeepers.GetKey(ibctransfertypes.StoreKey),
-		appKeepers.GetSubspace(ibctransfertypes.ModuleName),
-		appKeepers.IBCFeeKeeper,
-		appKeepers.IBCKeeper.ChannelKeeper,
-		appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.ScopedTransferKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	// UpgradeKeeper must be created before IBCKeeper
-	appKeepers.IBCKeeper = ibckeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[ibcexported.StoreKey],
-		appKeepers.GetSubspace(ibcexported.ModuleName),
-		appKeepers.StakingKeeper,
-		appKeepers.UpgradeKeeper,
-		appKeepers.ScopedIBCKeeper,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
 	// gov depends on provider, so needs to be set after
 	govConfig := govtypes.DefaultConfig()
 	// set the MaxMetadataLen for proposals to the same value as it was pre-sdk v0.47.x
@@ -336,17 +349,6 @@ func NewAppKeeper(
 		appKeepers.DistrKeeper,
 		bApp.MsgServiceRouter(),
 		govConfig,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	// mint keeper must be created after provider keeper
-	appKeepers.MintKeeper = mintkeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(appKeepers.keys[minttypes.StoreKey]),
-		appKeepers.StakingKeeper,
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		authtypes.FeeCollectorName,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
