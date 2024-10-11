@@ -8,6 +8,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	// "github.com/onomyprotocol/reserve/testutil/sample"
 	psmsimulation "github.com/onomyprotocol/reserve/x/psm/simulation"
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
@@ -16,7 +17,7 @@ import (
 var (
 	_ = psmsimulation.FindAccount
 	_ = rand.Rand{}
-
+	// _ = sample.AccAddress
 	_ = sdk.AccAddress{}
 	_ = simulation.MsgEntryKind
 )
