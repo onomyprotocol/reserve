@@ -23,6 +23,8 @@ import (
 	"github.com/onomyprotocol/reserve/x/auction/client/cli"
 	"github.com/onomyprotocol/reserve/x/auction/keeper"
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 )
 
 var (
@@ -177,9 +179,9 @@ type ModuleInputs struct {
 	Logger       log.Logger
 
 	AccountKeeper types.AccountKeeper
-	OracleKeeper  types.OracleKeeper
 	BankKeeper    types.BankKeeper
-	VaultKeeper   types.VaultKeeper
+	OracleKeeper  oraclekeeper.Keeper
+	VaultKeeper   vaultskeeper.Keeper
 }
 
 type ModuleOutputs struct {
@@ -200,8 +202,8 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.StoreService,
 		in.AccountKeeper,
 		in.BankKeeper,
-		in.VaultKeeper,
-		in.OracleKeeper,
+		&in.VaultKeeper,
+		&in.OracleKeeper,
 		in.Logger,
 		authority.String(),
 	)

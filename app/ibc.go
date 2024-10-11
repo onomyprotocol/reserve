@@ -8,7 +8,9 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	"github.com/cosmos/cosmos-sdk/x/params"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	paramproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
@@ -36,8 +38,10 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
 	oracle "github.com/onomyprotocol/reserve/x/oracle"
-	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
+	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.
@@ -94,7 +98,9 @@ func (app *App) registerIBCModules() error {
 	// See: https://docs.cosmos.network/main/modules/gov#proposal-messages
 	govRouter := govv1beta1.NewRouter()
 	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
-		AddRoute(oraclemoduletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper))
+		AddRoute(oraclemoduletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper)).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(psmtypes.RouterKey, psm.NewPSMProposalHandler(&app.PSMKeeper))
 
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.GetKey(ibcfeetypes.StoreKey),

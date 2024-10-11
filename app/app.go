@@ -32,7 +32,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/auth"
-	_ "github.com/cosmos/cosmos-sdk/x/auth" // import for side-effects
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authsims "github.com/cosmos/cosmos-sdk/x/auth/simulation"
 	_ "github.com/cosmos/cosmos-sdk/x/auth/tx/config" // import for side-effects
@@ -79,7 +78,10 @@ import (
 
 	auctionkeeper "github.com/onomyprotocol/reserve/x/auction/keeper"
 	oraclemodulekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
+	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
+
+	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/onomyprotocol/reserve/docs"
 )
@@ -147,7 +149,8 @@ type App struct {
 
 	OracleKeeper  oraclemodulekeeper.Keeper
 	VaultsKeeper  vaultskeeper.Keeper
-	AuctionKeeper auctionkeeper.Keeper
+	PSMKeeper     psmkeeper.Keeper
+	Auctionkeeper auctionkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -302,6 +305,8 @@ func New(
 		&app.CircuitBreakerKeeper,
 		&app.OracleKeeper,
 		&app.VaultsKeeper,
+		&app.PSMKeeper,
+		&app.Auctionkeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)

@@ -46,17 +46,17 @@ func NewKeeper(
 ) *Keeper {
 	sb := collections.NewSchemaBuilder(storeService)
 	k := Keeper{
-		authority:      authority,
-		cdc:            cdc,
-		storeService:   storeService,
-		accountKeeper:  ak,
-		OracleKeeper:   ok,
-		bankKeeper:     bk,
-		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		VaultsManager:  collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
-		Vaults:         collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
-		VaultsSequence: collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
-		LastUpdateTime: collections.NewItem(sb, types.LastUpdateKeyPrefix, "last_update", codec.CollValue[types.LastUpdate](cdc)),
+		authority:       authority,
+		cdc:             cdc,
+		storeService:    storeService,
+		accountKeeper:   ak,
+		OracleKeeper:    ok,
+		bankKeeper:      bk,
+		Params:          collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
+		VaultsManager:   collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
+		Vaults:          collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
+		VaultsSequence:  collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
+		LastUpdateTime:  collections.NewItem(sb, types.LastUpdateKeyPrefix, "last_update", codec.CollValue[types.LastUpdate](cdc)),
 		ShortfallAmount: collections.NewItem(sb, types.ShortfallKeyPrefix, "shortfall", sdk.IntValue),
 	}
 
@@ -82,6 +82,7 @@ func (k *Keeper) ActiveCollateralAsset(
 	stabilityFee math.LegacyDec,
 	mintingFee math.LegacyDec,
 	liquidationPenalty math.LegacyDec,
+	oracleScript int64,
 ) error {
 	// Check if asset alreay be actived
 	actived := k.IsActived(ctx, denom)
@@ -100,7 +101,7 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
-	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, denom, 1)
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, denom, oracleScript)
 	if err != nil {
 		return err
 	}

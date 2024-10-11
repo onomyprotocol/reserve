@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"time"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,15 +14,18 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	params := k.GetParams(ctx)
 
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
-	lastAuctionPeriods, err := k.lastestAuctionPeriod.Get(ctx)
+	lastAuctionPeriods_unix, err := k.lastestAuctionPeriod.Get(ctx)
 	if err != nil {
 		return err
 	}
-
+	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
 	// check if has reached the next auction periods
 	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
 		// update latest auction period
-		k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods))
+		err := k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
+		if err != nil {
+			return err
+		}
 
 		liquidations, err := k.vaultKeeper.GetLiquidations(ctx)
 		if err != nil {

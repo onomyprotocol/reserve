@@ -34,7 +34,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.OracleKeeper.GetPrice(ctx, denom, "USD")
+	price := k.OracleKeeper.GetPrice(ctx, denom, types.DefaultMintDenom)
 	// TODO: recalculate with denom decimal?
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(*price)
 	ratio := collateralValue.QuoInt(mint.Amount)
@@ -134,7 +134,7 @@ func (k *Keeper) MintCoin(
 	}
 
 	lockedCoin := vault.CollateralLocked
-	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, "USD")
+	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, types.DefaultMintDenom)
 	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(*price)
 
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(vm.Params.MintingFee).TruncateInt()
@@ -277,7 +277,7 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, "USD")
+	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, types.DefaultMintDenom)
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(*price)
 	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
@@ -328,8 +328,7 @@ func (k *Keeper) UpdateVaultsDebt(
 	return k.LastUpdateTime.Set(ctx, types.LastUpdate{Time: sdkCtx.BlockTime()})
 }
 
-func (k *Keeper) ShouldLiquidate(
-	ctx context.Context,
+func (k *Keeper) shouldLiquidate(
 	vault types.Vault,
 	price math.LegacyDec,
 	liquidationRatio math.LegacyDec,
@@ -352,12 +351,15 @@ func (k *Keeper) GetLiquidations(
 	ctx context.Context,
 ) ([]*types.Liquidation, error) {
 
+	// denom to liquidationRatios
 	liquidationRatios := make(map[string]math.LegacyDec)
+	// denom to price
 	prices := make(map[string]math.LegacyDec)
+	// denom to Liquidation
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
-		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, "USD")
+		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, types.DefaultMintDenom)
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
 		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom)
@@ -370,7 +372,7 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
-		shouldLiquidate, err := k.ShouldLiquidate(ctx, vault, prices[denom], liquidationRatios[denom])
+		shouldLiquidate, err := k.shouldLiquidate(vault, prices[denom], liquidationRatios[denom])
 		if shouldLiquidate && err == nil {
 			liquidations[denom].LiquidatingVaults = append(liquidations[denom].LiquidatingVaults, &vault)
 			liquidations[denom].VaultLiquidationStatus[id] = &types.VaultLiquidationStatus{}

@@ -43,7 +43,7 @@ type ParamSubspace interface {
 }
 
 type VaultKeeper interface {
-	GetLiquidations(ctx context.Context) ([]vaulttypes.Liquidation, error)
+	GetLiquidations(ctx context.Context) ([]*vaulttypes.Liquidation, error)
 	Liquidate(ctx context.Context, liquidation vaulttypes.Liquidation) error
 	GetVault(ctx context.Context, vaultId uint64) (vaulttypes.Vault, error)
 }
