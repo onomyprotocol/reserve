@@ -24,7 +24,7 @@ func DefaultParams() Params {
 		AuctionPeriods: time.Second * 30,
 		ReduceStep:     time.Second * 30,
 		StartingRate:   "1.5",
-		LowestRate:     "0.5",
+		LowestRate:     "0.9",
 		DiscountRate:   "0.1",
 	}
 }

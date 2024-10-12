@@ -132,7 +132,6 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 	if !has {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address %s: account does not exist", bid.Bidder)
 	}
-
 	bidQueue, err := k.Bids.Get(ctx, auctionId)
 	if err != nil {
 		return err
@@ -146,16 +145,29 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 		return err
 	}
 
-	bids, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidderAddr))
+	found, err := k.BidByAddress.Has(ctx, collections.Join(auctionId, bidderAddr))
+	if found {
+		bids, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidderAddr))
+		if err != nil {
+			return err
+		}
+		bids.Bids = append(bids.Bids, &bid)
+		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
+		if err != nil {
+			return err
+		}
+	} else {
+		bids := types.Bids{
+			Bids: []*types.Bid{&bid},
+		}
+		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
+		if err != nil {
+			return err
+		}
+	}
 	if err != nil {
 		return err
 	}
-	bids.Bids = append(bids.Bids, &bid)
-	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
-	if err != nil {
-		return err
-	}
-
 	return k.lockedToken(ctx, sdk.NewCoins(bid.Amount), bid.Bidder)
 }
 
