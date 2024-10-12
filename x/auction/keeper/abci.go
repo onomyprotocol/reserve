@@ -70,22 +70,22 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
 			auction.EndTime.After(currentTime) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
-			if ok {
+			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
 				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
 				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
 				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
-
 			} else {
-				liquidation_tmp.Denom = auction.Item.Denom
-				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
-				liquidation_tmp.VaultLiquidationStatus = make(map[uint64]*vaultstypes.VaultLiquidationStatus)
+				liquidation_tmp = &vaultstypes.Liquidation{
+					Denom:                  auction.Item.Denom,
+					LiquidatingVaults:      []*vaultstypes.Vault{&vault},
+					VaultLiquidationStatus: make(map[uint64]*vaultstypes.VaultLiquidationStatus),
+				}
 
-				var vaultLiquidationStatus_tmp vaultstypes.VaultLiquidationStatus
-				vaultLiquidationStatus_tmp.Sold = auction.TokenRaised
-				vaultLiquidationStatus_tmp.RemainCollateral = auction.Item
-
-				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultLiquidationStatus_tmp
+				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultstypes.VaultLiquidationStatus{
+					Sold:             auction.TokenRaised,
+					RemainCollateral: auction.Item,
+				}
 				liquidationMap[auction.Item.Denom] = liquidation_tmp
 			}
 			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ModuleName, sdk.NewCoins(liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold))
