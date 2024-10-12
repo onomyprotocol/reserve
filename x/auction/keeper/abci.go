@@ -2,10 +2,9 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -47,8 +46,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 
 			if isCreate {
-				fmt.Println()
-				fmt.Println("+++++1 aution-id", auction.AuctionId)
 				err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
 				if err != nil {
 					return err
@@ -85,8 +82,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
 			auction.EndTime.Before(currentTime) {
-			fmt.Println()
-			fmt.Println("liquidate do end time ah++++++", auction.EndTime.Before(currentTime))
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
@@ -171,7 +166,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue types.BidQueue) error {
 	itemDenom := auction.Item.Denom
 
-	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
+	currentRate, err := math.LegacyNewDecFromStr(auction.CurrentRate)
 	if err != nil {
 		return err
 	}
@@ -186,20 +181,18 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 			continue
 		}
 
-		initPrices, err := sdkmath.LegacyNewDecFromStr(auction.InitialPrice)
+		initPrices, err := math.LegacyNewDecFromStr(auction.InitialPrice)
 		if err != nil {
 			continue
 		}
 
-		receivePrice, err := sdkmath.LegacyNewDecFromStr(bid.RecivePrice)
+		receivePrice, err := math.LegacyNewDecFromStr(bid.RecivePrice)
 		if err != nil {
 			continue
 		}
 
 		// Only handle bid if: (rate * init price) <= receive price
 		if currentRate.Mul(initPrices).LTE(receivePrice) {
-			fmt.Println()
-			fmt.Println("co kha nang la nguoi dau gia thanh cong")
 			bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(bid.Bidder)
 			if err != nil {
 				continue
@@ -211,22 +204,33 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 			if auction.Item.Amount.LT(receiveAmt) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL
 
-				fmt.Println()
-				fmt.Println("thua tien nhung k nhan duoc item")
-				continue
+				amountBuy := auction.Item.Amount.ToLegacyDec().Mul(receivePrice).TruncateInt()
+
+				amountRefund := bid.Amount.Amount.Sub(amountBuy)
+				// send all auction item
+				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(auction.Item))
+				if err != nil {
+					continue
+				}
+
+				err = k.refundToken(ctx, sdk.NewCoins(sdk.NewCoin(bid.Amount.Denom, amountRefund)), bid.Bidder)
+				if err != nil {
+					continue
+				}
+
+				auction.Item = sdk.NewCoin(auction.Item.Denom, math.ZeroInt())
+				auction.TokenRaised = auction.TokenRaised.Add(sdk.NewCoin(bid.Amount.Denom, amountBuy))
+			} else {
+				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
+				if err != nil {
+					continue
+				}
+
+				// update auction collatheral
+				auction.Item = auction.Item.Sub(receiveCoin)
+
+				auction.TokenRaised = auction.TokenRaised.Add(bid.Amount)
 			}
-
-			err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
-			if err != nil {
-				continue
-			}
-			fmt.Println()
-			fmt.Println("bid thanh cong roi ne")
-
-			// update auction collatheral
-			auction.Item = auction.Item.Sub(receiveCoin)
-
-			auction.TokenRaised = auction.TokenRaised.Add(bid.Amount)
 
 			if auction.TokenRaised.IsGTE(auction.TargetGoal) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
@@ -267,19 +271,19 @@ func (k Keeper) refundBidders(ctx context.Context, bidQueue types.BidQueue) erro
 }
 
 func (k Keeper) discountRate(auction types.Auction, params types.Params) (string, error) {
-	lowestRate, err := sdkmath.LegacyNewDecFromStr(params.LowestRate)
+	lowestRate, err := math.LegacyNewDecFromStr(params.LowestRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
-	discountRate, err := sdkmath.LegacyNewDecFromStr(params.DiscountRate)
+	discountRate, err := math.LegacyNewDecFromStr(params.DiscountRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
-	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
+	currentRate, err := math.LegacyNewDecFromStr(auction.CurrentRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
 	if currentRate.LT(lowestRate) || currentRate.Sub(discountRate).LT(lowestRate) {
