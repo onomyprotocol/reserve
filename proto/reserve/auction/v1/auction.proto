@@ -43,8 +43,7 @@ message Auction {
   uint64 auction_id = 3;
 
   // starting price (currently only support usd stable token)
-  cosmos.base.v1beta1.Coin initial_price = 4
-      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+  string initial_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 
   // items defines liquidate assets
   cosmos.base.v1beta1.Coin item = 5
@@ -84,9 +83,8 @@ message Bid {
   cosmos.base.v1beta1.Coin amount = 3
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
   
-  // recive_rate defines the rate compare to the price at the start of the auction
-  // that the bid is willing to pay
-  string recive_rate = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
+  // recive_price defines the price that the bid is willing to pay
+  string recive_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 
   // maxReceive maximum receive-able amount
   cosmos.base.v1beta1.Coin max_receive = 5
