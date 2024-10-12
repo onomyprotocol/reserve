@@ -69,12 +69,25 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
 			auction.EndTime.After(currentTime) {
+			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
+			if ok {
+				liquidation_tmp.Denom = auction.Item.Denom
+				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
+				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
+				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
 
-			liquidationMap[auction.Item.Denom].Denom = auction.Item.Denom
-			liquidationMap[auction.Item.Denom].LiquidatingVaults = append(liquidationMap[auction.Item.Denom].LiquidatingVaults, &vault)
-			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
-			liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral = liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+			} else {
+				liquidation_tmp.Denom = auction.Item.Denom
+				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
+				liquidation_tmp.VaultLiquidationStatus = make(map[uint64]*vaultstypes.VaultLiquidationStatus)
 
+				var vaultLiquidationStatus_tmp vaultstypes.VaultLiquidationStatus
+				vaultLiquidationStatus_tmp.Sold = auction.TokenRaised
+				vaultLiquidationStatus_tmp.RemainCollateral = auction.Item
+
+				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultLiquidationStatus_tmp
+				liquidationMap[auction.Item.Denom] = liquidation_tmp
+			}
 			err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ModuleName, sdk.NewCoins(liquidationMap[auction.Item.Denom].VaultLiquidationStatus[vault.Id].Sold))
 			if err != nil {
 				return true, err
