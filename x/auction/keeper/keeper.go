@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/store"
@@ -25,7 +24,7 @@ type (
 		authKeeper   types.AccountKeeper
 		bankKeeper   types.BankKeeper
 		vaultKeeper  types.VaultKeeper
-		oracleKeeper types.OracleKeeper
+		OracleKeeper types.OracleKeeper
 
 		// the address capable of executing a MsgUpdateParams message. Typically, this
 		// should be the x/gov module account.
@@ -74,7 +73,7 @@ func NewKeeper(
 		authKeeper:           ak,
 		bankKeeper:           bk,
 		vaultKeeper:          vk,
-		oracleKeeper:         ok,
+		OracleKeeper:         ok,
 		lastestAuctionPeriod: collections.NewItem(sb, types.LastestAuctionPeriodPrefix, "lastest_auction_period", collections.Int64Value),
 		AuctionIdSeq:         collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
 		BidIdSeq:             collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
@@ -132,7 +131,6 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 	if !has {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address %s: account does not exist", bid.Bidder)
 	}
-
 	bidQueue, err := k.Bids.Get(ctx, auctionId)
 	if err != nil {
 		return err
@@ -146,16 +144,29 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 		return err
 	}
 
-	bids, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidderAddr))
+	found, err := k.BidByAddress.Has(ctx, collections.Join(auctionId, bidderAddr))
+	if found {
+		bids, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidderAddr))
+		if err != nil {
+			return err
+		}
+		bids.Bids = append(bids.Bids, &bid)
+		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
+		if err != nil {
+			return err
+		}
+	} else {
+		bids := types.Bids{
+			Bids: []*types.Bid{&bid},
+		}
+		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
+		if err != nil {
+			return err
+		}
+	}
 	if err != nil {
 		return err
 	}
-	bids.Bids = append(bids.Bids, &bid)
-	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
-	if err != nil {
-		return err
-	}
-
 	return k.lockedToken(ctx, sdk.NewCoins(bid.Amount), bid.Bidder)
 }
 
@@ -214,18 +225,4 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 	}
 
 	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAcc, amt)
-}
-
-// TODO: allow multiple currency denom: EUR, JPY
-func (k Keeper) calculateInitAuctionPrice(ctx context.Context, collateralAsset sdk.Coin, debt sdk.Coin) sdk.Coin {
-	rate := k.oracleKeeper.GetPrice(ctx, collateralAsset.Denom, getDebtFiatDenom(debt))
-	amount := collateralAsset.Amount.ToLegacyDec().Mul(*rate)
-	return sdk.NewCoin(debt.Denom, amount.TruncateInt())
-}
-
-func getDebtFiatDenom(debt sdk.Coin) string {
-	if !strings.Contains(debt.Denom, "nom") {
-		panic(fmt.Sprintf("invalid debt denom: %s", debt.Denom))
-	}
-	return strings.ReplaceAll(debt.Denom, "nom", "")
 }

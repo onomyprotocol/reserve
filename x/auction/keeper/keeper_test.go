@@ -13,20 +13,11 @@ import (
 	"github.com/onomyprotocol/reserve/x/auction/types"
 )
 
-var (
-	usdt = "usdt"
-	usdc = "usdc"
-
-	limitUSDT = math.NewInt(1000000)
-	limitUSDC = math.NewInt(1000000)
-)
-
 type KeeperTestSuite struct {
 	apptesting.KeeperTestHelper
 
 	k                keeper.Keeper
 	msgServer        types.MsgServer
-	queryServer      types.QueryServer
 	mockOracleKeeper *MockOracleKeeper
 }
 
@@ -41,7 +32,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper
 
-	s.k = s.App.Auctionkeeper
+	s.k = s.App.AuctionKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)
 	// s.queryServer = keeper.NewQueryServerImpl(s.k)
 }

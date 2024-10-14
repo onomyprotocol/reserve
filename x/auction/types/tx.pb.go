@@ -136,9 +136,8 @@ type MsgBid struct {
 	AuctionId uint64 `protobuf:"varint,2,opt,name=auction_id,json=auctionId,proto3" json:"auction_id,omitempty"`
 	// amount defines the amount that the bidder willing to pay.
 	Amount types.Coin `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount"`
-	// recive_rate defines the rate compare to the price at the start of the auction
-	// that the bid is willing to pay
-	ReciveRate string `protobuf:"bytes,4,opt,name=recive_rate,json=reciveRate,proto3" json:"recive_rate,omitempty"`
+	// recive_price defines the price that the bid is willing to pay
+	RecivePrice string `protobuf:"bytes,4,opt,name=recive_price,json=recivePrice,proto3" json:"recive_price,omitempty"`
 }
 
 func (m *MsgBid) Reset()         { *m = MsgBid{} }
@@ -195,9 +194,9 @@ func (m *MsgBid) GetAmount() types.Coin {
 	return types.Coin{}
 }
 
-func (m *MsgBid) GetReciveRate() string {
+func (m *MsgBid) GetRecivePrice() string {
 	if m != nil {
-		return m.ReciveRate
+		return m.RecivePrice
 	}
 	return ""
 }
@@ -654,10 +653,10 @@ func (m *MsgBid) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ReciveRate) > 0 {
-		i -= len(m.ReciveRate)
-		copy(dAtA[i:], m.ReciveRate)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.ReciveRate)))
+	if len(m.RecivePrice) > 0 {
+		i -= len(m.RecivePrice)
+		copy(dAtA[i:], m.RecivePrice)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.RecivePrice)))
 		i--
 		dAtA[i] = 0x22
 	}
@@ -834,7 +833,7 @@ func (m *MsgBid) Size() (n int) {
 	}
 	l = m.Amount.Size()
 	n += 1 + l + sovTx(uint64(l))
-	l = len(m.ReciveRate)
+	l = len(m.RecivePrice)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -1171,7 +1170,7 @@ func (m *MsgBid) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ReciveRate", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RecivePrice", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1199,7 +1198,7 @@ func (m *MsgBid) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ReciveRate = string(dAtA[iNdEx:postIndex])
+			m.RecivePrice = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

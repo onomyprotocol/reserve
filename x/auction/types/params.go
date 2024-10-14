@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -18,7 +20,13 @@ func NewParams() Params {
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams()
+	return Params{
+		AuctionPeriods: time.Second * 30,
+		ReduceStep:     time.Second * 30,
+		StartingRate:   "1.5",
+		LowestRate:     "0.9",
+		DiscountRate:   "0.1",
+	}
 }
 
 // ParamSetPairs get the params.ParamSet
