@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/store"
@@ -226,18 +225,4 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 	}
 
 	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAcc, amt)
-}
-
-// TODO: allow multiple currency denom: EUR, JPY
-func (k Keeper) calculateInitAuctionPrice(ctx context.Context, collateralAsset sdk.Coin, debt sdk.Coin) sdk.Coin {
-	rate := k.OracleKeeper.GetPrice(ctx, collateralAsset.Denom, getDebtFiatDenom(debt))
-	amount := collateralAsset.Amount.ToLegacyDec().Mul(*rate)
-	return sdk.NewCoin(debt.Denom, amount.TruncateInt())
-}
-
-func getDebtFiatDenom(debt sdk.Coin) string {
-	if !strings.Contains(debt.Denom, "nom") {
-		panic(fmt.Sprintf("invalid debt denom: %s", debt.Denom))
-	}
-	return strings.ReplaceAll(debt.Denom, "nom", "")
 }
