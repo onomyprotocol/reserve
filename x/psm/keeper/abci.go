@@ -35,25 +35,24 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 // 			oldPrice:1
 // 			feeIn  : 0.01
 // 			feeOut : 0.01
-// 			k_in = AdjustmentFeeIn = 0.05
-// 			k_out = AdjustmentFeeOut = 0.05
-// 			--------------------------------------
+// 			maxFee = 0.02
+// 			k = AdjustmentFeeIn = 40
+// 			----------------------------------------------------------------------------------------
 // 			case 1:
 //			newPrice: 1.01 (1.01$nomUSD = 1USDT)
-// 			deltaP = 1.01 - 1 = 0.01
-// 			deltaP > 0
-//			newfeeIn  = feeIn - k_in * deltaP = 0.01 - 0.5 * 0.01 = 0.005
-// 			newfeeOut = feeOut + k_out * deltaP = 0.01 + 0.5 * 0.01 = 0.015
+// 			rate = 1/1.01 = 0.990099
+// 			newfeeOut = 0.01/(0.990099)**k = 0.01 * (1.01**40)= 0.014888637335882209
+//			newfeeIn  = 0.02 - 0.014888637335882209 = 0.005111362664117791
+
 // 			So $USDT swap to $nomUSD will be cheaper than $nomUSD swap to $USDT
-// 			--------------------------------------
+// 			----------------------------------------------------------------------------------------
 // 			case 2:
-//			newPrice: 0.98 (0.98$nomUSD = 1USDT)
-// 			deltaP = 0.98 - 1 = -0.02
+//			newPrice: 0.99 (0.98$nomUSD = 1USDT)
+// 			rate = 1/0.99 = 1.0101010101
 // 			deltaP < 0
-//			newfeeIn  = feeIn + k_in * deltaP = 0.01 + 0.5 * 0.02 = 0.02
-// 			newfeeOut = feeOut - k_out * deltaP = 0.01 - 0.5 * 0.02 = 0.00
+//			newfeeIn  = 0.01 * (1.0101010101)**40 = 0.014948314143157351
+// 			newfeeOut = 0.02 - 0.014948314143157351 = 0.005051685856842649
 // 			So $nomUSD swap to $USDT will be cheaper than $USDT swap to $nomUSD
-//
 
 func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, stablecoin types.Stablecoin) types.Stablecoin {
 	params, err := k.GetParams(ctx)
@@ -64,11 +63,33 @@ func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, s
 	if deltaP.Abs().LT(params.AcceptablePriceRatio) {
 		return stablecoin
 	}
+	// fee in anf out < fee_in +fee_out
+	feeMax, err := k.FeeMaxStablecoin.Get(ctx, stablecoin.Denom)
+	if err != nil {
+		panic(err)
+	}
 
-	feeIn := stablecoin.FeeIn.Sub(params.AdjustmentFeeIn.Mul(deltaP))
-	feeOut := stablecoin.FeeOut.Add(params.AdjustmentFeeOut.Mul(deltaP))
+	rate := math.LegacyOneDec().Quo(newPrice)
+	if rate.LT(math.LegacyOneDec()) {
+		feeOut := math.LegacyMustNewDecFromStr(feeMax).QuoInt64(2)
+		for i := 0; i < int(params.AdjustmentFee); i++ {
+			feeOut = feeOut.Quo(rate)
+		}
+		feeOut = math.LegacyMinDec(feeOut, math.LegacyMustNewDecFromStr(feeMax))
+		feeIn := math.LegacyMustNewDecFromStr(feeMax).Sub(feeOut)
 
-	stablecoin.FeeIn = math.LegacyMaxDec(feeIn, math.LegacyZeroDec())
-	stablecoin.FeeOut = math.LegacyMaxDec(feeOut, math.LegacyZeroDec())
+		stablecoin.FeeIn = feeIn
+		stablecoin.FeeOut = feeOut
+	} else {
+		feeIn := math.LegacyMustNewDecFromStr(feeMax).QuoInt64(2)
+		for i := 0; i < int(params.AdjustmentFee); i++ {
+			feeIn = feeIn.Mul(rate)
+		}
+		feeIn = math.LegacyMinDec(feeIn, math.LegacyMustNewDecFromStr(feeMax))
+		feeOut := math.LegacyMustNewDecFromStr(feeMax).Sub(feeIn)
+
+		stablecoin.FeeIn = feeIn
+		stablecoin.FeeOut = feeOut
+	}
 	return stablecoin
 }
