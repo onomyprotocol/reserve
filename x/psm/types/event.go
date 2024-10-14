@@ -8,4 +8,6 @@ const (
 	AttributeAmount         = "amount"
 	AttributeStablecoinName = "stablecoin_name"
 	AttributeReceive        = "receive"
+	AttributeFeeIn          = "fee_in"
+	AttributeFeeOut         = "fee_out"
 )

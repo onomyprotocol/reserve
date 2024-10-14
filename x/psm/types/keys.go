@@ -21,10 +21,12 @@ const (
 )
 
 var (
-	KeyStableCoin       = []byte{0x01}
-	KeyLockStableCoin   = []byte{0x02}
-	KeyUnlockStableCoin = []byte{0x03}
-	ParamsKey           = []byte{0x4}
+	KeyStableCoin          = []byte{0x01}
+	KeyLockStableCoin      = []byte{0x02}
+	KeyUnlockStableCoin    = []byte{0x03}
+	ParamsKey              = []byte{0x4}
+	KeyTotalStablecoinLock = []byte{0x5}
+	KeyFeeMax              = []byte{0x6}
 )
 
 func GetKeyStableCoin(denom string) []byte {
