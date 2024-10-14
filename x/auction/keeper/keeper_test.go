@@ -41,7 +41,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper
 
-	s.k = s.App.Auctionkeeper
+	s.k = s.App.AuctionKeeper
 	s.msgServer = keeper.NewMsgServerImpl(s.k)
 	// s.queryServer = keeper.NewQueryServerImpl(s.k)
 }
