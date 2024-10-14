@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	sdkmath "cosmossdk.io/math"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -20,7 +20,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	}
 	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
 	// check if has reached the next auction periods
-	if lastAuctionPeriods.Add(params.AuctionPeriods).After(currentTime) {
+	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
 		// update latest auction period
 		err := k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
 		if err != nil {
@@ -40,12 +40,25 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		// create new auction for this vault
 		for _, vault := range liquidatedVaults {
 			//calcualte initial price and target price
-			auction, err := k.NewAuction(ctx, currentTime, vault.LiquidationPrice, vault.CollateralLocked, vault.Debt, vault.Id)
+			auction, isCreate, err := k.GetNewAuction(ctx, currentTime, vault.LiquidationPrice, vault.CollateralLocked, vault.Debt, vault.Id)
 			if err != nil {
 				return err
 			}
 
-			err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+			if isCreate {
+				err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+				if err != nil {
+					return err
+				}
+				err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{AuctionId: auction.AuctionId, Bids: []*types.Bid{}})
+				if err != nil {
+					return err
+				}
+				err = k.BidIdSeq.Set(ctx, auction.AuctionId, 0)
+				if err != nil {
+					return err
+				}
+			}
 			if err != nil {
 				return err
 			}
@@ -68,7 +81,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		needCleanup := false
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
-			auction.EndTime.After(currentTime) {
+			auction.EndTime.Before(currentTime) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
@@ -153,7 +166,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue types.BidQueue) error {
 	itemDenom := auction.Item.Denom
 
-	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
+	currentRate, err := math.LegacyNewDecFromStr(auction.CurrentRate)
 	if err != nil {
 		return err
 	}
@@ -168,12 +181,12 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 			continue
 		}
 
-		initPrices, err := sdkmath.LegacyNewDecFromStr(auction.InitialPrice)
+		initPrices, err := math.LegacyNewDecFromStr(auction.InitialPrice)
 		if err != nil {
 			continue
 		}
 
-		receivePrice, err := sdkmath.LegacyNewDecFromStr(bid.RecivePrice)
+		receivePrice, err := math.LegacyNewDecFromStr(bid.RecivePrice)
 		if err != nil {
 			continue
 		}
@@ -190,18 +203,34 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 			// if out of collatheral
 			if auction.Item.Amount.LT(receiveAmt) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL
-				continue
+
+				amountBuy := auction.Item.Amount.ToLegacyDec().Mul(receivePrice).TruncateInt()
+
+				amountRefund := bid.Amount.Amount.Sub(amountBuy)
+				// send all auction item
+				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(auction.Item))
+				if err != nil {
+					continue
+				}
+
+				err = k.refundToken(ctx, sdk.NewCoins(sdk.NewCoin(bid.Amount.Denom, amountRefund)), bid.Bidder)
+				if err != nil {
+					continue
+				}
+
+				auction.Item = sdk.NewCoin(auction.Item.Denom, math.ZeroInt())
+				auction.TokenRaised = auction.TokenRaised.Add(sdk.NewCoin(bid.Amount.Denom, amountBuy))
+			} else {
+				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
+				if err != nil {
+					continue
+				}
+
+				// update auction collatheral
+				auction.Item = auction.Item.Sub(receiveCoin)
+
+				auction.TokenRaised = auction.TokenRaised.Add(bid.Amount)
 			}
-
-			err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
-			if err != nil {
-				continue
-			}
-
-			// update auction collatheral
-			auction.Item = auction.Item.Sub(receiveCoin)
-
-			auction.TokenRaised = auction.TokenRaised.Add(bid.Amount)
 
 			if auction.TokenRaised.IsGTE(auction.TargetGoal) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
@@ -242,19 +271,19 @@ func (k Keeper) refundBidders(ctx context.Context, bidQueue types.BidQueue) erro
 }
 
 func (k Keeper) discountRate(auction types.Auction, params types.Params) (string, error) {
-	lowestRate, err := sdkmath.LegacyNewDecFromStr(params.LowestRate)
+	lowestRate, err := math.LegacyNewDecFromStr(params.LowestRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
-	discountRate, err := sdkmath.LegacyNewDecFromStr(params.DiscountRate)
+	discountRate, err := math.LegacyNewDecFromStr(params.DiscountRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
-	currentRate, err := sdkmath.LegacyNewDecFromStr(auction.CurrentRate)
+	currentRate, err := math.LegacyNewDecFromStr(auction.CurrentRate)
 	if err != nil {
-		return sdkmath.LegacyZeroDec().String(), err
+		return math.LegacyZeroDec().String(), err
 	}
 
 	if currentRate.LT(lowestRate) || currentRate.Sub(discountRate).LT(lowestRate) {

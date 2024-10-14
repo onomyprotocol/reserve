@@ -150,7 +150,7 @@ type App struct {
 	OracleKeeper  oraclemodulekeeper.Keeper
 	VaultsKeeper  vaultskeeper.Keeper
 	PSMKeeper     psmkeeper.Keeper
-	Auctionkeeper auctionkeeper.Keeper
+	AuctionKeeper auctionkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// simulation manager
@@ -306,7 +306,7 @@ func New(
 		&app.OracleKeeper,
 		&app.VaultsKeeper,
 		&app.PSMKeeper,
-		&app.Auctionkeeper,
+		&app.AuctionKeeper,
 		// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	); err != nil {
 		panic(err)
