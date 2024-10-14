@@ -5,6 +5,8 @@ package reserve.oracle;
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "reserve/oracle/params.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "reserve/oracle/proposal.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
@@ -14,5 +16,61 @@ message GenesisState {
   // params defines all the parameters of the module.
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
-  string port_id = 2;
+  BandParams band_params = 2 [ (gogoproto.nullable) = false ];
+  repeated BandPriceState band_price_states = 3;
+  repeated BandOracleRequest band_oracle_requests = 4;
+  uint64 band_latest_client_id = 5;
+  repeated CalldataRecord calldata_records = 6;
+  uint64 band_latest_request_id = 7;
+  BandOracleRequestParams band_oracle_request_params = 8 [ (gogoproto.nullable) = false ];
+}
+
+message BandOracleRequestParams {
+  // AskCount is the number of validators that are requested to respond to this
+  // oracle request. Higher value means more security, at a higher gas cost.
+  uint64 ask_count = 1;
+
+  // MinCount is the minimum number of validators necessary for the request to
+  // proceed to the execution phase. Higher value means more security, at the
+  // cost of liveness.
+  uint64 min_count = 2;
+
+  // FeeLimit is the maximum tokens that will be paid to all data source
+  // providers.
+  repeated cosmos.base.v1beta1.Coin fee_limit = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+
+  // PrepareGas is amount of gas to pay to prepare raw requests
+  uint64 prepare_gas = 4;
+  // ExecuteGas is amount of gas to reserve for executing
+  uint64 execute_gas = 5;
+  // MinSourceCount is the minimum number of data sources that must be used by
+  // each validator
+  uint64 min_source_count = 6;
+}
+
+message BandPriceState {
+  string symbol = 1;
+  string rate = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  uint64 resolve_time = 3;
+  uint64 request_ID = 4;
+  PriceState price_state = 5 [ (gogoproto.nullable) = false ];
+}
+
+message PriceState {
+  string price = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+  int64 timestamp = 2;
+}
+
+message CalldataRecord {
+  uint64 client_id = 1;
+  bytes calldata = 2;
 }

@@ -1,0 +1,31 @@
+syntax = "proto3";
+package reserve.vaults;
+
+import "gogoproto/gogo.proto";
+import "reserve/vaults/tx.proto";
+import "amino/amino.proto";
+import "cosmos_proto/cosmos.proto";
+
+
+option go_package = "github.com/onomyprotocol/reserve/x/vaults/types";
+
+
+message ActiveCollateralProposal {
+  option (gogoproto.goproto_getters)         = false;
+  option (cosmos_proto.implements_interface) = "cosmos.gov.v1beta1.Content";
+  option (amino.name)                        = "reserve/ActiveCollateralProposal";
+
+  string               title       = 1;
+  string               description = 2;
+  MsgActiveCollateral active_collateral     = 3 [(gogoproto.nullable) = false];
+}
+
+message UpdatesCollateralProposal {
+  option (gogoproto.goproto_getters)         = false;
+  option (cosmos_proto.implements_interface) = "cosmos.gov.v1beta1.Content";
+  option (amino.name)                        = "reserve/UpdatesCollateralProposal";
+
+  string               title       = 1;
+  string               description = 2;
+  MsgUpdatesCollateral updates_collateral     = 3 [(gogoproto.nullable) = false];
+}
