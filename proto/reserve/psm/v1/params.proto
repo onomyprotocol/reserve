@@ -22,15 +22,6 @@ message Params {
     (gogoproto.nullable)   = false
   ];
   // feeIn adjustment factor
-  bytes adjustment_feeIn = 3 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false
-  ];
-    // feeIn adjustment factor
-  bytes adjustment_feeOut = 4 [
-    (cosmos_proto.scalar)  = "cosmos.Dec",
-    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
-    (gogoproto.nullable)   = false
-  ];
+  int64 adjustment_fee = 3;
+
 }
