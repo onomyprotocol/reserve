@@ -36,7 +36,7 @@ func TestUpdateBandParamsProposal(t *testing.T) {
 	portID := app.OracleKeeper.GetPort(ctx)
 	require.Equal(t, new_BandParams.IbcPortId, portID)
 
-	isBound := app.OracleKeeper.ShouldBound(ctx, portID)
+	isBound := app.OracleKeeper.IsBound(ctx, portID)
 	require.False(t, isBound)
 
 	bandParams = app.OracleKeeper.GetBandParams(ctx)

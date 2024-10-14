@@ -6,25 +6,25 @@ import (
 	"fmt"
 
 	"cosmossdk.io/core/appmodule"
-	"cosmossdk.io/core/store"
-	"cosmossdk.io/depinject"
-	"cosmossdk.io/log"
+	// "cosmossdk.io/core/store"
+	// "cosmossdk.io/depinject"
+	// "cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
+	// authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	// govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	// capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
-	 ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
+	// ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
 
 	// this line is used by starport scaffolding # 1
 
-	modulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
+	// modulev1 "github.com/onomyprotocol/reserve/api/reserve/oracle/module"
 	"github.com/onomyprotocol/reserve/x/oracle/client/cli"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -104,6 +104,7 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 func (a AppModuleBasic) GetQueryCmd() *cobra.Command {
 	return cli.GetQueryCmd()
 }
+
 // ----------------------------------------------------------------------------
 // AppModule
 // ----------------------------------------------------------------------------
@@ -163,14 +164,12 @@ func (AppModule) ConsensusVersion() uint64 { return 1 }
 // BeginBlock contains the logic that is automatically triggered at the beginning of each block.
 // The begin block implementation is optional.
 func (am AppModule) BeginBlock(ctx context.Context) error {
-	am.keeper.BeginBlocker(sdk.UnwrapSDKContext(ctx))
-	return nil
+	return keeper.BeginBlocker(sdk.UnwrapSDKContext(ctx), am.keeper)
 }
 
 // EndBlock contains the logic that is automatically triggered at the end of each block.
 // The end block implementation is optional.
 func (am AppModule) EndBlock(ctx context.Context) error {
-	am.keeper.EndBlocker(sdk.UnwrapSDKContext(ctx))
 	return nil
 }
 
@@ -184,55 +183,55 @@ func (am AppModule) IsAppModule() {}
 // App Wiring Setup
 // ----------------------------------------------------------------------------
 
-func init() {
-	appmodule.Register(
-		&modulev1.Module{},
-		appmodule.Provide(ProvideModule),
-	)
-}
+// func init() {
+// 	appmodule.Register(
+// 		&modulev1.Module{},
+// 		appmodule.Provide(ProvideModule),
+// 	)
+// }
 
-type ModuleInputs struct {
-	depinject.In
+// type ModuleInputs struct {
+// 	depinject.In
 
-	StoreService store.KVStoreService
-	Cdc          codec.Codec
-	Config       *modulev1.Module
-	Logger       log.Logger
+// 	StoreService store.KVStoreService
+// 	Cdc          codec.Codec
+// 	Config       *modulev1.Module
+// 	Logger       log.Logger
 
-	AccountKeeper types.AccountKeeper
-	BankKeeper    types.BankKeeper
+// 	AccountKeeper types.AccountKeeper
+// 	BankKeeper    types.BankKeeper
 
-	IBCKeeperFn        func() *ibckeeper.Keeper                   `optional:"true"`
-	CapabilityScopedFn func(string) capabilitykeeper.ScopedKeeper `optional:"true"`
-}
+// 	IBCKeeperFn        func() *ibckeeper.Keeper                   `optional:"true"`
+// 	CapabilityScopedFn func(string) capabilitykeeper.ScopedKeeper `optional:"true"`
+// }
 
-type ModuleOutputs struct {
-	depinject.Out
+// type ModuleOutputs struct {
+// 	depinject.Out
 
-	OracleKeeper keeper.Keeper
-	Module       appmodule.AppModule
-}
+// 	OracleKeeper keeper.Keeper
+// 	Module       appmodule.AppModule
+// }
 
-func ProvideModule(in ModuleInputs) ModuleOutputs {
-	// default to governance authority if not provided
-	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
-	if in.Config.Authority != "" {
-		authority = authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
-	}
-	k := keeper.NewKeeper(
-		in.Cdc,
-		in.StoreService,
-		in.Logger,
-		authority.String(),
-		in.IBCKeeperFn,
-		in.CapabilityScopedFn,
-	)
-	m := NewAppModule(
-		in.Cdc,
-		k,
-		in.AccountKeeper,
-		in.BankKeeper,
-	)
+// func ProvideModule(in ModuleInputs) ModuleOutputs {
+// 	// default to governance authority if not provided
+// 	authority := authtypes.NewModuleAddress(govtypes.ModuleName)
+// 	if in.Config.Authority != "" {
+// 		authority = authtypes.NewModuleAddressOrBech32Address(in.Config.Authority)
+// 	}
+// 	k := keeper.NewKeeper(
+// 		in.Cdc,
+// 		in.StoreService,
+// 		in.Logger,
+// 		authority.String(),
+// 		in.IBCKeeperFn,
+// 		in.CapabilityScopedFn,
+// 	)
+// 	m := NewAppModule(
+// 		in.Cdc,
+// 		k,
+// 		in.AccountKeeper,
+// 		in.BankKeeper,
+// 	)
 
-	return ModuleOutputs{OracleKeeper: k, Module: m}
-}
+// 	return ModuleOutputs{OracleKeeper: k, Module: m}
+// }

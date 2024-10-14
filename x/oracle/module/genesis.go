@@ -2,13 +2,14 @@ package oracle
 
 import (
 	"context"
-
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisState) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		// TODO: should we panic here
 		panic(err)
@@ -25,12 +26,12 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 	k.SetBandParams(ctx, genState.BandParams)
 
 	if genState.BandParams.IbcPortId != "" {
-		k.SetPort(ctx, genState.BandParams.IbcPortId)
+		k.SetPort(sdkCtx, genState.BandParams.IbcPortId)
 		// Only try to bind to port if it is not already bound, since we may already own port capability
-		if k.ShouldBound(ctx, genState.BandParams.IbcPortId) {
+		if !k.IsBound(sdkCtx, genState.BandParams.IbcPortId) {
 			// module binds to the port on InitChain
 			// and claims the returned capability
-			err := k.BindPort(ctx, genState.BandParams.IbcPortId)
+			err := k.BindPort(sdkCtx, genState.BandParams.IbcPortId)
 			if err != nil {
 				panic(types.ErrBandPortBind.Error() + err.Error())
 			}

@@ -9,7 +9,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
-func (k *Keeper) BeginBlocker(ctx context.Context) {
+func BeginBlocker(ctx context.Context, k Keeper) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 	bandParams := k.GetBandParams(ctx)
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
@@ -23,6 +23,8 @@ func (k *Keeper) BeginBlocker(ctx context.Context) {
 	if sdkCtx.BlockHeight()%86400 == 0 {
 		k.CleanUpStaleBandCalldataRecords(sdkCtx)
 	}
+
+	return nil
 }
 
 func (k *Keeper) RequestAllBandRates(ctx context.Context) {

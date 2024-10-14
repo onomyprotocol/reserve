@@ -2,8 +2,8 @@ package app
 
 import (
 	"encoding/json"
-	"testing"
 	"os"
+	"testing"
 
 	abci "github.com/cometbft/cometbft/abci/types"
 	cmtjson "github.com/cometbft/cometbft/libs/json"
@@ -40,7 +40,7 @@ func setup(withGenesis bool, invCheckPeriod uint) (*App, GenesisState) {
 	appOptions[flags.FlagHome] = DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = invCheckPeriod
 
-	app, _ := New(log.NewNopLogger(), db, nil, true, appOptions)
+	app := NewApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, DefaultNodeHome, appOptions)
 	if withGenesis {
 		return app, app.DefaultGenesis()
 	}
@@ -66,7 +66,7 @@ func NewSimappWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptio
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(100000000000000))),
 	}
 
-	app, _ := New(options.Logger, options.DB, nil, true, options.AppOpts)
+	app := NewApp(options.Logger, options.DB, nil, true, map[int64]bool{}, DefaultNodeHome, options.AppOpts)
 	genesisState := app.DefaultGenesis()
 	genesisState, err = simtestutil.GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
 	require.NoError(t, err)
@@ -211,6 +211,6 @@ func initAccountWithCoins(app *App, ctx sdk.Context, addr sdk.AccAddress, coins 
 	}
 }
 
-func Cleanup(app *App) {           // release cosmwasm instance cache lock
+func Cleanup(app *App) { // release cosmwasm instance cache lock
 	_ = os.RemoveAll(DefaultNodeHome) // remove default dir, if it was overridden during test Setup, it's a responsibility of the sender to remove the folder
 }

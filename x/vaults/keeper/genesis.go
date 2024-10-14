@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
@@ -27,5 +28,15 @@ func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error
 			return err
 		}
 	}
+
+	if data.LastUpdate != nil {
+		k.LastUpdateTime.Set(ctx, *data.LastUpdate)
+	} else {
+		sdkCtx := sdk.UnwrapSDKContext(ctx)
+		k.LastUpdateTime.Set(ctx, types.LastUpdate{Time: sdkCtx.BlockTime()})
+	}
+
+	k.ShortfallAmount.Set(ctx, data.ShortfallAmount)
+
 	return nil
 }

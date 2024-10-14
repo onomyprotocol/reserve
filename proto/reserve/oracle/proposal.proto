@@ -1,10 +1,10 @@
 syntax = "proto3";
 package reserve.oracle;
 
-import "reserve/oracle/genesis.proto";
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
@@ -43,4 +43,47 @@ message DeleteBandOracleRequestProposal {
     string title = 1;
     string description = 2;
     repeated uint64 delete_request_ids = 3;
+}
+
+message BandParams {
+  // block request interval to send Band IBC prices
+  int64 ibc_request_interval = 1;
+  // band IBC source channel
+  string ibc_source_channel = 2;
+  // band IBC version
+  string ibc_version = 3;
+  // band IBC portID
+  string ibc_port_id = 4;
+  //  legacy oracle scheme ids
+  repeated int64 legacy_oracle_ids = 5;
+}
+
+message BandOracleRequest {
+  // Unique Identifier for band ibc oracle request
+  uint64 request_id = 1;
+  // OracleScriptID is the unique identifier of the oracle script to be
+  // executed.
+  int64 oracle_script_id = 2;
+  // Symbols is the list of symbols to prepare in the calldata
+  repeated string symbols = 3;
+  // AskCount is the number of validators that are requested to respond to this
+  // oracle request. Higher value means more security, at a higher gas cost.
+  uint64 ask_count = 4;
+  // MinCount is the minimum number of validators necessary for the request to
+  // proceed to the execution phase. Higher value means more security, at the
+  // cost of liveness.
+  uint64 min_count = 5;
+  // FeeLimit is the maximum tokens that will be paid to all data source
+  // providers.
+  repeated cosmos.base.v1beta1.Coin fee_limit = 6 [
+    (gogoproto.nullable) = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  // PrepareGas is amount of gas to pay to prepare raw requests
+  uint64 prepare_gas = 7;
+  // ExecuteGas is amount of gas to reserve for executing
+  uint64 execute_gas = 8;
+  // MinSourceCount is the minimum number of data sources that must be used by
+  // each validator
+  uint64 min_source_count = 9;
 }

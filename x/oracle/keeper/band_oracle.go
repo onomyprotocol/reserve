@@ -1,24 +1,25 @@
 package keeper
 
 import (
-	"fmt"
-	"time"
-	"strconv"
 	"context"
+	"fmt"
+	"strconv"
+	"time"
+
+	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	prefix "cosmossdk.io/store/prefix"
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
-	"github.com/onomyprotocol/reserve/x/oracle/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	errorsmod "cosmossdk.io/errors"
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
 // SetBandParams sets the Band params in the state
-func (k Keeper) SetBandParams(ctx context.Context, bandParams types.BandParams)  error{
+func (k Keeper) SetBandParams(ctx context.Context, bandParams types.BandParams) error {
 	bz := k.cdc.MustMarshal(&bandParams)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.BandParamsKey, bz)
@@ -43,7 +44,7 @@ func (k Keeper) GetBandParams(ctx context.Context) types.BandParams {
 }
 
 // SetBandOracleRequestParams sets the Band Oracle request params in the state
-func (k Keeper) SetBandOracleRequestParams(ctx context.Context, bandOracleRequestParams types.BandOracleRequestParams)  error{
+func (k Keeper) SetBandOracleRequestParams(ctx context.Context, bandOracleRequestParams types.BandOracleRequestParams) error {
 	bz := k.cdc.MustMarshal(&bandOracleRequestParams)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.BandOracleRequestParamsKey, bz)
@@ -52,7 +53,7 @@ func (k Keeper) SetBandOracleRequestParams(ctx context.Context, bandOracleReques
 // GetBandParams gets the Band params stored in the state
 func (k Keeper) GetBandOracleRequestParams(ctx context.Context) types.BandOracleRequestParams {
 	store := k.storeService.OpenKVStore(ctx)
-	bz, err := store.Get(types.BandParamsKey)
+	bz, err := store.Get(types.BandOracleRequestParamsKey)
 
 	if err != nil {
 		return types.DefaultGenesis().BandOracleRequestParams
@@ -75,7 +76,7 @@ func (k Keeper) SetBandCallDataRecord(ctx context.Context, record *types.Calldat
 }
 
 // DeleteBandCallDataRecord deletes the Band IBC oracle request call data
-func (k Keeper) DeleteBandCallDataRecord(ctx context.Context, clientID uint64) error{
+func (k Keeper) DeleteBandCallDataRecord(ctx context.Context, clientID uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Delete(types.GetBandCallDataRecordKey(clientID))
 }
@@ -178,7 +179,7 @@ func (k Keeper) GetBandOracleRequest(ctx context.Context, requestID uint64) *typ
 }
 
 // DeleteBandOracleRequest deletes the Band oracle request call data
-func (k Keeper) DeleteBandOracleRequest(ctx context.Context, requestID uint64) error{
+func (k Keeper) DeleteBandOracleRequest(ctx context.Context, requestID uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Delete(types.GetBandOracleRequestIDKey(requestID))
 }
@@ -218,7 +219,7 @@ func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.Ba
 }
 
 // SetBandPriceState sets the band ibc price state.
-func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState *types.BandPriceState) error{
+func (k *Keeper) SetBandPriceState(ctx context.Context, symbol string, priceState *types.BandPriceState) error {
 	bz := k.cdc.MustMarshal(priceState)
 	store := k.storeService.OpenKVStore(ctx)
 	return store.Set(types.GetBandPriceStoreKey(symbol), bz)
@@ -243,7 +244,7 @@ func (k *Keeper) GetAllBandPriceStates(ctx context.Context) []*types.BandPriceSt
 }
 
 // AddNewSymbolToBandOracleRequest adds a new symbol to the bandOracle request
-func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error{
+func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
 	allBandOracleRequests := k.GetAllBandOracleRequests(ctx)
 	// check if new symbol's oracle script id is existing
 	for _, req := range allBandOracleRequests {
@@ -257,14 +258,14 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	bandOracleRequestParams := k.GetBandOracleRequestParams(ctx)
 	requestID := k.GetBandLatestRequestID(ctx) + 1
 	newBandOracleRequest := types.BandOracleRequest{
-		RequestId: requestID,
+		RequestId:      requestID,
 		OracleScriptId: oracleScriptId,
-		Symbols: []string{symbol},
-		AskCount: bandOracleRequestParams.AskCount,
-		MinCount: bandOracleRequestParams.MinCount,
-		FeeLimit: bandOracleRequestParams.FeeLimit,
-		PrepareGas: bandOracleRequestParams.PrepareGas,
-		ExecuteGas: bandOracleRequestParams.ExecuteGas,
+		Symbols:        []string{symbol},
+		AskCount:       bandOracleRequestParams.AskCount,
+		MinCount:       bandOracleRequestParams.MinCount,
+		FeeLimit:       bandOracleRequestParams.FeeLimit,
+		PrepareGas:     bandOracleRequestParams.PrepareGas,
+		ExecuteGas:     bandOracleRequestParams.ExecuteGas,
 		MinSourceCount: bandOracleRequestParams.MinSourceCount,
 	}
 
@@ -315,20 +316,20 @@ func (k *Keeper) RequestBandOraclePrices(
 
 	calldata := req.GetCalldata(types.IsLegacySchemeOracleScript(req.OracleScriptId, bandParams))
 
-	sourceChannelEnd, found := k.ibcKeeperFn().ChannelKeeper.GetChannel(sdkCtx, sourcePortID, sourceChannel)
+	sourceChannelEnd, found := k.channelKeeper.GetChannel(sdkCtx, sourcePortID, sourceChannel)
 	if !found {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unknown channel %s port %s", sourceChannel, sourcePortID)
 	}
 
 	// retrieve the dynamic capability for this channel
-	channelCap, ok := k.ScopedKeeper().GetCapability(sdkCtx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
+	channelCap, ok := k.scopedKeeper.GetCapability(sdkCtx, host.ChannelCapabilityPath(sourcePortID, sourceChannel))
 	if !ok {
 		return errorsmod.Wrap(channeltypes.ErrChannelCapabilityNotFound, "module does not own channel capability")
 	}
 
 	destinationPort := sourceChannelEnd.Counterparty.PortId
 	destinationChannel := sourceChannelEnd.Counterparty.ChannelId
-	sequence, found := k.ibcKeeperFn().ChannelKeeper.GetNextSequenceSend(sdkCtx, sourcePortID, sourceChannel)
+	sequence, found := k.channelKeeper.GetNextSequenceSend(sdkCtx, sourcePortID, sourceChannel)
 
 	if !found {
 		return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unknown sequence number for channel %s port %s", sourceChannel, sourcePortID)
@@ -350,7 +351,7 @@ func (k *Keeper) RequestBandOraclePrices(
 	)
 
 	// Send packet to IBC, authenticating with channelCap
-	_, err = k.ibcKeeperFn().ChannelKeeper.SendPacket(
+	_, err = k.channelKeeper.SendPacket(
 		sdkCtx,
 		channelCap,
 		packet.SourcePort,
@@ -376,7 +377,7 @@ func (k *Keeper) RequestBandOraclePrices(
 }
 
 func (k *Keeper) ProcessBandOraclePrices(
-	ctx context.Context,
+	ctx sdk.Context,
 	relayer sdk.Address,
 	packet types.OracleResponsePacketData,
 ) error {
@@ -410,14 +411,13 @@ func (k *Keeper) ProcessBandOraclePrices(
 }
 
 func (k *Keeper) updateBandPriceStates(
-	ctx context.Context,
+	ctx sdk.Context,
 	input types.OracleInput,
 	output types.OracleOutput,
 	packet types.OracleResponsePacketData,
 	relayer sdk.Address,
 	clientID int,
-) {	
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
+) {
 	var (
 		inputSymbols = input.PriceSymbols()
 		requestID    = packet.RequestID
@@ -455,7 +455,7 @@ func (k *Keeper) updateBandPriceStates(
 			continue
 		}
 
-		blockTime := sdkCtx.BlockTime().Unix()
+		blockTime := ctx.BlockTime().Unix()
 		if bandPriceState == nil {
 			bandPriceState = &types.BandPriceState{
 				Symbol:      symbol,
@@ -473,7 +473,7 @@ func (k *Keeper) updateBandPriceStates(
 
 		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
 		if err != nil {
-			k.Logger(sdkCtx).Info("Can not set band price state for symbol %v", symbol)
+			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
 		}
 
 		symbols = append(symbols, symbol)
@@ -486,7 +486,7 @@ func (k *Keeper) updateBandPriceStates(
 
 	// emit SetBandPriceEvent event
 	// nolint:errcheck //ignored on purpose
-	sdkCtx.EventManager().EmitTypedEvent(&types.SetBandPriceEvent{
+	ctx.EventManager().EmitTypedEvent(&types.SetBandPriceEvent{
 		Relayer:     relayer.String(),
 		Symbols:     symbols,
 		Prices:      prices,

@@ -4,6 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 const (
@@ -13,7 +14,6 @@ const (
 
 var (
 	Query_serviceDesc = _Query_serviceDesc
-	Msg_serviceDesc   = _Msg_serviceDesc
 )
 
 func NewMsgCreateVault(owner string, collateral, minted sdk.Coin) MsgCreateVault {
@@ -62,6 +62,9 @@ func NewMsgClose(vaultId uint64, sender string) MsgClose {
 		Sender:  sender,
 	}
 }
+
+var _ govtypes.Content = &ActiveCollateralProposal{}
+var _ govtypes.Content = &UpdatesCollateralProposal{}
 
 func (m *ActiveCollateralProposal) GetDescription() string {
 	return " "
