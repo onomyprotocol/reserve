@@ -193,7 +193,7 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 	}
 
 	k.keeper.totalStablecoinLock.Set(ctx, msg.Denom, math.ZeroInt())
-	k.keeper.feeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -219,7 +219,7 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
-	k.keeper.feeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(

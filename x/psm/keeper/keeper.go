@@ -39,7 +39,7 @@ type (
 
 		// stablecoin / totalStablecoinLock
 		totalStablecoinLock collections.Map[string, math.Int]
-		feeMaxStablecoin    collections.Map[string, string]
+		FeeMaxStablecoin    collections.Map[string, string]
 	}
 )
 
@@ -72,7 +72,7 @@ func NewKeeper(
 		OracleKeeper:        oracleKeeper,
 		Params:              collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		totalStablecoinLock: collections.NewMap(sb, types.KeyTotalStablecoinLock, "total_stablecoin_lock", collections.StringKey, sdk.IntValue),
-		feeMaxStablecoin:    collections.NewMap(sb, types.KeyFeeMax, "fee_max_stablecoin", collections.StringKey, collections.StringValue),
+		FeeMaxStablecoin:    collections.NewMap(sb, types.KeyFeeMax, "fee_max_stablecoin", collections.StringKey, collections.StringValue),
 		// this line is used by starport scaffolding # collection/instantiate
 	}
 
