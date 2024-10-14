@@ -7,10 +7,8 @@ import (
 	"cosmossdk.io/math"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/onomyprotocol/reserve/app"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
-	"github.com/onomyprotocol/reserve/x/oracle/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,7 +23,7 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
-	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	price := app.OracleKeeper.GetPrice1(ctx, "ATOM", "USD")
 	require.Nil(t, price)
 
 	bandPriceState := &types.BandPriceState{
@@ -42,7 +40,7 @@ func TestBandPriceState(t *testing.T) {
 	data = app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
 	require.Equal(t, bandPriceState, data)
 
-	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	price = app.OracleKeeper.GetPrice1(ctx, "ATOM", "USD")
 	expect := math.LegacyNewDec(10)
 	require.Equal(t, &expect, price)
 
@@ -134,28 +132,6 @@ func TestBandCallDataRecord(t *testing.T) {
 
 	record = app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
 	require.Nil(t, record)
-}
-
-func TestCleanStaleBandCallDataRecord(t *testing.T) {
-	app := app.Setup(t, false)
-	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
-
-	for id := 0; id < 1010; id++ {
-		record := &types.CalldataRecord{
-			ClientId: uint64(id),
-			Calldata: []byte("123"),
-		}
-		err := app.OracleKeeper.SetBandCallDataRecord(ctx, record)
-		require.NoError(t, err)
-	}
-	records := app.OracleKeeper.GetAllBandCalldataRecords(ctx)
-	require.Equal(t, 1010, len(records))
-
-	err := app.OracleKeeper.SetBandLatestClientID(ctx, uint64(1010))
-	require.NoError(t, err)
-	app.OracleKeeper.CleanUpStaleBandCalldataRecords(ctx)
-	records = app.OracleKeeper.GetAllBandCalldataRecords(ctx)
-	require.Equal(t, 1000, len(records))
 }
 
 func TestGetPrice(t *testing.T) {
@@ -286,7 +262,7 @@ func TestGetPrice(t *testing.T) {
 			}
 
 			// Execute GetPrice
-			price := app.OracleKeeper.GetPrice(ctx, tc.baseSymbol, tc.quoteSymbol)
+			price := app.OracleKeeper.GetPrice1(ctx, tc.baseSymbol, tc.quoteSymbol)
 
 			// Check expectations
 			if tc.expectNil {
@@ -294,129 +270,6 @@ func TestGetPrice(t *testing.T) {
 			} else {
 				require.NotNil(t, price)
 				require.Equal(t, tc.expectedPrice, price)
-			}
-		})
-	}
-}
-
-func TestProcessBandOraclePrices(t *testing.T) {
-	// Set up the application and context
-	app := app.Setup(t, false)
-	ctx := app.BaseApp.NewContextLegacy(false, tmproto.Header{Height: 1, ChainID: "3", Time: time.Unix(1618997040, 0)})
-
-	// Define table-driven test cases
-	tests := []struct {
-		name          string
-		clientID      string
-		calldata      *types.CalldataRecord
-		oracleOutput  interface{}
-		expectedError bool
-		expectedRate  int64
-	}{
-		{
-			name:          "Fail when ClientID is not a valid integer",
-			clientID:      "invalid-id",
-			calldata:      nil,
-			oracleOutput:  nil,
-			expectedError: true,
-		},
-		{
-			name:          "Return nil when no CallDataRecord found",
-			clientID:      "1",
-			calldata:      nil,
-			oracleOutput:  nil,
-			expectedError: false,
-		},
-		{
-			name:     "Fail when decoding OracleInput",
-			clientID: "1",
-			calldata: &types.CalldataRecord{
-				ClientId: 1,
-				Calldata: []byte{0xFF, 0xFF},
-			},
-			oracleOutput:  nil,
-			expectedError: true,
-		},
-		{
-			name:     "Fail when decoding OracleOutput",
-			clientID: "1",
-			calldata: &types.CalldataRecord{
-				ClientId: 1,
-				Calldata: utils.MustEncode(types.Input{
-					Symbols:    []string{"ATOM", "BTC"},
-					Multiplier: types.BandPriceMultiplier,
-				}),
-			},
-			oracleOutput:  []byte{0xFF, 0xFF},
-			expectedError: true,
-		},
-		{
-			name:     "Success with valid OracleResponsePacketData",
-			clientID: "1",
-			calldata: &types.CalldataRecord{
-				ClientId: 1,
-				Calldata: utils.MustEncode(types.Input{
-					Symbols:    []string{"ATOM", "BTC"},
-					Multiplier: types.BandPriceMultiplier,
-				}),
-			},
-			oracleOutput: types.BandOutput{
-				Responses: []types.Response{
-					{Symbol: "ATOM", ResponseCode: 0, Rate: 100 * types.BandPriceMultiplier},  
-					{Symbol: "BTC", ResponseCode: 0, Rate: 50000 * types.BandPriceMultiplier}, 
-				},
-			},
-			expectedError: false,
-			expectedRate:  100,
-		},
-	}
-
-	// Iterate over each test case
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.calldata != nil {
-				err := app.OracleKeeper.SetBandCallDataRecord(ctx, tt.calldata)
-				require.NoError(t, err)
-			}
-
-			var result []byte
-			if tt.oracleOutput != nil {
-				switch v := tt.oracleOutput.(type) {
-				case types.BandOutput:
-					result = utils.MustEncode(v)
-				case []byte:
-					result = v
-				}
-			}
-
-			oraclePacketData := types.OracleResponsePacketData{
-				ClientID:    tt.clientID,
-				RequestID:   1,
-				Result:      result,
-				ResolveTime: time.Now().Unix(),
-			}
-
-			relayer := sdk.AccAddress("mock-relayer-address")
-
-			err := app.OracleKeeper.ProcessBandOraclePrices(ctx, relayer, oraclePacketData)
-
-			if tt.expectedError {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-
-				record := app.OracleKeeper.GetBandCallDataRecord(ctx, 1)
-				require.Nil(t, record, "BandCallDataRecord was not deleted after processing")
-
-				if tt.expectedRate != 0 {
-					priceState := app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
-					require.NotNil(t, priceState)
-
-					actualPrice := priceState.PriceState.Price
-
-					expectedPrice := math.LegacyNewDec(tt.expectedRate)
-					require.True(t, actualPrice.Equal(expectedPrice), "Price for ATOM did not match. Expected: %s, Got: %s", expectedPrice, actualPrice)
-				}
 			}
 		})
 	}

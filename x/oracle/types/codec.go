@@ -24,6 +24,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
 		&MsgRequestBandRates{},
+		&MsgSetPrice{},
 	)
 
 	registry.RegisterImplementations((*govtypes.Content)(nil),
