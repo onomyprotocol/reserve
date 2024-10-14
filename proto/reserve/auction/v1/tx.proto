@@ -68,6 +68,8 @@ message MsgBid {
 // MsgBid message.
 message MsgBidResponse {
   string response = 1;
+
+  uint64 bid_id = 2;
 }
 
 // MsgCancelBid is the Msg/CancelBid request type.
@@ -75,7 +77,8 @@ message MsgCancelBid {
   option (cosmos.msg.v1.signer) = "bidder";
   option (amino.name) = "reserve/x/auction/MsgCancelBid";
 
-  string bidder = 1;
+  // bidder is the address that submitting the bid entry.
+  string bidder = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // bid_id is the unique id.
   uint64 bid_id = 2;

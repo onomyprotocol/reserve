@@ -522,6 +522,13 @@ func (k *Keeper) Liquidate(
 			//TODO: Sort by CR in GetLiquidations could reduce calculate here
 			for _, vault := range liquidation.LiquidatingVaults {
 				penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
+				
+				// If collateral locked not enough for penalty,
+				// transfer all and mark vault CLOSED
+				if penaltyAmount.GT(vault.CollateralLocked.Amount) {
+					penaltyAmount = vault.CollateralLocked.Amount
+					vault.Status = types.CLOSED
+				}
 				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(liquidation.Denom, penaltyAmount)))
 				if err != nil {
 					return err
@@ -539,8 +546,13 @@ func (k *Keeper) Liquidate(
 			})
 
 			// Try to reconstitue vaults
+			// list contains both LIQUIDATING & CLOSED,
+			// only reconstitue LIQUIDATING vaults
 			totalRemainDebt := totalDebt.Sub(sold)
 			for _, vault := range liquidation.LiquidatingVaults {
+				if vault.Status != types.LIQUIDATING {
+					continue
+				}
 				// if remain debt & collateral can cover full vault
 				// open again
 				if vault.Debt.IsLTE(totalRemainDebt) && vault.CollateralLocked.IsLTE(totalCollateralRemain) {
