@@ -4,8 +4,8 @@ package reserve.oracle;
 
 import "amino/amino.proto";
 import "gogoproto/gogo.proto";
-import "reserve/oracle/params.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "reserve/oracle/params.proto";
 import "reserve/oracle/proposal.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
@@ -50,6 +50,8 @@ message BandOracleRequestParams {
   // each validator
   uint64 min_source_count = 6;
 }
+
+
 
 message BandPriceState {
   string symbol = 1;

@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "reserve/oracle/params.proto";
 import "reserve/oracle/genesis.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
 
@@ -21,6 +22,8 @@ service Query {
     option (google.api.http).get =
         "/reserve/oracle/band_price_states";
   }
+
+  rpc QueryPrice(MsgGetPrice) returns (MsgGetPriceResponse);
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -41,4 +44,16 @@ message QueryBandPriceStatesRequest {}
 // Query/BandPriceStates RPC method.
 message QueryBandPriceStatesResponse {
   repeated BandPriceState price_states = 1;
+}
+
+message MsgGetPrice{
+  string denom = 1;
+}
+
+message MsgGetPriceResponse {
+    bytes price = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
 }
