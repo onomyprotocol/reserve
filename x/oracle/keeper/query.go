@@ -17,3 +17,13 @@ func (k Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStates
 
 	return res, nil
 }
+
+func (k Keeper) Price(c context.Context, q *types.QueryPriceRequest) (*types.QueryPriceResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	price := k.GetPrice(ctx, q.BaseDenom, q.QuoteDenom)
+	res := &types.QueryPriceResponse{
+		Price: price.String(),
+	}
+	return res, nil
+}

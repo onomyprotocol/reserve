@@ -280,6 +280,7 @@ func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyD
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
+		k.Logger(ctx).Info("Can not get price state of base denom %s: price state is nil or rate is zero", base)
 		return nil
 	}
 
@@ -289,6 +290,7 @@ func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyD
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
+		k.Logger(ctx).Info("Can not get price state of quote denom %s: price state is nil or rate is zero", quote)
 		return nil
 	}
 
