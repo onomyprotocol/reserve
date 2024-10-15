@@ -44,7 +44,7 @@ message QueryParamsResponse {
 message QueryBandPriceStatesRequest {}
 
 // QueryBandPriceStatesResponse is the response type for the
-// Query/Price RPC method.
+// Query/BandPriceStates RPC method.
 message QueryBandPriceStatesResponse {
   repeated BandPriceState price_states = 1;
 }
