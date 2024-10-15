@@ -46,3 +46,15 @@ func (k Keeper) QueryPrice(ctx context.Context, msg *types.MsgGetPrice) (*types.
 	price := k.GetPrice(ctx, msg.Denom, psmtypes.DenomStable)
 	return &types.MsgGetPriceResponse{Price: *price}, nil
 }
+
+func (k Keeper) QueryAllPrice(ctx context.Context, msg *types.MsgGetAllPrice) (*types.MsgGetAllPriceResponse, error) {
+	allPrice := []*types.PriceDenom{}
+
+	for i, j := range k.price {
+		allPrice = append(allPrice, &types.PriceDenom{
+			Denom: i,
+			Price: j,
+		})
+	}
+	return &types.MsgGetAllPriceResponse{AllPrice: allPrice}, nil
+}

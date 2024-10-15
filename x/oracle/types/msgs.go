@@ -105,3 +105,7 @@ func NewGetPrice(denom string) MsgGetPrice {
 		Denom: denom,
 	}
 }
+
+func NewAllGetPrice() MsgGetAllPrice {
+	return MsgGetAllPrice{}
+}

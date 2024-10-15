@@ -24,6 +24,7 @@ service Query {
   }
 
   rpc QueryPrice(MsgGetPrice) returns (MsgGetPriceResponse);
+  rpc QueryAllPrice(MsgGetAllPrice) returns (MsgGetAllPriceResponse);
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -52,6 +53,23 @@ message MsgGetPrice{
 
 message MsgGetPriceResponse {
     bytes price = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+message MsgGetAllPrice{
+}
+
+message MsgGetAllPriceResponse {
+   repeated PriceDenom all_price = 1;
+}
+
+message PriceDenom {
+  string denom = 1;
+
+  bytes price = 2 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
