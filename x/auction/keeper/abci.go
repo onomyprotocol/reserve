@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -150,6 +151,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	})
 
 	// Loop through liquidationMap and liquidate
+	fmt.Println("liquidationMap", liquidationMap)
 	for _, liq := range liquidationMap {
 		err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {
@@ -220,6 +222,8 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 
 				auction.Item = sdk.NewCoin(auction.Item.Denom, math.ZeroInt())
 				auction.TokenRaised = auction.TokenRaised.Add(sdk.NewCoin(bid.Amount.Denom, amountBuy))
+				bidQueue.Bids[i].IsHandle = true
+				break
 			} else {
 				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
 				if err != nil {
@@ -234,16 +238,18 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 
 			if auction.TokenRaised.IsGTE(auction.TargetGoal) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
+				bidQueue.Bids[i].IsHandle = true
+				break
 			}
 
 			bidQueue.Bids[i].IsHandle = true
 		}
+	}
 
-		// update auction status
-		err = k.Auctions.Set(ctx, auction.AuctionId, auction)
-		if err != nil {
-			return err
-		}
+	// update auction status
+	err = k.Auctions.Set(ctx, auction.AuctionId, auction)
+	if err != nil {
+		return err
 	}
 
 	// update bid queue
