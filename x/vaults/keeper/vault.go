@@ -533,9 +533,9 @@ func (k *Keeper) Liquidate(
 			ratios := make([]math.LegacyDec, 0)
 			//TODO: Sort by CR in GetLiquidations could reduce calculate here
 			for _, vault := range liquidation.LiquidatingVaults {
-				collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral
+				collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral.Amount
 				penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
-				
+
 				// If remain collateral not enough for penalty,
 				// transfer all and mark vault CLOSED
 				if penaltyAmount.GT(collateralRemain) {
@@ -575,7 +575,7 @@ func (k *Keeper) Liquidate(
 				// if remain debt & collateral can cover full vault
 				// open again
 				if vault.Debt.IsLTE(totalRemainDebt) && vault.CollateralLocked.IsLTE(totalCollateralRemain) {
-					// Lock collateral to vault address     
+					// Lock collateral to vault address
 					err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.MustAccAddressFromBech32(vault.Address), sdk.NewCoins(vault.CollateralLocked))
 					if err != nil {
 						return err
