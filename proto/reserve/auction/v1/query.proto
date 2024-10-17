@@ -20,6 +20,10 @@ service Query {
   rpc QueryAllAuction(QueryAllAuctionRequest) returns (QueryAllAuctionResponse){
     option (google.api.http).get = "/reserve/auction/auction";
   }
+
+  rpc QueryAllBids(QueryAllBidsRequest) returns (QueryAllBidsResponse){
+    option (google.api.http).get = "/reserve/auction/auction";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -37,5 +41,13 @@ message QueryAllAuctionRequest {}
 message QueryAllAuctionResponse {
   // params holds all the parameters of this module.
   repeated Auction auctions = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+message QueryAllBidsRequest {}
+
+message QueryAllBidsResponse {
+  // params holds all the parameters of this module.
+  repeated Bid Bids = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
