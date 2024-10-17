@@ -67,6 +67,34 @@ func NewMsgClose(vaultId uint64, sender string) MsgClose {
 var _ govtypes.Content = &ActiveCollateralProposal{}
 var _ govtypes.Content = &UpdatesCollateralProposal{}
 
+func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
+	return &MsgActiveCollateral{
+		Denom:              a.ActiveCollateral.Denom,
+		MinCollateralRatio: a.ActiveCollateral.MinCollateralRatio,
+		LiquidationRatio:   a.ActiveCollateral.LiquidationRatio,
+		MaxDebt:            a.ActiveCollateral.MaxDebt,
+		StabilityFee:       a.ActiveCollateral.StabilityFee,
+		LiquidationPenalty: a.ActiveCollateral.LiquidationPenalty,
+		MintingFee:         a.ActiveCollateral.MintingFee,
+		OraclScript:        a.ActiveCollateral.OraclScript,
+		Authority:          a.ActiveCollateral.Authority,
+	}
+}
+
+func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral {
+	return &MsgUpdatesCollateral{
+		Denom:              u.UpdatesCollateral.Denom,
+		MinCollateralRatio: u.UpdatesCollateral.MinCollateralRatio,
+		LiquidationRatio:   u.UpdatesCollateral.LiquidationRatio,
+		MaxDebt:            u.UpdatesCollateral.MaxDebt,
+		StabilityFee:       u.UpdatesCollateral.StabilityFee,
+		LiquidationPenalty: u.UpdatesCollateral.LiquidationPenalty,
+		MintingFee:         u.UpdatesCollateral.MintingFee,
+		OraclScript:        u.UpdatesCollateral.OraclScript,
+		Authority:          u.UpdatesCollateral.Authority,
+	}
+}
+
 func (m *ActiveCollateralProposal) GetDescription() string {
 	return " "
 }
