@@ -7,6 +7,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	"github.com/onomyprotocol/reserve/x/oracle/utils"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 type msgServer struct {
@@ -40,6 +41,10 @@ func (k Keeper) RequestBandRates(goCtx context.Context, msg *types.MsgRequestBan
 func (k Keeper) UpdateBandParams(goCtx context.Context, msg *types.MsgUpdateBandParams) (*types.MsgUpdateBandParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	if err := k.validateAuthority(msg.Authority); err != nil {
+		return nil, err
+	}
+
 	if err := k.validateUpdateBandParams(msg); err != nil {
 		return nil, err
 	}
@@ -60,6 +65,11 @@ func (k Keeper) UpdateBandParams(goCtx context.Context, msg *types.MsgUpdateBand
 
 func (k Keeper) UpdateBandOracleRequest(goCtx context.Context, msg *types.MsgUpdateBandOracleRequest) (*types.MsgUpdateBandOracleRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	
+	if err := k.validateAuthority(msg.Authority); err != nil {
+		return nil, err
+	}
+
 	if err := k.validateUpdateBandOracleRequest(msg); err != nil {
 		return nil, err
 	}
@@ -108,6 +118,11 @@ func (k Keeper) UpdateBandOracleRequest(goCtx context.Context, msg *types.MsgUpd
 
 func (k Keeper) DeleteBandOracleRequests(goCtx context.Context, msg *types.MsgDeleteBandOracleRequests) (*types.MsgDeleteBandOracleRequestsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	
+	if err := k.validateAuthority(msg.Authority); err != nil {
+		return nil, err
+	}
+
 	if len(msg.DeleteRequestIds) == 0 {
 		return nil, types.ErrInvalidBandDeleteRequest
 	}
@@ -172,6 +187,17 @@ func (k *Keeper) validateUpdateBandOracleRequest(msg *types.MsgUpdateBandOracleR
 		return errorsmod.Wrapf(types.ErrInvalidOwasmGas, "UpdateBandOracleRequestProposal: Invalid Execute Gas (%d)", msg.UpdateOracleRequest.ExecuteGas)
 	}
 
+	return nil
+}
+
+func (k *Keeper) validateAuthority(authority string) error {
+	if _, err := k.authKeeper.AddressCodec().StringToBytes(authority); err != nil {
+		return sdkerrors.ErrInvalidAddress.Wrapf("invalid authority address: %s", err)
+	}
+
+	if k.authority != authority {
+		return errorsmod.Wrapf(govtypes.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, authority)
+	}
 
 	return nil
 }

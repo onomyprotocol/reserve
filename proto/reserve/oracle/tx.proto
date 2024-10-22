@@ -68,8 +68,9 @@ message MsgUpdateBandParams {
   option (amino.name) = "oracle/UpdateBandParams";
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.equal)           = false;
-
-  BandParams band_params = 1 [ (gogoproto.nullable) = false ];
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string   authority     = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  BandParams band_params = 2 [ (gogoproto.nullable) = false ];
 }
 
 // MsgUpdateBandParamsResponse define the Msg/UpdateBandParams response type.
@@ -81,8 +82,10 @@ message MsgUpdateBandOracleRequest{
   option (amino.name) = "oracle/UpdateBandOracleRequest";
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.equal)           = false;
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string   authority                      = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  BandOracleRequest update_oracle_request = 1;
+  BandOracleRequest update_oracle_request = 2;
 }
 
 // MsgUpdateBandOracleRequestResponse define the Msg/MsgUpdateBandOracleRequest response type.
@@ -94,8 +97,10 @@ message MsgDeleteBandOracleRequests{
   option (amino.name) = "oracle/UpdateBandOracleRequest";
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.equal)           = false;
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string   authority                 = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
-  repeated uint64 delete_request_ids = 1;
+  repeated uint64 delete_request_ids = 2;
 }
 
 // MsgDeleteBandOracleRequestsResponse define the Msg/MsgDeleteBandOracleRequests response type.
