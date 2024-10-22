@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 	"fmt"
-	errorsmod "cosmossdk.io/errors"
+
 	"cosmossdk.io/core/store"
+	errorsmod "cosmossdk.io/errors"
 	ibchost "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 
 	"cosmossdk.io/log"
@@ -25,7 +26,7 @@ type (
 		cdc          codec.BinaryCodec
 		storeService store.KVStoreService
 		logger       log.Logger
-
+		authKeeper   types.AccountKeeper
 		// the address capable of executing a MsgUpdateParams message. Typically, this
 		// should be the x/gov module account.
 		authority string
@@ -40,6 +41,7 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeService store.KVStoreService,
 	logger log.Logger,
+	ak types.AccountKeeper,
 	authority string,
 	channelKeeper types.ChannelKeeper,
 	portKeeper types.PortKeeper,
@@ -54,6 +56,7 @@ func NewKeeper(
 		cdc:           cdc,
 		storeService:  storeService,
 		authority:     authority,
+		authKeeper:    ak,
 		logger:        logger,
 		channelKeeper: channelKeeper,
 		portKeeper:    portKeeper,
