@@ -73,9 +73,11 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		needCleanup := false
+		currentRate := math.LegacyMustNewDecFromStr(auction.CurrentRate)
+		lowestRate := math.LegacyMustNewDecFromStr(params.LowestRate)
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
-			auction.EndTime.Before(currentTime) {
+			currentRate.Equal(lowestRate) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
@@ -135,6 +137,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 		}
 
+		fmt.Println("fillBids", bidQueue)
 		err = k.fillBids(ctx, auction, bidQueue)
 		if err != nil {
 			return true, err
