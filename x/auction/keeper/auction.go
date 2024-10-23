@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -48,23 +47,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 	}
 	params := k.GetParams(ctx)
 
-	startingRate, err := math.LegacyNewDecFromStr(params.StartingRate)
-	if err != nil {
-		return nil, fmt.Errorf("invalid starting rate params: %v", err)
-	}
-	lowestRate, err := math.LegacyNewDecFromStr(params.LowestRate)
-	if err != nil {
-		return nil, fmt.Errorf("invalid lowest rate params: %v", err)
-	}
-	discountRate, err := math.LegacyNewDecFromStr(params.DiscountRate)
-	if err != nil {
-		return nil, fmt.Errorf("invalid discount rate params: %v", err)
-	}
-	endTime := startTime.Add(time.Duration(startingRate.Sub(lowestRate).Quo(discountRate).Ceil().RoundInt64() * int64(params.ReduceStep)))
-
 	return &types.Auction{
-		StartTime:        startTime,
-		EndTime:          endTime,
 		AuctionId:        auctionId,
 		InitialPrice:     initialPrice.String(),
 		Item:             item,
