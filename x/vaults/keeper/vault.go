@@ -487,7 +487,7 @@ func (k *Keeper) Liquidate(
 				if err != nil {
 					return err
 				}
-				vault.CollateralLocked.Amount = vault.CollateralLocked.Amount.Sub(penaltyAmount)
+				vault.CollateralLocked.Amount = collateralRemain.Amount.Sub(penaltyAmount)
 			}
 		}
 	} else {
