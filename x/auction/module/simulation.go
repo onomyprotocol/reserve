@@ -1,4 +1,4 @@
-package oracle
+package auction
 
 import (
 	"math/rand"
@@ -9,13 +9,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/onomyprotocol/reserve/testutil/sample"
-	oraclesimulation "github.com/onomyprotocol/reserve/x/oracle/simulation"
-	"github.com/onomyprotocol/reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/auction/types"
 )
 
 // avoid unused import issue
 var (
-	_ = oraclesimulation.FindAccount
 	_ = rand.Rand{}
 	_ = sample.AccAddress
 	_ = sdk.AccAddress{}
@@ -32,12 +30,11 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	oracleGenesis := types.GenesisState{
+	auctionGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
-		PortId: types.PortID,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&oracleGenesis)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&auctionGenesis)
 }
 
 // RegisterStoreDecoder registers a decoder.

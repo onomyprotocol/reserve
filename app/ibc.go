@@ -4,12 +4,13 @@ import (
 	"cosmossdk.io/core/appmodule"
 	storetypes "cosmossdk.io/store/types"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	"github.com/cosmos/cosmos-sdk/x/params"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	paramproposal "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
@@ -36,13 +37,15 @@ import (
 	solomachine "github.com/cosmos/ibc-go/v8/modules/light-clients/06-solomachine"
 	ibctm "github.com/cosmos/ibc-go/v8/modules/light-clients/07-tendermint"
 
-	// this line is used by starport scaffolding # ibc/app/import
+	oracle "github.com/onomyprotocol/reserve/x/oracle"
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
 	oraclemoduletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	psm "github.com/onomyprotocol/reserve/x/psm/module"
+	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // registerIBCModules register IBC keepers and non dependency inject modules.
-func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
+func (app *App) registerIBCModules() error {
 	// set up non depinject support modules store keys
 	if err := app.RegisterStores(
 		storetypes.NewKVStoreKey(capabilitytypes.StoreKey),
@@ -94,7 +97,10 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 	// by granting the governance module the right to execute the message.
 	// See: https://docs.cosmos.network/main/modules/gov#proposal-messages
 	govRouter := govv1beta1.NewRouter()
-	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler)
+	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
+		AddRoute(oraclemoduletypes.RouterKey, oracle.NewOracleProposalHandler(app.OracleKeeper)).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper)).
+		AddRoute(psmtypes.RouterKey, psm.NewPSMProposalHandler(&app.PSMKeeper))
 
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.GetKey(ibcfeetypes.StoreKey),
@@ -162,6 +168,12 @@ func (app *App) registerIBCModules(appOpts servertypes.AppOptions) error {
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 
 	oracleIBCModule := ibcfee.NewIBCMiddleware(oraclemodule.NewIBCModule(app.OracleKeeper), app.IBCFeeKeeper)
+	// oracleStack, err := app.registerOracleModule()
+	// if err != nil {
+	// 	return err
+	// }
+
+	// ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleStack)
 	ibcRouter.AddRoute(oraclemoduletypes.ModuleName, oracleIBCModule)
 	// this line is used by starport scaffolding # ibc/app/module
 
@@ -200,6 +212,8 @@ func RegisterIBC(registry cdctypes.InterfaceRegistry) map[string]appmodule.AppMo
 		capabilitytypes.ModuleName:  capability.AppModule{},
 		ibctm.ModuleName:            ibctm.AppModule{},
 		solomachine.ModuleName:      solomachine.AppModule{},
+
+		// oraclemoduletypes.ModuleName: oraclemodule.AppModule{},
 	}
 
 	for name, m := range modules {

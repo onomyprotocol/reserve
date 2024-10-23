@@ -1,0 +1,36 @@
+syntax = "proto3";
+package reserve.psm.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+import "amino/amino.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
+
+message Stablecoin {
+  string denom = 1;
+    // limit total stablecoin module support
+  bytes limit_total = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+  bytes fee_in = 3 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+  bytes fee_out = 4 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// message LockCoin {
+//   string address = 1;
+//   cosmos.base.v1beta1.Coin coin = 2;
+//   int64 time = 3;
+// }
