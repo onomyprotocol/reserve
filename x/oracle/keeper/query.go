@@ -27,3 +27,23 @@ func (k Keeper) Price(c context.Context, q *types.QueryPriceRequest) (*types.Que
 	}
 	return res, nil
 }
+
+func (k Keeper) BandParams(c context.Context, q *types.QueryBandParamsRequest) (*types.QueryBandParamsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	bandParams := k.GetBandParams(ctx)
+	res := &types.QueryBandParamsResponse{
+		BandParams: &bandParams,
+	}
+	return res, nil
+}
+
+func (k Keeper) BandOracleRequestParams(c context.Context, q *types.QueryBandOracleRequestParamsRequest) (*types.QueryBandOracleRequestParamsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	bandOracleRequestParams := k.GetBandOracleRequestParams(ctx)
+	res := &types.QueryBandOracleRequestParamsResponse{
+		BandOracleRequestParams: &bandOracleRequestParams,
+	}
+	return res, nil
+}

@@ -25,6 +25,8 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(
 		GetBandPriceStates(),
 		GetPrice(),
+		GetBandParams(),
+		GetBandOracleRequestParams(),
 	)
 	return cmd
 }
@@ -33,7 +35,7 @@ func GetQueryCmd() *cobra.Command {
 func GetBandPriceStates() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "band-price-states",
-		Short: "Gets Band price states",
+		Short: "Get Band price states",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -78,6 +80,60 @@ func GetPrice() *cobra.Command {
 				QuoteDenom: quoteDenom,
 			}
 			res, err = queryClient.Price(context.Background(), req)
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetBandParams queries the band parameters
+func GetBandParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "band-params",
+		Short: "Get band parameters",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			var res proto.Message
+			req := &types.QueryBandParamsRequest{}
+			res, err = queryClient.BandParams(context.Background(), req)
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetBandOracleRequestParams queries the band oracle request parameters
+func GetBandOracleRequestParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "band-oracle-request-params",
+		Short: "Get band oracle request parameters",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			var res proto.Message
+			req := &types.QueryBandOracleRequestParamsRequest{}
+			res, err = queryClient.BandOracleRequestParams(context.Background(), req)
 			if err != nil {
 				return err
 			}
