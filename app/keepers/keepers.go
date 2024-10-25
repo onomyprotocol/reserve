@@ -310,6 +310,7 @@ func NewAppKeeper(
 		appCodec,
 		runtime.NewKVStoreService(appKeepers.keys[oracletypes.StoreKey]),
 		logger,
+		appKeepers.AccountKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		appKeepers.IBCKeeper.ChannelKeeper,
 		appKeepers.IBCKeeper.PortKeeper,
