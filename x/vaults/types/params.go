@@ -13,7 +13,6 @@ var (
 	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("0.05")
 	DefaultMinInitialDebt        = math.NewInt(50_000_000)
 	DefaultRecalculateDebtPeriod = time.Hour
-	DefaultLiquidatePeriod       = time.Hour
 	DefaultMintDenom             = "nomUSD"
 
 	KeyMintingFee            = []byte("MintingFee")
@@ -21,7 +20,6 @@ var (
 	KeyLiquidationPenalty    = []byte("LiquidationPenalty")
 	KeyMinInitialDebt        = []byte("MinInitialDebt")
 	KeyRecalculateDebtPeriod = []byte("RecalculateDebtPeriod")
-	KeyLiquidatePeriod       = []byte("LiquidatePeriod")
 )
 
 // NewParams creates a new Params instance.
@@ -29,13 +27,11 @@ func NewParams(
 	minInitialDebt math.Int,
 	mintDenom string,
 	chargingPeriod time.Duration,
-	liquidatePeriod time.Duration,
 ) Params {
 	return Params{
-		MinInitialDebt:  minInitialDebt,
-		LiquidatePeriod: liquidatePeriod,
-		ChargingPeriod:  chargingPeriod,
-		MintDenom:       mintDenom,
+		MinInitialDebt: minInitialDebt,
+		ChargingPeriod: chargingPeriod,
+		MintDenom:      mintDenom,
 	}
 }
 
@@ -45,7 +41,6 @@ func DefaultParams() Params {
 		DefaultMinInitialDebt,
 		DefaultMintDenom,
 		DefaultRecalculateDebtPeriod,
-		DefaultLiquidatePeriod,
 	)
 }
 
@@ -57,16 +52,10 @@ func (m Params) Validate() error {
 	if err := validateRecalculateDebtPeriod(m.ChargingPeriod); err != nil {
 		return err
 	}
-	if err := validateLiquidatePeriod(m.LiquidatePeriod); err != nil {
-		return err
-	}
 	return nil
 }
 
 func validateRecalculateDebtPeriod(i interface{}) error {
-	return nil
-}
-func validateLiquidatePeriod(i interface{}) error {
 	return nil
 }
 
