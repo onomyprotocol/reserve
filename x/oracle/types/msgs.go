@@ -16,6 +16,7 @@ const (
 var (
 	_ sdk.Msg = &MsgRequestBandRates{}
 	_ sdk.Msg = &MsgUpdateParams{}
+	_ sdk.Msg = &MsgUpdateBandParams{}
 )
 
 func (msg MsgUpdateParams) Route() string { return RouterKey }

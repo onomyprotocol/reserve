@@ -152,7 +152,7 @@ func (m *QueryBandPriceStatesRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryBandPriceStatesRequest proto.InternalMessageInfo
 
 // QueryBandPriceStatesResponse is the response type for the
-// Query/Price RPC method.
+// Query/BandPriceStates RPC method.
 type QueryBandPriceStatesResponse struct {
 	PriceStates []*BandPriceState `protobuf:"bytes,1,rep,name=price_states,json=priceStates,proto3" json:"price_states,omitempty"`
 }

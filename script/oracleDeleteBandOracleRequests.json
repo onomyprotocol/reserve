@@ -1,0 +1,10 @@
+{
+    "messages": [{
+      "@type": "/reserve.oracle.MsgDeleteBandOracleRequests",
+      "authority": "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
+      "delete_request_ids" : [1, 2]
+    }],
+    "deposit": "100000000stake",
+    "title": "My proposal",
+    "summary": "A short summary of my proposal"
+  }
