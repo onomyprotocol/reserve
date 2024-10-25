@@ -26,6 +26,7 @@ import (
 
 	"cosmossdk.io/core/appmodule"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	modulev1 "github.com/onomyprotocol/reserve/api/reserve/vaults/module"
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/vaults/keeper"
@@ -176,8 +177,9 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	PsmKeeper keeper.Keeper
-	Module    appmodule.AppModule
+	PsmKeeper  keeper.Keeper
+	Module     appmodule.AppModule
+	GovHandler govv1beta1.HandlerRoute
 }
 
 func ProvideModule(in ModuleInputs) ModuleOutputs {
@@ -202,6 +204,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.AccountKeeper,
 		in.BankKeeper,
 	)
+	govHandler := govv1beta1.HandlerRoute{RouteKey: types.RouterKey, Handler: NewVaultsProposalHandler(k)}
 
-	return ModuleOutputs{PsmKeeper: *k, Module: m}
+	return ModuleOutputs{PsmKeeper: *k, Module: m, GovHandler: govHandler}
 }

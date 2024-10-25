@@ -11,7 +11,7 @@ var (
 	DefaultMintingFee            = math.LegacyMustNewDecFromStr("0.05")
 	DefaultStabilityFee          = math.LegacyMustNewDecFromStr("0.05")
 	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("0.05")
-	DefaultMinInitialDebt        = math.NewInt(20_000_000)
+	DefaultMinInitialDebt        = math.NewInt(50_000_000)
 	DefaultRecalculateDebtPeriod = time.Hour
 	DefaultLiquidatePeriod       = time.Hour
 	DefaultMintDenom             = "nomUSD"
