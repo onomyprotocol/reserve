@@ -26,7 +26,19 @@ service Query {
       returns (QueryPriceResponse) {
     option (google.api.http).get =
       "/reserve/oracle/price";
-}
+  }
+  // Retrieves the band paraparametersms
+  rpc BandParams(QueryBandParamsRequest)
+      returns (QueryBandParamsResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/band_params";
+  }
+  // Retrieves the band oracle request parameters
+  rpc BandOracleRequestParams(QueryBandOracleRequestParamsRequest)
+      returns (QueryBandOracleRequestParamsResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/band_oracle_request_params";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -61,4 +73,24 @@ message QueryPriceRequest {
 // Query/Price RPC method
 message QueryPriceResponse {
   string price = 1;
+}
+
+// QueryBandParamsRequest is the request type for the
+// Query/BandParams RPC method.
+message QueryBandParamsRequest {}
+
+// QueryBandParamsResponse is the response type for the
+// Query/BandParams RPC method.
+message QueryBandParamsResponse {
+  BandParams band_params = 1;
+}
+
+// QueryBandOracleRequestParamsRequest is the request type for the
+// Query/BandOracleRequestParams RPC method.
+message QueryBandOracleRequestParamsRequest {}
+
+// QueryBandOracleRequestParamsResponse is the response type for the
+// Query/BandOracleRequestParams RPC method.
+message QueryBandOracleRequestParamsResponse {
+  BandOracleRequestParams band_oracle_request_params = 1;
 }
