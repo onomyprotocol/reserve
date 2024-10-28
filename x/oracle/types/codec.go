@@ -14,8 +14,9 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateParams{}, "oracle/MsgUpdateParams", nil)
 	cdc.RegisterConcrete(&MsgRequestBandRates{}, "oracle/MsgRequestBandRates", nil)
 	cdc.RegisterConcrete(&MsgUpdateBandParams{}, "oracle/MsgUpdateBandParams", nil)
-	cdc.RegisterConcrete(&MsgUpdateBandOracleRequest{}, "oracle/MsgUpdateBandOracleRequest", nil)
+	cdc.RegisterConcrete(&MsgUpdateBandOracleRequestRequest{}, "oracle/MsgUpdateBandOracleRequest", nil)
 	cdc.RegisterConcrete(&MsgDeleteBandOracleRequests{}, "oracle/MsgDeleteBandOracleRequests", nil)
+	cdc.RegisterConcrete(&MsgUpdateBandOracleRequestParamsRequest{}, "oracle/MsgUpdateBandOracleRequestParamsRequest", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -23,8 +24,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgUpdateParams{},
 		&MsgRequestBandRates{},
 		&MsgUpdateBandParams{},
-		&MsgUpdateBandOracleRequest{},
+		&MsgUpdateBandOracleRequestRequest{},
 		&MsgDeleteBandOracleRequests{},
+		&MsgUpdateBandOracleRequestParamsRequest{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

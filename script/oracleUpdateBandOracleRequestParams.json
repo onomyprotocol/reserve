@@ -1,11 +1,8 @@
 {
     "messages": [{
-      "@type": "/reserve.oracle.MsgUpdateBandOracleRequestRequest",
+      "@type": "/reserve.oracle.MsgUpdateBandOracleRequestParamsRequest",
       "authority": "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
-      "update_oracle_request" : {
-        "request_id": 1,
-        "oracle_script_id": 42,
-        "symbols":["BTC","USD","EUR"],
+      "update_band_oracle_request_params" : {
         "ask_count": 1,
         "min_count": 1,
         "fee_limit": [{"denom":"uband","amount":"300000"}],
@@ -17,4 +14,4 @@
     "deposit": "100000000stake",
     "title": "My proposal",
     "summary": "A short summary of my proposal"
-  }
+}
