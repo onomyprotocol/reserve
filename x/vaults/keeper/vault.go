@@ -552,7 +552,7 @@ func (k *Keeper) Liquidate(
 				if err != nil {
 					return err
 				}
-				vault.CollateralLocked.Amount = collateralRemain.Sub(penaltyAmount)
+				vault.CollateralLocked.Amount = vault.CollateralLocked.Amount.Sub(penaltyAmount)
 				totalCollateralRemain.Amount = totalCollateralRemain.Amount.Sub(penaltyAmount)
 
 				ratio := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(vault.LiquidationPrice).Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
