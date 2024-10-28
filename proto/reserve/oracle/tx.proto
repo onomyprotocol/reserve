@@ -22,9 +22,11 @@ service Msg {
 
   rpc UpdateBandParams(MsgUpdateBandParams) returns (MsgUpdateBandParamsResponse);
 
-  rpc UpdateBandOracleRequest(MsgUpdateBandOracleRequest) returns (MsgUpdateBandOracleRequestResponse);
+  rpc UpdateBandOracleRequest(MsgUpdateBandOracleRequestRequest) returns (MsgUpdateBandOracleRequestResponse);
 
   rpc DeleteBandOracleRequests(MsgDeleteBandOracleRequests) returns (MsgDeleteBandOracleRequestsResponse);
+
+  rpc UpdateBandOracleRequestParams(MsgUpdateBandOracleRequestParamsRequest) returns (MsgUpdateBandOracleRequestParamsResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -76,8 +78,8 @@ message MsgUpdateBandParams {
 // MsgUpdateBandParamsResponse define the Msg/UpdateBandParams response type.
 message MsgUpdateBandParamsResponse {}
 
-// MsgUpdateBandOracleRequest define defines a SDK message for update band oracle requests
-message MsgUpdateBandOracleRequest{
+// MsgUpdateBandOracleRequestRequest define defines a SDK message for update band oracle requests
+message MsgUpdateBandOracleRequestRequest{
   option (cosmos.msg.v1.signer) = "authority";
   option (amino.name) = "oracle/UpdateBandOracleRequest";
   option (gogoproto.goproto_getters) = false;
@@ -105,3 +107,18 @@ message MsgDeleteBandOracleRequests{
 
 // MsgDeleteBandOracleRequestsResponse define the Msg/MsgDeleteBandOracleRequests response type.
 message MsgDeleteBandOracleRequestsResponse {}
+
+// MsgUpdateBandOracleRequestParamsRequest define defines a SDK message for update band oracle request parameters
+message MsgUpdateBandOracleRequestParamsRequest {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "oracle/UpdateBandOracleRequestParams";
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.equal)           = false;
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string   authority                 = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  BandOracleRequestParams update_band_oracle_request_params = 2;
+}
+
+// MsgUpdateBandOracleRequestParamsResponse define the Msg/UpdateBandOracleRequestParams response type.
+message MsgUpdateBandOracleRequestParamsResponse {}
