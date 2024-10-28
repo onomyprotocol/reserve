@@ -406,6 +406,7 @@ func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
 ) error {
+	fmt.Println("START LIQUIDATE", liquidation)
 	params := k.GetParams(ctx)
 
 	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
@@ -433,6 +434,9 @@ func (k *Keeper) Liquidate(
 		sold = sold.Add(status.Sold)
 		totalCollateralRemain = totalCollateralRemain.Add(status.RemainCollateral)
 	}
+
+	fmt.Println("sold", sold)
+	fmt.Println("totalCollateralRemain", totalCollateralRemain)
 
 	// Sold amount enough to cover debt
 	if sold.Amount.GTE(totalDebt.Amount) {
@@ -467,6 +471,7 @@ func (k *Keeper) Liquidate(
 				vault.Status = types.CLOSED
 				continue
 			}
+			fmt.Println("current debt", vault.Debt)
 			penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
 			fmt.Println("penaltyAmount", penaltyAmount)
 			vault.Debt.Amount = math.ZeroInt()
@@ -547,7 +552,7 @@ func (k *Keeper) Liquidate(
 				if err != nil {
 					return err
 				}
-				vault.CollateralLocked.Amount = collateralRemain.Sub(penaltyAmount)
+				vault.CollateralLocked.Amount = vault.CollateralLocked.Amount.Sub(penaltyAmount)
 				totalCollateralRemain.Amount = totalCollateralRemain.Amount.Sub(penaltyAmount)
 
 				ratio := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(vault.LiquidationPrice).Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))

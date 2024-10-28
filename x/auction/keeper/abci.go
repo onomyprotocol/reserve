@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -81,8 +82,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
 				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultstypes.VaultLiquidationStatus{
+					Sold:             auction.TokenRaised,
+					RemainCollateral: auction.Item,
+				}
 			} else {
 				liquidation_tmp = &vaultstypes.Liquidation{
 					Denom:                  auction.Item.Denom,
@@ -136,6 +139,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 		}
 
+		fmt.Println("fillBids", bidQueue)
 		err = k.fillBids(ctx, auction, bidQueue)
 		if err != nil {
 			return true, err
@@ -145,6 +149,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	})
 
 	// Loop through liquidationMap and liquidate
+	fmt.Println("liquidationMap", liquidationMap)
 	for _, liq := range liquidationMap {
 		err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {
@@ -237,12 +242,12 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 
 			bidQueue.Bids[i].IsHandle = true
 		}
+	}
 
-		// update auction status
-		err = k.Auctions.Set(ctx, auction.AuctionId, auction)
-		if err != nil {
-			return err
-		}
+	// update auction status
+	err = k.Auctions.Set(ctx, auction.AuctionId, auction)
+	if err != nil {
+		return err
 	}
 
 	// update bid queue
