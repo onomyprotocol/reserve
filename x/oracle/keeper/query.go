@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"strconv"
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -44,6 +45,21 @@ func (k Keeper) BandOracleRequestParams(c context.Context, q *types.QueryBandOra
 	bandOracleRequestParams := k.GetBandOracleRequestParams(ctx)
 	res := &types.QueryBandOracleRequestParamsResponse{
 		BandOracleRequestParams: &bandOracleRequestParams,
+	}
+	return res, nil
+}
+
+func (k Keeper) BandOracleRequest(c context.Context, q *types.QueryBandOracleRequestRequest) (*types.QueryBandOracleRequestResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	requestID, err := strconv.ParseUint(q.RequestId, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	bandOracleRequest := k.GetBandOracleRequest(ctx, requestID)
+	res := &types.QueryBandOracleRequestResponse{
+		BandOracleRequest: bandOracleRequest,
 	}
 	return res, nil
 }
