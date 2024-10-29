@@ -22,6 +22,7 @@ func GetQueryCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdCheckParams())
 	cmd.AddCommand(CmdCheckStablecoin())
 	cmd.AddCommand(CmdGetAllStablecoin())
 	return cmd
@@ -62,6 +63,30 @@ func CmdGetAllStablecoin() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.AllStablecoin(context.Background(), &types.QueryAllStablecoinRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdCheckParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "params [denom]",
+		Short: "shows params module psm",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
 			if err != nil {
 				return err
 			}

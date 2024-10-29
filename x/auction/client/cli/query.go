@@ -20,6 +20,7 @@ func GetQueryCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdParams())
 	cmd.AddCommand(CmdQueryAllAuctions())
 	return cmd
 }
@@ -35,6 +36,28 @@ func CmdQueryAllAuctions() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.QueryAllAuction(context.Background(), &types.QueryAllAuctionRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "all-auction",
+		Short: "show all auctions",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
 			if err != nil {
 				return err
 			}
