@@ -100,7 +100,7 @@ func (k Keeper) TotalStablecoinLock(ctx context.Context, nameStablecoin string) 
 
 	err := k.totalStablecoinLock.Walk(ctx, nil, func(key string, value math.Int) (stop bool, err error) {
 		if key == nameStablecoin {
-			total.Add(value)
+			total = total.Add(value)
 		}
 		return false, nil
 	})
