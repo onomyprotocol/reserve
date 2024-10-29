@@ -49,7 +49,7 @@ func CmdQueryAllAuctions() *cobra.Command {
 
 func CmdParams() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "all-auction",
+		Use:   "params",
 		Short: "show all auctions",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
