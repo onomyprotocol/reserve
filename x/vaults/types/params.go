@@ -55,51 +55,12 @@ func (m Params) Validate() error {
 	return nil
 }
 
-func validateRecalculateDebtPeriod(i interface{}) error {
-	return nil
-}
-
-func validateStabilityFee(i interface{}) error {
-	v, ok := i.(math.LegacyDec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.IsNil() || v.IsNegative() {
-		return fmt.Errorf("total limit rate cannot be negative or nil: %s", v)
-	}
-
-	return nil
-}
-
-func validateLiquidationPenalty(i interface{}) error {
-	v, ok := i.(math.LegacyDec)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.IsNil() || v.IsNegative() {
-		return fmt.Errorf("total limit rate cannot be negative or nil: %s", v)
-	}
-
+func validateRecalculateDebtPeriod(_ interface{}) error {
 	return nil
 }
 
 func validateMinInitialDebt(i interface{}) error {
 	v, ok := i.(math.Int)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.IsNil() || v.IsNegative() {
-		return fmt.Errorf("total limit rate cannot be negative or nil: %s", v)
-	}
-
-	return nil
-}
-
-func validateMintingFee(i interface{}) error {
-	v, ok := i.(math.LegacyDec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}

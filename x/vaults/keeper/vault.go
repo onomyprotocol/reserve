@@ -435,9 +435,6 @@ func (k *Keeper) Liquidate(
 		totalCollateralRemain = totalCollateralRemain.Add(status.RemainCollateral)
 	}
 
-	fmt.Println("sold", sold)
-	fmt.Println("totalCollateralRemain", totalCollateralRemain)
-
 	// Sold amount enough to cover debt
 	if sold.Amount.GTE(totalDebt.Amount) {
 		// Burn debt
@@ -471,9 +468,9 @@ func (k *Keeper) Liquidate(
 				vault.Status = types.CLOSED
 				continue
 			}
-			fmt.Println("current debt", vault.Debt)
+
 			penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
-			fmt.Println("penaltyAmount", penaltyAmount)
+
 			vault.Debt.Amount = math.ZeroInt()
 			if penaltyAmount.GTE(collateralRemain.Amount) {
 				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(collateralRemain))
