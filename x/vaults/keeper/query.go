@@ -37,27 +37,27 @@ func (q queryServer) Params(ctx context.Context, req *types.QueryParamsRequest) 
 func (q queryServer) QueryAllCollateral(ctx context.Context, req *types.QueryAllCollateralRequest) (*types.QueryAllCollateralResponse, error) {
 	allCollateral := []*types.VaultMamager{}
 
-	q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultMamager) (stop bool, err error) {
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultMamager) (stop bool, err error) {
 		allCollateral = append(allCollateral, &value)
 		return false, nil
 	})
 
 	return &types.QueryAllCollateralResponse{
 		AllVaultMamager: allCollateral,
-	}, nil
+	}, err
 }
 
 func (q queryServer) QueryAllVaults(ctx context.Context, req *types.QueryAllVaultsRequest) (*types.QueryAllVaultsResponse, error) {
 	allVaults := []*types.Vault{}
 
-	q.keeper.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
+	err := q.keeper.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
 		allVaults = append(allVaults, &value)
 		return false, nil
 	})
 
 	return &types.QueryAllVaultsResponse{
 		AllVault: allVaults,
-	}, nil
+	}, err
 }
 
 func (q queryServer) QueryVaults(ctx context.Context, req *types.QueryVaultIdRequest) (*types.QueryVaultIdResponse, error) {

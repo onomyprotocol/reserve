@@ -12,7 +12,7 @@ import (
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" //nolint:staticcheck
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -250,8 +250,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	for _, req := range allBandOracleRequests {
 		if req.OracleScriptId == oracleScriptId {
 			req.Symbols = append(req.Symbols, symbol)
-			k.SetBandOracleRequest(ctx, *req)
-			return nil
+			return k.SetBandOracleRequest(ctx, *req)
 		}
 	}
 
@@ -269,10 +268,12 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 		MinSourceCount: bandOracleRequestParams.MinSourceCount,
 	}
 
-	k.SetBandOracleRequest(ctx, newBandOracleRequest)
+	err := k.SetBandOracleRequest(ctx, newBandOracleRequest)
+	if err != nil {
+		return err
+	}
 
-	k.SetBandLatestRequestID(ctx, requestID)
-	return nil
+	return k.SetBandLatestRequestID(ctx, requestID)
 }
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
@@ -366,14 +367,15 @@ func (k *Keeper) RequestBandOraclePrices(
 
 	// Persist the sequence number and OracleRequest CallData. CallData contains list of symbols.
 	// This is used to map the prices/rates with the symbols upon receiving oracle response from Band IBC.
-	k.SetBandCallDataRecord(ctx, &types.CalldataRecord{
+	err = k.SetBandCallDataRecord(ctx, &types.CalldataRecord{
 		ClientId: clientID,
 		Calldata: calldata,
 	})
+	if err != nil {
+		return err
+	}
 
-	k.SetBandLatestClientID(ctx, clientID)
-
-	return
+	return k.SetBandLatestClientID(ctx, clientID)
 }
 
 func (k *Keeper) ProcessBandOraclePrices(
@@ -405,9 +407,7 @@ func (k *Keeper) ProcessBandOraclePrices(
 	k.updateBandPriceStates(ctx, input, output, packet, relayer, clientID)
 
 	// Delete the calldata corresponding to the sequence number
-	k.DeleteBandCallDataRecord(ctx, uint64(clientID))
-
-	return nil
+	return k.DeleteBandCallDataRecord(ctx, uint64(clientID))
 }
 
 func (k *Keeper) updateBandPriceStates(
@@ -508,7 +508,10 @@ func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx context.Context) {
 	}
 
 	for _, id := range k.getPreviousRecordIDs(ctx, earliestToKeepClientID) {
-		k.DeleteBandCallDataRecord(ctx, id)
+		err := k.DeleteBandCallDataRecord(ctx, id)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

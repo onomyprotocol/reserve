@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	// "fmt"
 	"io"
 
 	"cosmossdk.io/log"
@@ -20,6 +21,7 @@ import (
 	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -28,11 +30,12 @@ import (
 
 func initRootCmd(
 	rootCmd *cobra.Command,
-	txConfig client.TxConfig,
 	basicManager module.BasicManager,
+	txConfig client.TxConfig,
 ) {
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(basicManager, app.DefaultNodeHome),
+		NewTestnetCmd(addModuleInitFlags),
 		debug.Cmd(),
 		confixcmd.ConfigCommand(),
 		pruning.Cmd(newApp, app.DefaultNodeHome),
@@ -57,6 +60,7 @@ func addModuleInitFlags(startCmd *cobra.Command) {
 
 // genesisCommand builds genesis-related `reserved genesis` command. Users may provide application specific commands as a parameter
 func genesisCommand(txConfig client.TxConfig, basicManager module.BasicManager, cmds ...*cobra.Command) *cobra.Command {
+	// fmt.Println(basicManager["genutil"] == nil)
 	cmd := genutilcli.Commands(txConfig, basicManager, app.DefaultNodeHome)
 
 	for _, subCmd := range cmds {
@@ -96,7 +100,7 @@ func txCommand(basicManager module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
 		Short:                      "Transactions subcommands",
-		DisableFlagParsing:         false,
+		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
@@ -111,7 +115,6 @@ func txCommand(basicManager module.BasicManager) *cobra.Command {
 		authcmd.GetBroadcastCommand(),
 		authcmd.GetEncodeCommand(),
 		authcmd.GetDecodeCommand(),
-		authcmd.GetSimulateCmd(),
 	)
 
 	basicManager.AddTxCommands(cmd)
@@ -130,15 +133,21 @@ func newApp(
 ) servertypes.Application {
 	baseappOptions := server.DefaultBaseappOptions(appOpts)
 
-	app, err := app.New(
-		logger, db, traceStore, true,
+	skipUpgradeHeights := make(map[int64]bool)
+	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
+		skipUpgradeHeights[int64(h)] = true
+	}
+
+	return app.NewApp(
+		logger,
+		db,
+		traceStore,
+		true,
+		skipUpgradeHeights,
+		cast.ToString(appOpts.Get(flags.FlagHome)),
 		appOpts,
 		baseappOptions...,
 	)
-	if err != nil {
-		panic(err)
-	}
-	return app
 }
 
 // appExport creates a new app (optionally at a given height) and exports state.
@@ -154,7 +163,6 @@ func appExport(
 ) (servertypes.ExportedApp, error) {
 	var (
 		bApp *app.App
-		err  error
 	)
 
 	// this check is necessary as we use the flag in x/upgrade.
@@ -173,18 +181,23 @@ func appExport(
 	viperAppOpts.Set(server.FlagInvCheckPeriod, 1)
 	appOpts = viperAppOpts
 
-	if height != -1 {
-		bApp, err = app.New(logger, db, traceStore, false, appOpts)
-		if err != nil {
-			return servertypes.ExportedApp{}, err
-		}
+	var loadLatest bool
+	if height == -1 {
+		loadLatest = true
+	}
 
+	bApp = app.NewApp(
+		logger,
+		db,
+		traceStore,
+		loadLatest,
+		map[int64]bool{},
+		homePath,
+		appOpts,
+	)
+
+	if height != -1 {
 		if err := bApp.LoadHeight(height); err != nil {
-			return servertypes.ExportedApp{}, err
-		}
-	} else {
-		bApp, err = app.New(logger, db, traceStore, true, appOpts)
-		if err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	}

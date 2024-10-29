@@ -29,12 +29,6 @@ message Params {
     (gogoproto.nullable) = false,
     (amino.dont_omitempty) = true
   ];
-
-  google.protobuf.Duration liquidate_period = 4 [
-    (gogoproto.stdduration) = true,
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
 }
 
 // VaultParams defines the parameters for each collateral vault type.

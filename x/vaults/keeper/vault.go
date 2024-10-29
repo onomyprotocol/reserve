@@ -304,12 +304,15 @@ func (k *Keeper) UpdateVaultsDebt(
 	rate := math.LegacyNewDec(deltaDur.Milliseconds()).Quo(math.LegacyNewDec((time.Hour * 24 * 365).Milliseconds())) // divice 365 days
 	// Get stability fee of all denoms
 	fees := make(map[string]math.LegacyDec, 0)
-	k.VaultsManager.Walk(ctx, nil, func(denom string, vm types.VaultMamager) (bool, error) {
+	err := k.VaultsManager.Walk(ctx, nil, func(denom string, vm types.VaultMamager) (bool, error) {
 		fees[denom] = vm.Params.StabilityFee.Mul(rate)
 		return false, nil
 	})
+	if err != nil {
+		return err
+	}
 
-	err := k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
+	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		var err error
 		if vault.Status == types.ACTIVE {
 			debtAmount := vault.Debt.Amount
@@ -406,6 +409,7 @@ func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
 ) error {
+	fmt.Println("START LIQUIDATE", liquidation)
 	params := k.GetParams(ctx)
 
 	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
@@ -458,31 +462,32 @@ func (k *Keeper) Liquidate(
 		}
 
 		// Take the liquidation penalty and send back to vault owner
-		if totalCollateralRemain.Amount.GT(math.ZeroInt()) {
-			//TODO: decimal
+		for _, vault := range liquidation.LiquidatingVaults {
+			collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral
 
-			for _, vault := range liquidation.LiquidatingVaults {
-				collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral
-				if collateralRemain.Amount.Equal(math.ZeroInt()) {
-					continue
+			if collateralRemain.Amount.Equal(math.ZeroInt()) {
+				vault.CollateralLocked.Amount = math.ZeroInt()
+				vault.Debt.Amount = math.ZeroInt()
+				vault.Status = types.CLOSED
+				continue
+			}
+
+			penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
+
+			vault.Debt.Amount = math.ZeroInt()
+			if penaltyAmount.GTE(collateralRemain.Amount) {
+				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(collateralRemain))
+				if err != nil {
+					return err
 				}
-				penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
-				fmt.Println("penaltyAmount", penaltyAmount)
-				if penaltyAmount.GTE(collateralRemain.Amount) {
-					err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(collateralRemain))
-					if err != nil {
-						return err
-					}
-				} else {
-					err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(collateralRemain.Denom, penaltyAmount)))
-					if err != nil {
-						return err
-					}
-					err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.MustAccAddressFromBech32(vault.Owner), sdk.NewCoins(sdk.NewCoin(collateralRemain.Denom, collateralRemain.Amount.Sub(penaltyAmount))))
-					if err != nil {
-						return err
-					}
+				vault.CollateralLocked.Amount = math.ZeroInt()
+				vault.Status = types.CLOSED
+			} else {
+				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(collateralRemain.Denom, penaltyAmount)))
+				if err != nil {
+					return err
 				}
+				vault.CollateralLocked.Amount = collateralRemain.Amount.Sub(penaltyAmount)
 			}
 		}
 	} else {
@@ -502,10 +507,20 @@ func (k *Keeper) Liquidate(
 
 		// No collateral remain
 		if totalCollateralRemain.Amount.Equal(math.ZeroInt()) {
-			//TODO: send shortfall to reserve
 			// Update vaults status
 			for _, vault := range liquidation.LiquidatingVaults {
-				k.SetVault(ctx, *vault)
+				soldAmount := liquidation.VaultLiquidationStatus[vault.Id].Sold.Amount
+				if soldAmount.GTE(vault.Debt.Amount) {
+					vault.Debt.Amount = math.ZeroInt()
+				} else {
+					vault.Debt.Amount = vault.Debt.Amount.Sub(soldAmount)
+				}
+				vault.CollateralLocked.Amount = math.ZeroInt()
+				// LIQUIDATED
+				err = k.SetVault(ctx, *vault)
+				if err != nil {
+					return err
+				}
 			}
 			currentShortfall, err := k.ShortfallAmount.Get(ctx)
 			if err != nil {
@@ -521,12 +536,19 @@ func (k *Keeper) Liquidate(
 			ratios := make([]math.LegacyDec, 0)
 			//TODO: Sort by CR in GetLiquidations could reduce calculate here
 			for _, vault := range liquidation.LiquidatingVaults {
+				collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral.Amount
 				penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
-				
-				// If collateral locked not enough for penalty,
+
+				// If remain collateral not enough for penalty,
 				// transfer all and mark vault CLOSED
-				if penaltyAmount.GT(vault.CollateralLocked.Amount) {
-					penaltyAmount = vault.CollateralLocked.Amount
+				if penaltyAmount.GT(collateralRemain) {
+					soldAmount := liquidation.VaultLiquidationStatus[vault.Id].Sold.Amount
+					if soldAmount.GTE(vault.Debt.Amount) {
+						vault.Debt.Amount = math.ZeroInt()
+					} else {
+						vault.Debt.Amount = vault.Debt.Amount.Sub(soldAmount)
+					}
+					penaltyAmount = collateralRemain
 					vault.Status = types.CLOSED
 				}
 				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(liquidation.Denom, penaltyAmount)))
@@ -546,11 +568,11 @@ func (k *Keeper) Liquidate(
 			})
 
 			// Try to reconstitue vaults
-			// list contains both LIQUIDATING & CLOSED,
-			// only reconstitue LIQUIDATING vaults
+			// list contains both LIQUIDATED & CLOSED,
+			// only reconstitue LIQUIDATED vaults
 			totalRemainDebt := totalDebt.Sub(sold)
 			for _, vault := range liquidation.LiquidatingVaults {
-				if vault.Status != types.LIQUIDATING {
+				if vault.Status != types.LIQUIDATED {
 					continue
 				}
 				// if remain debt & collateral can cover full vault
@@ -566,7 +588,14 @@ func (k *Keeper) Liquidate(
 
 					vault.Status = types.ACTIVE
 				} else {
-					vault.Status = types.LIQUIDATED
+					// Update debt then mark liquidated
+					soldAmount := liquidation.VaultLiquidationStatus[vault.Id].Sold.Amount
+					if soldAmount.GTE(vault.Debt.Amount) {
+						vault.Debt.Amount = math.ZeroInt()
+					} else {
+						vault.Debt.Amount = vault.Debt.Amount.Sub(soldAmount)
+					}
+					vault.CollateralLocked.Amount = math.ZeroInt()
 				}
 			}
 
@@ -582,7 +611,10 @@ func (k *Keeper) Liquidate(
 			if totalRemainDebt.Amount.GT(math.ZeroInt()) {
 				// Update vaults status
 				for _, vault := range liquidation.LiquidatingVaults {
-					k.SetVault(ctx, *vault)
+					err = k.SetVault(ctx, *vault)
+					if err != nil {
+						return err
+					}
 				}
 				currentShortfall, err := k.ShortfallAmount.Get(ctx)
 				if err != nil {
@@ -596,9 +628,9 @@ func (k *Keeper) Liquidate(
 	}
 	// Update vaults status
 	for _, vault := range liquidation.LiquidatingVaults {
-		k.SetVault(ctx, *vault)
+		err = k.SetVault(ctx, *vault)
 	}
-	return nil
+	return err
 }
 
 func (k *Keeper) GetVault(

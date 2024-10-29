@@ -13,9 +13,9 @@ import (
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/store"
-	storetypes "cosmossdk.io/store/types"
 	"cosmossdk.io/x/feegrant"
 	abci "github.com/cometbft/cometbft/abci/types"
+	tmjson "github.com/cometbft/cometbft/libs/json"
 	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	dbm "github.com/cosmos/cosmos-db"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -48,9 +48,9 @@ func init() {
 
 // fauxMerkleModeOpt returns a BaseApp option to use a dbStoreAdapter instead of
 // an IAVLStore for faster simulation speed.
-func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
-	bapp.SetFauxMerkleMode()
-}
+// func fauxMerkleModeOpt(bapp *baseapp.BaseApp) {
+// 	bapp.SetFauxMerkleMode()
+// }
 
 // interBlockCacheOpt returns a BaseApp option function that sets the persistent
 // inter-block write-through cache.
@@ -87,19 +87,28 @@ func BenchmarkSimulation(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp, err := app.New(logger, db, nil, true, appOptions, fauxMerkleModeOpt, baseapp.SetChainID(SimAppChainID))
-	require.NoError(b, err)
-	require.Equal(b, app.Name, bApp.Name())
+	bApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(b, app.AppName, bApp.Name())
 
 	// run randomized simulation
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
 		bApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simulationtypes.RandomAccounts,
 		simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)
@@ -133,19 +142,28 @@ func TestAppImportExport(t *testing.T) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp, err := app.New(logger, db, nil, true, appOptions, fauxMerkleModeOpt, baseapp.SetChainID(SimAppChainID))
-	require.NoError(t, err)
-	require.Equal(t, app.Name, bApp.Name())
+	bApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(t, app.AppName, bApp.Name())
 
 	// Run randomized simulation
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		t,
 		os.Stdout,
 		bApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simulationtypes.RandomAccounts,
 		simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)
@@ -174,9 +192,18 @@ func TestAppImportExport(t *testing.T) {
 		require.NoError(t, os.RemoveAll(newDir))
 	}()
 
-	newApp, err := app.New(log.NewNopLogger(), newDB, nil, true, appOptions, fauxMerkleModeOpt, baseapp.SetChainID(SimAppChainID))
-	require.NoError(t, err)
-	require.Equal(t, app.Name, newApp.Name())
+	newApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(t, app.AppName, newApp.Name())
 
 	var genesisState app.GenesisState
 	err = json.Unmarshal(exported.AppState, &genesisState)
@@ -184,7 +211,13 @@ func TestAppImportExport(t *testing.T) {
 
 	ctxA := bApp.NewContextLegacy(true, cmtproto.Header{Height: bApp.LastBlockHeight()})
 	ctxB := newApp.NewContextLegacy(true, cmtproto.Header{Height: bApp.LastBlockHeight()})
-	_, err = newApp.ModuleManager.InitGenesis(ctxB, bApp.AppCodec(), genesisState)
+
+	bz, err := tmjson.Marshal(genesisState)
+	require.NoError(t, err)
+	req := abci.RequestInitChain{
+		AppStateBytes: bz,
+	}
+	_, err = newApp.InitChainer(ctxB, &req)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "validator set is empty after InitGenesis") {
@@ -210,15 +243,10 @@ func TestAppImportExport(t *testing.T) {
 		slashingtypes.StoreKey: {slashingtypes.ValidatorMissedBlockBitmapKeyPrefix},
 	}
 
-	storeKeys := bApp.GetStoreKeys()
+	storeKeys := bApp.GetKVStoreKey()
 	require.NotEmpty(t, storeKeys)
 
 	for _, appKeyA := range storeKeys {
-		// only compare kvstores
-		if _, ok := appKeyA.(*storetypes.KVStoreKey); !ok {
-			continue
-		}
-
 		keyName := appKeyA.Name()
 		appKeyB := newApp.GetKey(keyName)
 
@@ -253,19 +281,28 @@ func TestAppSimulationAfterImport(t *testing.T) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp, err := app.New(logger, db, nil, true, appOptions, fauxMerkleModeOpt, baseapp.SetChainID(SimAppChainID))
-	require.NoError(t, err)
-	require.Equal(t, app.Name, bApp.Name())
+	bApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(t, app.AppName, bApp.Name())
 
 	// Run randomized simulation
 	stopEarly, simParams, simErr := simulation.SimulateFromSeed(
 		t,
 		os.Stdout,
 		bApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simulationtypes.RandomAccounts,
 		simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)
@@ -299,9 +336,18 @@ func TestAppSimulationAfterImport(t *testing.T) {
 		require.NoError(t, os.RemoveAll(newDir))
 	}()
 
-	newApp, err := app.New(log.NewNopLogger(), newDB, nil, true, appOptions, fauxMerkleModeOpt, baseapp.SetChainID(SimAppChainID))
-	require.NoError(t, err)
-	require.Equal(t, app.Name, newApp.Name())
+	newApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(t, app.AppName, newApp.Name())
 
 	_, err = newApp.InitChain(&abci.RequestInitChain{
 		AppStateBytes: exported.AppState,
@@ -313,10 +359,10 @@ func TestAppSimulationAfterImport(t *testing.T) {
 		t,
 		os.Stdout,
 		newApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simulationtypes.RandomAccounts,
 		simtestutil.SimulationOperations(newApp, newApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)
@@ -333,6 +379,7 @@ func TestAppStateDeterminism(t *testing.T) {
 	config.ExportParamsPath = ""
 	config.OnOperation = true
 	config.AllInvariants = true
+	config.ChainID = SimAppChainID
 
 	numSeeds := 3
 	numTimesToRunPerSeed := 3 // This used to be set to 5, but we've temporarily reduced it to 3 for the sake of faster CI.
@@ -372,38 +419,38 @@ func TestAppStateDeterminism(t *testing.T) {
 			} else {
 				logger = log.NewNopLogger()
 			}
-			chainID := fmt.Sprintf("chain-id-%d-%d", i, j)
-			config.ChainID = chainID
 
 			db := dbm.NewMemDB()
-			bApp, err := app.New(
+			bApp := app.NewApp(
 				logger,
 				db,
 				nil,
 				true,
+				map[int64]bool{},
+				app.DefaultNodeHome,
 				appOptions,
 				interBlockCacheOpt(),
-				baseapp.SetChainID(chainID),
+				baseapp.SetChainID(SimAppChainID),
 			)
-			require.NoError(t, err)
+			require.Equal(t, app.AppName, bApp.Name())
 
 			fmt.Printf(
 				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
 				config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
 			)
 
-			_, _, err = simulation.SimulateFromSeed(
+			_, _, err := simulation.SimulateFromSeed(
 				t,
 				os.Stdout,
 				bApp.BaseApp,
 				simtestutil.AppStateFn(
 					bApp.AppCodec(),
 					bApp.SimulationManager(),
-					bApp.DefaultGenesis(),
+					bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec()),
 				),
 				simulationtypes.RandomAccounts,
 				simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-				app.BlockedAddresses(),
+				bApp.ModuleAccountAddrs(),
 				config,
 				bApp.AppCodec(),
 			)

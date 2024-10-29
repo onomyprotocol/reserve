@@ -15,14 +15,23 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 	}
 
 	for _, bandPriceState := range genState.BandPriceStates {
-		k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
+		err := k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	for _, bandOracleRequest := range genState.BandOracleRequests {
-		k.SetBandOracleRequest(ctx, *bandOracleRequest)
+		err := k.SetBandOracleRequest(ctx, *bandOracleRequest)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	k.SetBandParams(ctx, genState.BandParams)
+	err := k.SetBandParams(ctx, genState.BandParams)
+	if err != nil {
+		panic(err)
+	}
 
 	if genState.BandParams.IbcPortId != "" {
 		k.SetPort(ctx, genState.BandParams.IbcPortId)
@@ -38,18 +47,30 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 	}
 
 	if genState.BandLatestClientId != 0 {
-		k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
+		err = k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	for _, record := range genState.CalldataRecords {
-		k.SetBandCallDataRecord(ctx, record)
+		err = k.SetBandCallDataRecord(ctx, record)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	if genState.BandLatestRequestId != 0 {
-		k.SetBandLatestRequestID(ctx, genState.BandLatestRequestId)
+		err = k.SetBandLatestRequestID(ctx, genState.BandLatestRequestId)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	k.SetBandOracleRequestParams(ctx, genState.BandOracleRequestParams)
+	err = k.SetBandOracleRequestParams(ctx, genState.BandOracleRequestParams)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // ExportGenesis returns the module's exported genesis.

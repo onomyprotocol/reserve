@@ -521,12 +521,15 @@ func (s *KeeperTestSuite) TestLiquidate() {
 
 				// Fund collateral locked for vault
 				lockCoins := sdk.NewCoins(t.liquidation.VaultLiquidationStatus[vaultId].RemainCollateral)
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, lockCoins)
-				s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, vaultAddr, lockCoins)
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, lockCoins)
+				s.Require().NoError(err)
+				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, vaultAddr, lockCoins)
+				s.Require().NoError(err)
 
 				// Fund sold coins to vault Module
 				soldCoins := sdk.NewCoins(t.liquidation.VaultLiquidationStatus[vaultId].Sold)
-				s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, soldCoins)
+				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, soldCoins)
+				s.Require().NoError(err)
 			}
 
 			err = s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)

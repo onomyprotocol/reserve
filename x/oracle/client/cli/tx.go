@@ -134,7 +134,7 @@ func NewUpdateBandOracleRequestProposalTxCmd() *cobra.Command {
 	cmd.Flags().Uint64(flagSufficientValidatorCount, 0, "Sufficient Validator Count")
 	cmd.Flags().Uint64(flagMinSourceCount, 3, "Min Source Count")
 	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
-	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
+	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal") //nolint:staticcheck
 	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
 
 	flags.AddTxFlagsToCmd(cmd)
@@ -182,7 +182,7 @@ func NewDeleteBandOracleRequestProposalTxCmd() *cobra.Command {
 	}
 
 	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
-	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
+	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal") //nolint:staticcheck
 	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
 
 	flags.AddTxFlagsToCmd(cmd)
@@ -198,7 +198,7 @@ func updateBandOracleRequestProposalArgsToContent(
 		return nil, err
 	}
 
-	description, err := cmd.Flags().GetString(govcli.FlagDescription)
+	description, err := cmd.Flags().GetString(govcli.FlagDescription) //nolint:staticcheck
 	if err != nil {
 		return nil, err
 	}
@@ -283,7 +283,7 @@ func deleteBandOracleRequestProposalArgsToContent(
 		return nil, err
 	}
 
-	description, err := cmd.Flags().GetString(govcli.FlagDescription)
+	description, err := cmd.Flags().GetString(govcli.FlagDescription) //nolint:staticcheck
 	if err != nil {
 		return nil, err
 	}

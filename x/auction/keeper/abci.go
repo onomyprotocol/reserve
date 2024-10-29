@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -14,18 +15,11 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	params := k.GetParams(ctx)
 
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
-	lastAuctionPeriods_unix, err := k.lastestAuctionPeriod.Get(ctx)
-	if err != nil {
-		return err
-	}
-	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
+	lastAuctionPeriods := time.Unix(k.LastestAuctionPeriod, 0)
 	// check if has reached the next auction periods
 	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
 		// update latest auction period
-		err := k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
-		if err != nil {
-			return err
-		}
+		k.LastestAuctionPeriod = lastAuctionPeriods.Add(params.AuctionPeriods).Unix()
 
 		liquidations, err := k.vaultKeeper.GetLiquidations(ctx)
 		if err != nil {
@@ -68,7 +62,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	// loop through all auctions
 	// get liquidations data then distribute debt & collateral remain
 	liquidationMap := make(map[string]*vaultstypes.Liquidation)
-	err = k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
+	err := k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
 		bidQueue, err := k.Bids.Get(ctx, auction.AuctionId)
 		if err != nil {
 			return true, err
@@ -79,15 +73,19 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		needCleanup := false
+		currentRate := math.LegacyMustNewDecFromStr(auction.CurrentRate)
+		lowestRate := math.LegacyMustNewDecFromStr(params.LowestRate)
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
-			auction.EndTime.Before(currentTime) {
+			currentRate.Equal(lowestRate) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.Denom = auction.Item.Denom
 				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultstypes.VaultLiquidationStatus{
+					Sold:             auction.TokenRaised,
+					RemainCollateral: auction.Item,
+				}
 			} else {
 				liquidation_tmp = &vaultstypes.Liquidation{
 					Denom:                  auction.Item.Denom,
@@ -111,7 +109,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		if needCleanup {
-			k.refundBidders(ctx, bidQueue)
+			err = k.refundBidders(ctx, bidQueue)
+			if err != nil {
+				return true, err
+			}
 
 			// clear the auction afterward
 			err = k.DeleteAuction(ctx, auction.AuctionId)
@@ -141,6 +142,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 		}
 
+		fmt.Println("fillBids", bidQueue)
 		err = k.fillBids(ctx, auction, bidQueue)
 		if err != nil {
 			return true, err
@@ -150,6 +152,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	})
 
 	// Loop through liquidationMap and liquidate
+	fmt.Println("liquidationMap", liquidationMap)
 	for _, liq := range liquidationMap {
 		err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {
@@ -220,6 +223,8 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 
 				auction.Item = sdk.NewCoin(auction.Item.Denom, math.ZeroInt())
 				auction.TokenRaised = auction.TokenRaised.Add(sdk.NewCoin(bid.Amount.Denom, amountBuy))
+				bidQueue.Bids[i].IsHandle = true
+				break
 			} else {
 				err = k.bankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), bidderAddr, sdk.NewCoins(receiveCoin))
 				if err != nil {
@@ -234,16 +239,18 @@ func (k Keeper) fillBids(ctx context.Context, auction types.Auction, bidQueue ty
 
 			if auction.TokenRaised.IsGTE(auction.TargetGoal) {
 				auction.Status = types.AuctionStatus_AUCTION_STATUS_FINISHED
+				bidQueue.Bids[i].IsHandle = true
+				break
 			}
 
 			bidQueue.Bids[i].IsHandle = true
 		}
+	}
 
-		// update auction status
-		err = k.Auctions.Set(ctx, auction.AuctionId, auction)
-		if err != nil {
-			return err
-		}
+	// update auction status
+	err = k.Auctions.Set(ctx, auction.AuctionId, auction)
+	if err != nil {
+		return err
 	}
 
 	// update bid queue

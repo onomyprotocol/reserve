@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	cmtproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/server"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -43,19 +44,28 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp, err := app.New(logger, db, nil, true, appOptions, interBlockCacheOpt())
-	require.NoError(b, err)
-	require.Equal(b, app.Name, bApp.Name())
+	bApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(b, app.AppName, bApp.Name())
 
 	// run randomized simulation
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
 		bApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)
@@ -100,19 +110,28 @@ func BenchmarkInvariants(b *testing.B) {
 	appOptions[flags.FlagHome] = app.DefaultNodeHome
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	bApp, err := app.New(logger, db, nil, true, appOptions, interBlockCacheOpt())
-	require.NoError(b, err)
-	require.Equal(b, app.Name, bApp.Name())
+	bApp := app.NewApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		appOptions,
+		interBlockCacheOpt(),
+		baseapp.SetChainID(SimAppChainID),
+	)
+	require.Equal(b, app.AppName, bApp.Name())
 
 	// run randomized simulation
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
 		bApp.BaseApp,
-		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.DefaultGenesis()),
+		simtestutil.AppStateFn(bApp.AppCodec(), bApp.SimulationManager(), bApp.ModuleBasics.DefaultGenesis(bApp.AppCodec())),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(bApp, bApp.AppCodec(), config),
-		app.BlockedAddresses(),
+		bApp.ModuleAccountAddrs(),
 		config,
 		bApp.AppCodec(),
 	)

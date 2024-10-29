@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
@@ -35,19 +34,33 @@ func (k Querier) QueryAllAuction(ctx context.Context, req *types.QueryAllAuction
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	t, _ := k.k.Auctions.Has(ctx, 0)
-	fmt.Println()
-	fmt.Println(t)
-
 	allAuction := []types.Auction{}
 
-	k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
-		fmt.Println("----1----")
+	err := k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
 		allAuction = append(allAuction, value)
 		return false, nil
 	})
 
 	return &types.QueryAllAuctionResponse{
 		Auctions: allAuction,
-	}, nil
+	}, err
+}
+
+func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsRequest) (*types.QueryAllBidsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	allBids := []types.Bid{}
+
+	err := k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
+		for _, bid := range value.Bids {
+			allBids = append(allBids, *bid)
+		}
+		return false, nil
+	})
+
+	return &types.QueryAllBidsResponse{
+		Bids: allBids,
+	}, err
 }

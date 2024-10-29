@@ -29,7 +29,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	}
 	mockOracleKeeper.SetPrice(s.Ctx, "nomUSD", math.LegacyMustNewDecFromStr("1"))
 
-	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
+	s.App.AuctionKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper
 
 	s.k = s.App.AuctionKeeper

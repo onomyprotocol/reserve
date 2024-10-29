@@ -164,7 +164,10 @@ func (im IBCModule) OnRecvPacket(
 			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
 		}
 		// Delete the calldata corresponding to the sequence number
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		err = im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		if err != nil {
+			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
+		}
 		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
 	}
 	println("Process OnrecvPacket ..........")
@@ -207,7 +210,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 			ClientId:  int64(clientID),
 		})
 	case *channeltypes.Acknowledgement_Error:
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+		err = im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
 		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
 			AckError: resp.Error,
@@ -215,7 +218,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 		})
 	}
 
-	return nil
+	return err
 }
 
 // OnTimeoutPacket implements the IBCModule interface
@@ -235,11 +238,11 @@ func (im IBCModule) OnTimeoutPacket(
 	}
 
 	// Delete the calldata corresponding to the sequence number
-	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	err = im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 	// nolint:errcheck //ignored on purpose
 	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
 		ClientId: int64(clientID),
 	})
 
-	return nil
+	return err
 }

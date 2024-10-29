@@ -73,7 +73,10 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 		return nil, err
 	}
 	newTotalStablecoinLock := totalStablecoinLock.Add(msg.Coin.Amount)
-	k.keeper.totalStablecoinLock.Set(ctx, msg.Coin.Denom, newTotalStablecoinLock)
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Coin.Denom, newTotalStablecoinLock)
+	if err != nil {
+		return nil, err
+	}
 
 	// send stablecoin to module
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
@@ -150,7 +153,10 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	// unlock
 	stablecoinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
 	newTotalStablecoinLock := totalStablecoinLock.Sub(receiveAmountStablecoin)
-	k.keeper.totalStablecoinLock.Set(ctx, msg.ToDenom, newTotalStablecoinLock)
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.ToDenom, newTotalStablecoinLock)
+	if err != nil {
+		return nil, err
+	}
 
 	// send stablecoin to user
 	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
@@ -192,8 +198,15 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	k.keeper.totalStablecoinLock.Set(ctx, msg.Denom, math.ZeroInt())
-	k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Denom, math.ZeroInt())
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
+	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -219,7 +232,10 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
-	k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	if err != nil {
+		return &types.MsgUpdatesStableCoinResponse{}, err
+	}
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
