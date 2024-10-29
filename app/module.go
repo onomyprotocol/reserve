@@ -91,11 +91,12 @@ var maccPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:            {authtypes.Burner},
 	// liquiditytypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
-	ibcfeetypes.ModuleName:      nil,
-	psmtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	vaultstypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
-	auctiontypes.ModuleName:     {authtypes.Minter, authtypes.Burner},
+	ibctransfertypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+	ibcfeetypes.ModuleName:        nil,
+	psmtypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
+	vaultstypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+	vaultstypes.ReserveModuleName: {authtypes.Minter, authtypes.Burner},
+	auctiontypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 }
 
 func appModules(
