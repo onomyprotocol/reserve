@@ -53,21 +53,24 @@ import (
 	ibctransfer "github.com/cosmos/ibc-go/v8/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v8/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
-	ibcclienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	ibcclienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" //nolint:staticcheck
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v8/modules/core/03-connection/types"
+	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
-	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 
 	psmkeeper "github.com/onomyprotocol/reserve/x/psm/keeper"
 	psmtypes "github.com/onomyprotocol/reserve/x/psm/types"
 
 	oraclekeeper "github.com/onomyprotocol/reserve/x/oracle/keeper"
-	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	oraclemodule "github.com/onomyprotocol/reserve/x/oracle/module"
+	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 
 	vaultskeeper "github.com/onomyprotocol/reserve/x/vaults/keeper"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
+
+	auctionkeeper "github.com/onomyprotocol/reserve/x/auction/keeper"
+	auctiontypes "github.com/onomyprotocol/reserve/x/auction/types"
 )
 
 type AppKeepers struct {
@@ -104,9 +107,10 @@ type AppKeepers struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	ScopedOracleKeeper   capabilitykeeper.ScopedKeeper
 
-	PsmKeeper    psmkeeper.Keeper
-	VaultsKeeper vaultskeeper.Keeper
-	OracleKeeper oraclekeeper.Keeper
+	PSMKeeper     psmkeeper.Keeper
+	VaultsKeeper  vaultskeeper.Keeper
+	OracleKeeper  oraclekeeper.Keeper
+	AuctionKeeper auctionkeeper.Keeper
 }
 
 func NewAppKeeper(
@@ -317,7 +321,7 @@ func NewAppKeeper(
 		appKeepers.ScopedOracleKeeper,
 	)
 
-	appKeepers.PsmKeeper = psmkeeper.NewKeeper(
+	appKeepers.PSMKeeper = psmkeeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(appKeepers.keys[psmtypes.StoreKey]),
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
@@ -332,6 +336,17 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		&appKeepers.OracleKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	appKeepers.AuctionKeeper = auctionkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(appKeepers.keys[auctiontypes.ModuleName]),
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		&appKeepers.VaultsKeeper,
+		&appKeepers.OracleKeeper,
+		logger,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
@@ -362,7 +377,7 @@ func NewAppKeeper(
 	ibcRouter.AddRoute(oracletypes.ModuleName, oraclemodule.NewIBCModule(appKeepers.OracleKeeper))
 	// this line is used by starport scaffolding # ibc/app/module
 
-	appKeepers.IBCKeeper.SetRouter(ibcRouter)	
+	appKeepers.IBCKeeper.SetRouter(ibcRouter)
 	// Register the proposal types
 	// Deprecated: Avoid adding new handlers, instead use the new proposal flow
 	// by granting the governance module the right to execute the message.

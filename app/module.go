@@ -72,6 +72,8 @@ import (
 	ibc "github.com/cosmos/ibc-go/v8/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 
+	auction "github.com/onomyprotocol/reserve/x/auction/module"
+	auctiontypes "github.com/onomyprotocol/reserve/x/auction/types"
 	oracle "github.com/onomyprotocol/reserve/x/oracle/module"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	psm "github.com/onomyprotocol/reserve/x/psm/module"
@@ -89,10 +91,12 @@ var maccPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:            {authtypes.Burner},
 	// liquiditytypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-	ibcfeetypes.ModuleName:      nil,
-	psmtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
-	vaultstypes.ModuleName:      {authtypes.Minter, authtypes.Burner},
+	ibctransfertypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+	ibcfeetypes.ModuleName:        nil,
+	psmtypes.ModuleName:           {authtypes.Minter, authtypes.Burner},
+	vaultstypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+	vaultstypes.ReserveModuleName: {authtypes.Minter, authtypes.Burner},
+	auctiontypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 }
 
 func appModules(
@@ -123,9 +127,10 @@ func appModules(
 		consensus.NewAppModule(appCodec, app.ConsensusParamsKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		genutil.NewAppModule(app.AccountKeeper, app.StakingKeeper, app, txConfig),
-		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
+		psm.NewAppModule(appCodec, app.PSMKeeper, app.AccountKeeper, app.BankKeeper),
 		oracle.NewAppModule(appCodec, app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 		vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
+		auction.NewAppModule(appCodec, app.AuctionKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 
 }
@@ -153,45 +158,47 @@ func newBasicManagerFromManager(app *App) module.BasicManager {
 // NOTE: capability module's beginblocker must come before any modules using capabilities (e.g. IBC)
 func orderBeginBlockers() []string {
 	return []string{
-			// cosmos sdk modules
-			minttypes.ModuleName,
-			distrtypes.ModuleName,
-			slashingtypes.ModuleName,
-			evidencetypes.ModuleName,
-			stakingtypes.ModuleName,
-			authz.ModuleName,
-			genutiltypes.ModuleName,
-			// ibc modules
-			capabilitytypes.ModuleName,
-			ibcexported.ModuleName,
-			ibctransfertypes.ModuleName,
-			icatypes.ModuleName,
-			ibcfeetypes.ModuleName,
-			// chain modules
-			oracletypes.ModuleName,
-			vaultstypes.ModuleName,
-			psmtypes.ModuleName,
+		// cosmos sdk modules
+		minttypes.ModuleName,
+		distrtypes.ModuleName,
+		slashingtypes.ModuleName,
+		evidencetypes.ModuleName,
+		stakingtypes.ModuleName,
+		authz.ModuleName,
+		genutiltypes.ModuleName,
+		// ibc modules
+		capabilitytypes.ModuleName,
+		ibcexported.ModuleName,
+		ibctransfertypes.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
+		// chain modules
+		oracletypes.ModuleName,
+		vaultstypes.ModuleName,
+		psmtypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
 func orderEndBlockers() []string {
 	return []string{
-	// cosmos sdk modules
-	crisistypes.ModuleName,
-	govtypes.ModuleName,
-	stakingtypes.ModuleName,
-	feegrant.ModuleName,
-	genutiltypes.ModuleName,
-	// ibc modules
-	ibcexported.ModuleName,
-	ibctransfertypes.ModuleName,
-	capabilitytypes.ModuleName,
-	icatypes.ModuleName,
-	ibcfeetypes.ModuleName,
-	// chain modules
-	oracletypes.ModuleName,
-	vaultstypes.ModuleName,
-	psmtypes.ModuleName,
+		// cosmos sdk modules
+		crisistypes.ModuleName,
+		govtypes.ModuleName,
+		stakingtypes.ModuleName,
+		feegrant.ModuleName,
+		genutiltypes.ModuleName,
+		// ibc modules
+		ibcexported.ModuleName,
+		ibctransfertypes.ModuleName,
+		capabilitytypes.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
+		// chain modules
+		oracletypes.ModuleName,
+		vaultstypes.ModuleName,
+		psmtypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
@@ -229,6 +236,7 @@ func orderInitBlockers() []string {
 		oracletypes.ModuleName,
 		vaultstypes.ModuleName,
 		psmtypes.ModuleName,
+		auctiontypes.ModuleName,
 	}
 }
 
@@ -251,8 +259,9 @@ func simulationModules(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		ibc.NewAppModule(app.IBCKeeper),
-		psm.NewAppModule(appCodec, app.PsmKeeper, app.AccountKeeper, app.BankKeeper),
+		psm.NewAppModule(appCodec, app.PSMKeeper, app.AccountKeeper, app.BankKeeper),
 		// oracle.NewAppModule(appCodec,app.OracleKeeper, app.AccountKeeper, app.BankKeeper),
 		// vaults.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
+		// auction.NewAppModule(appCodec, app.VaultsKeeper, app.AccountKeeper, app.BankKeeper),
 	}
 }

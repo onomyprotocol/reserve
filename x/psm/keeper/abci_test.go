@@ -21,29 +21,20 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 		{
 			name:         "normal",
 			priceCurrent: math.LegacyMustNewDecFromStr("1"),
-			feeIn:        math.LegacyMustNewDecFromStr("0.001"),
-			feeOut:       math.LegacyMustNewDecFromStr("0.001"),
+			feeIn:        math.LegacyMustNewDecFromStr("0.01"),
+			feeOut:       math.LegacyMustNewDecFromStr("0.01"),
 			priceUpdate:  math.LegacyMustNewDecFromStr("1.01"),
-			expectFeeIn:  math.LegacyMustNewDecFromStr("0.0005"),
-			expectFeeOut: math.LegacyMustNewDecFromStr("0.0015"),
+			expectFeeIn:  math.LegacyMustNewDecFromStr("0.005111362664117791"),
+			expectFeeOut: math.LegacyMustNewDecFromStr("0.014888637335882209"),
 		},
 		{
 			name:         "fluctuation",
-			priceCurrent: math.LegacyMustNewDecFromStr("1.05"),
-			feeIn:        math.LegacyMustNewDecFromStr("0.001"),
-			feeOut:       math.LegacyMustNewDecFromStr("0.001"),
-			priceUpdate:  math.LegacyMustNewDecFromStr("0.95"),
-			expectFeeIn:  math.LegacyMustNewDecFromStr("0.0035"),
-			expectFeeOut: math.LegacyMustNewDecFromStr("0.000"),
-		},
-		{
-			name:         "fluctuation 2",
-			priceCurrent: math.LegacyMustNewDecFromStr("1.05"),
-			feeIn:        math.LegacyMustNewDecFromStr("0.001"),
-			feeOut:       math.LegacyMustNewDecFromStr("0.001"),
-			priceUpdate:  math.LegacyMustNewDecFromStr("0.9"),
-			expectFeeIn:  math.LegacyMustNewDecFromStr("0.006"),
-			expectFeeOut: math.LegacyMustNewDecFromStr("0.000"),
+			priceCurrent: math.LegacyMustNewDecFromStr("1"),
+			feeIn:        math.LegacyMustNewDecFromStr("0.01"),
+			feeOut:       math.LegacyMustNewDecFromStr("0.01"),
+			priceUpdate:  math.LegacyMustNewDecFromStr("0.99"),
+			expectFeeIn:  math.LegacyMustNewDecFromStr("0.014948314143157351"),
+			expectFeeOut: math.LegacyMustNewDecFromStr("0.005051685856842649"),
 		},
 	}
 
@@ -56,8 +47,12 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 				FeeIn:  t.feeIn,
 				FeeOut: t.feeOut,
 			}
-			err := s.k.SetStablecoin(s.Ctx, sc)
+			s.mockOracleKeeper.SetPrice(s.Ctx, sc.Denom, t.priceCurrent)
+			err := s.k.FeeMaxStablecoin.Set(s.Ctx, usdt, t.feeIn.Add(t.feeOut).String())
 			s.Require().NoError(err)
+			err = s.k.SetStablecoin(s.Ctx, sc)
+			s.Require().NoError(err)
+
 			s.mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)
 
 			err = s.k.UpdatesStablecoinEpoch(s.Ctx)
@@ -66,8 +61,8 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 			scUpdate, found := s.k.GetStablecoin(s.Ctx, usdt)
 			s.Require().True(found)
 			// s.Require().Equal(t.priceUpdate, scUpdate.Price)
-			s.Require().Equal(t.expectFeeIn, scUpdate.FeeIn)
-			s.Require().Equal(t.expectFeeOut, scUpdate.FeeOut)
+			s.Require().Equal(t.expectFeeIn.String(), scUpdate.FeeIn.String())
+			s.Require().Equal(t.expectFeeOut.String(), scUpdate.FeeOut.String())
 		})
 	}
 

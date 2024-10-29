@@ -52,11 +52,11 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 	}
 
 	bid := types.Bid{
-		BidId:      newBidId,
-		Bidder:     msg.Bidder,
-		Amount:     msg.Amount,
-		ReciveRate: msg.ReciveRate,
-		IsHandle:   false,
+		BidId:       newBidId,
+		Bidder:      msg.Bidder,
+		Amount:      msg.Amount,
+		RecivePrice: msg.RecivePrice,
+		IsHandle:    false,
 	}
 	err = k.AddBidEntry(ctx, msg.AuctionId, bidderAddr, bid)
 	if err != nil {
@@ -70,6 +70,7 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 
 	return &types.MsgBidResponse{
 		Response: "Bid Accepted",
+		BidId:    newBidId,
 	}, nil
 }
 

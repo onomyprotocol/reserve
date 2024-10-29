@@ -44,5 +44,4 @@ func (s *KeeperTestSuite) TestParams() {
 
 	p := s.k.GetParams(s.Ctx)
 	s.Require().Equal(p.MinInitialDebt, types.DefaultMinInitialDebt)
-	s.Require().Equal(p.LiquidatePeriod, types.DefaultLiquidatePeriod)
 }

@@ -30,13 +30,17 @@ func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error
 	}
 
 	if data.LastUpdate != nil {
-		k.LastUpdateTime.Set(ctx, *data.LastUpdate)
+		err = k.LastUpdateTime.Set(ctx, *data.LastUpdate)
+		if err != nil {
+			return err
+		}
 	} else {
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
-		k.LastUpdateTime.Set(ctx, types.LastUpdate{Time: sdkCtx.BlockTime()})
+		err = k.LastUpdateTime.Set(ctx, types.LastUpdate{Time: sdkCtx.BlockTime()})
+		if err != nil {
+			return err
+		}
 	}
 
-	k.ShortfallAmount.Set(ctx, data.ShortfallAmount)
-
-	return nil
+	return k.ShortfallAmount.Set(ctx, data.ShortfallAmount)
 }

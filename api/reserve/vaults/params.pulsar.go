@@ -132,12 +132,6 @@ func (x *fastReflection_Params) Range(f func(protoreflect.FieldDescriptor, proto
 			return
 		}
 	}
-	if x.LiquidatePeriod != uint64(0) {
-		value := protoreflect.ValueOfUint64(x.LiquidatePeriod)
-		if !f(fd_Params_liquidate_period, value) {
-			return
-		}
-	}
 }
 
 // Has reports whether a field is populated.
@@ -163,8 +157,6 @@ func (x *fastReflection_Params) Has(fd protoreflect.FieldDescriptor) bool {
 		return x.MinInitialDebt != ""
 	case "reserve.vaults.Params.recalculate_debt_period":
 		return x.RecalculateDebtPeriod != uint64(0)
-	case "reserve.vaults.Params.liquidate_period":
-		return x.LiquidatePeriod != uint64(0)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
@@ -191,8 +183,6 @@ func (x *fastReflection_Params) Clear(fd protoreflect.FieldDescriptor) {
 		x.MinInitialDebt = ""
 	case "reserve.vaults.Params.recalculate_debt_period":
 		x.RecalculateDebtPeriod = uint64(0)
-	case "reserve.vaults.Params.liquidate_period":
-		x.LiquidatePeriod = uint64(0)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
@@ -224,9 +214,6 @@ func (x *fastReflection_Params) Get(descriptor protoreflect.FieldDescriptor) pro
 	case "reserve.vaults.Params.recalculate_debt_period":
 		value := x.RecalculateDebtPeriod
 		return protoreflect.ValueOfUint64(value)
-	case "reserve.vaults.Params.liquidate_period":
-		value := x.LiquidatePeriod
-		return protoreflect.ValueOfUint64(value)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
@@ -257,8 +244,6 @@ func (x *fastReflection_Params) Set(fd protoreflect.FieldDescriptor, value proto
 		x.MinInitialDebt = value.Interface().(string)
 	case "reserve.vaults.Params.recalculate_debt_period":
 		x.RecalculateDebtPeriod = value.Uint()
-	case "reserve.vaults.Params.liquidate_period":
-		x.LiquidatePeriod = value.Uint()
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.Params"))
@@ -404,9 +389,6 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		if x.RecalculateDebtPeriod != 0 {
 			n += 1 + runtime.Sov(uint64(x.RecalculateDebtPeriod))
 		}
-		if x.LiquidatePeriod != 0 {
-			n += 1 + runtime.Sov(uint64(x.LiquidatePeriod))
-		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -435,11 +417,6 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
-		}
-		if x.LiquidatePeriod != 0 {
-			i = runtime.EncodeVarint(dAtA, i, uint64(x.LiquidatePeriod))
-			i--
-			dAtA[i] = 0x30
 		}
 		if x.RecalculateDebtPeriod != 0 {
 			i = runtime.EncodeVarint(dAtA, i, uint64(x.RecalculateDebtPeriod))
@@ -666,25 +643,6 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 					b := dAtA[iNdEx]
 					iNdEx++
 					x.RecalculateDebtPeriod |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-			case 6:
-				if wireType != 0 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field LiquidatePeriod", wireType)
-				}
-				x.LiquidatePeriod = 0
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
-					}
-					if iNdEx >= l {
-						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					x.LiquidatePeriod |= uint64(b&0x7F) << shift
 					if b < 0x80 {
 						break
 					}
@@ -1296,7 +1254,6 @@ type Params struct {
 	LiquidationPenalty    string `protobuf:"bytes,3,opt,name=liquidation_penalty,json=liquidationPenalty,proto3" json:"liquidation_penalty,omitempty"`
 	MinInitialDebt        string `protobuf:"bytes,4,opt,name=min_initial_debt,json=minInitialDebt,proto3" json:"min_initial_debt,omitempty"`
 	RecalculateDebtPeriod uint64 `protobuf:"varint,5,opt,name=recalculate_debt_period,json=recalculateDebtPeriod,proto3" json:"recalculate_debt_period,omitempty"`
-	LiquidatePeriod       uint64 `protobuf:"varint,6,opt,name=liquidate_period,json=liquidatePeriod,proto3" json:"liquidate_period,omitempty"`
 }
 
 func (x *Params) Reset() {
@@ -1350,13 +1307,6 @@ func (x *Params) GetMinInitialDebt() string {
 func (x *Params) GetRecalculateDebtPeriod() uint64 {
 	if x != nil {
 		return x.RecalculateDebtPeriod
-	}
-	return 0
-}
-
-func (x *Params) GetLiquidatePeriod() uint64 {
-	if x != nil {
-		return x.LiquidatePeriod
 	}
 	return 0
 }

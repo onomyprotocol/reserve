@@ -6,7 +6,6 @@ import (
 	"cosmossdk.io/math"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"time"
 
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
@@ -63,28 +62,35 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 
 	// check balance user and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountnomUSD, _, err := k.keeper.SwapTonomUSD(ctx, addr, *msg.Coin)
+	receiveAmountnomUSD, fee_in, err := k.keeper.SwapTonomUSD(ctx, addr, *msg.Coin)
 	if err != nil {
 		return nil, err
 	}
 
-	// lock coin and send to module
-	err = k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: msg.Coin, Time: time.Now().Unix()})
+	// lock coin
+	totalStablecoinLock, err := k.keeper.totalStablecoinLock.Get(ctx, msg.Coin.Denom)
+	if err != nil {
+		return nil, err
+	}
+	newTotalStablecoinLock := totalStablecoinLock.Add(msg.Coin.Amount)
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Coin.Denom, newTotalStablecoinLock)
 	if err != nil {
 		return nil, err
 	}
 
+	// send stablecoin to module
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
 	if err != nil {
 		return nil, err
 	}
 
-	// mint nomUSD and send to user
+	// mint nomUSD
 	coinsMint := sdk.NewCoins(sdk.NewCoin(types.DenomStable, receiveAmountnomUSD))
 	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return nil, err
 	}
+	// send to user
 	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, coinsMint)
 	if err != nil {
 		return nil, err
@@ -96,7 +102,8 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 		sdk.NewEvent(
 			types.EventSwapTonomUSD,
 			sdk.NewAttribute(types.AttributeAmount, msg.Coin.String()),
-			sdk.NewAttribute(types.AttributeReceive, receiveAmountnomUSD.String()+types.DenomStable),
+			sdk.NewAttribute(types.AttributeReceive, coinsMint.String()),
+			sdk.NewAttribute(types.AttributeFeeIn, fee_in.String()),
 		),
 	)
 	return &types.MsgSwapTonomUSDResponse{}, nil
@@ -115,20 +122,20 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// check lock Coin of user
-	lockCoin, found := k.keeper.GetLockCoin(ctx, msg.Address)
-	if !found {
-		return nil, fmt.Errorf("not found %s locked from %s", msg.ToDenom, msg.Address)
+	totalStablecoinLock, err := k.keeper.totalStablecoinLock.Get(ctx, msg.ToDenom)
+	if err != nil {
+		return nil, err
 	}
 
 	// check balace and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountStablecoin, _, err := k.keeper.SwapToStablecoin(ctx, addr, msg.Amount, msg.ToDenom)
+	receiveAmountStablecoin, fee_out, err := k.keeper.SwapToStablecoin(ctx, addr, msg.Amount, msg.ToDenom)
 	if err != nil {
 		return nil, err
 	}
 
 	// locked stablecoin is greater than the amount desired
-	if lockCoin.Coin.Amount.LT(receiveAmountStablecoin) {
+	if totalStablecoinLock.LT(receiveAmountStablecoin) {
 		return nil, fmt.Errorf("amount %s locked lesser than amount desired", msg.ToDenom)
 	}
 
@@ -144,15 +151,15 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// unlock
-	coinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
-	newLockCoin := lockCoin.Coin.Sub(coinReceive)
-	err = k.keeper.SetLockCoin(ctx, types.LockCoin{Address: msg.Address, Coin: &newLockCoin, Time: time.Now().Unix()})
+	stablecoinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
+	newTotalStablecoinLock := totalStablecoinLock.Sub(receiveAmountStablecoin)
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.ToDenom, newTotalStablecoinLock)
 	if err != nil {
 		return nil, err
 	}
 
 	// send stablecoin to user
-	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(coinReceive))
+	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +170,8 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 		sdk.NewEvent(
 			types.EventSwapToStablecoin,
 			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.DenomStable),
-			sdk.NewAttribute(types.AttributeReceive, receiveAmountStablecoin.String()+msg.ToDenom),
+			sdk.NewAttribute(types.AttributeReceive, stablecoinReceive.String()),
+			sdk.NewAttribute(types.AttributeFeeOut, fee_out.String()),
 		),
 	)
 	return &types.MsgSwapToStablecoinResponse{}, nil
@@ -186,6 +194,16 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 	}
 
 	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Denom, 1)
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
+	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Denom, math.ZeroInt())
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
+	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
@@ -214,6 +232,11 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
+	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	if err != nil {
+		return &types.MsgUpdatesStableCoinResponse{}, err
+	}
+
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,

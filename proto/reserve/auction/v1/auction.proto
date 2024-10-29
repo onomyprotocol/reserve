@@ -25,26 +25,11 @@ enum AuctionStatus {
 
 // Auction struct
 message Auction {
-  // start_time defines auction's start time
-  google.protobuf.Timestamp start_time = 1 [
-    (gogoproto.stdtime) = true,
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
-
-  // end_time defines where the auction ended when there are no winning bid
-  google.protobuf.Timestamp end_time = 2 [
-    (gogoproto.stdtime) = true,
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
-
   // for simplicity, will use vault id that start the auction as auction id
   uint64 auction_id = 3;
 
   // starting price (currently only support usd stable token)
-  cosmos.base.v1beta1.Coin initial_price = 4
-      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+  string initial_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 
   // items defines liquidate assets
   cosmos.base.v1beta1.Coin item = 5
@@ -84,9 +69,8 @@ message Bid {
   cosmos.base.v1beta1.Coin amount = 3
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
   
-  // recive_rate defines the rate compare to the price at the start of the auction
-  // that the bid is willing to pay
-  string recive_rate = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
+  // recive_price defines the price that the bid is willing to pay
+  string recive_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 
   // maxReceive maximum receive-able amount
   cosmos.base.v1beta1.Coin max_receive = 5

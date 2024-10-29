@@ -3,16 +3,14 @@ package cli
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 
-	"github.com/onomyprotocol/reserve/x/vaults/types"
+	"github.com/onomyprotocol/reserve/x/auction/types"
 )
 
-// GetQueryCmd returns the cli query commands for this module.
 func GetQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
@@ -22,24 +20,23 @@ func GetQueryCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdQueryAllCollateral())
-	cmd.AddCommand(CmdQueryAllVaults())
-	cmd.AddCommand(CmdQueryVault())
-	cmd.AddCommand(CmdQueryParams())
+	cmd.AddCommand(CmdParams())
+	cmd.AddCommand(CmdQueryAllAuctions())
+	cmd.AddCommand(CmdQueryAllBids())
 	return cmd
 }
 
-func CmdQueryAllCollateral() *cobra.Command {
+func CmdQueryAllAuctions() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "all-collateral",
-		Short: "show all collateral",
+		Use:   "all-auction",
+		Short: "show all auctions",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.QueryAllCollateral(context.Background(), &types.QueryAllCollateralRequest{})
+			res, err := queryClient.QueryAllAuction(context.Background(), &types.QueryAllAuctionRequest{})
 			if err != nil {
 				return err
 			}
@@ -51,63 +48,10 @@ func CmdQueryAllCollateral() *cobra.Command {
 	return cmd
 }
 
-func CmdQueryAllVaults() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "all-vaults",
-		Short: "show all vaults",
-		Args:  cobra.ExactArgs(0),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			res, err := queryClient.QueryAllVaults(context.Background(), &types.QueryAllVaultsRequest{})
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
-		},
-	}
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-func CmdQueryVault() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "vault [vault-id]",
-		Short: "show vault from id",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			vaultID, err := strconv.ParseUint(args[0], 10, 64)
-			if err != nil {
-				return err
-			}
-
-			msg := types.QueryVaultIdRequest{
-				VaultId: vaultID,
-			}
-
-			res, err := queryClient.QueryVaults(context.Background(), &msg)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
-		},
-	}
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-func CmdQueryParams() *cobra.Command {
+func CmdParams() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "params",
-		Short: "show params module vaults",
+		Short: "show params module auctions",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -115,6 +59,28 @@ func CmdQueryParams() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryAllBids() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "all-bids",
+		Short: "show all bids",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryAllBids(context.Background(), &types.QueryAllBidsRequest{})
 			if err != nil {
 				return err
 			}

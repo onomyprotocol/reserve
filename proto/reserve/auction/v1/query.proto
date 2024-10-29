@@ -5,6 +5,7 @@ import "amino/amino.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "reserve/auction/v1/params.proto";
+import "reserve/auction/v1/auction.proto";
 import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/auction/types";
@@ -15,7 +16,16 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/reserve/auction/params";
   }
+
+  rpc QueryAllAuction(QueryAllAuctionRequest) returns (QueryAllAuctionResponse){
+    option (google.api.http).get = "/reserve/auction/auction";
+  }
+
+  rpc QueryAllBids(QueryAllBidsRequest) returns (QueryAllBidsResponse){
+    option (google.api.http).get = "/reserve/auction/auction";
+  }
 }
+
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
@@ -27,3 +37,19 @@ message QueryParamsResponse {
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
+message QueryAllAuctionRequest {}
+
+message QueryAllAuctionResponse {
+  // params holds all the parameters of this module.
+  repeated Auction auctions = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+
+message QueryAllBidsRequest {}
+
+message QueryAllBidsResponse {
+  // params holds all the parameters of this module.
+  repeated Bid Bids = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}

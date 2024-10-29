@@ -60,15 +60,16 @@ message MsgBid {
   cosmos.base.v1beta1.Coin amount = 3
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  // recive_rate defines the rate compare to the price at the start of the auction
-  // that the bid is willing to pay
-  string recive_rate = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
+  // recive_price defines the price that the bid is willing to pay
+  string recive_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 }
 
 // MsgBidResponse defines the response structure for executing a
 // MsgBid message.
 message MsgBidResponse {
   string response = 1;
+
+  uint64 bid_id = 2;
 }
 
 // MsgCancelBid is the Msg/CancelBid request type.
@@ -76,11 +77,14 @@ message MsgCancelBid {
   option (cosmos.msg.v1.signer) = "bidder";
   option (amino.name) = "reserve/x/auction/MsgCancelBid";
 
+  // bidder is the address that submitting the bid entry.
+  string bidder = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
   // bid_id is the unique id.
-  uint64 bid_id = 1;
+  uint64 bid_id = 2;
 
   // bidding auction id 
-  uint64 auction_id = 2;
+  uint64 auction_id = 3;
 }
 
 // MsgCancelBidResponse defines the response structure for executing a
