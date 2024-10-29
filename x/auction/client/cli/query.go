@@ -49,8 +49,8 @@ func CmdQueryAllAuctions() *cobra.Command {
 
 func CmdParams() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "all-auction",
-		Short: "show all auctions",
+		Use:   "params",
+		Short: "show params module auctions",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
