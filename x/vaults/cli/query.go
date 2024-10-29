@@ -25,6 +25,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(CmdQueryAllCollateral())
 	cmd.AddCommand(CmdQueryAllVaults())
 	cmd.AddCommand(CmdQueryVault())
+	cmd.AddCommand(CmdQueryParams())
 	return cmd
 }
 
@@ -49,6 +50,7 @@ func CmdQueryAllCollateral() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
 func CmdQueryAllVaults() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "all-vaults",
@@ -70,6 +72,7 @@ func CmdQueryAllVaults() *cobra.Command {
 	flags.AddQueryFlagsToCmd(cmd)
 	return cmd
 }
+
 func CmdQueryVault() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vault [vault-id]",
@@ -90,6 +93,28 @@ func CmdQueryVault() *cobra.Command {
 			}
 
 			res, err := queryClient.QueryVaults(context.Background(), &msg)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "params",
+		Short: "show params module vaults",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
 			if err != nil {
 				return err
 			}
