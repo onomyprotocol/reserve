@@ -71,6 +71,8 @@ func (s *KeeperTestHelper) Setup() {
 }
 
 func (s *KeeperTestHelper) FundAccount(acccount sdk.AccAddress, moduleName string, coins sdk.Coins) {
-	s.App.BankKeeper.MintCoins(s.Ctx, moduleName, coins)
-	s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, moduleName, acccount, coins)
+	err := s.App.BankKeeper.MintCoins(s.Ctx, moduleName, coins)
+	s.Require().NoError(err)
+	err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, moduleName, acccount, coins)
+	s.Require().NoError(err)
 }

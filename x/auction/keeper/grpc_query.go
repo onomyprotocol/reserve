@@ -36,14 +36,14 @@ func (k Querier) QueryAllAuction(ctx context.Context, req *types.QueryAllAuction
 
 	allAuction := []types.Auction{}
 
-	k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+	err := k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
 		allAuction = append(allAuction, value)
 		return false, nil
 	})
 
 	return &types.QueryAllAuctionResponse{
 		Auctions: allAuction,
-	}, nil
+	}, err
 }
 
 func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsRequest) (*types.QueryAllBidsResponse, error) {
@@ -53,7 +53,7 @@ func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsReques
 
 	allBids := []types.Bid{}
 
-	k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
+	err := k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
 		for _, bid := range value.Bids {
 			allBids = append(allBids, *bid)
 		}
@@ -62,5 +62,5 @@ func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsReques
 
 	return &types.QueryAllBidsResponse{
 		Bids: allBids,
-	}, nil
+	}, err
 }

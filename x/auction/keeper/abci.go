@@ -109,7 +109,10 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 		}
 
 		if needCleanup {
-			k.refundBidders(ctx, bidQueue)
+			err = k.refundBidders(ctx, bidQueue)
+			if err != nil {
+				return true, err
+			}
 
 			// clear the auction afterward
 			err = k.DeleteAuction(ctx, auction.AuctionId)

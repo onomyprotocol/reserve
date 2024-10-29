@@ -304,12 +304,15 @@ func (k *Keeper) UpdateVaultsDebt(
 	rate := math.LegacyNewDec(deltaDur.Milliseconds()).Quo(math.LegacyNewDec((time.Hour * 24 * 365).Milliseconds())) // divice 365 days
 	// Get stability fee of all denoms
 	fees := make(map[string]math.LegacyDec, 0)
-	k.VaultsManager.Walk(ctx, nil, func(denom string, vm types.VaultMamager) (bool, error) {
+	err := k.VaultsManager.Walk(ctx, nil, func(denom string, vm types.VaultMamager) (bool, error) {
 		fees[denom] = vm.Params.StabilityFee.Mul(rate)
 		return false, nil
 	})
+	if err != nil {
+		return err
+	}
 
-	err := k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
+	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		var err error
 		if vault.Status == types.ACTIVE {
 			debtAmount := vault.Debt.Amount
@@ -514,7 +517,10 @@ func (k *Keeper) Liquidate(
 				}
 				vault.CollateralLocked.Amount = math.ZeroInt()
 				// LIQUIDATED
-				k.SetVault(ctx, *vault)
+				err = k.SetVault(ctx, *vault)
+				if err != nil {
+					return err
+				}
 			}
 			currentShortfall, err := k.ShortfallAmount.Get(ctx)
 			if err != nil {
@@ -605,7 +611,10 @@ func (k *Keeper) Liquidate(
 			if totalRemainDebt.Amount.GT(math.ZeroInt()) {
 				// Update vaults status
 				for _, vault := range liquidation.LiquidatingVaults {
-					k.SetVault(ctx, *vault)
+					err = k.SetVault(ctx, *vault)
+					if err != nil {
+						return err
+					}
 				}
 				currentShortfall, err := k.ShortfallAmount.Get(ctx)
 				if err != nil {
@@ -619,9 +628,9 @@ func (k *Keeper) Liquidate(
 	}
 	// Update vaults status
 	for _, vault := range liquidation.LiquidatingVaults {
-		k.SetVault(ctx, *vault)
+		err = k.SetVault(ctx, *vault)
 	}
-	return nil
+	return err
 }
 
 func (k *Keeper) GetVault(

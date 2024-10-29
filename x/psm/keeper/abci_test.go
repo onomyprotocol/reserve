@@ -48,9 +48,9 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 				FeeOut: t.feeOut,
 			}
 			s.mockOracleKeeper.SetPrice(s.Ctx, sc.Denom, t.priceCurrent)
-			s.k.FeeMaxStablecoin.Set(s.Ctx, usdt, t.feeIn.Add(t.feeOut).String())
-
-			err := s.k.SetStablecoin(s.Ctx, sc)
+			err := s.k.FeeMaxStablecoin.Set(s.Ctx, usdt, t.feeIn.Add(t.feeOut).String())
+			s.Require().NoError(err)
+			err = s.k.SetStablecoin(s.Ctx, sc)
 			s.Require().NoError(err)
 
 			s.mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)

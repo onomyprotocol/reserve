@@ -18,17 +18,20 @@ func (k Keeper) GetNewAuction(ctx context.Context,
 	vaultId uint64,
 ) (*types.Auction, bool, error) {
 	var newAuction *types.Auction
-	k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+	err := k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
 		if value.VaultId == vaultId {
 			newAuction = &value
 			return true, nil
 		}
 		return false, nil
 	})
+	if err != nil {
+		return nil, false, err
+	}
 	if newAuction != nil {
 		return newAuction, false, nil
 	}
-	newAuction, err := k.NewAuction(ctx, startTime, initialPrice, item, targetGoal, vaultId)
+	newAuction, err = k.NewAuction(ctx, startTime, initialPrice, item, targetGoal, vaultId)
 	if err != nil {
 		return newAuction, true, err
 	}

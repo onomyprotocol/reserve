@@ -83,10 +83,10 @@ func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablec
 		allStablecoins = append(allStablecoins, &newStablecoinResponse)
 	}
 
-	q.keeper.IterateStablecoin(c, func(red types.Stablecoin) (stop bool) {
+	err := q.keeper.IterateStablecoin(c, func(red types.Stablecoin) (stop bool) {
 		adder(red)
 		return false
 	})
 
-	return &types.QueryAllStablecoinResponse{AllStablecoinResponse: allStablecoins}, nil
+	return &types.QueryAllStablecoinResponse{AllStablecoinResponse: allStablecoins}, err
 }
