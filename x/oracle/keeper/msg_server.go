@@ -63,7 +63,7 @@ func (k Keeper) UpdateBandParams(goCtx context.Context, msg *types.MsgUpdateBand
 	return nil, nil
 }
 
-func (k Keeper) UpdateBandOracleRequest(goCtx context.Context, msg *types.MsgUpdateBandOracleRequest) (*types.MsgUpdateBandOracleRequestResponse, error) {
+func (k Keeper) UpdateBandOracleRequest(goCtx context.Context, msg *types.MsgUpdateBandOracleRequestRequest) (*types.MsgUpdateBandOracleRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	
 	if err := k.validateAuthority(msg.Authority); err != nil {
@@ -134,6 +134,47 @@ func (k Keeper) DeleteBandOracleRequests(goCtx context.Context, msg *types.MsgDe
 	return nil, nil
 }
 
+func (k Keeper) UpdateBandOracleRequestParams(goCtx context.Context, msg *types.MsgUpdateBandOracleRequestParamsRequest) (*types.MsgUpdateBandOracleRequestParamsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	if err := k.validateAuthority(msg.Authority); err != nil {
+		return nil, err
+	}
+
+	if err := k.validateUpdateBandOracleRequestParams(msg); err != nil {
+		return nil, err
+	}
+	newOracleRequestParams := types.BandOracleRequestParams{}
+
+	if msg.UpdateBandOracleRequestParams.MinCount > 0 {
+		newOracleRequestParams.MinCount = msg.UpdateBandOracleRequestParams.MinCount
+	}
+
+	if msg.UpdateBandOracleRequestParams.AskCount > 0 {
+		newOracleRequestParams.AskCount = msg.UpdateBandOracleRequestParams.AskCount
+	}
+
+	if msg.UpdateBandOracleRequestParams.FeeLimit != nil {
+		newOracleRequestParams.FeeLimit = msg.UpdateBandOracleRequestParams.FeeLimit
+	}
+
+	if msg.UpdateBandOracleRequestParams.PrepareGas > 0 {
+		newOracleRequestParams.PrepareGas = msg.UpdateBandOracleRequestParams.PrepareGas
+	}
+
+	if msg.UpdateBandOracleRequestParams.ExecuteGas > 0 {
+		newOracleRequestParams.ExecuteGas = msg.UpdateBandOracleRequestParams.ExecuteGas
+	}
+
+	if msg.UpdateBandOracleRequestParams.MinSourceCount > 0 {
+		newOracleRequestParams.MinSourceCount = msg.UpdateBandOracleRequestParams.MinSourceCount
+	}
+
+	k.SetBandOracleRequestParams(ctx, newOracleRequestParams)
+
+	return nil, nil
+}
+
 // validateUpdateBandParams returns validate for update band params.
 func (k *Keeper) validateUpdateBandParams(msg *types.MsgUpdateBandParams) error {
 	if msg.BandParams.IbcRequestInterval == 0 {
@@ -151,7 +192,7 @@ func (k *Keeper) validateUpdateBandParams(msg *types.MsgUpdateBandParams) error 
 }
 
 // validateUpdateBandOracleRequest returns validate for update band oracle request.
-func (k *Keeper) validateUpdateBandOracleRequest(msg *types.MsgUpdateBandOracleRequest) error {
+func (k *Keeper) validateUpdateBandOracleRequest(msg *types.MsgUpdateBandOracleRequestRequest) error {
 	if msg.UpdateOracleRequest == nil {
 		return types.ErrInvalidBandUpdateRequest
 	}
@@ -185,6 +226,31 @@ func (k *Keeper) validateUpdateBandOracleRequest(msg *types.MsgUpdateBandOracleR
 
 	if msg.UpdateOracleRequest != nil && msg.UpdateOracleRequest.ExecuteGas <= 0 {
 		return errorsmod.Wrapf(types.ErrInvalidOwasmGas, "UpdateBandOracleRequestProposal: Invalid Execute Gas (%d)", msg.UpdateOracleRequest.ExecuteGas)
+	}
+
+	return nil
+}
+
+// validateUpdateBandOracleRequestParams returns validate for update band oracle request.
+func (k *Keeper) validateUpdateBandOracleRequestParams(msg *types.MsgUpdateBandOracleRequestParamsRequest) error {
+	if msg.UpdateBandOracleRequestParams == nil {
+		return types.ErrInvalidBandUpdateRequest
+	}
+
+	if msg.UpdateBandOracleRequestParams != nil && msg.UpdateBandOracleRequestParams.AskCount > 0 && msg.UpdateBandOracleRequestParams.MinCount > 0 && msg.UpdateBandOracleRequestParams.AskCount < msg.UpdateBandOracleRequestParams.MinCount {
+		return errorsmod.Wrapf(types.ErrInvalidAskCount, "UpdateBandOracleRequestParamsProposal: Request validator count (%d) must not be less than sufficient validator count (%d).", msg.UpdateBandOracleRequestParams.AskCount, msg.UpdateBandOracleRequestParams.MinCount)
+	}
+
+	if msg.UpdateBandOracleRequestParams != nil && msg.UpdateBandOracleRequestParams.FeeLimit != nil && !msg.UpdateBandOracleRequestParams.FeeLimit.IsValid() {
+		return errorsmod.Wrapf(sdkerrors.ErrInvalidCoins, "UpdateBandOracleRequestParamsProposal: Invalid Fee Limit (%s)", msg.UpdateBandOracleRequestParams.GetFeeLimit().String())
+	}
+
+	if msg.UpdateBandOracleRequestParams != nil && msg.UpdateBandOracleRequestParams.PrepareGas <= 0 && msg.UpdateBandOracleRequestParams.ExecuteGas > 0 {
+		return errorsmod.Wrapf(types.ErrInvalidOwasmGas, "UpdateBandOracleRequestParamsProposal: Invalid Prepare Gas (%d)", msg.UpdateBandOracleRequestParams.PrepareGas)
+	}
+
+	if msg.UpdateBandOracleRequestParams != nil && msg.UpdateBandOracleRequestParams.ExecuteGas <= 0 {
+		return errorsmod.Wrapf(types.ErrInvalidOwasmGas, "UpdateBandOracleRequestParamsProposal: Invalid Execute Gas (%d)", msg.UpdateBandOracleRequestParams.ExecuteGas)
 	}
 
 	return nil

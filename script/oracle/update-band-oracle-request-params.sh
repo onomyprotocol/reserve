@@ -121,17 +121,27 @@ sleep 7
 reserved q gov proposals
 # reserved tx gov submit-legacy-proposal active-collateral "title" "description" "atom" "10" "0.1" "10000" 10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from validator1 -y --chain-id testing-1 --fees 20stake
 
-reserved tx gov submit-proposal ./script/oracleDeleteBandOracleRequests.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+reserved tx gov submit-proposal ./script/oracleUpdateBandOracleRequestParams.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 
-# # vote
+# vote
 sleep 7
 reserved tx gov vote 1 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 reserved tx gov vote 1 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
 reserved tx gov vote 1 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y --fees 20stake
+
+# # Check band params
+# echo "================================================"
+# echo "Band params before update by gov"
+# reserved q oracle band-params
 
 # wait voting_perio=15s
 echo "========sleep=========="
 sleep 15
 reserved q gov proposals
 
-# killall reserved || true
+# # Check band params after gov passed
+# echo "================================================"
+# echo "Band params after update by gov"
+# reserved q oracle band-params
+
+killall reserved || true
