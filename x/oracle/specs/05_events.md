@@ -1,10 +1,14 @@
-syntax = "proto3";
-package reserve.oracle;
+---
+sidebar_position: 5
+title: Events
+---
+# Events
 
-import "gogoproto/gogo.proto";
+The oracle module emits the following events:
 
-option go_package = "github.com/onomyprotocol/reserve/x/oracle/types";
+## Band
 
+```protobuf
 message EventBandAckSuccess {
   string ack_result = 1;
   int64 client_id = 2;
@@ -30,3 +34,4 @@ message SetBandPriceEvent {
   uint64 request_id = 5;
   int64 client_id = 6;
 }
+```
