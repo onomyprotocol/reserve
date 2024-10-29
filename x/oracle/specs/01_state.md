@@ -149,3 +149,4 @@ Note:
 
 1. `IbcSourceChannel`, `IbcVersion`, `IbcPortId` are common parameters required for IBC connection.
 2. `IbcRequestInterval` describes the automatic price fetch request interval that is automatically triggered on onomy chain on beginblocker.
+3. `AskCount`, `MinCount`, `FeeLimit`, `PrepareGas`, `ExecuteGas`, `MinSourceCount` are common parameters required for IBC connection parameters required for Band IBC oracle query
