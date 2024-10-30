@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"cosmossdk.io/math"
 	errors "github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
@@ -41,6 +42,7 @@ func GetTxCmd() *cobra.Command {
 		NewRequestBandRatesTxCmd(),
 		NewUpdateBandOracleRequestProposalTxCmd(),
 		NewDeleteBandOracleRequestProposalTxCmd(),
+		NewSetPriceCmd(),
 	)
 
 	return cmd
@@ -134,7 +136,7 @@ func NewUpdateBandOracleRequestProposalTxCmd() *cobra.Command {
 	cmd.Flags().Uint64(flagSufficientValidatorCount, 0, "Sufficient Validator Count")
 	cmd.Flags().Uint64(flagMinSourceCount, 3, "Min Source Count")
 	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
-	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal") //nolint:staticcheck
+	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
 	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
 
 	flags.AddTxFlagsToCmd(cmd)
@@ -182,7 +184,7 @@ func NewDeleteBandOracleRequestProposalTxCmd() *cobra.Command {
 	}
 
 	cmd.Flags().String(govcli.FlagTitle, "", "title of proposal")
-	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal") //nolint:staticcheck
+	cmd.Flags().String(govcli.FlagDescription, "", "description of proposal")
 	cmd.Flags().String(govcli.FlagDeposit, "", "deposit of proposal")
 
 	flags.AddTxFlagsToCmd(cmd)
@@ -198,7 +200,7 @@ func updateBandOracleRequestProposalArgsToContent(
 		return nil, err
 	}
 
-	description, err := cmd.Flags().GetString(govcli.FlagDescription) //nolint:staticcheck
+	description, err := cmd.Flags().GetString(govcli.FlagDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -283,7 +285,7 @@ func deleteBandOracleRequestProposalArgsToContent(
 		return nil, err
 	}
 
-	description, err := cmd.Flags().GetString(govcli.FlagDescription) //nolint:staticcheck
+	description, err := cmd.Flags().GetString(govcli.FlagDescription)
 	if err != nil {
 		return nil, err
 	}
@@ -309,4 +311,33 @@ func deleteBandOracleRequestProposalArgsToContent(
 	}
 
 	return content, nil
+}
+
+func NewSetPriceCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "set-price [denom] [price]",
+		Args:  cobra.ExactArgs(2),
+		Short: "set price for denom ",
+		Long: `set price for denomn.
+
+			Example:
+			$ onomyd tx mockoracel set-price usdt 1 
+	`,
+
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+			price := math.LegacyMustNewDecFromStr(args[1])
+			addr := clientCtx.GetFromAddress()
+			msg := types.NewSetPrice(args[0], addr.String(), price)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
 }

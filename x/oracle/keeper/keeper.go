@@ -2,11 +2,13 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+
 	"cosmossdk.io/core/store"
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/log"
+	math "cosmossdk.io/math"
 	"cosmossdk.io/store/prefix"
-	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -33,6 +35,8 @@ type (
 		ibcKeeperFn        func() *ibckeeper.Keeper
 		capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper
 		scopedKeeper       exported.ScopedKeeper
+
+		price map[string]math.LegacyDec
 	}
 )
 
@@ -41,8 +45,8 @@ func NewKeeper(
 	storeService store.KVStoreService,
 	logger log.Logger,
 	authority string,
-	ibcKeeperFn func() *ibckeeper.Keeper,
-	capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
+	// ibcKeeperFn func() *ibckeeper.Keeper,
+	// capabilityScopedFn func(string) capabilitykeeper.ScopedKeeper,
 
 ) Keeper {
 	if _, err := sdk.AccAddressFromBech32(authority); err != nil {
@@ -50,12 +54,13 @@ func NewKeeper(
 	}
 
 	return Keeper{
-		cdc:                cdc,
-		storeService:       storeService,
-		authority:          authority,
-		logger:             logger,
-		ibcKeeperFn:        ibcKeeperFn,
-		capabilityScopedFn: capabilityScopedFn,
+		cdc:          cdc,
+		storeService: storeService,
+		authority:    authority,
+		logger:       logger,
+		// ibcKeeperFn:        ibcKeeperFn,
+		// capabilityScopedFn: capabilityScopedFn,
+		price: make(map[string]math.LegacyDec),
 	}
 }
 
@@ -138,3 +143,13 @@ func (k *Keeper) ScopedKeeper() exported.ScopedKeeper {
 	}
 	return k.scopedKeeper
 }
+
+// need to delete when merging with oracle
+// func (k *Keeper) GetPrice(ctx context.Context, denom string) math.LegacyDec {
+// 	return math.LegacyZeroDec()
+// }
+
+// need to delete when merging with oracle
+// func (k *Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
+// 	return nil
+// }

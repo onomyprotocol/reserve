@@ -3,6 +3,7 @@ package types
 import (
 	"cosmossdk.io/errors"
 	errorsmod "cosmossdk.io/errors"
+	math "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -89,4 +90,22 @@ func (msg MsgRequestBandRates) GetSigners() []sdk.AccAddress {
 func (msg MsgRequestBandRates) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
+}
+
+func NewSetPrice(denom, authority string, price math.LegacyDec) MsgSetPrice {
+	return MsgSetPrice{
+		Denom:     denom,
+		Price:     price,
+		Authority: authority,
+	}
+}
+
+func NewGetPrice(denom string) MsgGetPrice {
+	return MsgGetPrice{
+		Denom: denom,
+	}
+}
+
+func NewAllGetPrice() MsgGetAllPrice {
+	return MsgGetAllPrice{}
 }

@@ -1,11 +1,11 @@
 package oracle
 
 import (
-	errorsmod "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	errorsmod "cosmossdk.io/errors"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -20,7 +20,7 @@ func NewOracleProposalHandler(k keeper.Keeper) govtypes.Handler {
 			return handleUpdateBandOracleRequestProposal(ctx, k, c)
 
 		case *types.DeleteBandOracleRequestProposal:
-			return handleDeleteBandOracleRequestProposal(ctx, k, c)
+			return handleDeleteBandOracleRequestProposal(ctx, k, c)	
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized param proposal content type: %T", c)
 		}
@@ -43,7 +43,8 @@ func handleUpdateBandParamsProposal(ctx sdk.Context, k keeper.Keeper, p *types.U
 		}
 	}
 
-	return k.SetBandParams(ctx, p.BandParams)
+	k.SetBandParams(ctx, p.BandParams)
+	return nil
 }
 
 func handleUpdateBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *types.UpdateBandOracleRequestProposal) error {
@@ -88,7 +89,9 @@ func handleUpdateBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *
 		request.MinSourceCount = p.UpdateOracleRequest.MinSourceCount
 	}
 
-	return k.SetBandOracleRequest(ctx, *request)
+	k.SetBandOracleRequest(ctx, *request)
+
+	return nil
 }
 
 func handleDeleteBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *types.DeleteBandOracleRequestProposal) error {
@@ -97,10 +100,7 @@ func handleDeleteBandOracleRequestProposal(ctx sdk.Context, k keeper.Keeper, p *
 	}
 
 	for _, requestID := range p.DeleteRequestIds {
-		err := k.DeleteBandOracleRequest(ctx, requestID)
-		if err != nil {
-			return err
-		}
+		k.DeleteBandOracleRequest(ctx, requestID)
 	}
 
 	return nil

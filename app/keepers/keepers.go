@@ -315,8 +315,8 @@ func NewAppKeeper(
 		runtime.NewKVStoreService(appKeepers.keys[oracletypes.StoreKey]),
 		logger,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		appKeepers.GetIBCKeeper,
-		appKeepers.GetScopedKeeper,
+		// appKeepers.GetIBCKeeper,
+		// appKeepers.GetScopedKeeper,
 	)
 
 	appKeepers.PSMKeeper = psmkeeper.NewKeeper(
