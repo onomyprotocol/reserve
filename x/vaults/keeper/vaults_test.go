@@ -97,7 +97,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 			denom:      "atom",
 			owner:      s.TestAccs[0],
 			collateral: collateral,
-			mint:       sdk.NewCoin(mintDenom, math.NewInt(40_000_000)),
+			mint:       sdk.NewCoin(mintDenom, math.NewInt(50_000_000)),
 			expErr:     false,
 		},
 	}
