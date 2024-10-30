@@ -1,8 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
-
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
@@ -512,7 +510,6 @@ func (s *KeeperTestSuite) TestLiquidate() {
 
 			for _, vault := range t.liquidation.LiquidatingVaults {
 				vaultId, vaultAddr := s.App.VaultsKeeper.GetVaultIdAndAddress(s.Ctx)
-				fmt.Println("vaultId", vaultId)
 				vault.Id = vaultId
 				vault.Address = vaultAddr.String()
 
@@ -533,13 +530,10 @@ func (s *KeeperTestSuite) TestLiquidate() {
 			}
 
 			err = s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
-			fmt.Println("errrrr", err)
 
 			if t.reserveBalances != nil {
 				reserveModuleAddr := s.App.AccountKeeper.GetModuleAddress(types.ReserveModuleName)
 				reserveBalance := s.App.BankKeeper.GetAllBalances(s.Ctx, reserveModuleAddr)
-				fmt.Println("reserve balances", reserveBalance)
-				fmt.Println("test case reserve balances", t.reserveBalances)
 				// t.reserveBalances.Sort()
 				s.Require().Equal(reserveBalance, t.reserveBalances)
 			}
@@ -557,7 +551,6 @@ func (s *KeeperTestSuite) TestLiquidate() {
 
 			for i, vault := range t.liquidation.LiquidatingVaults {
 				updatedVault, err := s.App.VaultsKeeper.GetVault(s.Ctx, vault.Id)
-				fmt.Println("updated vault", updatedVault)
 				s.Require().NoError(err)
 				s.Require().Equal(updatedVault.Status, t.expVaultStatus[i])
 			}

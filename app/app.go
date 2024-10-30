@@ -194,7 +194,6 @@ func NewApp(
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
-	// fmt.Println(txConfig.NewTxBuilder() == nil)
 	app.mm = module.NewManager(appModules(app, appCodec, txConfig, skipGenesisInvariants)...)
 	app.ModuleBasics = newBasicManagerFromManager(app)
 
@@ -294,7 +293,6 @@ func NewApp(
 		}
 	}
 
-	// fmt.Println("new_app=0", app.ModuleBasics["bank"] == nil)
 	return app
 }
 
