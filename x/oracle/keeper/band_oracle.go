@@ -276,7 +276,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 }
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
-func (k *Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
+func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {

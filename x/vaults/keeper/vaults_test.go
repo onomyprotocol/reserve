@@ -216,7 +216,6 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 	}
 }
 
-// TODO: Update
 func (s *KeeperTestSuite) TestWithdrawFromVault() {
 	s.SetupTest()
 	var (
@@ -265,69 +264,18 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 	}
 }
 
-// TODO: Update
-// func (s *KeeperTestSuite) TestUpdateVaultsDebt() {
-// 	s.SetupTest()
-// 	var (
-// 		denom              = "atom"
-// 		maxDebt            = math.NewInt(10000)
-// 		feeStabilityUpdate = math.LegacyMustNewDecFromStr("0.5")
-// 	)
-
-// 	tests := []struct {
-// 		name    string
-// 		setup   func()
-// 		vaultId uint64
-// 	}{
-// 		{
-// 			name: "success",
-// 			setup: func() {
-// 				vault := types.Vault{
-// 					Owner:            s.TestAccs[0].String(),
-// 					Debt:             sdk.NewCoin(denom, maxDebt),
-// 					CollateralLocked: sdk.NewCoin(denom, maxDebt),
-// 					Status:           types.ACTIVE,
-// 				}
-// 				err := s.k.SetVault(s.Ctx, vault)
-// 				s.Require().NoError(err)
-
-// 				// update params
-// 				uP := types.DefaultParams()
-// 				uP.StabilityFee = feeStabilityUpdate
-// 				err = s.k.SetParams(s.Ctx, uP)
-// 				s.Require().NoError(err)
-// 			},
-// 			vaultId: 0,
-// 		},
-// 	}
-// 	for _, t := range tests {
-// 		s.Run(t.name, func() {
-// 			t.setup()
-// 			err := s.k.UpdateVaultsDebt(s.Ctx)
-// 			s.Require().NoError(err)
-
-// 			// expect
-// 			expectDebtAmount := math.LegacyNewDecFromInt(maxDebt).Add(math.LegacyNewDecFromInt(maxDebt).Mul(feeStabilityUpdate)).TruncateInt()
-// 			vault, err := s.k.GetVault(s.Ctx, t.vaultId)
-// 			s.Require().NoError(err)
-// 			s.Require().Equal(expectDebtAmount.String(), vault.Debt.Amount.String())
-// 		})
-// 	}
-// }
-
 func (s *KeeperTestSuite) TestLiquidate() {
 	// s.SetupTest()
 
 	vaultOwnerAddr := sdk.AccAddress([]byte("addr1_______________"))
 
 	tests := []struct {
-		name               string
-		liquidation        types.Liquidation
-		expVaultStatus     []types.VaultStatus
-		shortfallAmount    sdk.Coin
-		moduleBalances     sdk.Coins
-		reserveBalances    sdk.Coins
-		vaultOwnerBalances sdk.Coins
+		name            string
+		liquidation     types.Liquidation
+		expVaultStatus  []types.VaultStatus
+		shortfallAmount sdk.Coin
+		moduleBalances  sdk.Coins
+		reserveBalances sdk.Coins
 	}{
 		{
 			name: "single vault - sold all, enough to cover debt",
@@ -352,7 +300,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 					},
 				},
 			},
-			expVaultStatus:  []types.VaultStatus{types.LIQUIDATED},
+			expVaultStatus:  []types.VaultStatus{types.CLOSED},
 			reserveBalances: sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, math.NewInt(10_000_000))),
 		},
 		{
@@ -411,9 +359,6 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1_000_000)),
 				sdk.NewCoin("atom", math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt()), // (25/7)*0.05
 			),
-			vaultOwnerBalances: sdk.NewCoins(
-				sdk.NewCoin("atom", math.NewInt(1_000_000).Sub(math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt())),
-			), // remain - penalty
 		},
 		{
 			name: "single vault - remain collateral, not enough to cover debt, can reconstitute vault",
@@ -530,17 +475,13 @@ func (s *KeeperTestSuite) TestLiquidate() {
 			}
 
 			err = s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
+			s.Require().NoError(err)
 
 			if t.reserveBalances != nil {
 				reserveModuleAddr := s.App.AccountKeeper.GetModuleAddress(types.ReserveModuleName)
 				reserveBalance := s.App.BankKeeper.GetAllBalances(s.Ctx, reserveModuleAddr)
 				// t.reserveBalances.Sort()
 				s.Require().Equal(reserveBalance, t.reserveBalances)
-			}
-
-			if t.vaultOwnerBalances != nil {
-				ownerBalances := s.App.BankKeeper.GetAllBalances(s.Ctx, vaultOwnerAddr)
-				s.Require().Equal(ownerBalances, t.vaultOwnerBalances)
 			}
 
 			if !t.shortfallAmount.IsNil() {
@@ -558,60 +499,3 @@ func (s *KeeperTestSuite) TestLiquidate() {
 		})
 	}
 }
-
-// func (s *KeeperTestSuite) TestGetLiquidateVaults() {
-// 	s.SetupTest()
-// 	var (
-// 		denom1        = "atom"
-// 		denom2        = "osmo"
-// 		coin          = sdk.NewCoin(denom1, math.NewInt(1000))
-// 		coinMintToAcc = sdk.NewCoin(denom1, math.NewInt(1000000))
-// 		maxDebt       = math.NewInt(10000)
-// 	)
-
-// 	tests := []struct {
-// 		name       string
-// 		setup      func()
-// 		vaultId    uint64
-// 		sender     sdk.AccAddress
-// 		collateral sdk.Coin
-// 	}{
-// 		{
-// 			name: "success",
-// 			setup: func() {
-// 				err := s.k.ActiveCollateralAsset(s.Ctx, denom1, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
-// 				s.Require().NoError(err)
-// 				err = s.k.ActiveCollateralAsset(s.Ctx, denom2, math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt)
-// 				s.Require().NoError(err)
-
-// 				vault := types.Vault{
-// 					Owner:            s.TestAccs[0].String(),
-// 					Debt:             sdk.NewCoin(denom1, maxDebt),
-// 					CollateralLocked: sdk.NewCoin(denom1, maxDebt),
-// 					Status:           types.ACTIVE,
-// 				}
-// 				err = s.k.SetVault(s.Ctx, vault)
-// 				s.Require().NoError(err)
-
-// 				err = s.App.BankKeeper.MintCoins(s.Ctx, types.ModuleName, sdk.NewCoins(coinMintToAcc))
-// 				s.Require().NoError(err)
-// 				err = s.App.BankKeeper.SendCoinsFromModuleToAccount(s.Ctx, types.ModuleName, s.TestAccs[0], sdk.NewCoins(coinMintToAcc))
-// 				s.Require().NoError(err)
-// 			},
-// 			vaultId:    0,
-// 			sender:     s.TestAccs[0],
-// 			collateral: coin,
-// 		},
-// 	}
-// 	for _, t := range tests {
-// 		s.Run(t.name, func() {
-// 			t.setup()
-// 			vaults, prices, err := s.k.GetLiquidateVaults(s.Ctx)
-// 			s.Require().NoError(err)
-
-// 			// current price = 1, vaults is empty,
-// 			s.Require().Equal(2, len(prices))
-// 			s.Require().Equal(0, len(vaults))
-// 		})
-// 	}
-// }

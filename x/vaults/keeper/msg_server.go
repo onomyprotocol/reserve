@@ -64,6 +64,9 @@ func (k msgServer) UpdatesCollateral(ctx context.Context, msg *types.MsgUpdatesC
 
 // Create new vault, send Collateral and receive back an amount Minted
 func (k msgServer) CreateVault(ctx context.Context, msg *types.MsgCreateVault) (*types.MsgCreateVaultResponse, error) {
+	if !msg.Minted.IsPositive() {
+		return nil, fmt.Errorf("invalid coin")
+	}
 	err := k.CreateNewVault(ctx, sdk.MustAccAddressFromBech32(msg.Owner), msg.Collateral, msg.Minted)
 	if err != nil {
 		return nil, err
@@ -73,6 +76,10 @@ func (k msgServer) CreateVault(ctx context.Context, msg *types.MsgCreateVault) (
 
 // Send additional Collateral
 func (k msgServer) Deposit(ctx context.Context, msg *types.MsgDeposit) (*types.MsgDepositResponse, error) {
+	if !msg.Amount.IsPositive() {
+		return nil, fmt.Errorf("invalid coin")
+	}
+
 	err := k.DepositToVault(ctx, msg.VaultId, sdk.MustAccAddressFromBech32(msg.Sender), msg.Amount)
 	if err != nil {
 		return nil, err
@@ -82,6 +89,10 @@ func (k msgServer) Deposit(ctx context.Context, msg *types.MsgDeposit) (*types.M
 
 // Withdraw a amount Collateral, make sure the remaining Collateral value is still more than the loan amount
 func (k msgServer) Withdraw(ctx context.Context, msg *types.MsgWithdraw) (*types.MsgWithdrawResponse, error) {
+	if !msg.Amount.IsPositive() {
+		return nil, fmt.Errorf("invalid coin")
+	}
+
 	err := k.WithdrawFromVault(ctx, msg.VaultId, sdk.MustAccAddressFromBech32(msg.Sender), msg.Amount)
 	if err != nil {
 		return nil, err
@@ -91,6 +102,10 @@ func (k msgServer) Withdraw(ctx context.Context, msg *types.MsgWithdraw) (*types
 
 // additional loan, collateral is still guaranteed
 func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMintResponse, error) {
+	if !msg.Amount.IsPositive() {
+		return nil, fmt.Errorf("invalid coin")
+	}
+
 	err := k.MintCoin(ctx, msg.VaultId, sdk.MustAccAddressFromBech32(msg.Sender), msg.Amount)
 	if err != nil {
 		return nil, err
@@ -100,6 +115,10 @@ func (k msgServer) Mint(ctx context.Context, msg *types.MsgMint) (*types.MsgMint
 
 // repay part or all of a loan
 func (k msgServer) Repay(ctx context.Context, msg *types.MsgRepay) (*types.MsgRepayResponse, error) {
+	if !msg.Amount.IsPositive() {
+		return nil, fmt.Errorf("invalid coin")
+	}
+	
 	err := k.RepayDebt(ctx, msg.VaultId, sdk.MustAccAddressFromBech32(msg.Sender), msg.Amount)
 	if err != nil {
 		return nil, err
