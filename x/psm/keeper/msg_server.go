@@ -178,6 +178,10 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 }
 
 func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddStableCoin) (*types.MsgAddStableCoinResponse, error) {
+	if k.keeper.authority != msg.Authority {
+		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.keeper.authority, msg.Authority)
+	}
+
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	if err := msg.ValidateBasic(); err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
@@ -218,6 +222,10 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 }
 
 func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.MsgUpdatesStableCoin) (*types.MsgUpdatesStableCoinResponse, error) {
+	if k.keeper.authority != msg.Authority {
+		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.keeper.authority, msg.Authority)
+	}
+
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	if err := msg.ValidateBasic(); err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err

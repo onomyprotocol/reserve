@@ -2,6 +2,8 @@ package keeper_test
 
 import (
 	"cosmossdk.io/math"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
@@ -11,9 +13,9 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		// Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
+		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -31,9 +33,9 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitUSDT,
-		// Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
+		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -50,9 +52,9 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	proUpdates := types.MsgUpdatesStableCoin{
 		Denom:      usdt,
 		LimitTotal: limitTotalUpdates,
-		// Price:      math.LegacyMustNewDecFromStr("1"),
-		FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut: math.LegacyMustNewDecFromStr("0.001"),
+		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
 
 	_, err = s.msgServer.UpdatesStableCoinProposal(s.Ctx, &proUpdates)

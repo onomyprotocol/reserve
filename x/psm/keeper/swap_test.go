@@ -5,6 +5,8 @@ import (
 
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
@@ -32,17 +34,13 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)
 				s.Require().NoError(err)
 
-				sc := types.Stablecoin{
+				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err = s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[0],
@@ -54,17 +52,13 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 		{
 			name: "insufficient balance",
 			setup: func(ctx context.Context, keeper keeper.Keeper) {
-				sc := types.Stablecoin{
-					Denom:      usdt,
-					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err := s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:      usdc,
+					LimitTotal: limitUSDC,
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[1],
@@ -115,17 +109,13 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)
 				s.Require().NoError(err)
 
-				sc := types.Stablecoin{
+				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err = s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[0],
@@ -138,17 +128,13 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 		{
 			name: "insufficient balance",
 			setup: func(ctx context.Context, keeper keeper.Keeper) {
-				sc := types.Stablecoin{
-					Denom:      usdt,
-					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err := s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:      usdc,
+					LimitTotal: limitUSDC,
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 			},
 			addr:            s.TestAccs[1],
