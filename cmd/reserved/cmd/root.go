@@ -51,8 +51,6 @@ func NewRootCmd() *cobra.Command {
 		}
 	}()
 
-	// fmt.Println(tempApplication.GetTxConfig().NewTxBuilder() == nil)
-
 	initClientCtx := client.Context{}.
 		WithCodec(tempApplication.AppCodec()).
 		WithInterfaceRegistry(tempApplication.InterfaceRegistry()).
@@ -114,7 +112,6 @@ func NewRootCmd() *cobra.Command {
 	// 	moduleBasicManager[name] = module.CoreAppModuleBasicAdaptor(name, mod)
 	// 	autoCliOpts.Modules[name] = mod
 	// }
-	// fmt.Println(tempApplication.ModuleBasics["genutil"] == nil)
 	initRootCmd(rootCmd, tempApplication.ModuleBasics, tempApplication.GetTxConfig())
 
 	overwriteFlagDefaults(rootCmd, map[string]string{

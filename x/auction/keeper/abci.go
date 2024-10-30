@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"cosmossdk.io/math"
@@ -142,7 +141,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 			}
 		}
 
-		fmt.Println("fillBids", bidQueue)
 		err = k.fillBids(ctx, auction, bidQueue)
 		if err != nil {
 			return true, err
@@ -152,7 +150,6 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	})
 
 	// Loop through liquidationMap and liquidate
-	fmt.Println("liquidationMap", liquidationMap)
 	for _, liq := range liquidationMap {
 		err := k.vaultKeeper.Liquidate(ctx, *liq)
 		if err != nil {

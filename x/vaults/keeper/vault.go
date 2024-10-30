@@ -409,7 +409,6 @@ func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
 ) error {
-	fmt.Println("START LIQUIDATE", liquidation)
 	params := k.GetParams(ctx)
 
 	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
@@ -655,7 +654,6 @@ func (k *Keeper) GetVaultIdAndAddress(
 	ctx context.Context,
 ) (uint64, sdk.AccAddress) {
 	id, err := k.VaultsSequence.Next(ctx)
-	fmt.Println("nextId", id, err)
 	if err != nil {
 		return 0, sdk.AccAddress{}
 	}
