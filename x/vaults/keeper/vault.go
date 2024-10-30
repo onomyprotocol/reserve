@@ -342,6 +342,9 @@ func (k *Keeper) shouldLiquidate(
 	}
 
 	collateralValue := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(price)
+	if math.LegacyNewDecFromInt(vault.Debt.Amount).Equal(math.LegacyZeroDec()) {
+		return false, nil
+	}
 	ratio := collateralValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
 	if ratio.LTE(liquidationRatio) {
