@@ -67,16 +67,8 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 		return nil, err
 	}
 
-	// lock coin
-	totalStablecoinLock, err := k.keeper.totalStablecoinLock.Get(ctx, msg.Coin.Denom)
-	if err != nil {
-		return nil, err
-	}
-	newTotalStablecoinLock := totalStablecoinLock.Add(msg.Coin.Amount)
-	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Coin.Denom, newTotalStablecoinLock)
-	if err != nil {
-		return nil, err
-	}
+	// add total stablecoin lock
+	k.keeper.AddTotalStablecoinLock(ctx, *msg.Coin)
 
 	// send stablecoin to module
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
@@ -122,7 +114,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// check lock Coin of user
-	totalStablecoinLock, err := k.keeper.totalStablecoinLock.Get(ctx, msg.ToDenom)
+	totalStablecoinLock, err := k.keeper.TotalStablecoinLock(ctx, msg.ToDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -150,13 +142,10 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 		return nil, err
 	}
 
-	// unlock
 	stablecoinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
-	newTotalStablecoinLock := totalStablecoinLock.Sub(receiveAmountStablecoin)
-	err = k.keeper.totalStablecoinLock.Set(ctx, msg.ToDenom, newTotalStablecoinLock)
-	if err != nil {
-		return nil, err
-	}
+
+	// sub total stablecoin lock
+	k.keeper.SubTotalStablecoinLock(ctx, stablecoinReceive)
 
 	// send stablecoin to user
 	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
@@ -202,16 +191,6 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	err = k.keeper.totalStablecoinLock.Set(ctx, msg.Denom, math.ZeroInt())
-	if err != nil {
-		return &types.MsgAddStableCoinResponse{}, err
-	}
-
-	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
-	if err != nil {
-		return &types.MsgAddStableCoinResponse{}, err
-	}
-
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,
@@ -231,16 +210,15 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
 
-	_, found := k.keeper.GetStablecoin(ctx, msg.Denom)
+	oldStablecoin, found := k.keeper.GetStablecoin(ctx, msg.Denom)
 	if !found {
 		return &types.MsgUpdatesStableCoinResponse{}, fmt.Errorf("%s not existed", msg.Denom)
 	}
 
-	err := k.keeper.SetStablecoin(ctx, types.GetMsgStablecoin(msg))
-	if err != nil {
-		return &types.MsgUpdatesStableCoinResponse{}, err
-	}
-	err = k.keeper.FeeMaxStablecoin.Set(ctx, msg.Denom, msg.FeeIn.Add(msg.FeeOut).String())
+	newStablecoin := types.GetMsgStablecoin(msg)
+	newStablecoin.TotalStablecoinLock = oldStablecoin.TotalStablecoinLock
+
+	err := k.keeper.SetStablecoin(ctx, newStablecoin)
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}

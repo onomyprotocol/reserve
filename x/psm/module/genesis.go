@@ -10,6 +10,13 @@ import (
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) error {
 	// this line is used by starport scaffolding # genesis/module/init
+	for _, sb := range genState.Stablecoins {
+		err := k.SetStablecoin(ctx, sb)
+		if err != nil {
+			return err
+		}
+	}
+
 	return k.Params.Set(ctx, genState.Params)
 }
 
@@ -23,7 +30,10 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) (*types.GenesisState, error
 		return nil, err
 	}
 
-	// this line is used by starport scaffolding # genesis/module/export
+	k.IterateStablecoin(ctx, func(red types.Stablecoin) (stop bool) {
+		genesis.Stablecoins = append(genesis.Stablecoins, red)
+		return false
+	})
 
 	return genesis, nil
 }

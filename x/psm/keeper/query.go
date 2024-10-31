@@ -51,15 +51,9 @@ func (q queryServer) Stablecoin(ctx context.Context, req *types.QueryStablecoinR
 		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
 	}
 
-	totalStablecoinLock, err := q.keeper.TotalStablecoinLock(ctx, req.Denom)
-	if err != nil {
-		return nil, err
-	}
-
 	return &types.QueryStablecoinResponse{
 		Stablecoin:       stablecoin,
-		CurrentTotal:     totalStablecoinLock,
-		SwapableQuantity: stablecoin.LimitTotal.Sub(totalStablecoinLock),
+		SwapableQuantity: stablecoin.LimitTotal.Sub(stablecoin.TotalStablecoinLock),
 	}, nil
 }
 
@@ -70,15 +64,9 @@ func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablec
 	allStablecoins := []*types.StablecoinResponse{}
 
 	adder := func(s types.Stablecoin) {
-		totalStablecoinLock, err := q.keeper.TotalStablecoinLock(c, s.Denom)
-		if err != nil {
-			panic(err)
-		}
-
 		newStablecoinResponse := types.StablecoinResponse{
 			Stablecoin:       s,
-			CurrentTotal:     totalStablecoinLock,
-			SwapableQuantity: s.LimitTotal.Sub(totalStablecoinLock),
+			SwapableQuantity: s.LimitTotal.Sub(s.TotalStablecoinLock),
 		}
 		allStablecoins = append(allStablecoins, &newStablecoinResponse)
 	}

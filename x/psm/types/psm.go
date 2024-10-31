@@ -6,11 +6,12 @@ import (
 
 func GetMsgStablecoin(msg getStablecoinFromMsg) Stablecoin {
 	return Stablecoin{
-		Denom:      msg.GetDenom(),
-		LimitTotal: msg.GetLimitTotal(),
-		// Price:      msg.GetPrice(),
-		FeeIn:  msg.GetFeeIn(),
-		FeeOut: msg.GetFeeOut(),
+		Denom:               msg.GetDenom(),
+		LimitTotal:          msg.GetLimitTotal(),
+		FeeIn:               msg.GetFeeIn(),
+		FeeOut:              msg.GetFeeOut(),
+		TotalStablecoinLock: math.ZeroInt(),
+		FeeMaxStablecoin:    msg.GetFeeIn().Add(msg.GetFeeOut()),
 	}
 }
 
