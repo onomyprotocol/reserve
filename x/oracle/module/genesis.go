@@ -11,19 +11,29 @@ import (
 func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisState) {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	if err := k.SetParams(ctx, genState.Params); err != nil {
-		// TODO: should we panic here
 		panic(err)
 	}
 
 	for _, bandPriceState := range genState.BandPriceStates {
-		k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
+		err := k.SetBandPriceState(ctx, bandPriceState.Symbol, bandPriceState)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set band price state for symbol %s", bandPriceState.Symbol)
+		}
 	}
 
 	for _, bandOracleRequest := range genState.BandOracleRequests {
-		k.SetBandOracleRequest(ctx, *bandOracleRequest)
+		err := k.SetBandOracleRequest(ctx, *bandOracleRequest)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set band oracle request for request id %v", bandOracleRequest.RequestId)
+		}
 	}
 
-	k.SetBandParams(ctx, genState.BandParams)
+	err := k.SetBandParams(ctx, genState.BandParams)
+	if err != nil {
+		sdkCtx.Logger().Info("can not set band params")
+		// should we panic here?
+		panic(err)
+	}
 
 	if genState.BandParams.IbcPortId != "" {
 		k.SetPort(sdkCtx, genState.BandParams.IbcPortId)
@@ -39,18 +49,31 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 	}
 
 	if genState.BandLatestClientId != 0 {
-		k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
+		err := k.SetBandLatestClientID(ctx, genState.BandLatestClientId)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set band latest client id %v", genState.BandLatestClientId)
+		}
 	}
 
 	for _, record := range genState.CalldataRecords {
-		k.SetBandCallDataRecord(ctx, record)
+		err := k.SetBandCallDataRecord(ctx, record)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set band call data record with client id %v", record.ClientId)
+		}
 	}
 
 	if genState.BandLatestRequestId != 0 {
-		k.SetBandLatestRequestID(ctx, genState.BandLatestRequestId)
+		err := k.SetBandLatestRequestID(ctx, genState.BandLatestRequestId)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set band latest request id %v", genState.BandLatestRequestId)
+		}
 	}
 
-	k.SetBandOracleRequestParams(ctx, genState.BandOracleRequestParams)
+	err = k.SetBandOracleRequestParams(ctx, genState.BandOracleRequestParams)
+	if err != nil {
+		sdkCtx.Logger().Info("can not set band oracle request params")
+		// should we set panic here
+	}
 }
 
 // ExportGenesis returns the module's exported genesis.

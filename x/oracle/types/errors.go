@@ -23,4 +23,7 @@ var (
 	ErrInvalidBandDeleteRequest = sdkerrors.Register(ModuleName, 15, "Invalid Band Delete Request Proposal")
 	ErrResolveStatusNotSuccess  = sdkerrors.Register(ModuleName, 16, "Band Oracle request is not resolved successfully")
 	ErrInvalidOracle            = sdkerrors.Register(ModuleName, 17, "invalid oracle")
+	ErrSetBandOracleRequest     = sdkerrors.Register(ModuleName, 18, "Can not set band Oracle request")
+	ErrSetBandCallDataRecord    = sdkerrors.Register(ModuleName, 19, "Can not set band call data record")
+	ErrSetBandLatestRequestId   = sdkerrors.Register(ModuleName, 20, "Can not set latest request id")
 )
