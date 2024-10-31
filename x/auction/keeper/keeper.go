@@ -118,15 +118,7 @@ func (k Keeper) DeleteAuction(ctx context.Context, auctionId uint64) error {
 
 // AddBidEntry adds new bid entry for the given auction id
 func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sdk.AccAddress, bid types.Bid) error {
-	has, err := k.Auctions.Has(ctx, auctionId)
-	if err != nil {
-		return err
-	}
-	if !has {
-		return fmt.Errorf("cannot bid for non-existing/expired auction with id: %v", auctionId)
-	}
-
-	has = k.authKeeper.HasAccount(ctx, bidderAddr)
+	has := k.authKeeper.HasAccount(ctx, bidderAddr)
 	if !has {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address %s: account does not exist", bid.Bidder)
 	}

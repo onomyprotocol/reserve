@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"cosmossdk.io/collections"
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
@@ -40,6 +41,26 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 			Response: "Failed to submit bid",
 		}, err
 	}
+
+	// check bid denom to match vault debt denom
+	bidDenom := msg.Amount.Denom
+	auction, err := k.Auctions.Get(ctx, msg.AuctionId)
+	if err != nil {
+		if errorsmod.IsOf(err, collections.ErrNotFound) {
+			return nil, fmt.Errorf("cannot bid for non-existing/expired auction with id: %v", msg.AuctionId)
+		}
+		return nil, err
+	}
+
+	vault, err := k.vaultKeeper.GetVault(ctx, auction.VaultId)
+	if err != nil {
+		return nil, err
+	}
+
+	if vault.Debt.Denom != bidDenom {
+		return nil, fmt.Errorf("invalid bid amount denom, expected %s got %s", vault.Debt.Denom, bidDenom)
+	}
+
 	bidIdSeq, err := k.BidIdSeq.Get(ctx, msg.AuctionId)
 	if err != nil {
 		return nil, err
