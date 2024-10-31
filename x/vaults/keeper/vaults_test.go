@@ -120,11 +120,11 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 	s.SetupTest()
 	var (
 		denom           = "atom"
-		repayAsset      = sdk.NewCoin("nomUSD", math.NewInt(2000000))
+		repayAsset      = sdk.NewCoin(types.DefaultMintDenom, math.NewInt(2000000))
 		collateralAsset = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund            = sdk.NewCoin(denom, math.NewInt(1000000000000))
 		maxDebt         = math.NewInt(2000000000)
-		mintedCoin      = sdk.NewCoin("nomUSD", math.NewInt(300000000))
+		mintedCoin      = sdk.NewCoin(types.DefaultMintDenom, math.NewInt(300000000))
 	)
 
 	tests := []struct {
@@ -177,7 +177,7 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		collateralAsset = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund            = sdk.NewCoin(denom, math.NewInt(1000000000000))
 		maxDebt         = math.NewInt(2000000000)
-		mintedCoin      = sdk.NewCoin("nomUSD", math.NewInt(200000000))
+		mintedCoin      = sdk.NewCoin(types.DefaultMintDenom, math.NewInt(200000000))
 	)
 
 	tests := []struct {
@@ -224,7 +224,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		coinMintToAcc = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund          = sdk.NewCoin(denom, math.NewInt(10000000000000))
 		maxDebt       = math.NewInt(2000000000)
-		mintedCoin    = sdk.NewCoin("nomUSD", math.NewInt(200000000))
+		mintedCoin    = sdk.NewCoin(types.DefaultMintDenom, math.NewInt(200000000))
 	)
 
 	tests := []struct {

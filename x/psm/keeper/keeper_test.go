@@ -10,6 +10,7 @@ import (
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 var (
@@ -66,7 +67,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	mockOracleKeeper := MockOracleKeeper{
 		prices: make(map[string]math.LegacyDec),
 	}
-	mockOracleKeeper.SetPrice(s.Ctx, types.DenomStable, math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, vaultstypes.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
 
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper

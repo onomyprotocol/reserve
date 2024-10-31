@@ -15,9 +15,6 @@ const (
 
 	// MemStoreKey defines the in-memory store key.
 	MemStoreKey = "mem_psm"
-
-	// Inter Stable Token.
-	DenomStable = "nomUSD"
 )
 
 var (

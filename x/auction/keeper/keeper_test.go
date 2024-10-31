@@ -11,6 +11,7 @@ import (
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/auction/keeper"
 	"github.com/onomyprotocol/reserve/x/auction/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 type KeeperTestSuite struct {
@@ -27,7 +28,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	mockOracleKeeper := MockOracleKeeper{
 		prices: make(map[string]math.LegacyDec),
 	}
-	mockOracleKeeper.SetPrice(s.Ctx, "nomUSD", math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, vaultstypes.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
 
 	s.App.AuctionKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper
