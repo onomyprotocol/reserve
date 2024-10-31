@@ -131,6 +131,13 @@ func (m *Params) GetChargingPeriod() time.Duration {
 	return 0
 }
 
+func (m *Params) GetLiquidatePeriod() time.Duration {
+	if m != nil {
+		return m.LiquidatePeriod
+	}
+	return 0
+}
+
 // VaultParams defines the parameters for each collateral vault type.
 type VaultMamagerParams struct {
 	MintDenom          string                      `protobuf:"bytes,1,opt,name=mint_denom,json=mintDenom,proto3" json:"mint_denom,omitempty"`
@@ -597,6 +604,9 @@ func (this *Params) Equal(that interface{}) bool {
 	if this.ChargingPeriod != that1.ChargingPeriod {
 		return false
 	}
+	if this.LiquidatePeriod != that1.LiquidatePeriod {
+		return false
+	}
 	return true
 }
 func (m *Params) Marshal() (dAtA []byte, err error) {
@@ -619,12 +629,20 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	n1, err1 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(m.ChargingPeriod, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.ChargingPeriod):])
+	n1, err1 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(m.LiquidatePeriod, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.LiquidatePeriod):])
 	if err1 != nil {
 		return 0, err1
 	}
 	i -= n1
 	i = encodeVarintParams(dAtA, i, uint64(n1))
+	i--
+	dAtA[i] = 0x22
+	n2, err2 := github_com_cosmos_gogoproto_types.StdDurationMarshalTo(m.ChargingPeriod, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.ChargingPeriod):])
+	if err2 != nil {
+		return 0, err2
+	}
+	i -= n2
+	i = encodeVarintParams(dAtA, i, uint64(n2))
 	i--
 	dAtA[i] = 0x1a
 	if len(m.AllowedMintDenom) > 0 {
@@ -997,12 +1015,12 @@ func (m *LastUpdate) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	n8, err8 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.Time, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.Time):])
-	if err8 != nil {
-		return 0, err8
+	n9, err9 := github_com_cosmos_gogoproto_types.StdTimeMarshalTo(m.Time, dAtA[i-github_com_cosmos_gogoproto_types.SizeOfStdTime(m.Time):])
+	if err9 != nil {
+		return 0, err9
 	}
-	i -= n8
-	i = encodeVarintParams(dAtA, i, uint64(n8))
+	i -= n9
+	i = encodeVarintParams(dAtA, i, uint64(n9))
 	i--
 	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
@@ -1034,6 +1052,8 @@ func (m *Params) Size() (n int) {
 		}
 	}
 	l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.ChargingPeriod)
+	n += 1 + l + sovParams(uint64(l))
+	l = github_com_cosmos_gogoproto_types.SizeOfStdDuration(m.LiquidatePeriod)
 	n += 1 + l + sovParams(uint64(l))
 	return n
 }
@@ -1296,6 +1316,39 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(&m.ChargingPeriod, dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LiquidatePeriod", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParams
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthParams
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthParams
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := github_com_cosmos_gogoproto_types.StdDurationUnmarshal(&m.LiquidatePeriod, dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

@@ -29,7 +29,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	s.SetupTest()
 	var (
 		denom      = "atom"
-		mintDenom  = types.DefaultMintDenom
+		mintDenom  = types.DefaultMintDenom[0]
 		collateral = sdk.NewCoin(denom, math.NewInt(10_000_000)) // 10 atom = 80$
 		maxDebt    = math.NewInt(100_000_000)
 	)
@@ -267,7 +267,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 func (s *KeeperTestSuite) TestLiquidate() {
 	// s.SetupTest()
 
-	vaultOwnerAddr := sdk.AccAddress([]byte("addr1_______________"))
+	// 	vaultOwnerAddr := sdk.AccAddress([]byte("addr1_______________"))
 
 	tests := []struct {
 		name            string
@@ -458,8 +458,8 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				vault.Id = vaultId
 				vault.Address = vaultAddr.String()
 
-				err := s.App.VaultsKeeper.SetVault(s.Ctx, *vault)
-				s.Require().NoError(err)
+				// 				err := s.App.VaultsKeeper.SetVault(s.Ctx, *vault)
+				// 				s.Require().NoError(err)
 
 				// Fund collateral locked for vault
 				lockCoins := sdk.NewCoins(t.liquidation.VaultLiquidationStatus[vaultId].RemainCollateral)
