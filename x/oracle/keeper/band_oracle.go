@@ -294,7 +294,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 		return nil
 	}
 
-	if quote == types.QuoteUSD {
+	if quote == types.QuoteUSD || quote == types.QuoteNomUSD {
 		return &basePriceState.PriceState.Price
 	}
 
