@@ -110,13 +110,15 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 			auction.EndTime.Before(currentTime) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
-				liquidation_tmp.Denom = auction.Item.Denom
+				liquidation_tmp.DebtDenom = auction.Item.Denom
+				liquidation_tmp.DebtDenom = mintDenom
 				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
 				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
 				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
 			} else {
 				liquidation_tmp = &vaultstypes.Liquidation{
-					Denom:                  auction.Item.Denom,
+					MintDenom:              mintDenom,
+					DebtDenom:              auction.Item.Denom,
 					LiquidatingVaults:      []*vaultstypes.Vault{&vault},
 					VaultLiquidationStatus: make(map[uint64]*vaultstypes.VaultLiquidationStatus),
 				}

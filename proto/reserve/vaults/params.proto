@@ -144,7 +144,9 @@ message VaultLiquidationStatus {
 }
 
 message Liquidation {
-  string denom = 1;
+  string debt_denom = 1;
+
+  string mint_denom = 2;
 
   repeated Vault liquidating_vaults = 3;
 
