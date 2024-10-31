@@ -25,6 +25,10 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
+
 	params := k.GetParams(ctx)
 	vmParams := vm.Params
 
@@ -121,6 +125,9 @@ func (k *Keeper) MintCoin(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
@@ -185,6 +192,10 @@ func (k *Keeper) RepayDebt(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
+
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
