@@ -10,7 +10,6 @@ import (
 
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (s *KeeperTestSuite) TestSwapTonomUSD() {
@@ -104,7 +103,7 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 		{
 			name: "success",
 			setup: func(ctx context.Context, keeper keeper.Keeper) {
-				coinsMint := sdk.NewCoins(sdk.NewCoin(vaultstypes.DefaultMintDenom, math.NewInt(1000000)))
+				coinsMint := sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1000000)))
 				err := keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 				s.Require().NoError(err)
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)

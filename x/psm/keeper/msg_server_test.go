@@ -10,7 +10,6 @@ import (
 
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
@@ -85,7 +84,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 			_, err := s.msgServer.SwapTonomUSD(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, vaultstypes.DefaultMintDenom)
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenom)
 				s.Require().Equal(t.expectedReceive, balance.Amount)
 
 			} else {
@@ -154,7 +153,7 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 			_, err := s.msgServer.SwapToStablecoin(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, vaultstypes.DefaultMintDenom)
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenom)
 				s.Require().Equal(t.expectedBalancenomUSD.String(), balance.Amount.String())
 
 			} else {

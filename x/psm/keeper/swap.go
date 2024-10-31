@@ -2,16 +2,17 @@ package keeper
 
 import (
 	"context"
-	"cosmossdk.io/math"
 	"fmt"
+
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
+	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
-	denomMint := vaultstypes.DefaultMintDenom
+	denomMint := types.DefaultMintDenom
 	asset := k.BankKeeper.GetBalance(ctx, addr, denomMint)
 
 	if asset.Amount.LT(amount) {
@@ -34,7 +35,7 @@ func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amoun
 }
 
 func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
-	denomMint := vaultstypes.DefaultMintDenom
+	denomMint := types.DefaultMintDenom
 	asset := k.BankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
 
 	if asset.Amount.LT(stablecoin.Amount) {

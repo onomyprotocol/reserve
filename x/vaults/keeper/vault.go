@@ -25,6 +25,7 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 
+	// TODO: Check if mint denom is allowed
 	if mint.Denom != types.DefaultMintDenom {
 		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
 	}
