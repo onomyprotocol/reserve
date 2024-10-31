@@ -4,29 +4,21 @@ import (
 	"context"
 	"time"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (k Keeper) handleLiquidation(ctx context.Context, mintDenom string) error {
-	// Implement the logic for handling liquidation
-	// This might include checking conditions, updating states, and logging events
 	params := k.GetParams(ctx)
-	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
 
-	lastAuctionPeriods_unix, err := k.lastestAuctionPeriod.Get(ctx)
-	if err != nil {
-		return err
-	}
-	lastAuctionPeriods := time.Unix(lastAuctionPeriods_unix, 0)
+	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
+	lastAuctionPeriods := time.Unix(k.LastestAuctionPeriod, 0)
 	// check if has reached the next auction periods
 	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
 		// update latest auction period
-		err := k.lastestAuctionPeriod.Set(ctx, lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
-		if err != nil {
-			return err
-		}
+		k.LastestAuctionPeriod = lastAuctionPeriods.Add(params.AuctionPeriods).Unix()
 
 		liquidations, err := k.vaultKeeper.GetLiquidations(ctx, mintDenom)
 		if err != nil {
@@ -94,6 +86,7 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 	liquidationMap := make(map[string]*vaultstypes.Liquidation)
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
 
+	// loop through all auctions
 	err := k.Auctions.Walk(ctx, nil, func(auctionId uint64, auction types.Auction) (bool, error) {
 		bidQueue, err := k.Bids.Get(ctx, auction.AuctionId)
 		if err != nil {
@@ -105,20 +98,23 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 		}
 
 		needCleanup := false
+		currentRate := math.LegacyMustNewDecFromStr(auction.CurrentRate)
+		lowestRate := math.LegacyMustNewDecFromStr(params.LowestRate)
 		if auction.Status == types.AuctionStatus_AUCTION_STATUS_FINISHED ||
 			auction.Status == types.AuctionStatus_AUCTION_STATUS_OUT_OF_COLLATHERAL ||
-			auction.EndTime.Before(currentTime) {
+			currentRate.Equal(lowestRate) {
 			liquidation_tmp, ok := liquidationMap[auction.Item.Denom]
 			if ok && liquidation_tmp != nil {
 				liquidation_tmp.DebtDenom = auction.Item.Denom
-				liquidation_tmp.DebtDenom = mintDenom
 				liquidation_tmp.LiquidatingVaults = append(liquidation_tmp.LiquidatingVaults, &vault)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold = liquidation_tmp.VaultLiquidationStatus[vault.Id].Sold.Add(auction.TokenRaised)
-				liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral = liquidation_tmp.VaultLiquidationStatus[vault.Id].RemainCollateral.Add(auction.Item)
+				liquidation_tmp.VaultLiquidationStatus[vault.Id] = &vaultstypes.VaultLiquidationStatus{
+					Sold:             auction.TokenRaised,
+					RemainCollateral: auction.Item,
+				}
 			} else {
 				liquidation_tmp = &vaultstypes.Liquidation{
-					MintDenom:              mintDenom,
 					DebtDenom:              auction.Item.Denom,
+					MintDenom:              mintDenom,
 					LiquidatingVaults:      []*vaultstypes.Vault{&vault},
 					VaultLiquidationStatus: make(map[uint64]*vaultstypes.VaultLiquidationStatus),
 				}
@@ -139,7 +135,10 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 		}
 
 		if needCleanup {
-			k.refundBidders(ctx, bidQueue)
+			err = k.refundBidders(ctx, bidQueue)
+			if err != nil {
+				return true, err
+			}
 
 			// clear the auction afterward
 			err = k.DeleteAuction(ctx, auction.AuctionId)
@@ -176,5 +175,9 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 
 		return false, nil
 	})
-	return liquidationMap, err
+
+	if err != nil {
+		return nil, err
+	}
+	return liquidationMap, nil
 }
