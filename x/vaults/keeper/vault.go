@@ -125,6 +125,9 @@ func (k *Keeper) MintCoin(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
@@ -189,6 +192,10 @@ func (k *Keeper) RepayDebt(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
+
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
