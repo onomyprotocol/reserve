@@ -12,7 +12,7 @@ import (
 	runtime "github.com/cosmos/cosmos-sdk/runtime"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" // nolint:all
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -250,7 +250,10 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	for _, req := range allBandOracleRequests {
 		if req.OracleScriptId == oracleScriptId {
 			req.Symbols = append(req.Symbols, symbol)
-			k.SetBandOracleRequest(ctx, *req)
+			err := k.SetBandOracleRequest(ctx, *req)
+			if err != nil {
+				return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "can not set symbol %s with oracle script id %v", symbol, oracleScriptId)
+			}
 			return nil
 		}
 	}
@@ -269,9 +272,16 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 		MinSourceCount: bandOracleRequestParams.MinSourceCount,
 	}
 
-	k.SetBandOracleRequest(ctx, newBandOracleRequest)
+	err := k.SetBandOracleRequest(ctx, newBandOracleRequest)
+	if err != nil {
+		return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "can not set symbol %s", symbol)
+	}
 
-	k.SetBandLatestRequestID(ctx, requestID)
+	err = k.SetBandLatestRequestID(ctx, requestID)
+	if err != nil {
+		return fmt.Errorf("can not set latest request id %v with symbol %s", requestID ,symbol)
+	}
+
 	return nil
 }
 
@@ -368,12 +378,18 @@ func (k *Keeper) RequestBandOraclePrices(
 
 	// Persist the sequence number and OracleRequest CallData. CallData contains list of symbols.
 	// This is used to map the prices/rates with the symbols upon receiving oracle response from Band IBC.
-	k.SetBandCallDataRecord(ctx, &types.CalldataRecord{
+	err = k.SetBandCallDataRecord(ctx, &types.CalldataRecord{
 		ClientId: clientID,
 		Calldata: calldata,
 	})
+	if err != nil {
+		return errorsmod.Wrapf(types.ErrSetBandCallDataRecord, "can not set band call data with client ID %v", clientID)
+	}
 
-	k.SetBandLatestClientID(ctx, clientID)
+	err = k.SetBandLatestClientID(ctx, clientID)
+	if err != nil {
+		return errorsmod.Wrapf(types.ErrSetBandLatestRequestId, "can not set band latest client ID %v", clientID)
+	}
 
 	return
 }
@@ -407,7 +423,7 @@ func (k *Keeper) ProcessBandOraclePrices(
 	k.updateBandPriceStates(ctx, input, output, packet, relayer, clientID)
 
 	// Delete the calldata corresponding to the sequence number
-	k.DeleteBandCallDataRecord(ctx, uint64(clientID))
+	k.DeleteBandCallDataRecord(ctx, uint64(clientID)) // nolint: all
 
 	return nil
 }
@@ -440,7 +456,6 @@ func (k *Keeper) updateBandPriceStates(
 			multiplier = input.PriceMultiplier()
 			price      = math.LegacyNewDec(int64(rate)).Quo(math.LegacyNewDec(int64(multiplier)))
 		)
-		println("Checking symbol: %s and price: %s", symbol, price.String())
 		if price.IsZero() {
 			continue
 		}
@@ -510,7 +525,7 @@ func (k *Keeper) CleanUpStaleBandCalldataRecords(ctx context.Context) {
 	}
 
 	for _, id := range k.getPreviousRecordIDs(ctx, earliestToKeepClientID) {
-		k.DeleteBandCallDataRecord(ctx, id)
+		k.DeleteBandCallDataRecord(ctx, id) // nolint: all
 	}
 }
 

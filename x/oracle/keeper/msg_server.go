@@ -2,12 +2,14 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/onomyprotocol/reserve/x/oracle/types"
-	"github.com/onomyprotocol/reserve/x/oracle/utils"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/onomyprotocol/reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/oracle/utils"
 )
 
 type msgServer struct {
@@ -59,7 +61,10 @@ func (k Keeper) UpdateBandParams(goCtx context.Context, msg *types.MsgUpdateBand
 		}
 	}
 
-	k.SetBandParams(ctx, msg.BandParams)
+	err := k.SetBandParams(ctx, msg.BandParams)
+	if err != nil {
+		return nil, fmt.Errorf("can not set band params")
+	}
 	return nil, nil
 }
 
@@ -111,7 +116,10 @@ func (k Keeper) UpdateBandOracleRequest(goCtx context.Context, msg *types.MsgUpd
 		request.MinSourceCount = msg.UpdateOracleRequest.MinSourceCount
 	}
 
-	k.SetBandOracleRequest(ctx, *request)
+	err := k.SetBandOracleRequest(ctx, *request)
+	if err != nil {
+		return nil, errorsmod.Wrapf(types.ErrSetBandOracleRequest, "can not set band oracle request with request id %v", request.RequestId)
+	}
 
 	return nil, nil
 }
@@ -128,7 +136,10 @@ func (k Keeper) DeleteBandOracleRequests(goCtx context.Context, msg *types.MsgDe
 	}
 
 	for _, requestID := range msg.DeleteRequestIds {
-		k.DeleteBandOracleRequest(ctx, requestID)
+		err := k.DeleteBandOracleRequest(ctx, requestID)
+		if err != nil {
+			return nil, fmt.Errorf("can not delete band oracle request id %v", requestID)
+		}
 	}
 
 	return nil, nil
@@ -170,7 +181,10 @@ func (k Keeper) UpdateBandOracleRequestParams(goCtx context.Context, msg *types.
 		newOracleRequestParams.MinSourceCount = msg.UpdateBandOracleRequestParams.MinSourceCount
 	}
 
-	k.SetBandOracleRequestParams(ctx, newOracleRequestParams)
+	err := k.SetBandOracleRequestParams(ctx, newOracleRequestParams)
+	if err != nil {
+		return nil, fmt.Errorf("can not set band oracle request parameters")
+	}
 
 	return nil, nil
 }

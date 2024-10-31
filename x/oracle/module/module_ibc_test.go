@@ -5,7 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" // nolint:all
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
@@ -299,10 +299,11 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 			suite.Require().True(ok)
 
 			onomyApp := suite.chainO.App.(*reserveapp.App)
-			onomyApp.OracleKeeper.SetBandCallDataRecord(suite.chainO.GetContext(), &oracletypes.CalldataRecord{
+			err = onomyApp.OracleKeeper.SetBandCallDataRecord(suite.chainO.GetContext(), &oracletypes.CalldataRecord{
 				ClientId: 1,
 				Calldata: data,
 			})
+			suite.Require().NoError(err)
 
 			// call recv packet
 			ack := cbs.OnRecvPacket(suite.chainO.GetContext(), packet, nil)
