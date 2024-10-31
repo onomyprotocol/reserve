@@ -554,6 +554,10 @@ func (k *Keeper) Liquidate(
 					return err
 				}
 				vault.CollateralLocked.Amount = collateralRemain.Amount.Sub(penaltyAmount)
+				err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.MustAccAddressFromBech32(vault.Address), sdk.NewCoins(vault.CollateralLocked))
+				if err != nil {
+					return err
+				}
 			}
 		}
 	} else {
