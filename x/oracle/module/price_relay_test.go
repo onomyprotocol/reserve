@@ -8,7 +8,7 @@ import (
 	dbm "github.com/cosmos/cosmos-db"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" //nolint:staticcheck
+	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" // nolint:all
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	ibctesting "github.com/cosmos/ibc-go/v8/testing"
 	testifysuite "github.com/stretchr/testify/suite"
@@ -134,7 +134,6 @@ func (suite *PriceRelayTestSuite) TestHandlePriceRelay() {
 		ExecuteGas:     200,
 	})
 	suite.Require().NoError(err)
-
 	// send from chainI to chainB
 	msg := oracletypes.NewMsgRequestBandRates(suite.chainO.SenderAccount.GetAddress(), 1)
 	_, err = suite.chainO.SendMsgs(msg)

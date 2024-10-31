@@ -1,0 +1,16 @@
+{
+    "messages": [{
+      "@type": "/reserve.oracle.MsgUpdateBandParams",
+      "authority": "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
+      "band_params" : {
+        "ibc_request_interval": 7,
+        "ibc_source_channel": "channel-0",
+        "ibc_version":"bandchain-2",
+        "ibc_port_id": "oracle",
+        "legacy_oracle_ids": [42]
+      }
+    }],
+    "deposit": "100000000stake",
+    "title": "My proposal",
+    "summary": "A short summary of my proposal"
+}

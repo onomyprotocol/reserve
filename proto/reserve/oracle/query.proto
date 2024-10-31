@@ -21,6 +21,30 @@ service Query {
     option (google.api.http).get =
         "/reserve/oracle/band_price_states";
   }
+  // Retrieves the price of base/quote
+  rpc Price(QueryPriceRequest)
+      returns (QueryPriceResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/price";
+  }
+  // Retrieves the band paraparametersms
+  rpc BandParams(QueryBandParamsRequest)
+      returns (QueryBandParamsResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/band_params";
+  }
+  // Retrieves the band oracle request parameters
+  rpc BandOracleRequestParams(QueryBandOracleRequestParamsRequest)
+      returns (QueryBandOracleRequestParamsResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/band_oracle_request_params";
+  }
+  // Retrieves the band oracle request parameters
+  rpc BandOracleRequest(QueryBandOracleRequestRequest)
+      returns (QueryBandOracleRequestResponse) {
+    option (google.api.http).get =
+      "/reserve/oracle/band_oracle_request";
+}
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -41,4 +65,50 @@ message QueryBandPriceStatesRequest {}
 // Query/BandPriceStates RPC method.
 message QueryBandPriceStatesResponse {
   repeated BandPriceState price_states = 1;
+}
+
+// QueryPriceRequest is the request type for the
+// Query/Price RPC method.
+message QueryPriceRequest {
+  string base_denom = 1;
+
+  string quote_denom = 2;
+}
+
+// QueryPriceResponse is the response type for the
+// Query/Price RPC method
+message QueryPriceResponse {
+  string price = 1;
+}
+
+// QueryBandParamsRequest is the request type for the
+// Query/BandParams RPC method.
+message QueryBandParamsRequest {}
+
+// QueryBandParamsResponse is the response type for the
+// Query/BandParams RPC method.
+message QueryBandParamsResponse {
+  BandParams band_params = 1;
+}
+
+// QueryBandOracleRequestParamsRequest is the request type for the
+// Query/BandOracleRequestParams RPC method.
+message QueryBandOracleRequestParamsRequest {}
+
+// QueryBandOracleRequestParamsResponse is the response type for the
+// Query/BandOracleRequestParams RPC method.
+message QueryBandOracleRequestParamsResponse {
+  BandOracleRequestParams band_oracle_request_params = 1;
+}
+
+// QueryBandOracleRequestRequest is the request type for the
+// Query/QueryBandOracleRequest RPC method.
+message QueryBandOracleRequestRequest {
+  string request_id = 1;
+}
+
+// QueryBandOracleRequestResponse is the response type for the
+// Query/QueryBandOracleRequest RPC method.
+message QueryBandOracleRequestResponse {
+  BandOracleRequest band_oracle_request = 1;
 }

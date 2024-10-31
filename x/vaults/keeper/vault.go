@@ -94,6 +94,20 @@ func (k *Keeper) CreateNewVault(
 	}
 	// Update vault manager
 	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtCreateVault,
+			sdk.NewAttribute(types.AttributeKeyVaultId, fmt.Sprintf("%d", vaultId)),
+			sdk.NewAttribute(types.AttributeKeyOwner, vault.Owner),
+			sdk.NewAttribute(types.AttributeKeyMintAmount, mint.String()),
+			sdk.NewAttribute(types.AttributeKeyCollateral, collateral.String()),
+			sdk.NewAttribute(types.AttributeKeyDebt, vault.Debt.String()),
+			sdk.NewAttribute(types.AttributeKeyVaultAddress, vault.Address),
+		),
+	)
+
 	return k.VaultsManager.Set(ctx, denom, vm)
 }
 
@@ -183,6 +197,17 @@ func (k *Keeper) MintCoin(
 
 	// Update vault manager
 	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtMint,
+			sdk.NewAttribute(types.AttributeKeyVaultId, fmt.Sprintf("%d", vaultId)),
+			sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
+			sdk.NewAttribute(types.AttributeKeyMintAmount, mint.String()),
+		),
+	)
+
 	return k.VaultsManager.Set(ctx, vault.CollateralLocked.Denom, vm)
 }
 
@@ -190,9 +215,9 @@ func (k *Keeper) RepayDebt(
 	ctx context.Context,
 	vaultId uint64,
 	sender sdk.AccAddress,
-	mint sdk.Coin,
+	repay sdk.Coin,
 ) error {
-	if mint.Denom != types.DefaultMintDenom {
+	if repay.Denom != types.DefaultMintDenom {
 		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
 	}
 
@@ -208,7 +233,7 @@ func (k *Keeper) RepayDebt(
 		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
 	}
 
-	burnAmount := mint
+	burnAmount := repay
 	if vault.Debt.IsLT(burnAmount) {
 		burnAmount = vault.Debt
 	}
@@ -231,6 +256,17 @@ func (k *Keeper) RepayDebt(
 	}
 
 	vm.MintAvailable = vm.MintAvailable.Add(burnAmount.Amount)
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtRepay,
+			sdk.NewAttribute(types.AttributeKeyVaultId, fmt.Sprintf("%d", vaultId)),
+			sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
+			sdk.NewAttribute(types.AttributeKeyRepayAmount, repay.String()),
+		),
+	)
+
 	return k.VaultsManager.Set(ctx, vm.Denom, vm)
 }
 
@@ -261,6 +297,17 @@ func (k *Keeper) DepositToVault(
 
 	// Update vault
 	vault.CollateralLocked = vault.CollateralLocked.Add(collateral)
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtDeposit,
+			sdk.NewAttribute(types.AttributeKeyVaultId, fmt.Sprintf("%d", vaultId)),
+			sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
+			sdk.NewAttribute(types.AttributeKeyCollateral, collateral.String()),
+		),
+	)
+
 	return k.SetVault(ctx, vault)
 }
 
@@ -303,6 +350,20 @@ func (k *Keeper) WithdrawFromVault(
 
 	// Update vault
 	vault.CollateralLocked = vault.CollateralLocked.Sub(collateral)
+	if vault.CollateralLocked.Amount.Equal(math.ZeroInt()) {
+		vault.Status = types.CLOSED
+	}
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtWithdraw,
+			sdk.NewAttribute(types.AttributeKeyVaultId, fmt.Sprintf("%d", vaultId)),
+			sdk.NewAttribute(sdk.AttributeKeySender, sender.String()),
+			sdk.NewAttribute(types.AttributeKeyCollateral, collateral.String()),
+		),
+	)
+
 	return k.SetVault(ctx, vault)
 }
 
@@ -423,6 +484,7 @@ func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
 ) error {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	params := k.GetParams(ctx)
 
 	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
@@ -430,11 +492,13 @@ func (k *Keeper) Liquidate(
 		return err
 	}
 
+	vaultIds := ""
 	totalDebt := sdk.NewCoin(params.MintDenom, math.ZeroInt())
 	sold := sdk.NewCoin(params.MintDenom, math.ZeroInt())
 	totalCollateralRemain := sdk.NewCoin(liquidation.Denom, math.ZeroInt())
 
 	for _, vault := range liquidation.LiquidatingVaults {
+		vaultIds = vaultIds + fmt.Sprintf("%d, ", vault.Id)
 		totalDebt = totalDebt.Add(vault.Debt)
 		// transfer all remain collateral locked in vault to vaults module for distributing.
 		vaultAddr := sdk.MustAccAddressFromBech32(vault.Address)
@@ -539,7 +603,18 @@ func (k *Keeper) Liquidate(
 			if err != nil {
 				return err
 			}
-			newShortfall := currentShortfall.Add(totalDebt.Sub(sold).Amount)
+			shortfallAmount := totalDebt.Sub(sold).Amount
+			newShortfall := currentShortfall.Add(shortfallAmount)
+
+			sdkCtx.EventManager().EmitEvent(
+				sdk.NewEvent(
+					types.TypeEvtLiquidate,
+					sdk.NewAttribute(types.AttributeKeyLiquidateVaults, vaultIds),
+					sdk.NewAttribute(types.AttributeKeyBurnAmount, sold.String()),
+					sdk.NewAttribute(types.AttributeKeyShortfallAmount, shortfallAmount.String()),
+				),
+			)
+
 			return k.ShortfallAmount.Set(ctx, newShortfall)
 		} else {
 			// If there some collateral asset remain, try to reconstitue vault
@@ -634,6 +709,16 @@ func (k *Keeper) Liquidate(
 					return err
 				}
 				newShortfall := currentShortfall.Add(totalRemainDebt.Amount)
+
+				sdkCtx.EventManager().EmitEvent(
+					sdk.NewEvent(
+						types.TypeEvtLiquidate,
+						sdk.NewAttribute(types.AttributeKeyLiquidateVaults, vaultIds),
+						sdk.NewAttribute(types.AttributeKeyBurnAmount, sold.String()),
+						sdk.NewAttribute(types.AttributeKeyShortfallAmount, totalRemainDebt.String()),
+					),
+				)
+
 				return k.ShortfallAmount.Set(ctx, newShortfall)
 			}
 
@@ -643,6 +728,15 @@ func (k *Keeper) Liquidate(
 	for _, vault := range liquidation.LiquidatingVaults {
 		err = k.SetVault(ctx, *vault)
 	}
+
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeEvtLiquidate,
+			sdk.NewAttribute(types.AttributeKeyLiquidateVaults, vaultIds),
+			sdk.NewAttribute(types.AttributeKeyBurnAmount, sold.String()),
+		),
+	)
+
 	return err
 }
 

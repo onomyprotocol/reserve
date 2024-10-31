@@ -314,9 +314,11 @@ func NewAppKeeper(
 		appCodec,
 		runtime.NewKVStoreService(appKeepers.keys[oracletypes.StoreKey]),
 		logger,
+		appKeepers.AccountKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		appKeepers.GetIBCKeeper,
-		appKeepers.GetScopedKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedOracleKeeper,
 	)
 
 	appKeepers.PSMKeeper = psmkeeper.NewKeeper(

@@ -5,6 +5,8 @@ import (
 
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
@@ -31,17 +33,13 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)
 				s.Require().NoError(err)
 
-				sc := types.Stablecoin{
+				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err = s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
@@ -58,20 +56,16 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 			name: "insufficient balance",
 			addr: s.TestAccs[1],
 			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD {
-				sc := types.Stablecoin{
-					Denom:      usdt,
-					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err := s.k.SetStablecoin(s.Ctx, sc)
+				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:      usdc,
+					LimitTotal: limitUSDC,
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
-				s.Require().NoError(err)
-
-				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
+				amountSwap := sdk.NewCoin(usdc, math.NewInt(1000))
 				return &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[1].String(),
 					Coin:    &amountSwap,
@@ -123,17 +117,13 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				err = keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, s.TestAccs[0], coinsMint)
 				s.Require().NoError(err)
 
-				sc := types.Stablecoin{
+				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
+					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:      usdt,
 					LimitTotal: limitUSDT,
-					// Price:      math.LegacyMustNewDecFromStr("1"),
-					FeeIn:  math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut: math.LegacyMustNewDecFromStr("0.001"),
-				}
-				err = s.k.SetStablecoin(s.Ctx, sc)
-				s.Require().NoError(err)
-
-				err = s.k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, sc.Denom, 1)
+					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+				})
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))

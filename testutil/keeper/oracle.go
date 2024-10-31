@@ -17,9 +17,12 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	portkeeper "github.com/cosmos/ibc-go/v8/modules/core/05-port/keeper"
+	channelkeeper "github.com/cosmos/ibc-go/v8/modules/core/04-channel/keeper"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
-	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 	"github.com/stretchr/testify/require"
+
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
+	address "github.com/cosmos/cosmos-sdk/codec/address"
 
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -43,21 +46,23 @@ func OracleKeeper(t testing.TB) (keeper.Keeper, sdk.Context) {
 	scopedKeeper := capabilityKeeper.ScopeToModule(ibcexported.ModuleName)
 	portKeeper := portkeeper.NewKeeper(scopedKeeper)
 	scopeModule := capabilityKeeper.ScopeToModule(types.ModuleName)
+	channelKeeper := channelkeeper.NewKeeper(appCodec, storeKey,nil, nil, portKeeper, scopeModule)
+
+	authKeeper := authkeeper.NewAccountKeeper(appCodec, runtime.NewKVStoreService(storeKey), authtypes.ProtoBaseAccount,
+		nil,
+		address.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix()),
+		sdk.GetConfig().GetBech32AccountAddrPrefix(),
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),)
 
 	k := keeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(storeKey),
 		log.NewNopLogger(),
+		authKeeper,
 		authority.String(),
-		func() *ibckeeper.Keeper {
-			return &ibckeeper.Keeper{
-				PortKeeper: &portKeeper,
-			}
-		},
-		func(string) capabilitykeeper.ScopedKeeper {
-			return scopeModule
-		},
-		// scopedKeeper,
+		channelKeeper,
+		&portKeeper,
+		scopedKeeper,
 	)
 
 	ctx := sdk.NewContext(stateStore, cmtproto.Header{}, false, log.NewNopLogger())

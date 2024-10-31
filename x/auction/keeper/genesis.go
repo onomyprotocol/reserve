@@ -6,7 +6,7 @@ import (
 	"github.com/onomyprotocol/reserve/x/auction/types"
 )
 
-func (k Keeper) InitGennesis(ctx sdk.Context, genState types.GenesisState) {
+func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		panic(err)
 	}
