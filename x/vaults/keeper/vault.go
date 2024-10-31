@@ -25,6 +25,10 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 
+	if mint.Denom != types.DefaultMintDenom {
+		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	}
+
 	params := k.GetParams(ctx)
 	vmParams := vm.Params
 
