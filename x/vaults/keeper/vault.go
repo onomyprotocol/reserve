@@ -217,7 +217,7 @@ func (k *Keeper) RepayDebt(
 	sender sdk.AccAddress,
 	repay sdk.Coin,
 ) error {
-	if mint.Denom != types.DefaultMintDenom {
+	if repay.Denom != types.DefaultMintDenom {
 		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
 	}
 
