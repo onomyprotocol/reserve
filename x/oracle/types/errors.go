@@ -22,4 +22,5 @@ var (
 	ErrBandRequestNotFound      = sdkerrors.Register(ModuleName, 14, "Band Oracle Request not found")
 	ErrInvalidBandDeleteRequest = sdkerrors.Register(ModuleName, 15, "Invalid Band Delete Request Proposal")
 	ErrResolveStatusNotSuccess  = sdkerrors.Register(ModuleName, 16, "Band Oracle request is not resolved successfully")
+	ErrInvalidOracle            = sdkerrors.Register(ModuleName, 17, "invalid oracle")
 )
