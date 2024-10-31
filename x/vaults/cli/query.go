@@ -24,8 +24,9 @@ func GetQueryCmd() *cobra.Command {
 
 	cmd.AddCommand(CmdQueryAllCollateral())
 	cmd.AddCommand(CmdQueryAllVaults())
-	cmd.AddCommand(CmdQueryVault())
+	cmd.AddCommand(CmdQueryVaultByID())
 	cmd.AddCommand(CmdQueryParams())
+	cmd.AddCommand(CmdQueryVaultFromAddress())
 	return cmd
 }
 
@@ -73,7 +74,7 @@ func CmdQueryAllVaults() *cobra.Command {
 	return cmd
 }
 
-func CmdQueryVault() *cobra.Command {
+func CmdQueryVaultByID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "vault [vault-id]",
 		Short: "show vault from id",
@@ -92,7 +93,7 @@ func CmdQueryVault() *cobra.Command {
 				VaultId: vaultID,
 			}
 
-			res, err := queryClient.QueryVaults(context.Background(), &msg)
+			res, err := queryClient.QueryVaultsByID(context.Background(), &msg)
 			if err != nil {
 				return err
 			}
@@ -115,6 +116,32 @@ func CmdQueryParams() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.Params(context.Background(), &types.QueryParamsRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryVaultFromAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "vault-by-address [owner-address]",
+		Short: "show vaults from owner address",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			msg := types.QueryVaultByOwnerRequest{
+				Address: args[0],
+			}
+
+			res, err := queryClient.QueryVaultByOwner(context.Background(), &msg)
 			if err != nil {
 				return err
 			}
