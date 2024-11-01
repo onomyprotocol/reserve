@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -62,6 +64,128 @@ func NewMsgClose(vaultId uint64, sender string) MsgClose {
 		VaultId: vaultId,
 		Sender:  sender,
 	}
+}
+
+func (msg *MsgCreateVault) ValidateBasic() error {
+	if msg.Owner == "" {
+		return fmt.Errorf("owner address is empty")
+	}
+
+	err := msg.Collateral.Validate()
+	if err != nil {
+		return err
+	}
+	return msg.Minted.Validate()
+}
+
+func (msg *MsgDeposit) ValidateBasic() error {
+	if msg.Sender == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	return msg.Amount.Validate()
+}
+
+func (msg *MsgWithdraw) ValidateBasic() error {
+	if msg.Sender == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	return msg.Amount.Validate()
+}
+
+func (msg *MsgMint) ValidateBasic() error {
+	if msg.Sender == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	return msg.Amount.Validate()
+}
+
+func (msg *MsgRepay) ValidateBasic() error {
+	if msg.Sender == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	return msg.Amount.Validate()
+}
+
+func (msg *MsgClose) ValidateBasic() error {
+	if msg.Sender == "" {
+		return fmt.Errorf("sender address is empty")
+	}
+
+	return nil
+}
+
+func (msg *MsgActiveCollateral) ValidateBasic() error {
+	if msg.Denom == "" {
+		return fmt.Errorf("denom is empty")
+	}
+
+	if msg.Authority == "" {
+		return fmt.Errorf("authority is empty")
+	}
+
+	if msg.OraclScript == 0 {
+		return fmt.Errorf("oraclScript is empty")
+	}
+
+	if msg.MinCollateralRatio.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.LiquidationRatio.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.LiquidationPenalty.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.MaxDebt.LT(math.ZeroInt()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.MintingFee.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+	return nil
+}
+
+func (msg *MsgUpdatesCollateral) ValidateBasic() error {
+	if msg.Denom == "" {
+		return fmt.Errorf("denom is empty")
+	}
+
+	if msg.Authority == "" {
+		return fmt.Errorf("authority is empty")
+	}
+
+	if msg.OraclScript == 0 {
+		return fmt.Errorf("oraclScript is empty")
+	}
+
+	if msg.MinCollateralRatio.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.LiquidationRatio.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.LiquidationPenalty.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.MaxDebt.LT(math.ZeroInt()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.MintingFee.LT(math.LegacyZeroDec()) {
+		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+	return nil
 }
 
 var _ govtypes.Content = &ActiveCollateralProposal{}
