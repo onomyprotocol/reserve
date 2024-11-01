@@ -50,13 +50,13 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// check stablecoin is suport
-	_, found := k.keeper.GetStablecoin(ctx, msg.Coin.Denom)
-	if !found {
+	_, err := k.keeper.Stablecoins.Get(ctx, msg.Coin.Denom)
+	if err != nil {
 		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.Coin.Denom)
 	}
 
 	// check limit swap
-	err := k.keeper.checkLimitTotalStablecoin(ctx, msg.Coin.Denom, msg.Coin.Amount)
+	err = k.keeper.checkLimitTotalStablecoin(ctx, msg.Coin.Denom, msg.Coin.Amount)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,10 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// add total stablecoin lock
-	k.keeper.AddTotalStablecoinLock(ctx, *msg.Coin)
+	err = k.keeper.AddTotalStablecoinLock(ctx, *msg.Coin)
+	if err != nil {
+		return nil, err
+	}
 
 	// send stablecoin to module
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
@@ -109,8 +112,8 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// check stablecoin is suport
-	_, found := k.keeper.GetStablecoin(ctx, msg.ToDenom)
-	if !found {
+	_, err := k.keeper.Stablecoins.Get(ctx, msg.ToDenom)
+	if err != nil {
 		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.ToDenom)
 	}
 
@@ -146,8 +149,10 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	stablecoinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
 
 	// sub total stablecoin lock
-	k.keeper.SubTotalStablecoinLock(ctx, stablecoinReceive)
-
+	err = k.keeper.SubTotalStablecoinLock(ctx, stablecoinReceive)
+	if err != nil {
+		return nil, err
+	}
 	// send stablecoin to user
 	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
 	if err != nil {
@@ -177,12 +182,12 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	_, found := k.keeper.GetStablecoin(ctx, msg.Denom)
-	if found {
+	_, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
+	if err == nil {
 		return &types.MsgAddStableCoinResponse{}, fmt.Errorf("%s has existed", msg.Denom)
 	}
 
-	err := k.keeper.SetStablecoin(ctx, types.GetMsgStablecoin(msg))
+	err = k.keeper.Stablecoins.Set(ctx, msg.Denom, types.GetMsgStablecoin(msg))
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
@@ -211,15 +216,15 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
 
-	oldStablecoin, found := k.keeper.GetStablecoin(ctx, msg.Denom)
-	if !found {
+	oldStablecoin, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
+	if err == nil {
 		return &types.MsgUpdatesStableCoinResponse{}, fmt.Errorf("%s not existed", msg.Denom)
 	}
 
 	newStablecoin := types.GetMsgStablecoin(msg)
 	newStablecoin.TotalStablecoinLock = oldStablecoin.TotalStablecoinLock
 
-	err := k.keeper.SetStablecoin(ctx, newStablecoin)
+	err = k.keeper.Stablecoins.Set(ctx, newStablecoin.Denom, newStablecoin)
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}

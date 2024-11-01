@@ -46,8 +46,8 @@ func (q queryServer) Stablecoin(ctx context.Context, req *types.QueryStablecoinR
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	stablecoin, found := q.keeper.GetStablecoin(ctx, req.Denom)
-	if !found {
+	stablecoin, err := q.keeper.Stablecoins.Get(ctx, req.Denom)
+	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
 	}
 
@@ -57,7 +57,7 @@ func (q queryServer) Stablecoin(ctx context.Context, req *types.QueryStablecoinR
 	}, nil
 }
 
-func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablecoinRequest) (*types.QueryAllStablecoinResponse, error) {
+func (q queryServer) AllStablecoin(ctx context.Context, req *types.QueryAllStablecoinRequest) (*types.QueryAllStablecoinResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -71,9 +71,9 @@ func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablec
 		allStablecoins = append(allStablecoins, &newStablecoinResponse)
 	}
 
-	err := q.keeper.IterateStablecoin(c, func(red types.Stablecoin) (stop bool) {
-		adder(red)
-		return false
+	err := q.keeper.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+		adder(value)
+		return false, nil
 	})
 
 	return &types.QueryAllStablecoinResponse{AllStablecoinResponse: allStablecoins}, err

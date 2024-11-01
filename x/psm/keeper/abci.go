@@ -20,14 +20,16 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 		}
 
 		sc := k.stablecoinUpdate(ctx, *price, red)
-		err := k.SetStablecoin(ctx, sc)
+		err := k.Stablecoins.Set(ctx, sc.Denom, sc)
 		if err != nil {
 			return false
 		}
 		return false
 	}
 
-	return k.IterateStablecoin(ctx, updatePrice)
+	return k.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+		return updatePrice(value), nil
+	}) //k.IterateStablecoin(ctx, updatePrice)
 }
 
 // price is $nomUSD amount to exchange for 1 $stabalecoin
