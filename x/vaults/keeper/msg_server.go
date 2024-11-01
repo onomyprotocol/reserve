@@ -132,10 +132,8 @@ func (k msgServer) Close(ctx context.Context, msg *types.MsgClose) (*types.MsgCl
 	if err != nil {
 		return nil, fmt.Errorf("vault %d was not found", msg.VaultId)
 	}
-	if msg.Sender != vault.Owner {
-		return nil, fmt.Errorf("%s is not vault owner, expected: %s", msg.Sender, vault.Owner)
-	}
-	err = k.CloseVault(ctx, vault)
+	
+	err = k.CloseVault(ctx, msg.Sender, vault)
 	if err != nil {
 		return nil, err
 	}
