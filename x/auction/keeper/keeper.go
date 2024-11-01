@@ -162,7 +162,7 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 }
 
 // CancelBidEntry cancel existing bid entry for the given auction id
-func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64) error {
+func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64, bidder sdk.AccAddress) error {
 	has, err := k.Auctions.Has(ctx, auctionId)
 	if err != nil {
 		return err
@@ -189,6 +189,24 @@ func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64) err
 	}
 
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
+	if err != nil {
+		return err
+	}
+
+	bidsByAddress, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidder))
+	if err != nil {
+		return err
+	}
+
+	// since this only use for query let not add any checks here if the bid exist or not
+	for i, bid := range bidsByAddress.Bids {
+		if bid.BidId == bidId {
+			bid.IsHandle = true
+			bidsByAddress.Bids[i] = bid
+			break
+		}
+	}
+	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidder), bidsByAddress)
 	if err != nil {
 		return err
 	}

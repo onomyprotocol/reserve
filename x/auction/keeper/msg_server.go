@@ -96,8 +96,12 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 }
 
 func (k msgServer) CancelBid(ctx context.Context, msg *types.MsgCancelBid) (*types.MsgCancelBidResponse, error) {
+	bidderAddr, err := k.authKeeper.AddressCodec().StringToBytes(msg.Bidder)
+	if err != nil {
+		return nil, err
+	}
 
-	err := k.CancelBidEntry(ctx, msg.AuctionId, msg.BidId)
+	err = k.CancelBidEntry(ctx, msg.AuctionId, msg.BidId, bidderAddr)
 	if err != nil {
 		return nil, err
 	}
