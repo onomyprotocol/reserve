@@ -217,7 +217,7 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	}
 
 	oldStablecoin, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
-	if err == nil {
+	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, fmt.Errorf("%s not existed", msg.Denom)
 	}
 
