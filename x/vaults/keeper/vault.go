@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"slices"
 	"sort"
 	"strconv"
 	"time"
@@ -25,9 +26,10 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 
+	allowedMintDenoms := k.GetAllowedMintDenoms(ctx)
 	// TODO: Check if mint denom is allowed
-	if mint.Denom != types.DefaultMintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	if !slices.Contains(allowedMintDenoms, mint.Denom) {
+		return fmt.Errorf("minted denom must in list %s, but got %s", types.DefaultMintDenom, mint.Denom)
 	}
 
 	params := k.GetParams(ctx)
@@ -140,15 +142,18 @@ func (k *Keeper) MintCoin(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
-	if mint.Denom != types.DefaultMintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
-	}
+
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
 	}
+
 	if vault.Status != types.ACTIVE {
 		return fmt.Errorf("vault is not actived")
+	}
+
+	if mint.Denom != vault.Debt.Denom {
+		return fmt.Errorf("mint denom must be %s, got %s", vault.Debt.Denom, mint.Denom)
 	}
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
 	if err != nil {
@@ -218,14 +223,16 @@ func (k *Keeper) RepayDebt(
 	sender sdk.AccAddress,
 	repay sdk.Coin,
 ) error {
-	if repay.Denom != types.DefaultMintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
-	}
 
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
 	}
+
+	if repay.Denom != vault.Debt.Denom {
+		return fmt.Errorf("repay denom must be %s, got %s", vault.Debt.Denom, repay.Denom)
+	}
+
 	if vault.Status != types.ACTIVE {
 		return fmt.Errorf("vault is not actived")
 	}
