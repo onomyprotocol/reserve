@@ -2,8 +2,9 @@ package keeper_test
 
 import (
 	"context"
-	"cosmossdk.io/math"
 	"testing"
+
+	"cosmossdk.io/math"
 
 	"github.com/stretchr/testify/suite"
 
@@ -66,7 +67,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	mockOracleKeeper := MockOracleKeeper{
 		prices: make(map[string]math.LegacyDec),
 	}
-	mockOracleKeeper.SetPrice(s.Ctx, types.DenomStable, math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, types.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
 
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper

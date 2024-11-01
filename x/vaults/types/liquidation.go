@@ -2,9 +2,10 @@ package types
 
 // this line is used by starport scaffolding # 1
 
-func NewEmptyLiquidation(denom string) *Liquidation {
+func NewEmptyLiquidation(debtDenom, mintDenom string) *Liquidation {
 	return &Liquidation{
-		Denom:                  denom,
+		DebtDenom:              debtDenom,
+		MintDenom:              mintDenom,
 		LiquidatingVaults:      []*Vault{},
 		VaultLiquidationStatus: make(map[uint64]*VaultLiquidationStatus),
 	}

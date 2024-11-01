@@ -2,9 +2,10 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+
 	errorsmod "cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/onomyprotocol/reserve/x/psm/types"
@@ -85,7 +86,7 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// mint nomUSD
-	coinsMint := sdk.NewCoins(sdk.NewCoin(types.DenomStable, receiveAmountnomUSD))
+	coinsMint := sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, receiveAmountnomUSD))
 	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return nil, err
@@ -140,7 +141,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// burn nomUSD
-	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.DenomStable, msg.Amount))
+	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, msg.Amount))
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
 	if err != nil {
 		return nil, err
@@ -169,7 +170,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventSwapToStablecoin,
-			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.DenomStable),
+			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.DefaultMintDenom),
 			sdk.NewAttribute(types.AttributeReceive, stablecoinReceive.String()),
 			sdk.NewAttribute(types.AttributeFeeOut, fee_out.String()),
 		),

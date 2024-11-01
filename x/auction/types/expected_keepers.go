@@ -43,9 +43,10 @@ type ParamSubspace interface {
 }
 
 type VaultKeeper interface {
-	GetLiquidations(ctx context.Context) ([]*vaulttypes.Liquidation, error)
-	Liquidate(ctx context.Context, liquidation vaulttypes.Liquidation) error
+	GetLiquidations(ctx context.Context, mintDenom string) ([]*vaulttypes.Liquidation, error)
+	Liquidate(ctx context.Context, liquidation vaulttypes.Liquidation, mintDenom string) error
 	GetVault(ctx context.Context, vaultId uint64) (vaulttypes.Vault, error)
+	GetAllowedMintDenoms(ctx context.Context) []string
 }
 
 type OracleKeeper interface {

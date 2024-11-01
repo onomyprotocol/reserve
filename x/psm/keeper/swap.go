@@ -2,8 +2,9 @@ package keeper
 
 import (
 	"context"
-	"cosmossdk.io/math"
 	"fmt"
+
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/onomyprotocol/reserve/x/psm/types"
@@ -11,15 +12,16 @@ import (
 
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
-	asset := k.BankKeeper.GetBalance(ctx, addr, types.DenomStable)
+	denomMint := types.DefaultMintDenom
+	asset := k.BankKeeper.GetBalance(ctx, addr, denomMint)
 
 	if asset.Amount.LT(amount) {
 		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
-	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, types.DenomStable)
+	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, denomMint)
 	if multiplier == nil {
-		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", toDenom, types.DenomStable)
+		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", toDenom, denomMint)
 	}
 	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
 
@@ -33,15 +35,16 @@ func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amoun
 }
 
 func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
+	denomMint := types.DefaultMintDenom
 	asset := k.BankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
 
 	if asset.Amount.LT(stablecoin.Amount) {
 		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
 	}
 
-	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, types.DenomStable)
+	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, denomMint)
 	if multiplier == nil {
-		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", stablecoin.Denom, types.DenomStable)
+		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", stablecoin.Denom, denomMint)
 	}
 
 	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
@@ -52,7 +55,7 @@ func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoi
 	}
 
 	receiveAmountnomUSD := amountnomUSD.Sub(fee)
-	return receiveAmountnomUSD.RoundInt(), sdk.NewDecCoinFromDec(types.DenomStable, fee), nil
+	return receiveAmountnomUSD.RoundInt(), sdk.NewDecCoinFromDec(denomMint, fee), nil
 }
 
 func (k Keeper) PayFeesOut(ctx context.Context, amount math.Int, denom string) (math.LegacyDec, error) {

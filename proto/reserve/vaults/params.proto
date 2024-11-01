@@ -22,7 +22,7 @@ message Params {
     (gogoproto.nullable) = false
   ];
 
-  string mint_denom = 2;
+  repeated string allowed_mint_denom = 2;
 
   google.protobuf.Duration charging_period = 3 [
     (gogoproto.stdduration) = true,
@@ -33,42 +33,44 @@ message Params {
 
 // VaultParams defines the parameters for each collateral vault type.
 message VaultMamagerParams {
-  string min_collateral_ratio = 1 [
+  string mint_denom = 1;
+
+  string min_collateral_ratio = 2 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_ratio = 2 [
+  string liquidation_ratio = 3 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string max_debt = 3 [
+  string max_debt = 4 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string stability_fee = 4 [
+  string stability_fee = 5 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_penalty = 5 [
+  string liquidation_penalty = 6 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string minting_fee = 6 [
+  string minting_fee = 7 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
@@ -142,7 +144,9 @@ message VaultLiquidationStatus {
 }
 
 message Liquidation {
-  string denom = 1;
+  string debt_denom = 1;
+
+  string mint_denom = 2;
 
   repeated Vault liquidating_vaults = 3;
 

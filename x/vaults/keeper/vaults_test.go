@@ -29,7 +29,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	s.SetupTest()
 	var (
 		denom      = "atom"
-		mintDenom  = types.DefaultMintDenom
+		mintDenom  = types.DefaultMintDenom[0]
 		collateral = sdk.NewCoin(denom, math.NewInt(10_000_000)) // 10 atom = 80$
 		maxDebt    = math.NewInt(100_000_000)
 	)
@@ -120,11 +120,11 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 	s.SetupTest()
 	var (
 		denom           = "atom"
-		repayAsset      = sdk.NewCoin("nomUSD", math.NewInt(2000000))
+		repayAsset      = sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(2000000))
 		collateralAsset = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund            = sdk.NewCoin(denom, math.NewInt(1000000000000))
 		maxDebt         = math.NewInt(2000000000)
-		mintedCoin      = sdk.NewCoin("nomUSD", math.NewInt(300000000))
+		mintedCoin      = sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(300000000))
 	)
 
 	tests := []struct {
@@ -177,7 +177,7 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		collateralAsset = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund            = sdk.NewCoin(denom, math.NewInt(1000000000000))
 		maxDebt         = math.NewInt(2000000000)
-		mintedCoin      = sdk.NewCoin("nomUSD", math.NewInt(200000000))
+		mintedCoin      = sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(200000000))
 	)
 
 	tests := []struct {
@@ -224,7 +224,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 		coinMintToAcc = sdk.NewCoin(denom, math.NewInt(100000000000))
 		fund          = sdk.NewCoin(denom, math.NewInt(10000000000000))
 		maxDebt       = math.NewInt(2000000000)
-		mintedCoin    = sdk.NewCoin("nomUSD", math.NewInt(200000000))
+		mintedCoin    = sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(200000000))
 	)
 
 	tests := []struct {
@@ -280,11 +280,12 @@ func (s *KeeperTestSuite) TestLiquidate() {
 		{
 			name: "single vault - sold all, enough to cover debt",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -295,22 +296,23 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 0
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(35_000_000)),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(35_000_000)),
 						RemainCollateral: sdk.NewCoin("atom", math.ZeroInt()),
 					},
 				},
 			},
 			expVaultStatus:  []types.VaultStatus{types.CLOSED},
-			reserveBalances: sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, math.NewInt(10_000_000))),
+			reserveBalances: sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(10_000_000))),
 		},
 		{
 			name: "single vault - sold all, not enough to cover debt",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -321,22 +323,23 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 0
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(20_000_000)),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(20_000_000)),
 						RemainCollateral: sdk.NewCoin("atom", math.ZeroInt()),
 					},
 				},
 			},
 			expVaultStatus:  []types.VaultStatus{types.LIQUIDATED},
-			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom, math.NewInt(5_000_000)),
+			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(5_000_000)),
 		},
 		{
 			name: "single vault - remain collateral, enough to cover debt",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -349,25 +352,26 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 1
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(26_000_000)),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(26_000_000)),
 						RemainCollateral: sdk.NewCoin("atom", math.NewInt(1_000_000)),
 					},
 				},
 			},
 			expVaultStatus: []types.VaultStatus{types.LIQUIDATED},
 			reserveBalances: sdk.NewCoins(
-				sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1_000_000)),
+				sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(1_000_000)),
 				sdk.NewCoin("atom", math.LegacyNewDec(25_000_000).QuoInt(math.NewInt(7)).Mul(math.LegacyNewDecWithPrec(5, 2)).TruncateInt()), // (25/7)*0.05
 			),
 		},
 		{
 			name: "single vault - remain collateral, not enough to cover debt, can reconstitute vault",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -377,7 +381,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 5
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.ZeroInt()),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.ZeroInt()),
 						RemainCollateral: sdk.NewCoin("atom", math.NewInt(5_000_000)),
 					},
 				},
@@ -391,11 +395,12 @@ func (s *KeeperTestSuite) TestLiquidate() {
 		{
 			name: "single vault - remain collateral, not enough to cover debt, can reconstitute vault",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -405,7 +410,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 5
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.ZeroInt()),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.ZeroInt()),
 						RemainCollateral: sdk.NewCoin("atom", math.NewInt(5_000_000)),
 					},
 				},
@@ -419,11 +424,12 @@ func (s *KeeperTestSuite) TestLiquidate() {
 		{
 			name: "single vault - remain collateral, not enough to cover debt, can not reconstitute vault",
 			liquidation: types.Liquidation{
-				Denom: "atom",
+				DebtDenom: "atom",
+				MintDenom: types.DefaultMintDenom[0],
 				LiquidatingVaults: []*types.Vault{
 					{
 						Owner:            vaultOwnerAddr.String(),
-						Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(25_000_000)),
+						Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(25_000_000)),
 						CollateralLocked: sdk.NewCoin("atom", math.NewInt(5_000_000)), // lock 5 ATOM at price 8, ratio = 160%
 						Status:           types.LIQUIDATING,
 						LiquidationPrice: math.LegacyNewDecWithPrec(7, 0), // liquidate at price 7, ratio = 140%
@@ -434,7 +440,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// Remain collateral = 4
 				VaultLiquidationStatus: map[uint64]*types.VaultLiquidationStatus{
 					0: {
-						Sold:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(7_000_000)),
+						Sold:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(7_000_000)),
 						RemainCollateral: sdk.NewCoin("atom", math.NewInt(4_000_000)),
 					},
 				},
@@ -444,7 +450,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				// penalty
 				sdk.NewCoin("atom", math.NewInt(4_000_000)), // (25/7)*0.05
 			),
-			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom, math.NewInt(18_000_000)),
+			shortfallAmount: sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(18_000_000)),
 		},
 	}
 	for _, t := range tests {
@@ -474,7 +480,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 				s.Require().NoError(err)
 			}
 
-			err = s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation)
+			err = s.App.VaultsKeeper.Liquidate(s.Ctx, t.liquidation, types.DefaultMintDenom[0])
 			s.Require().NoError(err)
 
 			if t.reserveBalances != nil {
