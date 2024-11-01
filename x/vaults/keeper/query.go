@@ -60,7 +60,7 @@ func (q queryServer) QueryAllVaults(ctx context.Context, req *types.QueryAllVaul
 	}, err
 }
 
-func (q queryServer) QueryVaults(ctx context.Context, req *types.QueryVaultIdRequest) (*types.QueryVaultIdResponse, error) {
+func (q queryServer) QueryVaultsByID(ctx context.Context, req *types.QueryVaultIdRequest) (*types.QueryVaultIdResponse, error) {
 	if req == nil {
 		return &types.QueryVaultIdResponse{}, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -72,4 +72,19 @@ func (q queryServer) QueryVaults(ctx context.Context, req *types.QueryVaultIdReq
 	return &types.QueryVaultIdResponse{
 		Vault: &vault,
 	}, nil
+}
+
+func (q queryServer) QueryVaultByOwner(ctx context.Context, req *types.QueryVaultByOwnerRequest) (*types.QueryVaultByOwnerResponse, error) {
+	allVaults := []*types.Vault{}
+
+	err := q.keeper.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
+		if req.Address == value.Owner {
+			allVaults = append(allVaults, &value)
+		}
+		return false, nil
+	})
+
+	return &types.QueryVaultByOwnerResponse{
+		Vaults: allVaults,
+	}, err
 }

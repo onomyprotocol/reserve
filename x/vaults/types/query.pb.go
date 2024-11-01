@@ -362,6 +362,94 @@ func (m *QueryAllCollateralResponse) GetAllVaultMamager() []*VaultMamager {
 	return nil
 }
 
+type QueryVaultByOwnerRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryVaultByOwnerRequest) Reset()         { *m = QueryVaultByOwnerRequest{} }
+func (m *QueryVaultByOwnerRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryVaultByOwnerRequest) ProtoMessage()    {}
+func (*QueryVaultByOwnerRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5eedd1d3c0c88e0e, []int{8}
+}
+func (m *QueryVaultByOwnerRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVaultByOwnerRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVaultByOwnerRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVaultByOwnerRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVaultByOwnerRequest.Merge(m, src)
+}
+func (m *QueryVaultByOwnerRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVaultByOwnerRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVaultByOwnerRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVaultByOwnerRequest proto.InternalMessageInfo
+
+func (m *QueryVaultByOwnerRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryVaultByOwnerResponse struct {
+	Vaults []*Vault `protobuf:"bytes,1,rep,name=vaults,proto3" json:"vaults,omitempty"`
+}
+
+func (m *QueryVaultByOwnerResponse) Reset()         { *m = QueryVaultByOwnerResponse{} }
+func (m *QueryVaultByOwnerResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryVaultByOwnerResponse) ProtoMessage()    {}
+func (*QueryVaultByOwnerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5eedd1d3c0c88e0e, []int{9}
+}
+func (m *QueryVaultByOwnerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryVaultByOwnerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryVaultByOwnerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryVaultByOwnerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryVaultByOwnerResponse.Merge(m, src)
+}
+func (m *QueryVaultByOwnerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryVaultByOwnerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryVaultByOwnerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryVaultByOwnerResponse proto.InternalMessageInfo
+
+func (m *QueryVaultByOwnerResponse) GetVaults() []*Vault {
+	if m != nil {
+		return m.Vaults
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "reserve.vaults.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "reserve.vaults.QueryParamsResponse")
@@ -371,44 +459,51 @@ func init() {
 	proto.RegisterType((*QueryAllVaultsResponse)(nil), "reserve.vaults.QueryAllVaultsResponse")
 	proto.RegisterType((*QueryAllCollateralRequest)(nil), "reserve.vaults.QueryAllCollateralRequest")
 	proto.RegisterType((*QueryAllCollateralResponse)(nil), "reserve.vaults.QueryAllCollateralResponse")
+	proto.RegisterType((*QueryVaultByOwnerRequest)(nil), "reserve.vaults.QueryVaultByOwnerRequest")
+	proto.RegisterType((*QueryVaultByOwnerResponse)(nil), "reserve.vaults.QueryVaultByOwnerResponse")
 }
 
 func init() { proto.RegisterFile("reserve/vaults/query.proto", fileDescriptor_5eedd1d3c0c88e0e) }
 
 var fileDescriptor_5eedd1d3c0c88e0e = []byte{
-	// 511 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x94, 0xcf, 0x6e, 0xd3, 0x40,
-	0x10, 0xc6, 0x63, 0x68, 0x43, 0x3b, 0x95, 0x8a, 0xba, 0xa4, 0xa1, 0x75, 0x2b, 0x83, 0xcc, 0x1f,
-	0x41, 0x90, 0xbc, 0x34, 0x9c, 0x38, 0xd2, 0x5e, 0xa8, 0x04, 0x52, 0xf1, 0x81, 0x03, 0x97, 0x68,
-	0x93, 0x2e, 0xc6, 0xd2, 0xda, 0xe3, 0x78, 0x37, 0x51, 0x73, 0x42, 0x82, 0x23, 0x17, 0x24, 0x5e,
-	0x82, 0x23, 0x8f, 0xd1, 0x63, 0x25, 0x2e, 0x9c, 0x10, 0x4a, 0x90, 0x78, 0x0d, 0x94, 0xdd, 0x75,
-	0x90, 0x83, 0xdb, 0xe6, 0x12, 0x59, 0x33, 0xbf, 0xf9, 0xbe, 0x6f, 0xbd, 0x13, 0x83, 0x9b, 0x73,
-	0xc9, 0xf3, 0x21, 0xa7, 0x43, 0x36, 0x10, 0x4a, 0xd2, 0xfe, 0x80, 0xe7, 0xa3, 0x20, 0xcb, 0x51,
-	0x21, 0x59, 0xb7, 0xbd, 0xc0, 0xf4, 0xdc, 0x0d, 0x96, 0xc4, 0x29, 0x52, 0xfd, 0x6b, 0x10, 0xb7,
-	0x11, 0x61, 0x84, 0xfa, 0x91, 0x4e, 0x9f, 0x6c, 0x75, 0x37, 0x42, 0x8c, 0x04, 0xa7, 0x2c, 0x8b,
-	0x29, 0x4b, 0x53, 0x54, 0x4c, 0xc5, 0x98, 0x4a, 0xdb, 0x6d, 0xf5, 0x50, 0x26, 0x28, 0x69, 0x97,
-	0x49, 0x6e, 0xfc, 0xe8, 0x70, 0xaf, 0xcb, 0x15, 0xdb, 0xa3, 0x19, 0x8b, 0xe2, 0x54, 0xc3, 0x96,
-	0xdd, 0x99, 0x8b, 0x97, 0xb1, 0x9c, 0x25, 0x56, 0xc8, 0x6f, 0x00, 0x79, 0x35, 0x1d, 0x3f, 0xd2,
-	0xc5, 0x90, 0xf7, 0x07, 0x5c, 0x2a, 0xff, 0x08, 0x6e, 0x94, 0xaa, 0x32, 0xc3, 0x54, 0x72, 0xf2,
-	0x14, 0xea, 0x66, 0x78, 0xcb, 0xb9, 0xed, 0x3c, 0x58, 0x6b, 0x37, 0x83, 0xf2, 0xe9, 0x02, 0xc3,
-	0xef, 0xaf, 0x9e, 0xfe, 0xbc, 0x55, 0xfb, 0xfa, 0xe7, 0x5b, 0xcb, 0x09, 0xed, 0x80, 0xff, 0xd8,
-	0x2a, 0xbe, 0x9e, 0x82, 0x87, 0xc7, 0xd6, 0x88, 0x6c, 0xc3, 0x8a, 0x1e, 0xed, 0xc4, 0xc7, 0x5a,
-	0x73, 0x29, 0xbc, 0x36, 0x34, 0x84, 0x7f, 0x00, 0x8d, 0xf2, 0x84, 0x0d, 0xf1, 0x08, 0x96, 0x35,
-	0x62, 0x33, 0x6c, 0xce, 0x67, 0xd0, 0x7c, 0x68, 0x18, 0xff, 0x26, 0x6c, 0x6a, 0x91, 0x67, 0x42,
-	0xe8, 0xfa, 0xec, 0x84, 0x2f, 0xa0, 0x39, 0xdf, 0xb0, 0xfa, 0x6d, 0x58, 0x65, 0x42, 0x74, 0x0a,
-	0x8f, 0xab, 0xe7, 0x7b, 0xac, 0x30, 0x3b, 0xec, 0xef, 0xc0, 0x76, 0xa1, 0x76, 0x80, 0x42, 0x30,
-	0xc5, 0x73, 0x26, 0x0a, 0xab, 0xb7, 0xe0, 0x56, 0x35, 0xad, 0xdd, 0x73, 0xd8, 0x98, 0xd9, 0x75,
-	0x12, 0x96, 0xb0, 0x88, 0xe7, 0xd6, 0x76, 0xb7, 0xd2, 0xf6, 0xa5, 0x61, 0xc2, 0xeb, 0x85, 0xbb,
-	0x2d, 0xb4, 0x3f, 0x2e, 0xc1, 0xb2, 0x36, 0x22, 0x7d, 0xa8, 0x9b, 0x9b, 0x20, 0xfe, 0xbc, 0xc4,
-	0xff, 0x97, 0xed, 0xde, 0xb9, 0x90, 0x31, 0x31, 0x7d, 0xef, 0xc3, 0xf7, 0xdf, 0x5f, 0xae, 0x6c,
-	0x91, 0x26, 0xad, 0xdc, 0x26, 0xf2, 0xc9, 0xb1, 0x8b, 0x54, 0x3a, 0x25, 0x79, 0x58, 0xa9, 0x5d,
-	0xf5, 0x9a, 0xdc, 0xd6, 0x22, 0xe8, 0x82, 0x69, 0xde, 0xc3, 0x7a, 0xf9, 0x76, 0xc9, 0xbd, 0xf3,
-	0xd4, 0x4b, 0x6b, 0xe1, 0xde, 0xbf, 0x0c, 0x5b, 0x30, 0xc0, 0x09, 0xac, 0xfd, 0x5b, 0x5e, 0x49,
-	0xaa, 0x5f, 0x71, 0xf9, 0xbf, 0xe0, 0xde, 0xbd, 0x18, 0x5a, 0xcc, 0x79, 0xff, 0xf0, 0x74, 0xec,
-	0x39, 0x67, 0x63, 0xcf, 0xf9, 0x35, 0xf6, 0x9c, 0xcf, 0x13, 0xaf, 0x76, 0x36, 0xf1, 0x6a, 0x3f,
-	0x26, 0x5e, 0xed, 0x0d, 0x8d, 0x62, 0xf5, 0x6e, 0xd0, 0x0d, 0x7a, 0x98, 0x50, 0x4c, 0x31, 0x19,
-	0xe9, 0x2f, 0x40, 0x0f, 0xc5, 0x4c, 0xe9, 0xa4, 0xd0, 0x52, 0xa3, 0x8c, 0xcb, 0x6e, 0x5d, 0x03,
-	0x4f, 0xfe, 0x06, 0x00, 0x00, 0xff, 0xff, 0xc2, 0xb1, 0xe2, 0x29, 0xe0, 0x04, 0x00, 0x00,
+	// 578 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x94, 0x4f, 0x8f, 0xd2, 0x40,
+	0x18, 0xc6, 0xa9, 0x0a, 0xbb, 0xbc, 0x26, 0xbb, 0x61, 0x64, 0x91, 0xed, 0x6e, 0xaa, 0xa9, 0x7f,
+	0xb2, 0x8b, 0x91, 0x71, 0xd1, 0x8b, 0x47, 0x59, 0x0f, 0x62, 0x34, 0xae, 0x3d, 0x78, 0xf0, 0x42,
+	0x06, 0x18, 0x6b, 0x93, 0xb6, 0x53, 0x3a, 0x05, 0x6d, 0x62, 0x62, 0xe2, 0xc9, 0xc4, 0x8b, 0xd1,
+	0x2f, 0xe1, 0xd1, 0x8f, 0xb1, 0xc7, 0x4d, 0xbc, 0x78, 0x32, 0x06, 0x4c, 0xfc, 0x1a, 0x86, 0x99,
+	0x29, 0x9b, 0xb2, 0x05, 0x7b, 0x21, 0x65, 0xde, 0xdf, 0xfb, 0x3c, 0x4f, 0xdf, 0x79, 0x01, 0xf4,
+	0x90, 0x72, 0x1a, 0x8e, 0x29, 0x1e, 0x93, 0x91, 0x1b, 0x71, 0x3c, 0x1c, 0xd1, 0x30, 0x6e, 0x06,
+	0x21, 0x8b, 0x18, 0xda, 0x50, 0xb5, 0xa6, 0xac, 0xe9, 0x15, 0xe2, 0x39, 0x3e, 0xc3, 0xe2, 0x53,
+	0x22, 0x7a, 0xd5, 0x66, 0x36, 0x13, 0x8f, 0x78, 0xf6, 0xa4, 0x4e, 0x77, 0x6d, 0xc6, 0x6c, 0x97,
+	0x62, 0x12, 0x38, 0x98, 0xf8, 0x3e, 0x8b, 0x48, 0xe4, 0x30, 0x9f, 0xab, 0x6a, 0xa3, 0xcf, 0xb8,
+	0xc7, 0x38, 0xee, 0x11, 0x4e, 0xa5, 0x1f, 0x1e, 0x1f, 0xf4, 0x68, 0x44, 0x0e, 0x70, 0x40, 0x6c,
+	0xc7, 0x17, 0xb0, 0x62, 0x77, 0x16, 0xe2, 0x05, 0x24, 0x24, 0x9e, 0x12, 0x32, 0xab, 0x80, 0x9e,
+	0xcf, 0xda, 0x8f, 0xc4, 0xa1, 0x45, 0x87, 0x23, 0xca, 0x23, 0xf3, 0x08, 0x2e, 0xa5, 0x4e, 0x79,
+	0xc0, 0x7c, 0x4e, 0xd1, 0x7d, 0x28, 0xc9, 0xe6, 0xba, 0x76, 0x55, 0xdb, 0xbb, 0xd8, 0xaa, 0x35,
+	0xd3, 0x6f, 0xd7, 0x94, 0x7c, 0xbb, 0x7c, 0xfc, 0xeb, 0x4a, 0xe1, 0xdb, 0xdf, 0xef, 0x0d, 0xcd,
+	0x52, 0x0d, 0xe6, 0x1d, 0xa5, 0xf8, 0x62, 0x06, 0x76, 0x06, 0xca, 0x08, 0x6d, 0xc3, 0xba, 0x68,
+	0xed, 0x3a, 0x03, 0xa1, 0x79, 0xc1, 0x5a, 0x1b, 0x4b, 0xc2, 0x3c, 0x84, 0x6a, 0xba, 0x43, 0x85,
+	0xb8, 0x05, 0x45, 0x81, 0xa8, 0x0c, 0x5b, 0x8b, 0x19, 0x04, 0x6f, 0x49, 0xc6, 0xbc, 0x0c, 0x5b,
+	0x42, 0xe4, 0x81, 0xeb, 0x8a, 0xf3, 0xf9, 0x1b, 0x3e, 0x81, 0xda, 0x62, 0x41, 0xe9, 0xb7, 0xa0,
+	0x4c, 0x5c, 0xb7, 0x9b, 0x78, 0x9c, 0x5f, 0xee, 0xb1, 0x4e, 0x54, 0xb3, 0xb9, 0x03, 0xdb, 0x89,
+	0xda, 0x21, 0x73, 0x5d, 0x12, 0xd1, 0x90, 0xb8, 0x89, 0xd5, 0x2b, 0xd0, 0xb3, 0x8a, 0xca, 0xee,
+	0x11, 0x54, 0xe6, 0x76, 0x5d, 0x8f, 0x78, 0xc4, 0xa6, 0xa1, 0xb2, 0xdd, 0xcd, 0xb4, 0x7d, 0x2a,
+	0x19, 0x6b, 0x33, 0x71, 0x57, 0x07, 0xe6, 0x3d, 0xa8, 0x9f, 0x0e, 0xac, 0x1d, 0x3f, 0x7b, 0xe3,
+	0xd3, 0x30, 0x99, 0x73, 0x1d, 0xd6, 0xc8, 0x60, 0x10, 0x52, 0x2e, 0xaf, 0xae, 0x6c, 0x25, 0x5f,
+	0xcd, 0xc7, 0x2a, 0x7a, 0xba, 0x4b, 0x85, 0xbb, 0x0d, 0x25, 0x69, 0xbd, 0x7a, 0x10, 0x0a, 0x6a,
+	0x7d, 0x29, 0x42, 0x51, 0x88, 0xa1, 0x21, 0x94, 0xe4, 0x2e, 0x20, 0x73, 0xb1, 0xe5, 0xec, 0xba,
+	0xe9, 0xd7, 0x56, 0x32, 0x32, 0x8b, 0x69, 0x7c, 0xf8, 0xf1, 0xe7, 0xeb, 0xb9, 0x3a, 0xaa, 0xe1,
+	0xcc, 0x7d, 0x46, 0x9f, 0x34, 0xb5, 0xca, 0xa9, 0x39, 0xa3, 0xfd, 0x4c, 0xed, 0xac, 0x8b, 0xd2,
+	0x1b, 0x79, 0xd0, 0x9c, 0x69, 0xde, 0xc3, 0x46, 0x7a, 0xbf, 0xd0, 0x8d, 0x65, 0xea, 0xa9, 0xc5,
+	0xd4, 0x6f, 0xfe, 0x0f, 0xcb, 0x19, 0xe0, 0x1d, 0x6c, 0x9e, 0xde, 0x2b, 0x6f, 0xc7, 0x9d, 0x87,
+	0x28, 0x7b, 0xcc, 0xe9, 0x5f, 0xa4, 0x7e, 0x7d, 0x35, 0x94, 0xd3, 0xfd, 0xa3, 0x06, 0x95, 0x33,
+	0x6b, 0x85, 0xf6, 0x96, 0x6b, 0xa7, 0xf7, 0x55, 0xdf, 0xcf, 0x41, 0xe6, 0x8b, 0xd2, 0xee, 0x1c,
+	0x4f, 0x0c, 0xed, 0x64, 0x62, 0x68, 0xbf, 0x27, 0x86, 0xf6, 0x79, 0x6a, 0x14, 0x4e, 0xa6, 0x46,
+	0xe1, 0xe7, 0xd4, 0x28, 0xbc, 0xc4, 0xb6, 0x13, 0xbd, 0x1e, 0xf5, 0x9a, 0x7d, 0xe6, 0x61, 0xe6,
+	0x33, 0x2f, 0x16, 0x7f, 0x89, 0x7d, 0xe6, 0xce, 0x95, 0xde, 0x26, 0x5a, 0x51, 0x1c, 0x50, 0xde,
+	0x2b, 0x09, 0xe0, 0xee, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x2b, 0x51, 0x44, 0xad, 0xf1, 0x05,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -427,7 +522,8 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	QueryAllCollateral(ctx context.Context, in *QueryAllCollateralRequest, opts ...grpc.CallOption) (*QueryAllCollateralResponse, error)
 	QueryAllVaults(ctx context.Context, in *QueryAllVaultsRequest, opts ...grpc.CallOption) (*QueryAllVaultsResponse, error)
-	QueryVaults(ctx context.Context, in *QueryVaultIdRequest, opts ...grpc.CallOption) (*QueryVaultIdResponse, error)
+	QueryVaultsByID(ctx context.Context, in *QueryVaultIdRequest, opts ...grpc.CallOption) (*QueryVaultIdResponse, error)
+	QueryVaultByOwner(ctx context.Context, in *QueryVaultByOwnerRequest, opts ...grpc.CallOption) (*QueryVaultByOwnerResponse, error)
 }
 
 type queryClient struct {
@@ -465,9 +561,18 @@ func (c *queryClient) QueryAllVaults(ctx context.Context, in *QueryAllVaultsRequ
 	return out, nil
 }
 
-func (c *queryClient) QueryVaults(ctx context.Context, in *QueryVaultIdRequest, opts ...grpc.CallOption) (*QueryVaultIdResponse, error) {
+func (c *queryClient) QueryVaultsByID(ctx context.Context, in *QueryVaultIdRequest, opts ...grpc.CallOption) (*QueryVaultIdResponse, error) {
 	out := new(QueryVaultIdResponse)
-	err := c.cc.Invoke(ctx, "/reserve.vaults.Query/QueryVaults", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/reserve.vaults.Query/QueryVaultsByID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) QueryVaultByOwner(ctx context.Context, in *QueryVaultByOwnerRequest, opts ...grpc.CallOption) (*QueryVaultByOwnerResponse, error) {
+	out := new(QueryVaultByOwnerResponse)
+	err := c.cc.Invoke(ctx, "/reserve.vaults.Query/QueryVaultByOwner", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -480,7 +585,8 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	QueryAllCollateral(context.Context, *QueryAllCollateralRequest) (*QueryAllCollateralResponse, error)
 	QueryAllVaults(context.Context, *QueryAllVaultsRequest) (*QueryAllVaultsResponse, error)
-	QueryVaults(context.Context, *QueryVaultIdRequest) (*QueryVaultIdResponse, error)
+	QueryVaultsByID(context.Context, *QueryVaultIdRequest) (*QueryVaultIdResponse, error)
+	QueryVaultByOwner(context.Context, *QueryVaultByOwnerRequest) (*QueryVaultByOwnerResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -496,8 +602,11 @@ func (*UnimplementedQueryServer) QueryAllCollateral(ctx context.Context, req *Qu
 func (*UnimplementedQueryServer) QueryAllVaults(ctx context.Context, req *QueryAllVaultsRequest) (*QueryAllVaultsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryAllVaults not implemented")
 }
-func (*UnimplementedQueryServer) QueryVaults(ctx context.Context, req *QueryVaultIdRequest) (*QueryVaultIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryVaults not implemented")
+func (*UnimplementedQueryServer) QueryVaultsByID(ctx context.Context, req *QueryVaultIdRequest) (*QueryVaultIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryVaultsByID not implemented")
+}
+func (*UnimplementedQueryServer) QueryVaultByOwner(ctx context.Context, req *QueryVaultByOwnerRequest) (*QueryVaultByOwnerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryVaultByOwner not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -558,20 +667,38 @@ func _Query_QueryAllVaults_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_QueryVaults_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_QueryVaultsByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryVaultIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).QueryVaults(ctx, in)
+		return srv.(QueryServer).QueryVaultsByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/reserve.vaults.Query/QueryVaults",
+		FullMethod: "/reserve.vaults.Query/QueryVaultsByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).QueryVaults(ctx, req.(*QueryVaultIdRequest))
+		return srv.(QueryServer).QueryVaultsByID(ctx, req.(*QueryVaultIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_QueryVaultByOwner_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryVaultByOwnerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).QueryVaultByOwner(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/reserve.vaults.Query/QueryVaultByOwner",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).QueryVaultByOwner(ctx, req.(*QueryVaultByOwnerRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -593,8 +720,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_QueryAllVaults_Handler,
 		},
 		{
-			MethodName: "QueryVaults",
-			Handler:    _Query_QueryVaults_Handler,
+			MethodName: "QueryVaultsByID",
+			Handler:    _Query_QueryVaultsByID_Handler,
+		},
+		{
+			MethodName: "QueryVaultByOwner",
+			Handler:    _Query_QueryVaultByOwner_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -840,6 +971,73 @@ func (m *QueryAllCollateralResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryVaultByOwnerRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVaultByOwnerRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVaultByOwnerRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryVaultByOwnerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryVaultByOwnerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryVaultByOwnerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Vaults) > 0 {
+		for iNdEx := len(m.Vaults) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Vaults[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -937,6 +1135,34 @@ func (m *QueryAllCollateralResponse) Size() (n int) {
 	_ = l
 	if len(m.AllVaultMamager) > 0 {
 		for _, e := range m.AllVaultMamager {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryVaultByOwnerRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryVaultByOwnerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Vaults) > 0 {
+		for _, e := range m.Vaults {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1482,6 +1708,172 @@ func (m *QueryAllCollateralResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.AllVaultMamager = append(m.AllVaultMamager, &VaultMamager{})
 			if err := m.AllVaultMamager[len(m.AllVaultMamager)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVaultByOwnerRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVaultByOwnerRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVaultByOwnerRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryVaultByOwnerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryVaultByOwnerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryVaultByOwnerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Vaults", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Vaults = append(m.Vaults, &Vault{})
+			if err := m.Vaults[len(m.Vaults)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

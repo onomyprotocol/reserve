@@ -1,7 +1,6 @@
 package types
 
 import (
-	"cosmossdk.io/errors"
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -68,11 +67,11 @@ func (msg MsgRequestBandRates) ValidateBasic() error {
 		return err
 	}
 	if sender.Empty() {
-		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: Sender address must not be empty.")
+		return errorsmod.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: Sender address must not be empty.")
 	}
 
 	if msg.RequestId == 0 {
-		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: requestID should be greater than zero")
+		return errorsmod.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: requestID should be greater than zero")
 	}
 	return nil
 }
