@@ -4,8 +4,9 @@ import (
 	"context"
 	"cosmossdk.io/math"
 	"fmt"
+	errors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
+	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
@@ -19,8 +20,8 @@ func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amoun
 	}
 
 	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, denomMint)
-	if multiplier == nil {
-		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", toDenom, denomMint)
+	if multiplier == nil || multiplier.IsNil() {
+		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", toDenom, denomMint)
 	}
 	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
 
@@ -42,8 +43,8 @@ func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoi
 	}
 
 	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, denomMint)
-	if multiplier == nil {
-		return math.Int{}, sdk.DecCoin{}, fmt.Errorf("can not get price %s and %s", stablecoin.Denom, denomMint)
+	if multiplier == nil || multiplier.IsNil() {
+		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", stablecoin.Denom, denomMint)
 	}
 
 	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
