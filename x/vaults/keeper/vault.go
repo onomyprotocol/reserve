@@ -8,9 +8,11 @@ import (
 	"strconv"
 	"time"
 
+	errors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
+	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
@@ -41,7 +43,10 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.OracleKeeper.GetPrice(ctx, denom, types.DefaultMintDenom[0])
+	price := k.OracleKeeper.GetPrice(ctx, denom, mint.Denom)
+	if price == nil || price.IsNil() {
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "CreateNewVault: can not get price with base %s quote %s", denom, mint.Denom)
+	}
 	// TODO: recalculate with denom decimal?
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(*price)
 	ratio := collateralValue.QuoInt(mint.Amount)
@@ -161,7 +166,10 @@ func (k *Keeper) MintCoin(
 	}
 
 	lockedCoin := vault.CollateralLocked
-	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, types.DefaultMintDenom[0])
+	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, mint.Denom)
+	if price == nil || price.IsNil() {
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "MintCoin: can not get price with base %s quote %s", lockedCoin.Denom, types.DefaultMintDenom)
+	}
 	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(*price)
 
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(vm.Params.MintingFee).TruncateInt()
@@ -343,7 +351,12 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, types.DefaultMintDenom[0])
+	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, vault.Debt.Denom)
+	// defensive programming: should never happen since when withdraw should always have a valid oracle price
+	if price == nil || price.IsNil() {
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "WithdrawFromVault: can not get price with base %s quote %s", collateral.Denom, types.DefaultMintDenom)
+	}
+
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(*price)
 	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
@@ -447,6 +460,9 @@ func (k *Keeper) GetLiquidations(
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
 		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, mintDenom)
+		if price == nil || price.IsNil() {
+			return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", vm.Denom, types.DefaultMintDenom)
+		}
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
 		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom, mintDenom)

@@ -15,6 +15,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" // nolint:all
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
+
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 )
 
@@ -279,7 +280,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 
 	err = k.SetBandLatestRequestID(ctx, requestID)
 	if err != nil {
-		return fmt.Errorf("can not set latest request id %v with symbol %s", requestID ,symbol)
+		return fmt.Errorf("can not set latest request id %v with symbol %s", requestID, symbol)
 	}
 
 	return nil
@@ -294,7 +295,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 		return nil
 	}
 
-	if quote == types.QuoteUSD || quote == types.QuoteNomUSD {
+	if quote == types.QuoteUSD || quote == "nomUSD" {
 		return &basePriceState.PriceState.Price
 	}
 
