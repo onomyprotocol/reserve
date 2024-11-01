@@ -88,11 +88,11 @@ message BidQueue {
   uint64 auction_id = 1;
 
   // array of bid entries with bidder address
-  repeated Bid bids = 2;
+  repeated Bid bids = 2 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
 // Bids defines a list of bid entries
 message Bids {
   // array of bid entries with bidder address
-  repeated Bid bids = 1;
+  repeated Bid bids = 1 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
