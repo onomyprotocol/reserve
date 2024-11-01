@@ -129,7 +129,7 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 
 	bid.Index = uint64(len(bidQueue.Bids))
 
-	bidQueue.Bids = append(bidQueue.Bids, &bid)
+	bidQueue.Bids = append(bidQueue.Bids, bid)
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
 	if err != nil {
 		return err
@@ -141,14 +141,14 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 		if err != nil {
 			return err
 		}
-		bids.Bids = append(bids.Bids, &bid)
+		bids.Bids = append(bids.Bids, bid)
 		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
 		if err != nil {
 			return err
 		}
 	} else {
 		bids := types.Bids{
-			Bids: []*types.Bid{&bid},
+			Bids: []types.Bid{bid},
 		}
 		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
 		if err != nil {

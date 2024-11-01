@@ -43,7 +43,7 @@ func (k *Keeper) BeginBlocker(ctx context.Context) error {
 				if err != nil {
 					return err
 				}
-				err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{AuctionId: auction.AuctionId, Bids: []*types.Bid{}})
+				err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{AuctionId: auction.AuctionId, Bids: []types.Bid{}})
 				if err != nil {
 					return err
 				}
