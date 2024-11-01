@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"strings"
 
 	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
@@ -15,6 +16,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types" // nolint:all
 	channeltypes "github.com/cosmos/ibc-go/v8/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v8/modules/core/24-host"
+	transfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 
 	"github.com/onomyprotocol/reserve/x/oracle/types"
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -290,6 +292,11 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
+	// Checking whether base is ibc denom or not
+	if !strings.HasPrefix(base, "ibc/") {
+		denomTrace := transfertypes.ParseDenomTrace(base)
+		base = denomTrace.BaseDenom
+	}
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
 		k.Logger(ctx).Info("Can not get price state of base denom %s: price state is nil or rate is zero", base)
@@ -300,6 +307,11 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 		return &basePriceState.PriceState.Price
 	}
 
+	// Checking whether quote is ibc denom or not
+	if !strings.HasPrefix(quote, "ibc/") {
+		denomTrace := transfertypes.ParseDenomTrace(quote)
+		quote = denomTrace.BaseDenom
+	}
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
 		k.Logger(ctx).Info("Can not get price state of quote denom %s: price state is nil or rate is zero", quote)
