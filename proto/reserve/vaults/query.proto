@@ -24,7 +24,11 @@ service Query {
     option (google.api.http).get = "/reserve/vaults/params";
   }
 
-  rpc QueryVaults(QueryVaultIdRequest) returns (QueryVaultIdResponse){
+  rpc QueryVaultsByID(QueryVaultIdRequest) returns (QueryVaultIdResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryVaultByOwner(QueryVaultByOwnerRequest) returns (QueryVaultByOwnerResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
 }
@@ -58,4 +62,12 @@ message QueryAllCollateralRequest {}
 
 message QueryAllCollateralResponse{
   repeated  VaultMamager all_vault_mamager = 1; 
+}
+
+message QueryVaultByOwnerRequest {
+  string address  = 1;
+}
+
+message QueryVaultByOwnerResponse{
+  repeated  Vault vaults = 1; 
 }

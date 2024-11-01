@@ -5,6 +5,7 @@ import (
 
 	"cosmossdk.io/math"
 	"github.com/onomyprotocol/reserve/x/psm/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (k Keeper) BeginBlocker(ctx context.Context) error {
@@ -13,8 +14,8 @@ func (k Keeper) BeginBlocker(ctx context.Context) error {
 
 func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 	updatePrice := func(red types.Stablecoin) bool {
-		price := k.OracleKeeper.GetPrice(ctx, red.Denom, types.DenomStable)
-		if price == nil {
+		price := k.OracleKeeper.GetPrice(ctx, red.Denom, vaultstypes.DefaultMintDenom)
+		if price == nil || price.IsNil() {
 			return false
 		}
 
