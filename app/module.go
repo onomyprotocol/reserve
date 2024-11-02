@@ -97,6 +97,7 @@ var maccPerms = map[string][]string{
 	vaultstypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 	vaultstypes.ReserveModuleName: {authtypes.Minter, authtypes.Burner},
 	auctiontypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+	oracletypes.ModuleName:        nil,
 }
 
 func appModules(
