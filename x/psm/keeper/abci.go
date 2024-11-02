@@ -20,14 +20,16 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 		}
 
 		sc := k.stablecoinUpdate(ctx, *price, red)
-		err := k.SetStablecoin(ctx, sc)
+		err := k.Stablecoins.Set(ctx, sc.Denom, sc)
 		if err != nil {
 			return false
 		}
 		return false
 	}
 
-	return k.IterateStablecoin(ctx, updatePrice)
+	return k.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+		return updatePrice(value), nil
+	}) //k.IterateStablecoin(ctx, updatePrice)
 }
 
 // price is $nomUSD amount to exchange for 1 $stabalecoin
@@ -65,29 +67,26 @@ func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, s
 		return stablecoin
 	}
 	// fee in anf out < fee_in +fee_out
-	feeMax, err := k.FeeMaxStablecoin.Get(ctx, stablecoin.Denom)
-	if err != nil {
-		panic(err)
-	}
+	feeMax := stablecoin.FeeMaxStablecoin
 
 	rate := math.LegacyOneDec().Quo(newPrice)
 	if rate.LT(math.LegacyOneDec()) {
-		feeOut := math.LegacyMustNewDecFromStr(feeMax).QuoInt64(2)
+		feeOut := feeMax.QuoInt64(2)
 		for i := 0; i < int(params.AdjustmentFee); i++ {
 			feeOut = feeOut.Quo(rate)
 		}
-		feeOut = math.LegacyMinDec(feeOut, math.LegacyMustNewDecFromStr(feeMax))
-		feeIn := math.LegacyMustNewDecFromStr(feeMax).Sub(feeOut)
+		feeOut = math.LegacyMinDec(feeOut, feeMax)
+		feeIn := feeMax.Sub(feeOut)
 
 		stablecoin.FeeIn = feeIn
 		stablecoin.FeeOut = feeOut
 	} else {
-		feeIn := math.LegacyMustNewDecFromStr(feeMax).QuoInt64(2)
+		feeIn := feeMax.QuoInt64(2)
 		for i := 0; i < int(params.AdjustmentFee); i++ {
 			feeIn = feeIn.Mul(rate)
 		}
-		feeIn = math.LegacyMinDec(feeIn, math.LegacyMustNewDecFromStr(feeMax))
-		feeOut := math.LegacyMustNewDecFromStr(feeMax).Sub(feeIn)
+		feeIn = math.LegacyMinDec(feeIn, feeMax)
+		feeOut := feeMax.Sub(feeIn)
 
 		stablecoin.FeeIn = feeIn
 		stablecoin.FeeOut = feeOut

@@ -22,26 +22,27 @@ func (s *KeeperTestSuite) TestStoreStablecoin() {
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
 	}
 
-	err := s.k.SetStablecoin(s.Ctx, s1)
+	err := s.k.Stablecoins.Set(s.Ctx, s1.Denom, s1)
 	s.Require().NoError(err)
-	err = s.k.SetStablecoin(s.Ctx, s2)
+	err = s.k.Stablecoins.Set(s.Ctx, s2.Denom, s2)
 	s.Require().NoError(err)
 
-	stablecoin1, found := s.k.GetStablecoin(s.Ctx, usdt)
-	s.Require().True(found)
+	stablecoin1, err := s.k.Stablecoins.Get(s.Ctx, usdt)
+	s.Require().NoError(err)
 	s.Require().Equal(stablecoin1.Denom, usdt)
 	s.Require().Equal(stablecoin1.LimitTotal, limitUSDT)
 
-	stablecoin2, found := s.k.GetStablecoin(s.Ctx, usdc)
-	s.Require().True(found)
+	stablecoin2, err := s.k.Stablecoins.Get(s.Ctx, usdc)
+	s.Require().NoError(err)
 	s.Require().Equal(stablecoin2.Denom, usdc)
 	s.Require().Equal(stablecoin2.LimitTotal, limitUSDC)
 
 	count := 0
-	err = s.k.IterateStablecoin(s.Ctx, func(red types.Stablecoin) (stop bool) {
+	err = s.k.Stablecoins.Walk(s.Ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
 		count += 1
-		return false
+		return false, nil
 	})
+
 	s.Require().NoError(err)
 	s.Require().Equal(count, 2)
 }

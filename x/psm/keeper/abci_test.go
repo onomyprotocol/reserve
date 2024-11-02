@@ -40,17 +40,14 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 
 	for _, t := range tests {
 		s.Run(t.name, func() {
-			sc := types.Stablecoin{
+			sc := types.GetMsgStablecoin(&types.MsgAddStableCoin{
 				Denom:      usdt,
 				LimitTotal: limitUSDT,
-				// Price:      t.priceCurrent,
-				FeeIn:  t.feeIn,
-				FeeOut: t.feeOut,
-			}
+				FeeIn:      t.feeIn,
+				FeeOut:     t.feeOut,
+			})
 			s.mockOracleKeeper.SetPrice(s.Ctx, sc.Denom, t.priceCurrent)
-			err := s.k.FeeMaxStablecoin.Set(s.Ctx, usdt, t.feeIn.Add(t.feeOut).String())
-			s.Require().NoError(err)
-			err = s.k.SetStablecoin(s.Ctx, sc)
+			err := s.k.Stablecoins.Set(s.Ctx, sc.Denom, sc)
 			s.Require().NoError(err)
 
 			s.mockOracleKeeper.SetPrice(s.Ctx, usdt, t.priceUpdate)
@@ -58,8 +55,8 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 			err = s.k.UpdatesStablecoinEpoch(s.Ctx)
 			s.Require().NoError(err)
 
-			scUpdate, found := s.k.GetStablecoin(s.Ctx, usdt)
-			s.Require().True(found)
+			scUpdate, err := s.k.Stablecoins.Get(s.Ctx, usdt)
+			s.Require().NoError(err)
 			// s.Require().Equal(t.priceUpdate, scUpdate.Price)
 			s.Require().Equal(t.expectFeeIn.String(), scUpdate.FeeIn.String())
 			s.Require().Equal(t.expectFeeOut.String(), scUpdate.FeeOut.String())
