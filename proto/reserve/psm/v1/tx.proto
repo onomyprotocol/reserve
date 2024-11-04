@@ -48,7 +48,8 @@ message MsgSwapTonomUSD {
   option (cosmos.msg.v1.signer) = "address";
 
   string address = 1;
-  cosmos.base.v1beta1.Coin coin = 2;
+  cosmos.base.v1beta1.Coin coin = 2
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 message MsgSwapTonomUSDResponse {}
 

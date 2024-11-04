@@ -63,19 +63,19 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 
 	// check balance user and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountnomUSD, fee_in, err := k.keeper.SwapTonomUSD(ctx, addr, *msg.Coin)
+	receiveAmountnomUSD, fee_in, err := k.keeper.SwapTonomUSD(ctx, addr, msg.Coin)
 	if err != nil {
 		return nil, err
 	}
 
 	// add total stablecoin lock
-	err = k.keeper.AddTotalStablecoinLock(ctx, *msg.Coin)
+	err = k.keeper.AddTotalStablecoinLock(ctx, msg.Coin)
 	if err != nil {
 		return nil, err
 	}
 
 	// send stablecoin to module
-	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
+	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(msg.Coin))
 	if err != nil {
 		return nil, err
 	}

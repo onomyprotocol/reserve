@@ -31,7 +31,7 @@ func init() {
 
 }
 
-func NewMsgSwapTonomUSD(addr string, coin *sdk.Coin) *MsgSwapTonomUSD {
+func NewMsgSwapTonomUSD(addr string, coin sdk.Coin) *MsgSwapTonomUSD {
 	return &MsgSwapTonomUSD{
 		Address: addr,
 		Coin:    coin,

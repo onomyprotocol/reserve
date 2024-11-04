@@ -46,7 +46,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
 				return &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[0].String(),
-					Coin:    &amountSwap,
+					Coin:    amountSwap,
 				}
 			},
 
@@ -69,7 +69,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				amountSwap := sdk.NewCoin(usdc, math.NewInt(1000))
 				return &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[1].String(),
-					Coin:    &amountSwap,
+					Coin:    amountSwap,
 				}
 			},
 
@@ -130,7 +130,7 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))
 				msg := &types.MsgSwapTonomUSD{
 					Address: s.TestAccs[0].String(),
-					Coin:    &amountSwap,
+					Coin:    amountSwap,
 				}
 				_, err = s.msgServer.SwapTonomUSD(s.Ctx, msg)
 				s.Require().NoError(err)
