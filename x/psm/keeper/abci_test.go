@@ -45,6 +45,7 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 				LimitTotal: limitUSDT,
 				FeeIn:      t.feeIn,
 				FeeOut:     t.feeOut,
+				NomType:    "nomUSD",
 			})
 			s.mockOracleKeeper.SetPrice(s.Ctx, sc.Denom, t.priceCurrent)
 			err := s.k.Stablecoins.Set(s.Ctx, sc.Denom, sc)
