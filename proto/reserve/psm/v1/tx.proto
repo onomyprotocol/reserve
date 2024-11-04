@@ -92,6 +92,7 @@ message MsgAddStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+  string nom_type = 6;
 }
 
 message MsgAddStableCoinResponse {}
@@ -121,6 +122,7 @@ message MsgUpdatesStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+    string nom_type = 6;
 }
 
 message MsgUpdatesStableCoinResponse {}
