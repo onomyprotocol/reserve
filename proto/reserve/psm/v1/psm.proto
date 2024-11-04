@@ -18,13 +18,13 @@ message Stablecoin {
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
-  // stablecoin to nomUSD exchange fee, fee_in when 1 stablecoin = 1nomUSD
+  // stablecoin to nom exchange fee, fee_in when 1 stablecoin = 1nomUSD
   bytes fee_in = 3 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  // nomUSD to stablecoin exchange fee, fee_out when 1 stablecoin = 1nomUSD
+  // nom to stablecoin exchange fee, fee_out when 1 stablecoin = 1nomUSD
   bytes fee_out = 4 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",

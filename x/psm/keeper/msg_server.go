@@ -43,7 +43,7 @@ func (k msgServer) UpdateParams(ctx context.Context, req *types.MsgUpdateParams)
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD) (*types.MsgSwapTonomUSDResponse, error) {
+func (k msgServer) SwapToNom(ctx context.Context, msg *types.MsgSwapToNom) (*types.MsgSwapToNomResponse, error) {
 	// validate msg
 	if err := msg.ValidateBasic(); err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 			sdk.NewAttribute(types.AttributeFeeIn, fee_in.String()),
 		),
 	)
-	return &types.MsgSwapTonomUSDResponse{}, nil
+	return &types.MsgSwapToNomResponse{}, nil
 }
 
 func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToStablecoin) (*types.MsgSwapToStablecoinResponse, error) {

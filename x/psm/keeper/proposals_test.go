@@ -36,6 +36,7 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		NomType:    "nomUSD",
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)

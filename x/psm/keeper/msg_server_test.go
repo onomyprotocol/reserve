@@ -19,7 +19,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 	tests := []struct {
 		name  string
 		addr  sdk.AccAddress
-		setup func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD
+		setup func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToNom
 
 		expectPass      bool
 		expectedReceive math.Int
@@ -27,7 +27,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 		{
 			name: "success",
 			addr: s.TestAccs[0],
-			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD {
+			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToNom {
 				coinsMint := sdk.NewCoins(sdk.NewCoin(usdt, math.NewInt(1000000)))
 				err := keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 				s.Require().NoError(err)
@@ -45,7 +45,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1000))
-				return &types.MsgSwapTonomUSD{
+				return &types.MsgSwapToNom{
 					Address: s.TestAccs[0].String(),
 					Coin:    amountSwap,
 				}
@@ -57,7 +57,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 		{
 			name: "insufficient balance",
 			addr: s.TestAccs[1],
-			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapTonomUSD {
+			setup: func(ctx context.Context, keeper keeper.Keeper) *types.MsgSwapToNom {
 				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
 					Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:      usdc,
@@ -69,7 +69,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdc, math.NewInt(1000))
-				return &types.MsgSwapTonomUSD{
+				return &types.MsgSwapToNom{
 					Address: s.TestAccs[1].String(),
 					Coin:    amountSwap,
 				}
@@ -84,7 +84,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 		s.Run(t.name, func() {
 			msg := t.setup(s.Ctx, s.k)
 
-			_, err := s.msgServer.SwapTonomUSD(s.Ctx, msg)
+			_, err := s.msgServer.SwapToNom(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
 				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenoms[0])
@@ -131,11 +131,11 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				s.Require().NoError(err)
 
 				amountSwap := sdk.NewCoin(usdt, math.NewInt(1001))
-				msg := &types.MsgSwapTonomUSD{
+				msg := &types.MsgSwapToNom{
 					Address: s.TestAccs[0].String(),
 					Coin:    amountSwap,
 				}
-				_, err = s.msgServer.SwapTonomUSD(s.Ctx, msg)
+				_, err = s.msgServer.SwapToNom(s.Ctx, msg)
 				s.Require().NoError(err)
 
 				return &types.MsgSwapToStablecoin{

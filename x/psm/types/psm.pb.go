@@ -32,9 +32,9 @@ type Stablecoin struct {
 	Denom string `protobuf:"bytes,1,opt,name=denom,proto3" json:"denom,omitempty"`
 	// limit total stablecoin
 	LimitTotal cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=limit_total,json=limitTotal,proto3,customtype=cosmossdk.io/math.Int" json:"limit_total"`
-	// stablecoin to nomUSD exchange fee, fee_in when 1 stablecoin = 1nomUSD
+	// stablecoin to nom exchange fee, fee_in when 1 stablecoin = 1nomUSD
 	FeeIn cosmossdk_io_math.LegacyDec `protobuf:"bytes,3,opt,name=fee_in,json=feeIn,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"fee_in"`
-	// nomUSD to stablecoin exchange fee, fee_out when 1 stablecoin = 1nomUSD
+	// nom to stablecoin exchange fee, fee_out when 1 stablecoin = 1nomUSD
 	FeeOut cosmossdk_io_math.LegacyDec `protobuf:"bytes,4,opt,name=fee_out,json=feeOut,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"fee_out"`
 	// amount of stablecoins locked in exchange for nomUSD
 	TotalStablecoinLock cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=total_stablecoin_lock,json=totalStablecoinLock,proto3,customtype=cosmossdk.io/math.Int" json:"total_stablecoin_lock"`

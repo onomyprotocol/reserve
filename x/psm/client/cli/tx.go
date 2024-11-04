@@ -49,7 +49,7 @@ func NewSwapTonomUSDCmd() *cobra.Command {
 			}
 
 			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapTonomUSD(addr.String(), stablecoin)
+			msg := types.NewMsgSwapToNom(addr.String(), stablecoin)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

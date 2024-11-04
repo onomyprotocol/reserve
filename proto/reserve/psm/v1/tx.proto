@@ -19,7 +19,7 @@ service Msg {
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
   rpc AddStableCoinProposal(MsgAddStableCoin) returns (MsgAddStableCoinResponse);
   rpc UpdatesStableCoinProposal(MsgUpdatesStableCoin) returns (MsgUpdatesStableCoinResponse);
-  rpc SwapTonomUSD(MsgSwapTonomUSD) returns (MsgSwapTonomUSDResponse);
+  rpc SwapToNom(MsgSwapToNom) returns (MsgSwapToNomResponse);
   rpc SwapToStablecoin(MsgSwapToStablecoin) returns (MsgSwapToStablecoinResponse);
 }
 
@@ -44,14 +44,14 @@ message MsgUpdateParams {
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
 
-message MsgSwapTonomUSD {
+message MsgSwapToNom {
   option (cosmos.msg.v1.signer) = "address";
 
   string address = 1;
   cosmos.base.v1beta1.Coin coin = 2
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
-message MsgSwapTonomUSDResponse {}
+message MsgSwapToNomResponse {}
 
 message MsgSwapToStablecoin {
   option (cosmos.msg.v1.signer) = "address";
