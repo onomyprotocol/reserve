@@ -58,12 +58,8 @@ message MsgSwapToStablecoin {
 
   string address = 1;
   string to_denom = 2;
-  bytes amount = 3 [
-  (cosmos_proto.scalar)  = "cosmos.Int",
-  (gogoproto.customtype) = "cosmossdk.io/math.Int",
-  (gogoproto.nullable)   = false,
-  (amino.dont_omitempty) = true
-  ];
+  cosmos.base.v1beta1.Coin coin = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 message MsgSwapToStablecoinResponse {}
 

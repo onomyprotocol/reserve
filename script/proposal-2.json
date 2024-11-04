@@ -5,8 +5,8 @@
       "denom": "usdt",
       "limit_total": "100000000000000000000000000000",
       "fee_in": "0.001000000000000000",
-      "fee_out": "0.001000000000000000"
-
+      "fee_out": "0.001000000000000000",
+      "nom_type":"nomUSD"
     }],
     "deposit": "100000000stake",
     "title": "My proposal",

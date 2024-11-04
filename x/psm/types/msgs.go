@@ -58,11 +58,11 @@ func (msg MsgSwapTonomUSD) GetSigners() []sdk.AccAddress {
 func (msg MsgSwapTonomUSD) Route() string { return RouterKey }
 
 // ///////////
-func NewMsgSwapToStablecoin(addr, toDenom string, amount math.Int) *MsgSwapToStablecoin {
+func NewMsgSwapToStablecoin(addr, toDenom string, amount sdk.Coin) *MsgSwapToStablecoin {
 	return &MsgSwapToStablecoin{
 		Address: addr,
 		ToDenom: toDenom,
-		Amount:  amount,
+		Coin:    amount,
 	}
 }
 
@@ -73,10 +73,8 @@ func (msg MsgSwapToStablecoin) ValidateBasic() error {
 	if msg.ToDenom == "" {
 		return fmt.Errorf("empty denom")
 	}
-	if msg.Amount.LT(math.ZeroInt()) {
-		return fmt.Errorf("total limit less than zero")
-	}
-	return nil
+
+	return msg.Coin.Validate()
 }
 
 func (msg MsgSwapToStablecoin) GetSigners() []sdk.AccAddress {
@@ -128,9 +126,9 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
 	}
 
-	// if msg.Price.LT(math.LegacyZeroDec()) {
-	// 	return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
-	// }
+	if msg.NomType == "" {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty nom type")
+	}
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "feein less than zero")
@@ -167,9 +165,9 @@ func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
 	}
 
-	// if msg.Price.LT(math.LegacyZeroDec()) {
-	// 	return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "price less than zero")
-	// }
+	if msg.NomType == "" {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty nom type")
+	}
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "feein less than zero")

@@ -21,6 +21,7 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 			sdkCtx.Logger().Info("can not set band price state for symbol %s", bandPriceState.Symbol)
 		}
 	}
+	// k.SetInitPrice(ctx)
 
 	for _, bandOracleRequest := range genState.BandOracleRequests {
 		err := k.SetBandOracleRequest(ctx, *bandOracleRequest)

@@ -1,8 +1,6 @@
 package types
 
-// DefaultIndex is the default global index
-const DefaultIndex uint64 = 1
-const DefaultMintDenom = "nomUSD"
+var DefaultMintDenoms = []string{"nomUSD", "nomJPY", "nomEUR"}
 
 // DefaultGenesis returns the default genesis state
 func DefaultGenesis() *GenesisState {
@@ -10,7 +8,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		Params:      DefaultParams(),
 		Stablecoins: []Stablecoin{},
-		Noms:        []string{DefaultMintDenom},
+		Noms:        DefaultMintDenoms,
 	}
 }
 

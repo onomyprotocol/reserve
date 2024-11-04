@@ -40,6 +40,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 					LimitTotal: limitUSDT,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 
@@ -63,6 +64,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 					LimitTotal: limitUSDC,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 
@@ -85,7 +87,7 @@ func (s *KeeperTestSuite) TestMsgServerSwapTonomUSD() {
 			_, err := s.msgServer.SwapTonomUSD(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenom)
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenoms[0])
 				s.Require().Equal(t.expectedReceive, balance.Amount)
 
 			} else {
@@ -124,6 +126,7 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 					LimitTotal: limitUSDT,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 
@@ -138,7 +141,7 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 				return &types.MsgSwapToStablecoin{
 					Address: s.TestAccs[0].String(),
 					ToDenom: usdt,
-					Amount:  math.NewInt(1000),
+					Coin:    sdk.NewCoin(types.DefaultMintDenoms[0], math.NewInt(1000)),
 				}
 			},
 
@@ -154,7 +157,7 @@ func (s *KeeperTestSuite) TestMsgSwapToStablecoin() {
 			_, err := s.msgServer.SwapToStablecoin(s.Ctx, msg)
 			if t.expectPass {
 				s.Require().NoError(err)
-				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenom)
+				balance := s.k.BankKeeper.GetBalance(s.Ctx, t.addr, types.DefaultMintDenoms[0])
 				s.Require().Equal(t.expectedBalancenomUSD.String(), balance.Amount.String())
 
 			} else {

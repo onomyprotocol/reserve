@@ -67,7 +67,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	mockOracleKeeper := MockOracleKeeper{
 		prices: make(map[string]math.LegacyDec),
 	}
-	mockOracleKeeper.SetPrice(s.Ctx, types.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, types.DefaultMintDenoms[0], math.LegacyMustNewDecFromStr("1"))
 
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper

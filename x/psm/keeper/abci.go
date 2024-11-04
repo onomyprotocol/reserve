@@ -13,7 +13,7 @@ func (k Keeper) BeginBlocker(ctx context.Context) error {
 
 func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 	updatePrice := func(red types.Stablecoin) bool {
-		price := k.OracleKeeper.GetPrice(ctx, red.Denom, types.DefaultMintDenom)
+		price := k.OracleKeeper.GetPrice(ctx, red.Denom, red.NomType)
 		if price == nil || price.IsNil() {
 			return false
 		}

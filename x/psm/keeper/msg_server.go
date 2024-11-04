@@ -50,7 +50,7 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// check stablecoin is suport
-	_, err := k.keeper.Stablecoins.Get(ctx, msg.Coin.Denom)
+	stablecoin, err := k.keeper.Stablecoins.Get(ctx, msg.Coin.Denom)
 	if err != nil {
 		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.Coin.Denom)
 	}
@@ -81,7 +81,7 @@ func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD)
 	}
 
 	// mint nomUSD
-	coinsMint := sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, receiveAmountnomUSD))
+	coinsMint := sdk.NewCoins(sdk.NewCoin(stablecoin.NomType, receiveAmountnomUSD))
 	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return nil, err
@@ -112,9 +112,13 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// check stablecoin is suport
-	_, err := k.keeper.Stablecoins.Get(ctx, msg.ToDenom)
+	stablecoin, err := k.keeper.Stablecoins.Get(ctx, msg.ToDenom)
 	if err != nil {
 		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.ToDenom)
+	}
+
+	if stablecoin.NomType != msg.Coin.Denom {
+		return nil, fmt.Errorf("can't exchange %s for %s, not same type", msg.Coin.Denom, msg.ToDenom)
 	}
 
 	// check lock Coin of user
@@ -125,7 +129,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 
 	// check balace and calculate amount of coins received
 	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountStablecoin, fee_out, err := k.keeper.SwapToStablecoin(ctx, addr, msg.Amount, msg.ToDenom)
+	receiveAmountStablecoin, fee_out, err := k.keeper.SwapToStablecoin(ctx, addr, msg.Coin.Amount, msg.ToDenom)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +140,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	}
 
 	// burn nomUSD
-	coinsBurn := sdk.NewCoins(sdk.NewCoin(types.DefaultMintDenom, msg.Amount))
+	coinsBurn := sdk.NewCoins(msg.Coin)
 	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
 	if err != nil {
 		return nil, err
@@ -164,7 +168,7 @@ func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToSta
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventSwapToStablecoin,
-			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+types.DefaultMintDenom),
+			sdk.NewAttribute(types.AttributeAmount, msg.Coin.String()),
 			sdk.NewAttribute(types.AttributeReceive, stablecoinReceive.String()),
 			sdk.NewAttribute(types.AttributeFeeOut, fee_out.String()),
 		),
@@ -181,6 +185,10 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 	if err := msg.ValidateBasic(); err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
+
+	// if msg. {
+
+	// }
 
 	_, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
 	if err == nil {

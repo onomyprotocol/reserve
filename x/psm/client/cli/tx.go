@@ -82,7 +82,7 @@ func NewSwapToStablecoinCmd() *cobra.Command {
 			}
 
 			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapToStablecoin(addr.String(), args[0], nomUSDcoin.Amount)
+			msg := types.NewMsgSwapToStablecoin(addr.String(), args[0], nomUSDcoin)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

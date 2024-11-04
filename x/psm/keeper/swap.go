@@ -9,12 +9,15 @@ import (
 	errors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
-	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
-	denomMint := types.DefaultMintDenom
+	denomMint, err := k.GetNomType(ctx, toDenom)
+	if err != nil {
+		return math.ZeroInt(), sdk.DecCoin{}, err
+	}
+
 	asset := k.BankKeeper.GetBalance(ctx, addr, denomMint)
 
 	if asset.Amount.LT(amount) {
@@ -37,7 +40,10 @@ func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amoun
 }
 
 func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
-	denomMint := types.DefaultMintDenom
+	denomMint, err := k.GetNomType(ctx, stablecoin.Denom)
+	if err != nil {
+		return math.ZeroInt(), sdk.DecCoin{}, err
+	}
 	asset := k.BankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
 
 	if asset.Amount.LT(stablecoin.Amount) {
