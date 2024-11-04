@@ -6,7 +6,6 @@ import (
 
 	"cosmossdk.io/core/store"
 	errorsmod "cosmossdk.io/errors"
-	ibchost "github.com/cosmos/ibc-go/v8/modules/core/24-host"
 
 	"cosmossdk.io/log"
 	"cosmossdk.io/store/prefix"
@@ -81,7 +80,7 @@ func (k Keeper) Logger(ctx context.Context) log.Logger {
 
 // ChanCloseInit defines a wrapper function for the channel Keeper's function
 func (k Keeper) ChanCloseInit(ctx sdk.Context, portID, channelID string) error {
-	capName := ibchost.ChannelCapabilityPath(portID, channelID)
+	capName := host.ChannelCapabilityPath(portID, channelID)
 	chanCap, ok := k.scopedKeeper.GetCapability(ctx, capName)
 	if !ok {
 		return errorsmod.Wrapf(channeltypes.ErrChannelCapabilityNotFound, "could not retrieve channel capability at: %s", capName)
@@ -91,7 +90,7 @@ func (k Keeper) ChanCloseInit(ctx sdk.Context, portID, channelID string) error {
 
 // IsBound checks if the module is already bound to the desired port
 func (k Keeper) IsBound(ctx sdk.Context, portID string) bool {
-	_, ok := k.scopedKeeper.GetCapability(ctx, ibchost.PortPath(portID))
+	_, ok := k.scopedKeeper.GetCapability(ctx, host.PortPath(portID))
 	return ok
 }
 
