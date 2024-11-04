@@ -55,9 +55,7 @@ func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsReques
 	allBids := []types.Bid{}
 
 	err := k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
-		for _, bid := range value.Bids {
-			allBids = append(allBids, bid)
-		}
+		allBids = append(allBids, value.Bids...)
 		return false, nil
 	})
 

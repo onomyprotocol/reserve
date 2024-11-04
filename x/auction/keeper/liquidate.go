@@ -72,9 +72,7 @@ func (k Keeper) handleLiquidation(ctx context.Context, mintDenom string) error {
 			return err
 		}
 	}
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 

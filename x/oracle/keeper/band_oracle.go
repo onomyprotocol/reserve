@@ -296,7 +296,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 		return nil
 	}
 
-	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenom {
+	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenom[0] {
 		return &basePriceState.PriceState.Price
 	}
 

@@ -236,7 +236,7 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 					Owner:            s.TestAccs[0].String(),
 					Id:               0,
 					Status:           types.LIQUIDATED,
-					Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1000)),
+					Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(1000)),
 					CollateralLocked: sdk.NewCoin(denom, math.ZeroInt()),
 				})
 				s.Require().NoError(err)
@@ -326,7 +326,7 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 				err = s.k.SetVault(s.Ctx, types.Vault{
 					Id:               0,
 					Status:           types.LIQUIDATED,
-					Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1000)),
+					Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(1000)),
 					CollateralLocked: sdk.NewCoin(denom, math.ZeroInt()),
 				})
 				s.Require().NoError(err)
@@ -427,7 +427,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 					Owner:            s.TestAccs[0].String(),
 					Id:               0,
 					Status:           types.LIQUIDATED,
-					Debt:             sdk.NewCoin(types.DefaultMintDenom, math.NewInt(1000)),
+					Debt:             sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(1000)),
 					CollateralLocked: sdk.NewCoin(denom, math.ZeroInt()),
 				})
 				s.Require().NoError(err)
