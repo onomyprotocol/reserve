@@ -136,24 +136,30 @@ reserved q bank balances $(reserved keys show validator1 -a --keyring-backend te
 
 # # tx swap usdt to nomUSD
 # echo "========swap==========="
-reserved tx psm swap-to-nomUSD 100000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nom 100000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 
-reserved tx psm swap-to-nomUSD 100000000000000000000000eurt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nom 100000000000000000000000eurt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 
-reserved tx psm swap-to-nomUSD 100000000000000000000000usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nom 100000000000000000000000usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
-reserved tx psm swap-to-nomUSD 100000000000000000000000jpyt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nom 100000000000000000000000jpyt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
 # # Check account after swap
 reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 # # tx swap nomUSD to usdt
-# reserved tx psm swap-to-stablecoin usdt 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-stablecoin usdc 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
-# sleep 7
-# # Check account after swap
-# reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
+sleep 7
+# Check account after swap
+reserved tx psm swap-to-stablecoin eurt 1000nomEUR --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
+sleep 7
+reserved tx psm swap-to-stablecoin jpyt 1000nomJPY --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
+sleep 7
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 # # killall reserved || true

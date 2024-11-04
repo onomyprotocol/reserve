@@ -22,20 +22,21 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(NewSwapToStablecoinCmd())
-	cmd.AddCommand(NewSwapTonomUSDCmd())
+	cmd.AddCommand(NewSwapToNomCmd())
 
 	return cmd
 }
 
-func NewSwapTonomUSDCmd() *cobra.Command {
+func NewSwapToNomCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap-to-nomUSD [stablecoin]",
+		Use:   "swap-to-nom [stablecoin]",
 		Args:  cobra.ExactArgs(1),
 		Short: "swap stablecoin to $nomUSD ",
 		Long: `swap stablecoin to $nomUSD.
 
 			Example:
-			$ onomyd tx psm swap-to-nomUSD 1000usdt --from mykey
+			$ onomyd tx psm swap-to-nom 100000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -62,13 +63,13 @@ func NewSwapTonomUSDCmd() *cobra.Command {
 
 func NewSwapToStablecoinCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap-to-stablecoin [stable-coin-type] [amount-nomUSD]",
+		Use:   "swap-to-stablecoin [stable-coin-type] [amount-nomX]",
 		Args:  cobra.ExactArgs(2),
-		Short: "swap $nomUSD to stablecoin ",
-		Long: `swap $nomUSD to stablecoin.
+		Short: "swap $nomX to stablecoin.  ",
+		Long: `swap $nomX to stablecoin.
 
 			Example:
-			$ onomyd tx psm swap-to-stablecoin usdt 10000nomUSD --from mykey
+			$ onomyd tx psm swap-to-stablecoin usdc 10000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
