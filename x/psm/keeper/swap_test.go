@@ -40,6 +40,7 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 					LimitTotal: limitUSDT,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 			},
@@ -58,6 +59,7 @@ func (s *KeeperTestSuite) TestSwapTonomUSD() {
 					LimitTotal: limitUSDC,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 			},
@@ -115,6 +117,7 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 					LimitTotal: limitUSDT,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 			},
@@ -134,6 +137,7 @@ func (s *KeeperTestSuite) TestSwapToStablecoin() {
 					LimitTotal: limitUSDC,
 					FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+					NomType:    "nomUSD",
 				})
 				s.Require().NoError(err)
 			},
