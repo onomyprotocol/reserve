@@ -37,6 +37,7 @@ type (
 		OracleKeeper  types.OracleKeeper
 
 		Stablecoins collections.Map[string, types.Stablecoin]
+		Noms        collections.Map[string, string]
 	}
 )
 
@@ -69,6 +70,7 @@ func NewKeeper(
 		OracleKeeper:  oracleKeeper,
 		Params:        collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		Stablecoins:   collections.NewMap(sb, types.KeyStableCoin, "stablecoins", collections.StringKey, codec.CollValue[types.Stablecoin](cdc)),
+		Noms:          collections.NewMap(sb, types.KeyNoms, "nom types", collections.StringKey, collections.StringValue),
 	}
 
 	schema, err := sb.Build()

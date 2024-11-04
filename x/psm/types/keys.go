@@ -24,12 +24,5 @@ var (
 	ParamsKey              = []byte{0x4}
 	KeyTotalStablecoinLock = []byte{0x5}
 	KeyFeeMax              = []byte{0x6}
+	KeyNoms                = []byte{0x01}
 )
-
-func GetKeyStableCoin(denom string) []byte {
-	return append(KeyStableCoin, []byte(denom)...)
-}
-
-func GetKeyLockCoin(denom string) []byte {
-	return append(KeyLockStableCoin, []byte(denom)...)
-}

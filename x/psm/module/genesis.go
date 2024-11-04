@@ -17,6 +17,13 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		}
 	}
 
+	for _, nom := range genState.Noms {
+		err := k.Noms.Set(ctx, nom, nom)
+		if err != nil {
+			return err
+		}
+	}
+
 	return k.Params.Set(ctx, genState.Params)
 }
 
@@ -32,6 +39,14 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) (*types.GenesisState, error
 
 	err = k.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
 		genesis.Stablecoins = append(genesis.Stablecoins, value)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.Noms.Walk(ctx, nil, func(key string, value string) (stop bool, err error) {
+		genesis.Noms = append(genesis.Noms, value)
 		return false, nil
 	})
 
