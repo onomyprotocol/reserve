@@ -46,46 +46,34 @@ func (q queryServer) Stablecoin(ctx context.Context, req *types.QueryStablecoinR
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	stablecoin, found := q.keeper.GetStablecoin(ctx, req.Denom)
-	if !found {
-		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
-	}
-
-	totalStablecoinLock, err := q.keeper.TotalStablecoinLock(ctx, req.Denom)
+	stablecoin, err := q.keeper.Stablecoins.Get(ctx, req.Denom)
 	if err != nil {
-		return nil, err
+		return nil, status.Errorf(codes.NotFound, "not found stablecoin %s", req.Denom)
 	}
 
 	return &types.QueryStablecoinResponse{
 		Stablecoin:       stablecoin,
-		CurrentTotal:     totalStablecoinLock,
-		SwapableQuantity: stablecoin.LimitTotal.Sub(totalStablecoinLock),
+		SwapableQuantity: stablecoin.LimitTotal.Sub(stablecoin.TotalStablecoinLock),
 	}, nil
 }
 
-func (q queryServer) AllStablecoin(c context.Context, req *types.QueryAllStablecoinRequest) (*types.QueryAllStablecoinResponse, error) {
+func (q queryServer) AllStablecoin(ctx context.Context, req *types.QueryAllStablecoinRequest) (*types.QueryAllStablecoinResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	allStablecoins := []*types.StablecoinResponse{}
 
 	adder := func(s types.Stablecoin) {
-		totalStablecoinLock, err := q.keeper.TotalStablecoinLock(c, s.Denom)
-		if err != nil {
-			panic(err)
-		}
-
 		newStablecoinResponse := types.StablecoinResponse{
 			Stablecoin:       s,
-			CurrentTotal:     totalStablecoinLock,
-			SwapableQuantity: s.LimitTotal.Sub(totalStablecoinLock),
+			SwapableQuantity: s.LimitTotal.Sub(s.TotalStablecoinLock),
 		}
 		allStablecoins = append(allStablecoins, &newStablecoinResponse)
 	}
 
-	err := q.keeper.IterateStablecoin(c, func(red types.Stablecoin) (stop bool) {
-		adder(red)
-		return false
+	err := q.keeper.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+		adder(value)
+		return false, nil
 	})
 
 	return &types.QueryAllStablecoinResponse{AllStablecoinResponse: allStablecoins}, err

@@ -26,7 +26,7 @@ func (k Keeper) Price(c context.Context, q *types.QueryPriceRequest) (*types.Que
 
 	price := k.GetPrice(ctx, q.BaseDenom, q.QuoteDenom)
 	if price == nil || price.IsNil() {
-		return nil, errors.Wrapf(types.ErrInvalidOracle, "base %s quote %s", q.BaseDenom, q.QuoteDenom)
+		return nil, errors.Wrapf(types.ErrInvalidOracle, "can not get price with base %s quote %s", q.BaseDenom, q.QuoteDenom)
 	} else {
 		res := &types.QueryPriceResponse{
 			Price: price.String(),

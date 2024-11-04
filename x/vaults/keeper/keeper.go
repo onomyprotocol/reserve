@@ -16,7 +16,7 @@ import (
 type Keeper struct {
 	cdc           codec.BinaryCodec
 	storeService  storetypes.KVStoreService
-	bankKeeper    types.BankKeeper
+	BankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
 	// Temporarily leave it public to easily replace it with mocks.
 	// TODO: Make it private
@@ -51,7 +51,7 @@ func NewKeeper(
 		storeService:    storeService,
 		accountKeeper:   ak,
 		OracleKeeper:    ok,
-		bankKeeper:      bk,
+		BankKeeper:      bk,
 		Params:          collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
 		VaultsManager:   collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
 		Vaults:          collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),

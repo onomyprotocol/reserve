@@ -112,35 +112,35 @@ sed -i -E "s|persistent_peers = \"\"|persistent_peers = \"$node1@localhost:26656
 
 
 # # start all three validators
-# screen -S onomy1 -t onomy1 -d -m reserved start --home=$HOME/.reserved/validator1
-# screen -S onomy2 -t onomy2 -d -m reserved start --home=$HOME/.reserved/validator2
-# screen -S onomy3 -t onomy3 -d -m reserved start --home=$HOME/.reserved/validator3
+screen -S onomy1 -t onomy1 -d -m reserved start --home=$HOME/.reserved/validator1
+screen -S onomy2 -t onomy2 -d -m reserved start --home=$HOME/.reserved/validator2
+screen -S onomy3 -t onomy3 -d -m reserved start --home=$HOME/.reserved/validator3
 
 # submit proposal add usdt
-# sleep 7
-# reserved tx gov submit-proposal ./script/proposal-2.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+sleep 7
+reserved tx gov submit-proposal ./script/proposal-2.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 
 # # # vote
-# sleep 7
-reserved tx gov vote 2 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-reserved tx gov vote 2 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
-reserved tx gov vote 2 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y --fees 20stake
+sleep 7
+reserved tx gov vote 1 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx gov vote 1 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
+reserved tx gov vote 1 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y --fees 20stake
 
 # # wait voting_perio=15s
-# sleep 15
+sleep 15
 # echo "========sleep=========="
 
 # # check add usdt, balances
 # reserved q psm  all-stablecoin
-# reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
 # # tx swap usdt to nomUSD
 # echo "========swap==========="
-# reserved tx psm swap-to-nomUSD 100000000000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap-to-nomUSD 100000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
-# sleep 7
+sleep 7
 # # Check account after swap
-# reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
+reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
 # # tx swap nomUSD to usdt
 # reserved tx psm swap-to-stablecoin usdt 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
