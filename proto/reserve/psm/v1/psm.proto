@@ -43,4 +43,6 @@ message Stablecoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+  // type nom which swaps at a 1:1 ratio, as nomUSD ~ 1 USDT
+  string nom_type = 7;
 }
