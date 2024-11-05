@@ -164,10 +164,10 @@ func (im IBCModule) OnRecvPacket(
 			return channeltypes.NewErrorAcknowledgement(fmt.Errorf("failed to parse client ID: %w", err))
 		}
 		// Delete the calldata corresponding to the sequence number
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID)) // nolint: all
+		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		return channeltypes.NewErrorAcknowledgement(types.ErrResolveStatusNotSuccess)
 	}
-
+	println("Process OnrecvPacket ..........")
 	if err := im.keeper.ProcessBandOraclePrices(ctx, relayer, resp); err != nil {
 		return channeltypes.NewErrorAcknowledgement(fmt.Errorf("cannot process Oracle response packet data: %w", err))
 	}
@@ -207,7 +207,7 @@ func (im IBCModule) OnAcknowledgementPacket(
 			ClientId:  int64(clientID),
 		})
 	case *channeltypes.Acknowledgement_Error:
-		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID)) // nolint: all 
+		im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 		// nolint:errcheck //ignored on purpose
 		ctx.EventManager().EmitTypedEvent(&types.EventBandAckError{
 			AckError: resp.Error,
@@ -235,7 +235,7 @@ func (im IBCModule) OnTimeoutPacket(
 	}
 
 	// Delete the calldata corresponding to the sequence number
-	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID)) // nolint: errcheck
+	im.keeper.DeleteBandCallDataRecord(ctx, uint64(clientID))
 	// nolint:errcheck //ignored on purpose
 	ctx.EventManager().EmitTypedEvent(&types.EventBandResponseTimeout{
 		ClientId: int64(clientID),

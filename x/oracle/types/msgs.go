@@ -1,7 +1,9 @@
 package types
 
 import (
+	"cosmossdk.io/errors"
 	errorsmod "cosmossdk.io/errors"
+	math "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -15,7 +17,6 @@ const (
 var (
 	_ sdk.Msg = &MsgRequestBandRates{}
 	_ sdk.Msg = &MsgUpdateParams{}
-	_ sdk.Msg = &MsgUpdateBandParams{}
 )
 
 func (msg MsgUpdateParams) Route() string { return RouterKey }
@@ -67,11 +68,11 @@ func (msg MsgRequestBandRates) ValidateBasic() error {
 		return err
 	}
 	if sender.Empty() {
-		return errorsmod.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: Sender address must not be empty.")
+		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: Sender address must not be empty.")
 	}
 
 	if msg.RequestId == 0 {
-		return errorsmod.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: requestID should be greater than zero")
+		return errors.Wrapf(ErrInvalidBandRequest, "MsgRequestBandRates: requestID should be greater than zero")
 	}
 	return nil
 }
@@ -89,4 +90,22 @@ func (msg MsgRequestBandRates) GetSigners() []sdk.AccAddress {
 func (msg MsgRequestBandRates) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(&msg)
 	return sdk.MustSortJSON(bz)
+}
+
+func NewSetPrice(denom, authority string, price math.LegacyDec) MsgSetPrice {
+	return MsgSetPrice{
+		Denom:     denom,
+		Price:     price,
+		Authority: authority,
+	}
+}
+
+func NewGetPrice(denom string) MsgGetPrice {
+	return MsgGetPrice{
+		Denom: denom,
+	}
+}
+
+func NewAllGetPrice() MsgGetAllPrice {
+	return MsgGetAllPrice{}
 }

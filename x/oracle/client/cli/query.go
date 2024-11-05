@@ -1,12 +1,9 @@
 package cli
 
 import (
-	"fmt"
 	"context"
-	"strconv"
 
 	"github.com/cosmos/gogoproto/proto"
-	errors "github.com/pkg/errors"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
@@ -27,10 +24,8 @@ func GetQueryCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		GetBandPriceStates(),
-		GetPrice(),
-		GetBandParams(),
-		GetBandOracleRequestParams(),
-		GetBandOracleRequest(),
+		CmdGetPrice(),
+		CmdGetAllPrice(),
 	)
 	return cmd
 }
@@ -39,7 +34,7 @@ func GetQueryCmd() *cobra.Command {
 func GetBandPriceStates() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "band-price-states",
-		Short: "Get Band price states",
+		Short: "Gets Band price states",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)
@@ -62,124 +57,52 @@ func GetBandPriceStates() *cobra.Command {
 	return cmd
 }
 
-// GetPrice queries the price based on rate of base/quote
-func GetPrice() *cobra.Command {
+func CmdGetPrice() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "price [base] [quote]",
-		Short: "Get price based on rate of base/quote",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			baseDenom := args[0]
-			quoteDenom := args[1]
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			var res proto.Message
-			req := &types.QueryPriceRequest{
-				BaseDenom:  baseDenom,
-				QuoteDenom: quoteDenom,
-			}
-			res, err = queryClient.Price(context.Background(), req)
-			if err != nil {
-				return err
-			}
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-// GetBandParams queries the band parameters
-func GetBandParams() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "band-params",
-		Short: "Get band parameters",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			queryClient := types.NewQueryClient(clientCtx)
-
-			var res proto.Message
-			req := &types.QueryBandParamsRequest{}
-			res, err = queryClient.BandParams(context.Background(), req)
-			if err != nil {
-				return err
-			}
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-// GetBandOracleRequestParams queries the band oracle request parameters
-func GetBandOracleRequestParams() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "band-oracle-request-params",
-		Short: "Get band oracle request parameters",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			queryClient := types.NewQueryClient(clientCtx)
-
-			var res proto.Message
-			req := &types.QueryBandOracleRequestParamsRequest{}
-			res, err = queryClient.BandOracleRequestParams(context.Background(), req)
-			if err != nil {
-				return err
-			}
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-	return cmd
-}
-
-// GetBandOracleRequest queries the band oracle request parameters
-func GetBandOracleRequest() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "band-oracle-request",
-		Short: "Get band oracle request",
+		Use:   "get-price [denom]",
+		Short: "shows info price denom",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			requestID, err := strconv.Atoi(args[0])
-			if err != nil {
-				return errors.New("requestID should be a positive number")
-			} else if requestID <= 0 {
-				return errors.New("requestID should be a positive number")
-			}
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
 			queryClient := types.NewQueryClient(clientCtx)
 
-			var res proto.Message
-			req := &types.QueryBandOracleRequestRequest{
-				RequestId: fmt.Sprint(requestID),
-			}
-			res, err = queryClient.BandOracleRequest(context.Background(), req)
+			msg := types.NewGetPrice(args[0])
+			res, err := queryClient.QueryPrice(context.Background(), &msg)
 			if err != nil {
 				return err
 			}
+
 			return clientCtx.PrintProto(res)
 		},
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdGetAllPrice() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "get-all-price",
+		Short: "shows info all price denom",
+		Args:  cobra.ExactArgs(0),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			msg := types.NewAllGetPrice()
+			res, err := queryClient.QueryAllPrice(context.Background(), &msg)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
 	return cmd
 }

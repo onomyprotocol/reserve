@@ -316,9 +316,9 @@ func NewAppKeeper(
 		logger,
 		appKeepers.AccountKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		appKeepers.IBCKeeper.ChannelKeeper,
-		appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.ScopedOracleKeeper,
+		// appKeepers.IBCKeeper.ChannelKeeper,
+		// appKeepers.IBCKeeper.PortKeeper,
+		// appKeepers.ScopedOracleKeeper,
 	)
 
 	appKeepers.PSMKeeper = psmkeeper.NewKeeper(
