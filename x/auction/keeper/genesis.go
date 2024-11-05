@@ -10,7 +10,7 @@ func (k Keeper) InitGenesis(ctx sdk.Context, genState types.GenesisState) {
 	if err := k.SetParams(ctx, genState.Params); err != nil {
 		panic(err)
 	}
-	k.LastestAuctionPeriod = ctx.BlockTime().Unix()
+	k.LastestAuctionPeriods.Set(ctx, "LastestAuctionPeriods", ctx.BlockTime().Unix())
 }
 
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
