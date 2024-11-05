@@ -14,7 +14,7 @@ var (
 	DefaultMinInitialDebt        = math.NewInt(50_000_000)
 	DefaultRecalculateDebtPeriod = time.Hour
 	DefaultLiquidatePeriod       = time.Hour
-	DefaultMintDenom             = []string{"nomUSD"}
+	DefaultMintDenom             = []string{"nomUSD", "nomEUR"}
 
 	KeyMintingFee            = []byte("MintingFee")
 	KeyStabilityFee          = []byte("StabilityFee")
