@@ -106,6 +106,10 @@ func (k Keeper) newLiquidateMap(ctx context.Context, mintDenom string, params ty
 			return true, err
 		}
 
+		if vault.Debt.Denom != mintDenom {
+			return false, nil
+		}
+
 		needCleanup := false
 		currentRate := math.LegacyMustNewDecFromStr(auction.CurrentRate)
 		lowestRate := math.LegacyMustNewDecFromStr(params.LowestRate)
