@@ -10,8 +10,9 @@ import (
 	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
-func (k Keeper) handleLiquidation(ctx context.Context, mintDenom string) error {
+func (k Keeper) handleLiquidation(ctx context.Context) error {
 	params := k.GetParams(ctx)
+	allowedMintDenoms := k.vaultKeeper.GetAllowedMintDenoms(ctx)
 
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
 	lastestAuctionPeriod, err := k.LastestAuctionPeriods.Get(ctx, "LastestAuctionPeriods")
@@ -26,57 +27,60 @@ func (k Keeper) handleLiquidation(ctx context.Context, mintDenom string) error {
 		if err != nil {
 			return err
 		}
-
-		liquidations, err := k.vaultKeeper.GetLiquidations(ctx, mintDenom)
-		if err != nil {
-			return err
-		}
-
-		liquidatedVaults := make([]*vaultstypes.Vault, 0)
-		for _, liq := range liquidations {
-			liquidatedVaults = append(liquidatedVaults, liq.LiquidatingVaults...)
-		}
-
-		// create new auction for this vault
-		for _, vault := range liquidatedVaults {
-			//calcualte initial price and target price
-			auction, isCreate, err := k.GetNewAuction(ctx, currentTime, vault.LiquidationPrice, vault.CollateralLocked, vault.Debt, vault.Id)
+		for _, mintDenom := range allowedMintDenoms {
+			liquidations, err := k.vaultKeeper.GetLiquidations(ctx, mintDenom)
 			if err != nil {
 				return err
 			}
 
-			if isCreate {
-				err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
-				if err != nil {
-					return err
-				}
-				err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{AuctionId: auction.AuctionId, Bids: []types.Bid{}})
-				if err != nil {
-					return err
-				}
-				err = k.BidIdSeq.Set(ctx, auction.AuctionId, 0)
-				if err != nil {
-					return err
-				}
+			liquidatedVaults := make([]*vaultstypes.Vault, 0)
+			for _, liq := range liquidations {
+				liquidatedVaults = append(liquidatedVaults, liq.LiquidatingVaults...)
 			}
-			if err != nil {
-				return err
+
+			// create new auction for this vault
+			for _, vault := range liquidatedVaults {
+				//calcualte initial price and target price
+				auction, isCreate, err := k.GetNewAuction(ctx, currentTime, vault.LiquidationPrice, vault.CollateralLocked, vault.Debt, vault.Id)
+				if err != nil {
+					return err
+				}
+
+				if isCreate {
+					err = k.Auctions.Set(ctx, auction.AuctionId, *auction)
+					if err != nil {
+						return err
+					}
+					err = k.Bids.Set(ctx, auction.AuctionId, types.BidQueue{AuctionId: auction.AuctionId, Bids: []types.Bid{}})
+					if err != nil {
+						return err
+					}
+					err = k.BidIdSeq.Set(ctx, auction.AuctionId, 0)
+					if err != nil {
+						return err
+					}
+				}
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
 
-	// loop through all auctions
-	// get liquidations data then distribute debt & collateral remain
-	liquidationMap, err := k.newLiquidateMap(ctx, mintDenom, params)
-	if err != nil {
-		return err
-	}
-
-	// Loop through liquidationMap and liquidate
-	for _, liq := range liquidationMap {
-		err := k.vaultKeeper.Liquidate(ctx, *liq, mintDenom)
+	for _, mintDenom := range allowedMintDenoms {
+		// loop through all auctions
+		// get liquidations data then distribute debt & collateral remain
+		liquidationMap, err := k.newLiquidateMap(ctx, mintDenom, params)
 		if err != nil {
 			return err
+		}
+
+		// Loop through liquidationMap and liquidate
+		for _, liq := range liquidationMap {
+			err := k.vaultKeeper.Liquidate(ctx, *liq, mintDenom)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
