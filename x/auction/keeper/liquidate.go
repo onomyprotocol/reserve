@@ -14,11 +14,18 @@ func (k Keeper) handleLiquidation(ctx context.Context, mintDenom string) error {
 	params := k.GetParams(ctx)
 
 	currentTime := sdk.UnwrapSDKContext(ctx).BlockHeader().Time
-	lastAuctionPeriods := time.Unix(k.LastestAuctionPeriod, 0)
+	lastestAuctionPeriod, err := k.LastestAuctionPeriods.Get(ctx, "LastestAuctionPeriods")
+	if err != nil {
+		return err
+	}
+	lastAuctionPeriods := time.Unix(lastestAuctionPeriod, 0)
 	// check if has reached the next auction periods
 	if lastAuctionPeriods.Add(params.AuctionPeriods).Before(currentTime) {
 		// update latest auction period
-		k.LastestAuctionPeriod = lastAuctionPeriods.Add(params.AuctionPeriods).Unix()
+		err = k.LastestAuctionPeriods.Set(ctx, "LastestAuctionPeriods", lastAuctionPeriods.Add(params.AuctionPeriods).Unix())
+		if err != nil {
+			return err
+		}
 
 		liquidations, err := k.vaultKeeper.GetLiquidations(ctx, mintDenom)
 		if err != nil {
