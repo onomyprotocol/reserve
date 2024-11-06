@@ -163,6 +163,10 @@ func (k *Keeper) MintCoin(
 		return fmt.Errorf("vault is not actived")
 	}
 
+	if sender.String() != vault.Owner {
+		return fmt.Errorf("sender is not the vault owner")
+	}
+
 	if mint.Denom != vault.Debt.Denom {
 		return fmt.Errorf("mint denom must be %s, got %s", vault.Debt.Denom, mint.Denom)
 	}
@@ -243,13 +247,14 @@ func (k *Keeper) RepayDebt(
 		return err
 	}
 
+	if sender.String() != vault.Owner {
+		return fmt.Errorf("sender is not the vault owner")
+	}
+
 	if repay.Denom != vault.Debt.Denom {
 		return fmt.Errorf("repay denom must be %s, got %s", vault.Debt.Denom, repay.Denom)
 	}
 
-	if sender.String() != vault.Owner {
-		return fmt.Errorf("sender is not the vault owner")
-	}
 	if vault.Status != types.ACTIVE {
 		return fmt.Errorf("vault is not actived")
 	}
