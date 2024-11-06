@@ -10,13 +10,10 @@ import (
 
 func (k *Keeper) BeginBlocker(ctx context.Context) error {
 	// get allowed mint denom
-	allowedMintDenoms := k.vaultKeeper.GetAllowedMintDenoms(ctx)
 
-	for _, mintDenom := range allowedMintDenoms {
-		err := k.handleLiquidation(ctx, mintDenom)
-		if err != nil {
-			return err
-		}
+	err := k.handleLiquidation(ctx)
+	if err != nil {
+		return err
 	}
 
 	return nil
