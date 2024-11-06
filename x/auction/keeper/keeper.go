@@ -31,7 +31,7 @@ type (
 		authority string
 
 		// timestamp of lastest auction period (Unix timestamp)
-		LastestAuctionPeriods collections.Map[string, int64]
+		LastestAuctionPeriods collections.Item[int64]
 
 		AuctionIdSeq collections.Sequence
 
@@ -75,7 +75,7 @@ func NewKeeper(
 		vaultKeeper:           vk,
 		OracleKeeper:          ok,
 		AuctionIdSeq:          collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
-		LastestAuctionPeriods: collections.NewMap(sb, types.LastestAuctionPeriodPrefix, "lastestAuctionPeriods", collections.StringKey, collections.Int64Value),
+		LastestAuctionPeriods: collections.NewItem(sb, types.LastestAuctionPeriodPrefix, "lastestAuctionPeriods", collections.Int64Value),
 		BidIdSeq:              collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
 		Auctions:              collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
 		Bids:                  collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
