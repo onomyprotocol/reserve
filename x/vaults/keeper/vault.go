@@ -645,6 +645,7 @@ func (k *Keeper) Liquidate(
 						vault.Debt.Amount = vault.Debt.Amount.Sub(soldAmount)
 					}
 					penaltyAmount = collateralRemain
+					vault.CollateralLocked.Amount = collateralRemain
 					vault.Status = types.CLOSED
 				}
 				err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(liquidation.Denom, penaltyAmount)))
