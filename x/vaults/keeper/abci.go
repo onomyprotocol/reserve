@@ -1,11 +1,14 @@
 package keeper
 
 import (
+	"context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // EndBlocker called at every block, update validator set
-func (k *Keeper) BeginBlocker(ctx sdk.Context) error {
+func (k *Keeper) BeginBlocker(goCtx context.Context) error {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 	currentTime := ctx.BlockTime()
 	params := k.GetParams(ctx)
 	// TODO: Recalculate debt
