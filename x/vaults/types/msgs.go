@@ -139,6 +139,10 @@ func (msg *MsgActiveCollateral) ValidateBasic() error {
 		return fmt.Errorf("minCollateralRatio cannot be less than 0")
 	}
 
+	if msg.StabilityFee.LTE(math.LegacyZeroDec()) {
+		return fmt.Errorf("StabilityFee cannot be less than 0")
+	}
+
 	if msg.LiquidationPenalty.LT(math.LegacyZeroDec()) {
 		return fmt.Errorf("minCollateralRatio cannot be less than 0")
 	}
@@ -172,6 +176,10 @@ func (msg *MsgUpdatesCollateral) ValidateBasic() error {
 
 	if msg.LiquidationRatio.LT(math.LegacyZeroDec()) {
 		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	}
+
+	if msg.StabilityFee.LTE(math.LegacyZeroDec()) {
+		return fmt.Errorf("StabilityFee cannot be less than 0")
 	}
 
 	if msg.LiquidationPenalty.LT(math.LegacyZeroDec()) {
