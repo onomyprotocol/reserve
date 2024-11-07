@@ -16,7 +16,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 		maxDebt         = math.NewInt(100_000_000_000_000_000)
 		fund            = sdk.NewCoin(denom, math.NewInt(1000000000000))
 		collateralAsset = sdk.NewCoin(denom, math.NewInt(100000000000))
-		mintedCoin      = sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(200000000))
+		mintedCoin      = sdk.NewCoin(types.DefaultMintDenoms[0], math.NewInt(200000000))
 	)
 
 	tests := []struct {
@@ -54,7 +54,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 				s.Require().NoError(err)
 			},
 			expErr:            false,
-			expDebt:           sdk.NewCoin(types.DefaultMintDenom[0], math.NewInt(210000010)), // 10% * 15/(60 * 60 * 24 * 365) * 210000000 + 210000000 = 210000010
+			expDebt:           sdk.NewCoin(types.DefaultMintDenoms[0], math.NewInt(210000010)), // 10% * 15/(60 * 60 * 24 * 365) * 210000000 + 210000000 = 210000010
 			expLastUpdateTime: s.Ctx.BlockTime(),
 			hasVaults:         false,
 		},
