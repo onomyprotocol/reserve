@@ -8,7 +8,7 @@ import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
 
-message Stablecoin {
+message StablecoinInfo {
   // stablecoin name
   string denom = 1;
   // limit total stablecoin
@@ -43,6 +43,4 @@ message Stablecoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  // type nom which swaps at a 1:1 ratio, as nomUSD ~ 1 USDT
-  string nom_type = 7;
 }

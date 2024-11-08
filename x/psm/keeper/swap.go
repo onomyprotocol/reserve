@@ -4,66 +4,86 @@ import (
 	"context"
 	"fmt"
 
+	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
-
-	errors "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/onomyprotocol/reserve/x/psm/types"
 )
 
 // SwapToStablecoin return receiveAmount, fee, error
-func (k Keeper) SwapToStablecoin(ctx context.Context, addr sdk.AccAddress, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
-	denomMint, err := k.GetNomType(ctx, toDenom)
+func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, offerCoin sdk.Coin, expectedDenom string) error {
+	// check stablecoin is suport
+	stablecoinInfo, err := k.StablecoinInfo.Get(ctx, expectedDenom)
 	if err != nil {
-		return math.ZeroInt(), sdk.DecCoin{}, err
+		return fmt.Errorf("%s not in list stablecoin supported", expectedDenom)
 	}
 
-	asset := k.BankKeeper.GetBalance(ctx, addr, denomMint)
-
-	if asset.Amount.LT(amount) {
-		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
-	}
-
-	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, denomMint)
-	if multiplier == nil || multiplier.IsNil() {
-		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", toDenom, denomMint)
-	}
-	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
-
-	fee, err := k.PayFeesOut(ctx, amountStablecoin.RoundInt(), toDenom)
+	// check lock Coin of user
+	totalStablecoinLock, err := k.TotalStablecoinLock(ctx, expectedDenom)
 	if err != nil {
-		return math.Int{}, sdk.DecCoin{}, err
+		return err
 	}
 
-	receiveAmount := amountStablecoin.Sub(fee)
-	return receiveAmount.RoundInt(), sdk.NewDecCoinFromDec(toDenom, fee), nil
+	rate := k.OracleKeeper.GetPrice(ctx, expectedDenom, types.USD)
+	if rate == nil || rate.IsNil() {
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", offerCoin.Denom, types.USD)
+	}
+
+	expectedAmount := offerCoin.Amount.ToLegacyDec().Quo(*rate).RoundInt()
+
+	// locked stablecoin is greater than the amount desired
+	if totalStablecoinLock.LT(expectedAmount) {
+		//TODO: register error
+		return fmt.Errorf("insufficient balance, PSM module have %d USD but request %d", totalStablecoinLock, expectedAmount)
+	}
+
+	fee, err := k.PayFeesOut(ctx, expectedAmount, expectedDenom)
+	if err != nil {
+		return err
+	}
+
+	// burn nomUSD
+	coinsBurn := sdk.NewCoins(offerCoin)
+	err = k.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
+	if err != nil {
+		return err
+	}
+	err = k.BankKeeper.BurnCoins(ctx, types.ModuleName, coinsBurn)
+	if err != nil {
+		return err
+	}
+
+	// update stable coin info
+	stablecoinReceive := sdk.NewCoin(expectedDenom, math.Int(expectedAmount))
+	stablecoinInfo.TotalStablecoinLock = totalStablecoinLock.Sub(expectedAmount)
+	err = k.StablecoinInfo.Set(ctx, expectedDenom, stablecoinInfo)
+	if err != nil {
+		return err
+	}
+
+	// send stablecoin to user
+	err = k.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
+	if err != nil {
+		return err
+	}
+
+	// event
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	sdkCtx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.EventSwapTonomUSD,
+			sdk.NewAttribute(types.AttributeAmount, offerCoin.String()),
+			sdk.NewAttribute(types.AttributeReceive, expectedAmount.String()),
+			sdk.NewAttribute(types.AttributeFeeIn, fee.String()),
+		),
+	)
+	return nil
 }
 
-func (k Keeper) SwapTonomUSD(ctx context.Context, addr sdk.AccAddress, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
-	denomMint, err := k.GetNomType(ctx, stablecoin.Denom)
-	if err != nil {
-		return math.ZeroInt(), sdk.DecCoin{}, err
-	}
-	asset := k.BankKeeper.GetBalance(ctx, addr, stablecoin.Denom)
-
-	if asset.Amount.LT(stablecoin.Amount) {
-		return math.ZeroInt(), sdk.DecCoin{}, fmt.Errorf("insufficient balance")
-	}
-
-	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, denomMint)
-	if multiplier == nil || multiplier.IsNil() {
-		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", stablecoin.Denom, denomMint)
-	}
-
-	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
-
-	fee, err := k.PayFeesIn(ctx, amountnomUSD.RoundInt(), stablecoin.Denom)
-	if err != nil {
-		return math.Int{}, sdk.DecCoin{}, err
-	}
-
-	receiveAmountnomUSD := amountnomUSD.Sub(fee)
-	return receiveAmountnomUSD.RoundInt(), sdk.NewDecCoinFromDec(denomMint, fee), nil
+func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAddress, offerCoin sdk.Coin, expectedDenom string) error {
+	return nil
 }
 
 func (k Keeper) PayFeesOut(ctx context.Context, amount math.Int, denom string) (math.LegacyDec, error) {

@@ -4,15 +4,14 @@ import (
 	"cosmossdk.io/math"
 )
 
-func GetMsgStablecoin(msg getStablecoinFromMsg) Stablecoin {
-	return Stablecoin{
+func GetMsgStablecoin(msg getStablecoinFromMsg) StablecoinInfo {
+	return StablecoinInfo{
 		Denom:               msg.GetDenom(),
 		LimitTotal:          msg.GetLimitTotal(),
 		FeeIn:               msg.GetFeeIn(),
 		FeeOut:              msg.GetFeeOut(),
 		TotalStablecoinLock: math.ZeroInt(),
 		FeeMaxStablecoin:    msg.GetFeeIn().Add(msg.GetFeeOut()),
-		NomType:             msg.GetNomType(),
 	}
 }
 
@@ -22,5 +21,4 @@ type getStablecoinFromMsg interface {
 	// GetPrice() math.LegacyDec
 	GetFeeIn() math.LegacyDec
 	GetFeeOut() math.LegacyDec
-	GetNomType() string
 }

@@ -16,13 +16,12 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
-		NomType:    "nomUSD",
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
 	s.Require().NoError(err)
 
-	stablecoin, err := s.k.Stablecoins.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err := s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitUSDT)
@@ -37,13 +36,12 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
-		NomType:    "nomUSD",
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
 	s.Require().NoError(err)
 
-	stablecoin, err := s.k.Stablecoins.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err := s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitUSDT)
@@ -57,13 +55,12 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
-		NomType:    "nomUSD",
 	}
 
 	_, err = s.msgServer.UpdatesStableCoinProposal(s.Ctx, &proUpdates)
 	s.Require().NoError(err)
 
-	stablecoin, err = s.k.Stablecoins.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err = s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitTotalUpdates)

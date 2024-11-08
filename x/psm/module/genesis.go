@@ -11,7 +11,7 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) error {
 	// this line is used by starport scaffolding # genesis/module/init
 	for _, sb := range genState.Stablecoins {
-		err := k.Stablecoins.Set(ctx, sb.Denom, sb)
+		err := k.StablecoinInfo.Set(ctx, sb.Denom, sb)
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) (*types.GenesisState, error
 		return nil, err
 	}
 
-	err = k.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+	err = k.StablecoinInfo.Walk(ctx, nil, func(key string, value types.StablecoinInfo) (stop bool, err error) {
 		genesis.Stablecoins = append(genesis.Stablecoins, value)
 		return false, nil
 	})

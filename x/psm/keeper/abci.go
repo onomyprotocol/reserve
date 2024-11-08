@@ -12,21 +12,21 @@ func (k Keeper) BeginBlocker(ctx context.Context) error {
 }
 
 func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
-	updatePrice := func(red types.Stablecoin) bool {
-		price := k.OracleKeeper.GetPrice(ctx, red.Denom, red.NomType)
+	updatePrice := func(info types.StablecoinInfo) bool {
+		price := k.OracleKeeper.GetPrice(ctx, info.Denom, "USD")
 		if price == nil || price.IsNil() {
 			return false
 		}
 
-		sc := k.stablecoinUpdate(ctx, *price, red)
-		err := k.Stablecoins.Set(ctx, sc.Denom, sc)
+		sc := k.stablecoinUpdate(ctx, *price, info)
+		err := k.StablecoinInfo.Set(ctx, sc.Denom, sc)
 		if err != nil {
 			return false
 		}
 		return false
 	}
 
-	return k.Stablecoins.Walk(ctx, nil, func(key string, value types.Stablecoin) (stop bool, err error) {
+	return k.StablecoinInfo.Walk(ctx, nil, func(key string, value types.StablecoinInfo) (stop bool, err error) {
 		return updatePrice(value), nil
 	}) //k.IterateStablecoin(ctx, updatePrice)
 }
@@ -56,7 +56,7 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 // 			newfeeOut = 0.02 - 0.014948314143157351 = 0.005051685856842649
 // 			So $nomUSD swap to $USDT will be cheaper than $USDT swap to $nomUSD
 
-func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, stablecoin types.Stablecoin) types.Stablecoin {
+func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, stablecoin types.StablecoinInfo) types.StablecoinInfo {
 	params, err := k.GetParams(ctx)
 	if err != nil {
 		panic(err)

@@ -1,16 +1,16 @@
 package types
 
 import (
+	"fmt"
+
 	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 var (
-	_ sdk.Msg              = &MsgSwapToNom{}
-	_ sdk.Msg              = &MsgSwapToStablecoin{}
+	_ sdk.Msg              = &MsgStableSwap{}
 	_ sdk.Msg              = &MsgAddStableCoin{}
 	_ sdk.Msg              = &MsgUpdatesStableCoin{}
 	_ getStablecoinFromMsg = &MsgAddStableCoin{}
@@ -31,22 +31,23 @@ func init() {
 
 }
 
-func NewMsgSwapToNom(addr string, coin sdk.Coin) *MsgSwapToNom {
-	return &MsgSwapToNom{
-		Address: addr,
-		Coin:    coin,
+func NewMsgStableSwap(addr string, coin sdk.Coin, expectedDenom string) *MsgStableSwap {
+	return &MsgStableSwap{
+		Address:       addr,
+		OfferCoin:     coin,
+		ExpectedDenom: expectedDenom,
 	}
 }
 
-func (msg MsgSwapToNom) ValidateBasic() error {
+func (msg MsgStableSwap) ValidateBasic() error {
 	if msg.Address == "" {
 		return fmt.Errorf("empty address")
 	}
 
-	return msg.Coin.Validate()
+	return msg.OfferCoin.Validate()
 }
 
-func (msg MsgSwapToNom) GetSigners() []sdk.AccAddress {
+func (msg MsgStableSwap) GetSigners() []sdk.AccAddress {
 	acc, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		panic(err)
@@ -55,43 +56,7 @@ func (msg MsgSwapToNom) GetSigners() []sdk.AccAddress {
 }
 
 // Route implements the sdk.Msg interface.
-func (msg MsgSwapToNom) Route() string { return RouterKey }
-
-// ///////////
-func NewMsgSwapToStablecoin(addr, toDenom string, amount sdk.Coin) *MsgSwapToStablecoin {
-	return &MsgSwapToStablecoin{
-		Address: addr,
-		ToDenom: toDenom,
-		Coin:    amount,
-	}
-}
-
-func (msg MsgSwapToStablecoin) ValidateBasic() error {
-	if msg.Address == "" {
-		return fmt.Errorf("empty address")
-	}
-	if msg.ToDenom == "" {
-		return fmt.Errorf("empty denom")
-	}
-
-	return msg.Coin.Validate()
-}
-
-func (msg MsgSwapToStablecoin) GetSigners() []sdk.AccAddress {
-	acc, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{acc}
-}
-
-// Route implements the sdk.Msg interface.
-func (msg MsgSwapToStablecoin) Route() string { return RouterKey }
-
-var (
-	Query_serviceDesc = _Query_serviceDesc
-	Msg_serviceDesc   = _Msg_serviceDesc
-)
+func (msg MsgStableSwap) Route() string { return RouterKey }
 
 // func (msg MsgAddStableCoin) GetPrice() math.LegacyDec {
 // 	return msg.Price
@@ -124,10 +89,6 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 
 	if msg.LimitTotal.LT(math.ZeroInt()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
-	}
-
-	if msg.NomType == "" {
-		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty nom type")
 	}
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
@@ -163,10 +124,6 @@ func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 
 	if msg.LimitTotal.LT(math.ZeroInt()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
-	}
-
-	if msg.NomType == "" {
-		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty nom type")
 	}
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {

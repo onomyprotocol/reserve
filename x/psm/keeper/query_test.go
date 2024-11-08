@@ -16,7 +16,7 @@ func (s *KeeperTestSuite) TestQueryParams() {
 func (s *KeeperTestSuite) TestStablecoin() {
 	s.SetupTest()
 
-	sc := types.Stablecoin{
+	sc := types.StablecoinInfo{
 		Denom:               usdt,
 		LimitTotal:          limitUSDT,
 		FeeIn:               math.LegacyMustNewDecFromStr("0.001"),
@@ -24,7 +24,7 @@ func (s *KeeperTestSuite) TestStablecoin() {
 		TotalStablecoinLock: math.ZeroInt(),
 		FeeMaxStablecoin:    math.LegacyZeroDec(),
 	}
-	err := s.k.Stablecoins.Set(s.Ctx, sc.Denom, sc)
+	err := s.k.StablecoinInfo.Set(s.Ctx, sc.Denom, sc)
 	s.Require().NoError(err)
 
 	rp, err := s.queryServer.Stablecoin(s.Ctx, &types.QueryStablecoinRequest{Denom: usdt})

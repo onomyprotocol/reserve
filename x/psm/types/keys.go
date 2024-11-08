@@ -15,6 +15,12 @@ const (
 
 	// MemStoreKey defines the in-memory store key.
 	MemStoreKey = "mem_psm"
+
+	// Reserve Stable Coin denom prefix
+	ReserveStableCoinDenomPrefix = "nom"
+
+	// USD
+	USD = "USD"
 )
 
 var (
