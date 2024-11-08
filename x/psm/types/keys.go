@@ -17,10 +17,7 @@ const (
 	MemStoreKey = "mem_psm"
 
 	// Reserve Stable Coin denom prefix
-	ReserveStableCoinDenomPrefix = "nom"
-
-	// USD
-	USD = "USD"
+	ReserveStableCoinDenom = "nomUSD"
 )
 
 var (

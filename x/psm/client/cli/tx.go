@@ -29,12 +29,12 @@ func GetTxCmd() *cobra.Command {
 func NewSwapToNomCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "swap [offer_stable_coin] [expected_denom]",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		Short: "stable swap  ",
 		Long: `swap between stable coins.
 
 			Example:
-			$ onomyd tx psm swap 100000000000000000000000usdt ibc/xxxxx --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+			$ onomyd tx psm swap 100000000000000000000000nomUSD ibc/xxxxx --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 	`,
 

@@ -25,15 +25,15 @@ echo $mnemonic2| reserved keys add validator2 --recover --keyring-backend=test -
 echo $mnemonic3| reserved keys add validator3 --recover --keyring-backend=test --home=$HOME/.reserved/validator3
 
 # create validator node with tokens to transfer to the three other nodes
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator1 
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator2 
-reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator3 
-reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000eurt,10000000000000000000000000000000usdc,10000000000000000000000000000000jpyt --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator1 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator2 
+reserved genesis add-genesis-account $(reserved keys show validator1 -a --keyring-backend=test --home=$HOME/.reserved/validator1) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator2 -a --keyring-backend=test --home=$HOME/.reserved/validator2) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator3 
+reserved genesis add-genesis-account $(reserved keys show validator3 -a --keyring-backend=test --home=$HOME/.reserved/validator3) 10000000000000000000000000000000stake,10000000000000000000000000000000usdt,10000000000000000000000000000000usdc --home=$HOME/.reserved/validator3 
 reserved genesis gentx validator1 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator1 --chain-id=testing-1
 reserved genesis gentx validator2 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator2 --chain-id=testing-1
 reserved genesis gentx validator3 1000000000000000000000stake --keyring-backend=test --home=$HOME/.reserved/validator3 --chain-id=testing-1
@@ -130,36 +130,18 @@ reserved tx gov vote 1 yes  --from validator3 --keyring-backend test --home ~/.r
 sleep 15
 # echo "========sleep=========="
 
-# # check add usdt, balances
-# reserved q psm  all-stablecoin
+# # # check add usdt, balances
+# # reserved q psm  all-stablecoin
 reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
-# # tx swap usdt to nomUSD
-# echo "========swap==========="
-reserved tx psm swap-to-nom 100000000000000000000000usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+# # # tx swap usdt to nomUSD
+# # echo "========swap==========="
+reserved tx psm swap 100000000000000000000000usdt nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 
-reserved tx psm swap-to-nom 100000000000000000000000eurt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
+reserved tx psm swap 1000000000usdc nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
-
-reserved tx psm swap-to-nom 100000000000000000000000usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap 1000nomUSD usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
-reserved tx psm swap-to-nom 100000000000000000000000jpyt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-sleep 7
-# # Check account after swap
-reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
-# # tx swap nomUSD to usdt
-reserved tx psm swap-to-stablecoin usdc 1000nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
-sleep 7
-# Check account after swap
-reserved tx psm swap-to-stablecoin eurt 1000nomEUR --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
-sleep 7
-reserved tx psm swap-to-stablecoin jpyt 1000nomJPY --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
-sleep 7
-reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
-# # killall reserved || true
+reserved tx psm swap 1000nomUSD usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
