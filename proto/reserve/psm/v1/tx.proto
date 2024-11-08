@@ -69,6 +69,7 @@ message MsgAddStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+  int64 oracle_script = 6;
 }
 
 message MsgAddStableCoinResponse {}
@@ -98,6 +99,8 @@ message MsgUpdatesStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+
+  int64 oracle_script = 6;
 }
 
 message MsgUpdatesStableCoinResponse {}

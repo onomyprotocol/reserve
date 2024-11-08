@@ -58,10 +58,6 @@ func (msg MsgStableSwap) GetSigners() []sdk.AccAddress {
 // Route implements the sdk.Msg interface.
 func (msg MsgStableSwap) Route() string { return RouterKey }
 
-// func (msg MsgAddStableCoin) GetPrice() math.LegacyDec {
-// 	return msg.Price
-// }
-
 func (msg MsgAddStableCoin) GetLimitTotal() math.Int {
 	return msg.LimitTotal
 }
@@ -85,6 +81,10 @@ func (a *MsgAddStableCoin) GetTitle() string       { return RouterKey }
 func (msg MsgAddStableCoin) ValidateBasic() error {
 	if msg.Denom == "" {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
+	}
+
+	if msg.OracleScript <= 0 {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty oracle script")
 	}
 
 	if msg.LimitTotal.LT(math.ZeroInt()) {
@@ -124,6 +124,10 @@ func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 
 	if msg.LimitTotal.LT(math.ZeroInt()) {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "limittotal less than zero")
+	}
+
+	if msg.OracleScript <= 0 {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty oracle script")
 	}
 
 	if msg.FeeIn.LT(math.LegacyZeroDec()) {
