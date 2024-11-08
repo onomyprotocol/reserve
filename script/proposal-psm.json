@@ -5,7 +5,8 @@
       "denom": "usdt",
       "limit_total": "100000000000000000000000000000",
       "fee_in": "0.001000000000000000",
-      "fee_out": "0.001000000000000000"
+      "fee_out": "0.001000000000000000",
+      "oracle_script": "44"
     },
     {
       "@type": "/reserve.psm.v1.MsgAddStableCoin",
@@ -13,7 +14,8 @@
       "denom": "usdc",
       "limit_total": "100000000000000000000000000000",
       "fee_in": "0.001000000000000000",
-      "fee_out": "0.001000000000000000"
+      "fee_out": "0.001000000000000000",
+      "oracle_script": "44"
     }],
     "deposit": "100000000stake",
     "title": "My proposal",
