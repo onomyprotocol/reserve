@@ -11,11 +11,12 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	s.SetupTest()
 
 	proAdd := types.MsgAddStableCoin{
-		Denom:      usdt,
-		LimitTotal: limitUSDT,
-		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		Denom:        usdt,
+		LimitTotal:   limitUSDT,
+		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
+		OracleScript: 44,
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -31,11 +32,12 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	s.SetupTest()
 
 	proAdd := types.MsgAddStableCoin{
-		Denom:      usdt,
-		LimitTotal: limitUSDT,
-		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		Denom:        usdt,
+		LimitTotal:   limitUSDT,
+		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
+		OracleScript: 44,
 	}
 
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
@@ -50,11 +52,12 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	limitTotalUpdates := math.NewInt(2000000)
 
 	proUpdates := types.MsgUpdatesStableCoin{
-		Denom:      usdt,
-		LimitTotal: limitTotalUpdates,
-		Authority:  authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		FeeIn:      math.LegacyMustNewDecFromStr("0.001"),
-		FeeOut:     math.LegacyMustNewDecFromStr("0.001"),
+		Denom:        usdt,
+		LimitTotal:   limitTotalUpdates,
+		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
+		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
+		OracleScript: 44,
 	}
 
 	_, err = s.msgServer.UpdatesStableCoinProposal(s.Ctx, &proUpdates)

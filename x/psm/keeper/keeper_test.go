@@ -17,8 +17,8 @@ var (
 	usdt = "usdt"
 	usdc = "usdc"
 
-	limitUSDT = math.NewInt(1000000)
-	limitUSDC = math.NewInt(1000000)
+	limitUSDT = math.NewInt(100000000)
+	limitUSDC = math.NewInt(100000000)
 )
 
 type MockOracleKeeper struct {

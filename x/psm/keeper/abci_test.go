@@ -41,10 +41,11 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 	for _, t := range tests {
 		s.Run(t.name, func() {
 			sc := types.GetMsgStablecoin(&types.MsgAddStableCoin{
-				Denom:      usdt,
-				LimitTotal: limitUSDT,
-				FeeIn:      t.feeIn,
-				FeeOut:     t.feeOut,
+				Denom:        usdt,
+				LimitTotal:   limitUSDT,
+				FeeIn:        t.feeIn,
+				FeeOut:       t.feeOut,
+				OracleScript: 44,
 			})
 			s.mockOracleKeeper.SetPrice(s.Ctx, sc.Denom, t.priceCurrent)
 			err := s.k.StablecoinInfos.Set(s.Ctx, sc.Denom, sc)
