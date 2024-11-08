@@ -18,7 +18,4 @@ message GenesisState {
 
   repeated StablecoinInfo stablecoins = 2
     [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
-
-  repeated string noms = 3
-    [ (amino.dont_omitempty) = true ];
 }
