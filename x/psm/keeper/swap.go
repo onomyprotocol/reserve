@@ -102,7 +102,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	// send stablecoin to module
 	err = k.BankKeeper.SendCoinsFromAccountToModule(ctx, accAddress, types.ModuleName, sdk.NewCoins(offerCoin))
 	if err != nil {
-		return fmt.Errorf(err.Error() + "1111")
+		return err
 	}
 
 	// mint nomUSD
@@ -114,7 +114,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	// send to user
 	err = k.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, accAddress, coinsMint)
 	if err != nil {
-		return fmt.Errorf(err.Error() + "222")
+		return err
 	}
 
 	// event
