@@ -24,7 +24,7 @@ func (s *KeeperTestSuite) TestStablecoin() {
 		TotalStablecoinLock: math.ZeroInt(),
 		FeeMaxStablecoin:    math.LegacyZeroDec(),
 	}
-	err := s.k.StablecoinInfo.Set(s.Ctx, sc.Denom, sc)
+	err := s.k.StablecoinInfos.Set(s.Ctx, sc.Denom, sc)
 	s.Require().NoError(err)
 
 	rp, err := s.queryServer.Stablecoin(s.Ctx, &types.QueryStablecoinRequest{Denom: usdt})

@@ -8,7 +8,7 @@ import (
 )
 
 func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom string) (math.Int, error) {
-	s, err := k.StablecoinInfo.Get(ctx, denom)
+	s, err := k.StablecoinInfos.Get(ctx, denom)
 	if err != nil {
 		return math.Int{}, fmt.Errorf("not found Stable coin %s", denom)
 	}
@@ -16,7 +16,7 @@ func (k Keeper) GetTotalLimitWithDenomStablecoin(ctx context.Context, denom stri
 }
 
 func (k Keeper) GetFeeIn(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, err := k.StablecoinInfo.Get(ctx, denom)
+	s, err := k.StablecoinInfos.Get(ctx, denom)
 	if err != nil {
 		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
 	}
@@ -24,7 +24,7 @@ func (k Keeper) GetFeeIn(ctx context.Context, denom string) (math.LegacyDec, err
 }
 
 func (k Keeper) GetFeeOut(ctx context.Context, denom string) (math.LegacyDec, error) {
-	s, err := k.StablecoinInfo.Get(ctx, denom)
+	s, err := k.StablecoinInfos.Get(ctx, denom)
 	if err != nil {
 		return math.LegacyDec{}, fmt.Errorf("not found Stable coin %s", denom)
 	}

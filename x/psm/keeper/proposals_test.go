@@ -21,7 +21,7 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
 	s.Require().NoError(err)
 
-	stablecoin, err := s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err := s.k.StablecoinInfos.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitUSDT)
@@ -41,7 +41,7 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &proAdd)
 	s.Require().NoError(err)
 
-	stablecoin, err := s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err := s.k.StablecoinInfos.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitUSDT)
@@ -60,7 +60,7 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	_, err = s.msgServer.UpdatesStableCoinProposal(s.Ctx, &proUpdates)
 	s.Require().NoError(err)
 
-	stablecoin, err = s.k.StablecoinInfo.Get(s.Ctx, proAdd.Denom)
+	stablecoin, err = s.k.StablecoinInfos.Get(s.Ctx, proAdd.Denom)
 	s.Require().NoError(err)
 	s.Require().Equal(stablecoin.Denom, proAdd.Denom)
 	s.Require().Equal(stablecoin.LimitTotal, limitTotalUpdates)

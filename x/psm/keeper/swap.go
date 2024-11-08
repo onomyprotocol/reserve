@@ -15,7 +15,7 @@ import (
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, offerCoin sdk.Coin, expectedDenom string) error {
 	// check stablecoin is suport
-	stablecoinInfo, err := k.StablecoinInfo.Get(ctx, expectedDenom)
+	stablecoinInfo, err := k.StablecoinInfos.Get(ctx, expectedDenom)
 	if err != nil {
 		return fmt.Errorf("%s not in list stablecoin supported", expectedDenom)
 	}
@@ -58,7 +58,7 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 	// update stable coin info
 	stablecoinReceive := sdk.NewCoin(expectedDenom, math.Int(expectedAmount))
 	stablecoinInfo.TotalStablecoinLock = totalStablecoinLock.Sub(expectedAmount)
-	err = k.StablecoinInfo.Set(ctx, expectedDenom, stablecoinInfo)
+	err = k.StablecoinInfos.Set(ctx, expectedDenom, stablecoinInfo)
 	if err != nil {
 		return err
 	}

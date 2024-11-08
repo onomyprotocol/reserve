@@ -36,8 +36,8 @@ type (
 		AccountKeeper types.AccountKeeper
 		OracleKeeper  types.OracleKeeper
 
-		StablecoinInfo collections.Map[string, types.StablecoinInfo]
-		Noms           collections.Map[string, string]
+		StablecoinInfos collections.Map[string, types.StablecoinInfo]
+		Noms            collections.Map[string, string]
 	}
 )
 
@@ -65,12 +65,12 @@ func NewKeeper(
 		authority:    authority,
 		// logger:       logger,
 
-		BankKeeper:     bankKeeper,
-		AccountKeeper:  accountKeeper,
-		OracleKeeper:   oracleKeeper,
-		Params:         collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		StablecoinInfo: collections.NewMap(sb, types.KeyStableCoin, "stablecoins", collections.StringKey, codec.CollValue[types.StablecoinInfo](cdc)),
-		Noms:           collections.NewMap(sb, types.KeyNoms, "nomtypes", collections.StringKey, collections.StringValue),
+		BankKeeper:      bankKeeper,
+		AccountKeeper:   accountKeeper,
+		OracleKeeper:    oracleKeeper,
+		Params:          collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
+		StablecoinInfos: collections.NewMap(sb, types.KeyStableCoin, "stablecoins", collections.StringKey, codec.CollValue[types.StablecoinInfo](cdc)),
+		Noms:            collections.NewMap(sb, types.KeyNoms, "nomtypes", collections.StringKey, collections.StringValue),
 	}
 
 	schema, err := sb.Build()
@@ -93,7 +93,7 @@ func (k Keeper) Logger() log.Logger {
 }
 
 func (k Keeper) TotalStablecoinLock(ctx context.Context, nameStablecoin string) (math.Int, error) {
-	sc, err := k.StablecoinInfo.Get(ctx, nameStablecoin)
+	sc, err := k.StablecoinInfos.Get(ctx, nameStablecoin)
 	if err != nil {
 		return math.Int{}, fmt.Errorf("canot found stablecoin name %s", nameStablecoin)
 	}
@@ -102,7 +102,7 @@ func (k Keeper) TotalStablecoinLock(ctx context.Context, nameStablecoin string) 
 }
 
 func (k Keeper) AddTotalStablecoinLock(ctx context.Context, amountAdd sdk.Coin) error {
-	sc, err := k.StablecoinInfo.Get(ctx, amountAdd.Denom)
+	sc, err := k.StablecoinInfos.Get(ctx, amountAdd.Denom)
 	if err != nil {
 		return fmt.Errorf("canot found stablecoin name %s", amountAdd.Denom)
 	}
@@ -112,11 +112,11 @@ func (k Keeper) AddTotalStablecoinLock(ctx context.Context, amountAdd sdk.Coin) 
 		return fmt.Errorf("exceed limitTotal stablecoin %s", amountAdd.Denom)
 	}
 
-	return k.StablecoinInfo.Set(ctx, sc.Denom, sc)
+	return k.StablecoinInfos.Set(ctx, sc.Denom, sc)
 }
 
 func (k Keeper) SubTotalStablecoinLock(ctx context.Context, amountSub sdk.Coin) error {
-	sc, err := k.StablecoinInfo.Get(ctx, amountSub.Denom)
+	sc, err := k.StablecoinInfos.Get(ctx, amountSub.Denom)
 	if err != nil {
 		return fmt.Errorf("canot found stablecoin name %s", amountSub.Denom)
 	}
@@ -125,5 +125,5 @@ func (k Keeper) SubTotalStablecoinLock(ctx context.Context, amountSub sdk.Coin) 
 	if sc.TotalStablecoinLock.LT(math.ZeroInt()) {
 		return fmt.Errorf("not enough stablecoins %s to pay", amountSub.Denom)
 	}
-	return k.StablecoinInfo.Set(ctx, sc.Denom, sc)
+	return k.StablecoinInfos.Set(ctx, sc.Denom, sc)
 }
