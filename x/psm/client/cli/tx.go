@@ -21,54 +21,21 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(NewSwapToStablecoinCmd())
-	cmd.AddCommand(NewSwapTonomUSDCmd())
+	cmd.AddCommand(NewSwapToNomCmd())
 
 	return cmd
 }
 
-func NewSwapTonomUSDCmd() *cobra.Command {
+func NewSwapToNomCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "swap-to-nomUSD [stablecoin]",
-		Args:  cobra.ExactArgs(1),
-		Short: "swap stablecoin to $nomUSD ",
-		Long: `swap stablecoin to $nomUSD.
-
-			Example:
-			$ onomyd tx psm swap-to-nomUSD 1000usdt --from mykey
-	`,
-
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-			stablecoin, err := sdk.ParseCoinNormalized(args[0])
-			if err != nil {
-				return err
-			}
-
-			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapTonomUSD(addr.String(), &stablecoin)
-
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-func NewSwapToStablecoinCmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "swap-to-stablecoin [stable-coin-type] [amount-nomUSD]",
+		Use:   "swap [offer_stable_coin] [expected_denom]",
 		Args:  cobra.ExactArgs(2),
-		Short: "swap $nomUSD to stablecoin ",
-		Long: `swap $nomUSD to stablecoin.
+		Short: "stable swap  ",
+		Long: `swap between stable coins.
 
 			Example:
-			$ onomyd tx psm swap-to-stablecoin usdt 10000nomUSD --from mykey
+			$ onomyd tx psm swap 100000000000000000000000nomUSD ibc/xxxxx --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
 	`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -76,13 +43,13 @@ func NewSwapToStablecoinCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			nomUSDcoin, err := sdk.ParseCoinNormalized(args[1])
+			offerCoin, err := sdk.ParseCoinNormalized(args[0])
 			if err != nil {
 				return err
 			}
 
 			addr := clientCtx.GetFromAddress()
-			msg := types.NewMsgSwapToStablecoin(addr.String(), args[0], nomUSDcoin.Amount)
+			msg := types.NewMsgStableSwap(addr.String(), offerCoin, args[1])
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

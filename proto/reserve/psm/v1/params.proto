@@ -8,7 +8,7 @@ import "cosmos_proto/cosmos.proto";
 option go_package = "github.com/onomyprotocol/reserve/x/psm/types";
 
 message Params {
-  // total $nomUSD can mint
+  // total $nomX can mint
   bytes limit_total = 1 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",

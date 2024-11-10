@@ -27,7 +27,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Params struct {
-	// total $nomUSD can mint
+	// total $nomX can mint
 	LimitTotal cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=limit_total,json=limitTotal,proto3,customtype=cosmossdk.io/math.Int" json:"limit_total"`
 	// The price cannot be exactly 1, an acceptable such as 0.9999 (AcceptablePriceRatio = 0.0001)
 	AcceptablePriceRatio cosmossdk_io_math.LegacyDec `protobuf:"bytes,2,opt,name=acceptable_price_ratio,json=acceptablePriceRatio,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"acceptable_price_ratio"`
