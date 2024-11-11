@@ -45,7 +45,7 @@ func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCol
 		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err = k.ActiveCollateralAsset(ctx, msg.Denom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, int64(msg.OraclScript))
+	err = k.ActiveCollateralAsset(ctx, msg.Denom, msg.SymBol, msg.MintDenom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, int64(msg.OraclScript))
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +173,7 @@ func (k msgServer) Close(ctx context.Context, msg *types.MsgClose) (*types.MsgCl
 	if err != nil {
 		return nil, fmt.Errorf("vault %d was not found", msg.VaultId)
 	}
-	
+
 	err = k.CloseVault(ctx, msg.Sender, vault)
 	if err != nil {
 		return nil, err

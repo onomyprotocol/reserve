@@ -122,21 +122,16 @@ reserved q gov proposals
 # reserved tx gov submit-legacy-proposal active-collateral "title" "description" "atom" "10" "0.1" "10000" 10000000000000000000stake --keyring-backend=test  --home=$HOME/.reserved/validator1 --from validator1 -y --chain-id testing-1 --fees 20stake
 
 reserved tx gov submit-proposal ./script/proposal-vault-1.json --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
-reserved tx gov submit-proposal ./script/proposal-vault-2.json --home=$HOME/.reserved/validator2  --from validator2 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 
 # # vote
 sleep 7
 reserved tx gov vote 1 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 reserved tx gov vote 1 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
 reserved tx gov vote 1 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y --fees 20stake
-sleep 7
-reserved tx gov vote 2 yes  --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-reserved tx gov vote 2 yes  --from validator2 --keyring-backend test --home ~/.reserved/validator2 --chain-id testing-1 -y --fees 20stake
-reserved tx gov vote 2 yes  --from validator3 --keyring-backend test --home ~/.reserved/validator3 --chain-id testing-1 -y --fees 20stake
 
 # wait voting_perio=15s
 echo "========sleep=========="
-sleep 8
+sleep 15
 reserved q gov proposals
 reserved tx oracle set-price usdt 1  --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 reserved tx oracle set-price atom 8  --home=$HOME/.reserved/validator2  --from validator2 --keyring-backend test --fees 20stake --chain-id testing-1 -y

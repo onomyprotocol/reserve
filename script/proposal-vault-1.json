@@ -5,7 +5,19 @@
       "authority":"onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
       "min_collateral_ratio": "0.5",
       "liquidation_ratio":"0.5",
-      "max_debt":"1000000000000000000000000000"
+      "max_debt":"1000000000000000000000000000",
+      "sym_bol": "usdt",
+      "mint_denom": "nomUSD"
+    },
+    {
+      "@type": "/reserve.vaults.MsgActiveCollateral",
+      "denom": "atom",
+      "authority":"onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
+      "min_collateral_ratio": "0.5",
+      "liquidation_ratio":"0.5",
+      "max_debt":"1000000000000000000000000000",
+      "sym_bol": "atom",
+      "mint_denom": "nomUSD"
     }],
     "deposit": "100000000stake",
     "title": "My proposal",
