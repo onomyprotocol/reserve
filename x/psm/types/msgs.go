@@ -83,6 +83,10 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
 	}
 
+	if msg.SymBol == "" {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty symbol")
+	}
+
 	if msg.OracleScript <= 0 {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty oracle script")
 	}
@@ -120,6 +124,10 @@ func (msg MsgUpdatesStableCoin) GetFeeOut() math.LegacyDec {
 func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 	if msg.Denom == "" {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
+	}
+
+	if msg.SymBol == "" {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty symbol")
 	}
 
 	if msg.LimitTotal.LT(math.ZeroInt()) {
