@@ -206,7 +206,6 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		in.AccountKeeper,
 		in.BankKeeper,
 		&in.VaultKeeper,
-		&in.OracleKeeper,
 		in.Logger,
 		authority.String(),
 	)

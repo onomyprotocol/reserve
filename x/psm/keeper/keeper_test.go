@@ -68,6 +68,7 @@ func (s *KeeperTestSuite) SetupTest() {
 		prices: make(map[string]math.LegacyDec),
 	}
 	mockOracleKeeper.SetPrice(s.Ctx, types.ReserveStableCoinDenom, math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, types.SymBolUSD, math.LegacyMustNewDecFromStr("1"))
 
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper

@@ -31,7 +31,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 			name: "success: one vault",
 			setup: func() { // 100000000000atom debt 210000000nomUSD(get 200000000nomUSD + 10000000nomUSD MintingFee)
 				err := s.k.ActiveCollateralAsset(s.Ctx,
-					denom, math.LegacyMustNewDecFromStr("1.6"),
+					denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("1.6"),
 					math.LegacyMustNewDecFromStr("1.5"),
 					maxDebt, stabilityFee,
 					types.DefaultMintingFee,
@@ -62,7 +62,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 			name: "success: no vault, LastUpdateTime updates",
 			setup: func() { // 100000000000atom debt 210000000nomUSD(get 200000000nomUSD + 10000000nomUSD MintingFee)
 				err := s.k.ActiveCollateralAsset(s.Ctx,
-					denom, math.LegacyMustNewDecFromStr("1.6"),
+					denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("1.6"),
 					math.LegacyMustNewDecFromStr("1.5"),
 					maxDebt, stabilityFee,
 					types.DefaultMintingFee,

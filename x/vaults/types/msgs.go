@@ -3,7 +3,6 @@ package types
 import (
 	"fmt"
 
-	sdkerrors "cosmossdk.io/errors"
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
@@ -119,8 +118,20 @@ func (msg *MsgClose) ValidateBasic() error {
 }
 
 func (msg *MsgActiveCollateral) ValidateBasic() error {
-	if msg.Denom == "" {
+	if msg.CollateralDenom == "" {
 		return fmt.Errorf("denom is empty")
+	}
+
+	if msg.CollateralSymbol == "" {
+		return fmt.Errorf("symbol is empty")
+	}
+
+	if msg.MintDenom == "" {
+		return fmt.Errorf("mintDenom is empty")
+	}
+
+	if msg.MintSymbol == "" {
+		return fmt.Errorf("mintSymbol is empty")
 	}
 
 	if msg.Authority == "" {
@@ -158,8 +169,16 @@ func (msg *MsgActiveCollateral) ValidateBasic() error {
 }
 
 func (msg *MsgUpdatesCollateral) ValidateBasic() error {
-	if msg.Denom == "" {
+	if msg.CollateralDenom == "" {
 		return fmt.Errorf("denom is empty")
+	}
+
+	if msg.SymBol == "" {
+		return fmt.Errorf("symbol is empty")
+	}
+
+	if msg.MintDenom == "" {
+		return fmt.Errorf("mintDenom is empty")
 	}
 
 	if msg.Authority == "" {
@@ -201,7 +220,7 @@ var _ govtypes.Content = &UpdatesCollateralProposal{}
 
 func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 	return &MsgActiveCollateral{
-		Denom:              a.ActiveCollateral.Denom,
+		CollateralDenom:    a.ActiveCollateral.CollateralDenom,
 		MinCollateralRatio: a.ActiveCollateral.MinCollateralRatio,
 		LiquidationRatio:   a.ActiveCollateral.LiquidationRatio,
 		MaxDebt:            a.ActiveCollateral.MaxDebt,
@@ -210,12 +229,14 @@ func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 		MintingFee:         a.ActiveCollateral.MintingFee,
 		OraclScript:        a.ActiveCollateral.OraclScript,
 		Authority:          a.ActiveCollateral.Authority,
+		CollateralSymbol:   a.ActiveCollateral.CollateralSymbol,
+		MintDenom:          a.ActiveCollateral.MintDenom,
 	}
 }
 
 func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral {
 	return &MsgUpdatesCollateral{
-		Denom:              u.UpdatesCollateral.Denom,
+		CollateralDenom:    u.UpdatesCollateral.CollateralDenom,
 		MinCollateralRatio: u.UpdatesCollateral.MinCollateralRatio,
 		LiquidationRatio:   u.UpdatesCollateral.LiquidationRatio,
 		MaxDebt:            u.UpdatesCollateral.MaxDebt,
@@ -224,6 +245,8 @@ func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral
 		MintingFee:         u.UpdatesCollateral.MintingFee,
 		OraclScript:        u.UpdatesCollateral.OraclScript,
 		Authority:          u.UpdatesCollateral.Authority,
+		SymBol:             u.UpdatesCollateral.SymBol,
+		MintDenom:          u.UpdatesCollateral.MintDenom,
 	}
 }
 
@@ -245,23 +268,8 @@ func (m *ActiveCollateralProposal) ProposalType() string {
 
 func (m *ActiveCollateralProposal) ValidateBasic() error {
 	a := m.ActiveCollateral
-	if a.Denom == "" {
-		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "empty denom")
-	}
 
-	if a.MinCollateralRatio.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
-	}
-
-	if a.LiquidationRatio.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
-	}
-
-	if a.MaxDebt.LT(math.ZeroInt()) {
-		return sdkerrors.Wrap(ErrInvalidActiveCollateralProposal, "less than zero")
-	}
-
-	return nil
+	return a.ValidateBasic()
 }
 
 func (m *UpdatesCollateralProposal) GetDescription() string {
@@ -282,21 +290,6 @@ func (m *UpdatesCollateralProposal) ProposalType() string {
 
 func (m *UpdatesCollateralProposal) ValidateBasic() error {
 	a := m.UpdatesCollateral
-	if a.Denom == "" {
-		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "empty denom")
-	}
 
-	if a.MinCollateralRatio.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
-	}
-
-	if a.LiquidationRatio.LT(math.LegacyZeroDec()) {
-		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
-	}
-
-	if a.MaxDebt.LT(math.ZeroInt()) {
-		return sdkerrors.Wrap(ErrInvalidUpdatesCollateralProposal, "less than zero")
-	}
-
-	return nil
+	return a.ValidateBasic()
 }

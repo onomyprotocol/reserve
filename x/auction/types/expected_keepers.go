@@ -3,8 +3,6 @@ package types
 import (
 	"context"
 
-	"cosmossdk.io/math"
-
 	addresscodec "cosmossdk.io/core/address"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	vaulttypes "github.com/onomyprotocol/reserve/x/vaults/types"
@@ -47,8 +45,4 @@ type VaultKeeper interface {
 	Liquidate(ctx context.Context, liquidation vaulttypes.Liquidation, mintDenom string) error
 	GetVault(ctx context.Context, vaultId uint64) (vaulttypes.Vault, error)
 	GetAllowedMintDenoms(ctx context.Context) []string
-}
-
-type OracleKeeper interface {
-	GetPrice(ctx context.Context, base, quote string) *math.LegacyDec
 }

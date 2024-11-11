@@ -94,7 +94,7 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Denom, msg.OracleScript)
+	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.SymBol, msg.OracleScript)
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
@@ -151,7 +151,7 @@ func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, coin sdk.Coin) er
 		return err
 	}
 	if (totalStablecoinLock.Add(coin.Amount)).GT(totalLimit) {
-		return fmt.Errorf("unable to perform %s token swap transaction because the amount of %s you want to swap exceeds the allowed limit, can only swap up to %s%s", coin.Denom, coin.Denom, (totalLimit).Sub(totalStablecoinLock).String(), coin.Denom)
+		return fmt.Errorf("unable to perform %s token swap transaction: exceeds the allowed limit %s , can only swap up to %s%s", coin.Denom, coin.Denom, (totalLimit).Sub(totalStablecoinLock).String(), coin.Denom)
 	}
 
 	return nil

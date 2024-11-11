@@ -42,6 +42,7 @@ func (s *KeeperTestSuite) TestUpdatesStablecoinEpoch() {
 		s.Run(t.name, func() {
 			sc := types.GetMsgStablecoin(&types.MsgAddStableCoin{
 				Denom:        usdt,
+				SymBol:       usdt,
 				LimitTotal:   limitUSDT,
 				FeeIn:        t.feeIn,
 				FeeOut:       t.feeOut,

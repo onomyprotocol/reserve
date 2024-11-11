@@ -18,6 +18,9 @@ const (
 
 	// Reserve Stable Coin denom prefix
 	ReserveStableCoinDenom = "nomUSD"
+
+	// symbol USD
+	SymBolUSD = "USD"
 )
 
 var (

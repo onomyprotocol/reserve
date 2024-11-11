@@ -15,8 +15,8 @@ import (
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, offerCoin sdk.Coin, expectedDenom string) error {
 	// check stablecoin is suport
-	ok, err := k.StablecoinInfos.Has(ctx, expectedDenom)
-	if err != nil || !ok {
+	stablecoin, err := k.StablecoinInfos.Get(ctx, expectedDenom)
+	if err != nil {
 		return fmt.Errorf("%s not in list stablecoin supported", expectedDenom)
 	}
 
@@ -27,7 +27,7 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 	}
 
 	// check balace and calculate amount of coins received
-	receiveAmountStablecoin, fee_out, err := k.calculateSwapToStablecoin(ctx, offerCoin.Amount, expectedDenom)
+	receiveAmountStablecoin, fee_out, err := k.calculateSwapToStablecoin(ctx, offerCoin.Amount, stablecoin)
 	if err != nil {
 		return err
 	}
@@ -76,8 +76,8 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 
 func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAddress, offerCoin sdk.Coin, expectedDenom string) error {
 	// check stablecoin is suport
-	ok, err := k.StablecoinInfos.Has(ctx, offerCoin.Denom)
-	if err != nil || !ok {
+	stablecoin, err := k.StablecoinInfos.Get(ctx, offerCoin.Denom)
+	if err != nil {
 		return fmt.Errorf("%s not in list stablecoin supported", offerCoin.Denom)
 	}
 
@@ -88,7 +88,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	}
 
 	// check balance user and calculate amount of coins received
-	receiveAmountnomUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin)
+	receiveAmountnomUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin, stablecoin.SymBol)
 	if err != nil {
 		return err
 	}
@@ -150,26 +150,26 @@ func (k Keeper) PayFeesIn(ctx context.Context, amount math.Int, denom string) (m
 }
 
 // SwapToStablecoin return receiveAmount, fee, error
-func (k Keeper) calculateSwapToStablecoin(ctx context.Context, amount math.Int, toDenom string) (math.Int, sdk.DecCoin, error) {
-	multiplier := k.OracleKeeper.GetPrice(ctx, toDenom, types.ReserveStableCoinDenom)
+func (k Keeper) calculateSwapToStablecoin(ctx context.Context, amount math.Int, sc types.StablecoinInfo) (math.Int, sdk.DecCoin, error) {
+	multiplier := k.OracleKeeper.GetPrice(ctx, sc.SymBol, types.SymBolUSD)
 	if multiplier == nil || multiplier.IsNil() {
-		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", toDenom, types.ReserveStableCoinDenom)
+		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", sc.SymBol, types.ReserveStableCoinDenom)
 	}
 	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
 
-	fee, err := k.PayFeesOut(ctx, amountStablecoin.RoundInt(), toDenom)
+	fee, err := k.PayFeesOut(ctx, amountStablecoin.RoundInt(), sc.Denom)
 	if err != nil {
 		return math.Int{}, sdk.DecCoin{}, err
 	}
 
 	receiveAmount := amountStablecoin.Sub(fee)
-	return receiveAmount.RoundInt(), sdk.NewDecCoinFromDec(toDenom, fee), nil
+	return receiveAmount.RoundInt(), sdk.NewDecCoinFromDec(sc.Denom, fee), nil
 }
 
-func (k Keeper) calculateSwapToOnomyStableToken(ctx context.Context, stablecoin sdk.Coin) (math.Int, sdk.DecCoin, error) {
-	multiplier := k.OracleKeeper.GetPrice(ctx, stablecoin.Denom, types.ReserveStableCoinDenom)
+func (k Keeper) calculateSwapToOnomyStableToken(ctx context.Context, stablecoin sdk.Coin, symBol string) (math.Int, sdk.DecCoin, error) {
+	multiplier := k.OracleKeeper.GetPrice(ctx, symBol, types.SymBolUSD)
 	if multiplier == nil || multiplier.IsNil() {
-		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", stablecoin.Denom, types.ReserveStableCoinDenom)
+		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", symBol, types.ReserveStableCoinDenom)
 	}
 
 	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
