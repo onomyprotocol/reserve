@@ -106,10 +106,6 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 	return nil
 }
 
-// func (msg MsgUpdatesStableCoin) GetPrice() math.LegacyDec {
-// 	return msg.Price
-// }
-
 func (msg MsgUpdatesStableCoin) GetLimitTotal() math.Int {
 	return msg.LimitTotal
 }
