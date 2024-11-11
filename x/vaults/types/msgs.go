@@ -118,16 +118,20 @@ func (msg *MsgClose) ValidateBasic() error {
 }
 
 func (msg *MsgActiveCollateral) ValidateBasic() error {
-	if msg.Denom == "" {
+	if msg.CollateralDenom == "" {
 		return fmt.Errorf("denom is empty")
 	}
 
-	if msg.SymBol == "" {
+	if msg.CollateralSymbol == "" {
 		return fmt.Errorf("symbol is empty")
 	}
 
 	if msg.MintDenom == "" {
 		return fmt.Errorf("mintDenom is empty")
+	}
+
+	if msg.MintSymbol == "" {
+		return fmt.Errorf("mintSymbol is empty")
 	}
 
 	if msg.Authority == "" {
@@ -165,7 +169,7 @@ func (msg *MsgActiveCollateral) ValidateBasic() error {
 }
 
 func (msg *MsgUpdatesCollateral) ValidateBasic() error {
-	if msg.Denom == "" {
+	if msg.CollateralDenom == "" {
 		return fmt.Errorf("denom is empty")
 	}
 
@@ -216,7 +220,7 @@ var _ govtypes.Content = &UpdatesCollateralProposal{}
 
 func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 	return &MsgActiveCollateral{
-		Denom:              a.ActiveCollateral.Denom,
+		CollateralDenom:    a.ActiveCollateral.CollateralDenom,
 		MinCollateralRatio: a.ActiveCollateral.MinCollateralRatio,
 		LiquidationRatio:   a.ActiveCollateral.LiquidationRatio,
 		MaxDebt:            a.ActiveCollateral.MaxDebt,
@@ -225,14 +229,14 @@ func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 		MintingFee:         a.ActiveCollateral.MintingFee,
 		OraclScript:        a.ActiveCollateral.OraclScript,
 		Authority:          a.ActiveCollateral.Authority,
-		SymBol:             a.ActiveCollateral.SymBol,
+		CollateralSymbol:   a.ActiveCollateral.CollateralSymbol,
 		MintDenom:          a.ActiveCollateral.MintDenom,
 	}
 }
 
 func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral {
 	return &MsgUpdatesCollateral{
-		Denom:              u.UpdatesCollateral.Denom,
+		CollateralDenom:    u.UpdatesCollateral.CollateralDenom,
 		MinCollateralRatio: u.UpdatesCollateral.MinCollateralRatio,
 		LiquidationRatio:   u.UpdatesCollateral.LiquidationRatio,
 		MaxDebt:            u.UpdatesCollateral.MaxDebt,
