@@ -115,12 +115,13 @@ message MsgActiveCollateral {
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
-  uint64 oracl_script = 9;
+  int64 collateral_oracl_script = 9;
 
   string authority = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   string mint_denom = 11;
   string mint_symbol = 12;
+  int64 mint_oracl_script = 13;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
@@ -177,11 +178,12 @@ message MsgUpdatesCollateral {
     (gogoproto.nullable) = false
   ];
 
-  uint64 oracl_script = 9;
+  int64 collateral_oracl_script = 9;
 
   string authority = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string sym_bol = 11;
   string mint_denom = 12;
+  int64 mint_oracl_script = 13;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.

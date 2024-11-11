@@ -45,7 +45,7 @@ func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCol
 		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err = k.ActiveCollateralAsset(ctx, msg.CollateralDenom, msg.CollateralSymbol, msg.MintDenom, msg.MintSymbol, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, int64(msg.OraclScript))
+	err = k.ActiveCollateralAsset(ctx, msg.CollateralDenom, msg.CollateralSymbol, msg.MintDenom, msg.MintSymbol, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, msg.CollateralOraclScript, msg.MintOraclScript)
 	if err != nil {
 		return nil, err
 	}
