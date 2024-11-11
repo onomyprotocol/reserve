@@ -7,7 +7,9 @@
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
       "sym_bol": "usdt",
-      "mint_denom": "nomUSD"
+      "oracl_script": "44",
+      "mint_denom": "nomUSD",
+      "stability_fee": "0.1"
     },
     {
       "@type": "/reserve.vaults.MsgActiveCollateral",
@@ -17,7 +19,9 @@
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
       "sym_bol": "atom",
-      "mint_denom": "nomUSD"
+      "oracl_script": "44",
+      "mint_denom": "nomUSD",
+      "stability_fee": "0.1"
     }],
     "deposit": "100000000stake",
     "title": "My proposal",
