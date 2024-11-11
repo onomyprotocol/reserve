@@ -28,7 +28,7 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 	collateralSymbol := vm.Symbol
-	mintDenom := vm.Params.MintDenom
+	mintSymbol := vm.Params.MintSymbol
 
 	allowedMintDenoms := k.GetAllowedMintDenoms(ctx)
 	// TODO: Check if mint denom is allowed
@@ -45,8 +45,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintDenom)
-	fmt.Println(price, collateralSymbol, mintDenom)
+	price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 	if price == nil || price.IsNil() {
 		return errors.Wrapf(oracletypes.ErrInvalidOracle, "CreateNewVault: can not get price with base %s quote %s", denom, types.DefaultMintDenoms)
 	}

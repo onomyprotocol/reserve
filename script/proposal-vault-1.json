@@ -1,26 +1,28 @@
 {
     "messages": [{
       "@type": "/reserve.vaults.MsgActiveCollateral",
-      "denom": "usdt",
+      "collateral_denom": "usdt",
+      "collateral_symbol":"usdt",
       "authority":"onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
       "min_collateral_ratio": "0.5",
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
-      "sym_bol": "usdt",
       "oracl_script": "44",
       "mint_denom": "nomUSD",
+      "mint_symbol":"USD",
       "stability_fee": "0.1"
     },
     {
       "@type": "/reserve.vaults.MsgActiveCollateral",
-      "denom": "atom",
+      "collateral_denom": "atom",
+      "collateral_symbol":"ATOM",
       "authority":"onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
       "min_collateral_ratio": "0.5",
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
-      "sym_bol": "atom",
       "oracl_script": "44",
       "mint_denom": "nomUSD",
+      "mint_symbol":"USD",
       "stability_fee": "0.1"
     }],
     "deposit": "100000000stake",

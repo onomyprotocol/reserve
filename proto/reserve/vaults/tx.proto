@@ -71,54 +71,56 @@ message MsgActiveCollateral {
   option (gogoproto.goproto_getters) = false;
   option (cosmos.msg.v1.signer) = "authority";
 
-  string denom = 1;
+  string collateral_denom = 1;
+  string collateral_symbol = 2;
 
-  string min_collateral_ratio = 2 [
+  string min_collateral_ratio = 3 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_ratio = 3 [
+  string liquidation_ratio = 4 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string max_debt = 4 [
+  string max_debt = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string stability_fee = 5 [
+  string stability_fee = 6 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_penalty = 6 [
+  string liquidation_penalty = 7 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string minting_fee = 7 [
+  string minting_fee = 8 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
-  uint64 oracl_script = 8;
+  uint64 oracl_script = 9;
 
-  string authority = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  string sym_bol = 10;
+  string authority = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
   string mint_denom = 11;
+  string mint_symbol = 12;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
@@ -130,55 +132,56 @@ message MsgUpdatesCollateral {
   option (gogoproto.goproto_getters) = false;
   option (cosmos.msg.v1.signer) = "authority";
 
-  string denom = 1;
+  string collateral_denom = 1;
+  string collateral_sym_bol = 2;
 
-  string min_collateral_ratio = 2 [
+  string min_collateral_ratio = 3 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_ratio = 3 [
+  string liquidation_ratio = 4 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string max_debt = 4 [
+  string max_debt = 5 [
     (cosmos_proto.scalar) = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string stability_fee = 5 [
+  string stability_fee = 6 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string liquidation_penalty = 6 [
+  string liquidation_penalty = 7 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  string minting_fee = 7 [
+  string minting_fee = 8 [
     (cosmos_proto.scalar) = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (amino.dont_omitempty) = true,
     (gogoproto.nullable) = false
   ];
 
-  uint64 oracl_script = 8;
+  uint64 oracl_script = 9;
 
-  string authority = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
-  string sym_bol = 10;
-  string mint_denom = 11;
+  string authority = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sym_bol = 11;
+  string mint_denom = 12;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.

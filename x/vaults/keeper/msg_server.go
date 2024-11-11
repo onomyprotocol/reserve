@@ -45,7 +45,7 @@ func (k msgServer) ActiveCollateral(ctx context.Context, msg *types.MsgActiveCol
 		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err = k.ActiveCollateralAsset(ctx, msg.Denom, msg.SymBol, msg.MintDenom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, int64(msg.OraclScript))
+	err = k.ActiveCollateralAsset(ctx, msg.CollateralDenom, msg.CollateralSymbol, msg.MintDenom, msg.MintSymbol, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, int64(msg.OraclScript))
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (k msgServer) UpdatesCollateral(ctx context.Context, msg *types.MsgUpdatesC
 		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err = k.UpdatesCollateralAsset(ctx, msg.Denom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty)
+	err = k.UpdatesCollateralAsset(ctx, msg.CollateralDenom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty)
 	if err != nil {
 		return nil, err
 	}
