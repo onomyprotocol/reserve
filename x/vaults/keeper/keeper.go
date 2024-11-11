@@ -85,7 +85,8 @@ func (k *Keeper) ActiveCollateralAsset(
 	stabilityFee math.LegacyDec,
 	mintingFee math.LegacyDec,
 	liquidationPenalty math.LegacyDec,
-	oracleScript int64,
+	collateralOracleScript int64,
+	mintOracleScript int64,
 ) error {
 	// Check if asset alreay be actived
 	actived := k.IsActived(ctx, CollateralDenom)
@@ -107,7 +108,12 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
-	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymbol, oracleScript)
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymbol, collateralOracleScript)
+	if err != nil {
+		return err
+	}
+
+	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, MintSymbol, mintOracleScript)
 	if err != nil {
 		return err
 	}
