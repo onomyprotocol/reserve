@@ -151,7 +151,7 @@ func (k Keeper) PayFeesIn(ctx context.Context, amount math.Int, denom string) (m
 
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) calculateSwapToStablecoin(ctx context.Context, amount math.Int, sc types.StablecoinInfo) (math.Int, sdk.DecCoin, error) {
-	multiplier := k.OracleKeeper.GetPrice(ctx, sc.SymBol, types.ReserveStableCoinDenom)
+	multiplier := k.OracleKeeper.GetPrice(ctx, sc.SymBol, types.SymBolUSD)
 	if multiplier == nil || multiplier.IsNil() {
 		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", sc.SymBol, types.ReserveStableCoinDenom)
 	}
@@ -167,7 +167,7 @@ func (k Keeper) calculateSwapToStablecoin(ctx context.Context, amount math.Int, 
 }
 
 func (k Keeper) calculateSwapToOnomyStableToken(ctx context.Context, stablecoin sdk.Coin, symBol string) (math.Int, sdk.DecCoin, error) {
-	multiplier := k.OracleKeeper.GetPrice(ctx, symBol, types.ReserveStableCoinDenom)
+	multiplier := k.OracleKeeper.GetPrice(ctx, symBol, types.SymBolUSD)
 	if multiplier == nil || multiplier.IsNil() {
 		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", symBol, types.ReserveStableCoinDenom)
 	}
