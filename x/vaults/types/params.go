@@ -13,25 +13,19 @@ var (
 	DefaultLiquidationPenalty    = math.LegacyMustNewDecFromStr("0.05")
 	DefaultMinInitialDebt        = math.NewInt(50_000_000)
 	DefaultRecalculateDebtPeriod = time.Hour
-	DefaultMintDenom             = "nomUSD"
-
-	KeyMintingFee            = []byte("MintingFee")
-	KeyStabilityFee          = []byte("StabilityFee")
-	KeyLiquidationPenalty    = []byte("LiquidationPenalty")
-	KeyMinInitialDebt        = []byte("MinInitialDebt")
-	KeyRecalculateDebtPeriod = []byte("RecalculateDebtPeriod")
+	DefaultMintDenoms            = []string{"nomUSD", "nomEUR", "nomJPY"}
 )
 
 // NewParams creates a new Params instance.
 func NewParams(
 	minInitialDebt math.Int,
-	mintDenom string,
+	mintDenom []string,
 	chargingPeriod time.Duration,
 ) Params {
 	return Params{
-		MinInitialDebt: minInitialDebt,
-		ChargingPeriod: chargingPeriod,
-		MintDenom:      mintDenom,
+		MinInitialDebt:   minInitialDebt,
+		ChargingPeriod:   chargingPeriod,
+		AllowedMintDenom: mintDenom,
 	}
 }
 
@@ -39,7 +33,7 @@ func NewParams(
 func DefaultParams() Params {
 	return NewParams(
 		DefaultMinInitialDebt,
-		DefaultMintDenom,
+		DefaultMintDenoms,
 		DefaultRecalculateDebtPeriod,
 	)
 }

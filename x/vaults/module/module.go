@@ -132,8 +132,8 @@ func (a AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServerImpl(a.keeper))
 }
 
-func (a AppModule) BeginBlock(_ context.Context) error {
-	return nil
+func (a AppModule) BeginBlock(ctx context.Context) error {
+	return a.keeper.BeginBlocker(ctx)
 }
 
 func (a AppModule) EndBlock(_ sdk.Context) []abci.ValidatorUpdate {

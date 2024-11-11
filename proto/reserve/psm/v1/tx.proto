@@ -19,8 +19,7 @@ service Msg {
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
   rpc AddStableCoinProposal(MsgAddStableCoin) returns (MsgAddStableCoinResponse);
   rpc UpdatesStableCoinProposal(MsgUpdatesStableCoin) returns (MsgUpdatesStableCoinResponse);
-  rpc SwapTonomUSD(MsgSwapTonomUSD) returns (MsgSwapTonomUSDResponse);
-  rpc SwapToStablecoin(MsgSwapToStablecoin) returns (MsgSwapToStablecoinResponse);
+  rpc StableSwap(MsgStableSwap) returns (MsgStableSwapResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -44,27 +43,6 @@ message MsgUpdateParams {
 // MsgUpdateParams message.
 message MsgUpdateParamsResponse {}
 
-message MsgSwapTonomUSD {
-  option (cosmos.msg.v1.signer) = "address";
-
-  string address = 1;
-  cosmos.base.v1beta1.Coin coin = 2;
-}
-message MsgSwapTonomUSDResponse {}
-
-message MsgSwapToStablecoin {
-  option (cosmos.msg.v1.signer) = "address";
-
-  string address = 1;
-  string to_denom = 2;
-  bytes amount = 3 [
-  (cosmos_proto.scalar)  = "cosmos.Int",
-  (gogoproto.customtype) = "cosmossdk.io/math.Int",
-  (gogoproto.nullable)   = false,
-  (amino.dont_omitempty) = true
-  ];
-}
-message MsgSwapToStablecoinResponse {}
 
 message MsgAddStableCoin {
   option (cosmos.msg.v1.signer) = "authority";
@@ -91,6 +69,7 @@ message MsgAddStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+  int64 oracle_script = 6;
 }
 
 message MsgAddStableCoinResponse {}
@@ -120,6 +99,22 @@ message MsgUpdatesStableCoin {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+
+  int64 oracle_script = 6;
 }
 
 message MsgUpdatesStableCoinResponse {}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgStableSwap message.
+
+message MsgStableSwap {
+  option (cosmos.msg.v1.signer) = "address";
+
+  string address = 1;
+  string expected_denom = 2;
+  cosmos.base.v1beta1.Coin offer_coin = 3
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+
+}
+message MsgStableSwapResponse {}

@@ -7,7 +7,6 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 // return aution, is create, error
@@ -17,8 +16,12 @@ func (k Keeper) GetNewAuction(ctx context.Context,
 	item, targetGoal sdk.Coin,
 	vaultId uint64,
 ) (*types.Auction, bool, error) {
+	vault, err := k.vaultKeeper.GetVault(ctx, vaultId)
+	if err != nil {
+		return nil, true, err
+	}
 	var newAuction *types.Auction
-	err := k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+	err = k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
 		if value.VaultId == vaultId {
 			newAuction = &value
 			return true, nil
@@ -31,7 +34,8 @@ func (k Keeper) GetNewAuction(ctx context.Context,
 	if newAuction != nil {
 		return newAuction, false, nil
 	}
-	newAuction, err = k.NewAuction(ctx, startTime, initialPrice, item, targetGoal, vaultId)
+	newAuction, err = k.NewAuction(ctx, startTime, initialPrice, item, targetGoal, vaultId, vault.Debt.Denom)
+
 	if err != nil {
 		return newAuction, true, err
 	}
@@ -43,6 +47,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 	initialPrice math.LegacyDec,
 	item, targetGoal sdk.Coin,
 	vaultId uint64,
+	mintDenom string,
 ) (*types.Auction, error) {
 	auctionId, err := k.AuctionIdSeq.Next(ctx)
 	if err != nil {
@@ -58,7 +63,7 @@ func (k Keeper) NewAuction(ctx context.Context,
 		LastDiscountTime: startTime,
 		Status:           types.AuctionStatus_AUCTION_STATUS_ACTIVE,
 		TargetGoal:       targetGoal,
-		TokenRaised:      sdk.NewCoin(vaultstypes.DefaultMintDenom, math.ZeroInt()),
+		TokenRaised:      sdk.NewCoin(mintDenom, math.ZeroInt()),
 		VaultId:          vaultId,
 	}, nil
 }

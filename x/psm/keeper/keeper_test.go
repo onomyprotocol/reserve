@@ -2,23 +2,23 @@ package keeper_test
 
 import (
 	"context"
-	"cosmossdk.io/math"
 	"testing"
+
+	"cosmossdk.io/math"
 
 	"github.com/stretchr/testify/suite"
 
 	"github.com/onomyprotocol/reserve/app/apptesting"
 	"github.com/onomyprotocol/reserve/x/psm/keeper"
 	"github.com/onomyprotocol/reserve/x/psm/types"
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 var (
 	usdt = "usdt"
 	usdc = "usdc"
 
-	limitUSDT = math.NewInt(1000000)
-	limitUSDC = math.NewInt(1000000)
+	limitUSDT = math.NewInt(100000000)
+	limitUSDC = math.NewInt(100000000)
 )
 
 type MockOracleKeeper struct {
@@ -67,7 +67,7 @@ func (s *KeeperTestSuite) SetupTest() {
 	mockOracleKeeper := MockOracleKeeper{
 		prices: make(map[string]math.LegacyDec),
 	}
-	mockOracleKeeper.SetPrice(s.Ctx, vaultstypes.DefaultMintDenom, math.LegacyMustNewDecFromStr("1"))
+	mockOracleKeeper.SetPrice(s.Ctx, types.ReserveStableCoinDenom, math.LegacyMustNewDecFromStr("1"))
 
 	s.App.PSMKeeper.OracleKeeper = mockOracleKeeper
 	s.mockOracleKeeper = &mockOracleKeeper

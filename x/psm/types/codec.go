@@ -13,9 +13,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
-		&MsgSwapToStablecoin{},
-		&MsgSwapTonomUSD{},
-		&MsgSwapToStablecoin{},
+		&MsgStableSwap{},
 		&MsgAddStableCoin{},
 		&MsgUpdatesStableCoin{},
 	)

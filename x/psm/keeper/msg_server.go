@@ -2,13 +2,12 @@ package keeper
 
 import (
 	"context"
-	errorsmod "cosmossdk.io/errors"
-	"cosmossdk.io/math"
 	"fmt"
+
+	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/onomyprotocol/reserve/x/psm/types"
-	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 type msgServer struct {
@@ -43,133 +42,36 @@ func (k msgServer) UpdateParams(ctx context.Context, req *types.MsgUpdateParams)
 	return &types.MsgUpdateParamsResponse{}, nil
 }
 
-func (k msgServer) SwapTonomUSD(ctx context.Context, msg *types.MsgSwapTonomUSD) (*types.MsgSwapTonomUSDResponse, error) {
+func (k msgServer) StableSwap(ctx context.Context, msg *types.MsgStableSwap) (_ *types.MsgStableSwapResponse, err error) {
 	// validate msg
-	if err := msg.ValidateBasic(); err != nil {
+	if err = msg.ValidateBasic(); err != nil {
 		return nil, err
 	}
 
-	// check stablecoin is suport
-	_, err := k.keeper.Stablecoins.Get(ctx, msg.Coin.Denom)
-	if err != nil {
-		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.Coin.Denom)
-	}
-
-	// check limit swap
-	err = k.keeper.checkLimitTotalStablecoin(ctx, msg.Coin.Denom, msg.Coin.Amount)
+	accAddress, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return nil, err
 	}
 
-	// check balance user and calculate amount of coins received
-	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountnomUSD, fee_in, err := k.keeper.SwapTonomUSD(ctx, addr, *msg.Coin)
-	if err != nil {
-		return nil, err
+	// balance check
+	asset := k.keeper.BankKeeper.GetBalance(ctx, accAddress, msg.OfferCoin.Denom)
+	if asset.Amount.LT(msg.OfferCoin.Amount) {
+		return nil, fmt.Errorf("insufficient balance")
 	}
 
-	// add total stablecoin lock
-	err = k.keeper.AddTotalStablecoinLock(ctx, *msg.Coin)
-	if err != nil {
-		return nil, err
+	if msg.OfferCoin.Denom == types.ReserveStableCoinDenom {
+		err = k.keeper.SwapToOtherStablecoin(ctx, accAddress, msg.OfferCoin, msg.ExpectedDenom)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		err = k.keeper.SwapToOnomyStableToken(ctx, accAddress, msg.OfferCoin, msg.ExpectedDenom)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	// send stablecoin to module
-	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, sdk.NewCoins(*msg.Coin))
-	if err != nil {
-		return nil, err
-	}
-
-	// mint nomUSD
-	coinsMint := sdk.NewCoins(sdk.NewCoin(vaultstypes.DefaultMintDenom, receiveAmountnomUSD))
-	err = k.keeper.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
-	if err != nil {
-		return nil, err
-	}
-	// send to user
-	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, coinsMint)
-	if err != nil {
-		return nil, err
-	}
-
-	// event
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
-	sdkCtx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventSwapTonomUSD,
-			sdk.NewAttribute(types.AttributeAmount, msg.Coin.String()),
-			sdk.NewAttribute(types.AttributeReceive, coinsMint.String()),
-			sdk.NewAttribute(types.AttributeFeeIn, fee_in.String()),
-		),
-	)
-	return &types.MsgSwapTonomUSDResponse{}, nil
-}
-
-func (k msgServer) SwapToStablecoin(ctx context.Context, msg *types.MsgSwapToStablecoin) (*types.MsgSwapToStablecoinResponse, error) {
-	// validate basic
-	if err := msg.ValidateBasic(); err != nil {
-		return nil, err
-	}
-
-	// check stablecoin is suport
-	_, err := k.keeper.Stablecoins.Get(ctx, msg.ToDenom)
-	if err != nil {
-		return nil, fmt.Errorf("%s not in list stablecoin supported", msg.ToDenom)
-	}
-
-	// check lock Coin of user
-	totalStablecoinLock, err := k.keeper.TotalStablecoinLock(ctx, msg.ToDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// check balace and calculate amount of coins received
-	addr := sdk.MustAccAddressFromBech32(msg.Address)
-	receiveAmountStablecoin, fee_out, err := k.keeper.SwapToStablecoin(ctx, addr, msg.Amount, msg.ToDenom)
-	if err != nil {
-		return nil, err
-	}
-
-	// locked stablecoin is greater than the amount desired
-	if totalStablecoinLock.LT(receiveAmountStablecoin) {
-		return nil, fmt.Errorf("amount %s locked lesser than amount desired", msg.ToDenom)
-	}
-
-	// burn nomUSD
-	coinsBurn := sdk.NewCoins(sdk.NewCoin(vaultstypes.DefaultMintDenom, msg.Amount))
-	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
-	if err != nil {
-		return nil, err
-	}
-	err = k.keeper.BankKeeper.BurnCoins(ctx, types.ModuleName, coinsBurn)
-	if err != nil {
-		return nil, err
-	}
-
-	stablecoinReceive := sdk.NewCoin(msg.ToDenom, receiveAmountStablecoin)
-
-	// sub total stablecoin lock
-	err = k.keeper.SubTotalStablecoinLock(ctx, stablecoinReceive)
-	if err != nil {
-		return nil, err
-	}
-	// send stablecoin to user
-	err = k.keeper.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
-	if err != nil {
-		return nil, err
-	}
-
-	// event
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
-	sdkCtx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			types.EventSwapToStablecoin,
-			sdk.NewAttribute(types.AttributeAmount, msg.Amount.String()+vaultstypes.DefaultMintDenom),
-			sdk.NewAttribute(types.AttributeReceive, stablecoinReceive.String()),
-			sdk.NewAttribute(types.AttributeFeeOut, fee_out.String()),
-		),
-	)
-	return &types.MsgSwapToStablecoinResponse{}, nil
+	return &types.MsgStableSwapResponse{}, nil
 }
 
 func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddStableCoin) (*types.MsgAddStableCoinResponse, error) {
@@ -182,17 +84,17 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	_, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
+	_, err := k.keeper.StablecoinInfos.Get(ctx, msg.Denom)
 	if err == nil {
 		return &types.MsgAddStableCoinResponse{}, fmt.Errorf("%s has existed", msg.Denom)
 	}
 
-	err = k.keeper.Stablecoins.Set(ctx, msg.Denom, types.GetMsgStablecoin(msg))
+	err = k.keeper.StablecoinInfos.Set(ctx, msg.Denom, types.GetMsgStablecoin(msg))
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Denom, 1)
+	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Denom, msg.OracleScript)
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
@@ -216,7 +118,7 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
 
-	oldStablecoin, err := k.keeper.Stablecoins.Get(ctx, msg.Denom)
+	oldStablecoin, err := k.keeper.StablecoinInfos.Get(ctx, msg.Denom)
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, fmt.Errorf("%s not existed", msg.Denom)
 	}
@@ -224,7 +126,7 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	newStablecoin := types.GetMsgStablecoin(msg)
 	newStablecoin.TotalStablecoinLock = oldStablecoin.TotalStablecoinLock
 
-	err = k.keeper.Stablecoins.Set(ctx, newStablecoin.Denom, newStablecoin)
+	err = k.keeper.StablecoinInfos.Set(ctx, newStablecoin.Denom, newStablecoin)
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
@@ -238,18 +140,18 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	return &types.MsgUpdatesStableCoinResponse{}, nil
 }
 
-func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, denom string, amountSwap math.Int) error {
-	totalStablecoinLock, err := k.TotalStablecoinLock(ctx, denom)
+func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, coin sdk.Coin) error {
+	totalStablecoinLock, err := k.TotalStablecoinLock(ctx, coin.Denom)
 	if err != nil {
 		return err
 	}
 
-	totalLimit, err := k.GetTotalLimitWithDenomStablecoin(ctx, denom)
+	totalLimit, err := k.GetTotalLimitWithDenomStablecoin(ctx, coin.Denom)
 	if err != nil {
 		return err
 	}
-	if (totalStablecoinLock.Add(amountSwap)).GT(totalLimit) {
-		return fmt.Errorf("unable to perform %s token swap transaction because the amount of %s you want to swap exceeds the allowed limit, can only swap up to %s%s", denom, denom, (totalLimit).Sub(totalStablecoinLock).String(), denom)
+	if (totalStablecoinLock.Add(coin.Amount)).GT(totalLimit) {
+		return fmt.Errorf("unable to perform %s token swap transaction because the amount of %s you want to swap exceeds the allowed limit, can only swap up to %s%s", coin.Denom, coin.Denom, (totalLimit).Sub(totalStablecoinLock).String(), coin.Denom)
 	}
 
 	return nil

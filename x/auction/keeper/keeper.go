@@ -31,7 +31,7 @@ type (
 		authority string
 
 		// timestamp of lastest auction period (Unix timestamp)
-		LastestAuctionPeriod int64
+		LastestAuctionPeriods collections.Item[int64]
 
 		AuctionIdSeq collections.Sequence
 
@@ -66,19 +66,20 @@ func NewKeeper(
 
 	sb := collections.NewSchemaBuilder(storeService)
 	return Keeper{
-		cdc:          cdc,
-		storeService: storeService,
-		authority:    authority,
-		logger:       logger,
-		authKeeper:   ak,
-		bankKeeper:   bk,
-		vaultKeeper:  vk,
-		OracleKeeper: ok,
-		AuctionIdSeq: collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
-		BidIdSeq:     collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
-		Auctions:     collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
-		Bids:         collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
-		BidByAddress: collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bids](cdc)), //nolint:staticcheck
+		cdc:                   cdc,
+		storeService:          storeService,
+		authority:             authority,
+		logger:                logger,
+		authKeeper:            ak,
+		bankKeeper:            bk,
+		vaultKeeper:           vk,
+		OracleKeeper:          ok,
+		AuctionIdSeq:          collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
+		LastestAuctionPeriods: collections.NewItem(sb, types.LastestAuctionPeriodPrefix, "lastestAuctionPeriods", collections.Int64Value),
+		BidIdSeq:              collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),
+		Auctions:              collections.NewMap(sb, types.AuctionsPrefix, "auctions", collections.Uint64Key, codec.CollValue[types.Auction](cdc)),
+		Bids:                  collections.NewMap(sb, types.BidsPrefix, "bids", collections.Uint64Key, codec.CollValue[types.BidQueue](cdc)),
+		BidByAddress:          collections.NewMap(sb, types.BidByAddressPrefix, "bids_by_address", collections.PairKeyCodec(collections.Uint64Key, sdk.LengthPrefixedAddressKey(sdk.AccAddressKey)), codec.CollValue[types.Bids](cdc)), //nolint:staticcheck
 	}
 }
 
@@ -118,15 +119,7 @@ func (k Keeper) DeleteAuction(ctx context.Context, auctionId uint64) error {
 
 // AddBidEntry adds new bid entry for the given auction id
 func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sdk.AccAddress, bid types.Bid) error {
-	has, err := k.Auctions.Has(ctx, auctionId)
-	if err != nil {
-		return err
-	}
-	if !has {
-		return fmt.Errorf("cannot bid for non-existing/expired auction with id: %v", auctionId)
-	}
-
-	has = k.authKeeper.HasAccount(ctx, bidderAddr)
+	has := k.authKeeper.HasAccount(ctx, bidderAddr)
 	if !has {
 		return sdkerrors.ErrInvalidAddress.Wrapf("invalid proposer address %s: account does not exist", bid.Bidder)
 	}
@@ -137,7 +130,7 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 
 	bid.Index = uint64(len(bidQueue.Bids))
 
-	bidQueue.Bids = append(bidQueue.Bids, &bid)
+	bidQueue.Bids = append(bidQueue.Bids, bid)
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
 	if err != nil {
 		return err
@@ -149,14 +142,14 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 		if err != nil {
 			return err
 		}
-		bids.Bids = append(bids.Bids, &bid)
+		bids.Bids = append(bids.Bids, bid)
 		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
 		if err != nil {
 			return err
 		}
 	} else {
 		bids := types.Bids{
-			Bids: []*types.Bid{&bid},
+			Bids: []types.Bid{bid},
 		}
 		err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidderAddr), bids)
 		if err != nil {
@@ -170,7 +163,7 @@ func (k Keeper) AddBidEntry(ctx context.Context, auctionId uint64, bidderAddr sd
 }
 
 // CancelBidEntry cancel existing bid entry for the given auction id
-func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64) error {
+func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64, bidder sdk.AccAddress) error {
 	has, err := k.Auctions.Has(ctx, auctionId)
 	if err != nil {
 		return err
@@ -197,6 +190,24 @@ func (k Keeper) CancelBidEntry(ctx context.Context, auctionId, bidId uint64) err
 	}
 
 	err = k.Bids.Set(ctx, auctionId, bidQueue)
+	if err != nil {
+		return err
+	}
+
+	bidsByAddress, err := k.BidByAddress.Get(ctx, collections.Join(auctionId, bidder))
+	if err != nil {
+		return err
+	}
+
+	// since this only use for query let not add any checks here if the bid exist or not
+	for i, bid := range bidsByAddress.Bids {
+		if bid.BidId == bidId {
+			bid.IsHandle = true
+			bidsByAddress.Bids[i] = bid
+			break
+		}
+	}
+	err = k.BidByAddress.Set(ctx, collections.Join(auctionId, bidder), bidsByAddress)
 	if err != nil {
 		return err
 	}

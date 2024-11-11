@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/collections"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -54,13 +55,31 @@ func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsReques
 	allBids := []types.Bid{}
 
 	err := k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
-		for _, bid := range value.Bids {
-			allBids = append(allBids, *bid)
-		}
+		allBids = append(allBids, value.Bids...)
 		return false, nil
 	})
 
 	return &types.QueryAllBidsResponse{
 		Bids: allBids,
+	}, err
+}
+
+func (k Querier) QueryAllBidderBids(ctx context.Context, req *types.QueryAllBidderBidsRequest) (*types.QueryAllBidderBidsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	bidderAddr, err := k.k.authKeeper.AddressCodec().StringToBytes(req.Bidder)
+	if err != nil {
+		return nil, err
+	}
+
+	bidsByAddress, err := k.k.BidByAddress.Get(ctx, collections.Join(req.AuctionId, sdk.AccAddress(bidderAddr)))
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryAllBidderBidsResponse{
+		Bids: bidsByAddress.Bids,
 	}, err
 }

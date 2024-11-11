@@ -156,3 +156,7 @@ func (k *Keeper) IsActived(
 	has, _ := k.VaultsManager.Has(ctx, denom)
 	return has
 }
+
+func (k *Keeper) GetAllowedMintDenoms(ctx context.Context) []string {
+	return k.GetParams(ctx).AllowedMintDenom
+}

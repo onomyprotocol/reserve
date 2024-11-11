@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"slices"
 	"sort"
 	"strconv"
 	"time"
@@ -11,8 +12,8 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
-	"github.com/onomyprotocol/reserve/x/vaults/types"
 	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
+	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 func (k *Keeper) CreateNewVault(
@@ -27,8 +28,10 @@ func (k *Keeper) CreateNewVault(
 		return fmt.Errorf("%s was not actived", denom)
 	}
 
-	if mint.Denom != types.DefaultMintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
+	allowedMintDenoms := k.GetAllowedMintDenoms(ctx)
+	// TODO: Check if mint denom is allowed
+	if !slices.Contains(allowedMintDenoms, mint.Denom) {
+		return fmt.Errorf("minted denom must in list %s, but got %s", types.DefaultMintDenoms, mint.Denom)
 	}
 
 	params := k.GetParams(ctx)
@@ -40,9 +43,9 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Calculate collateral ratio
-	price := k.OracleKeeper.GetPrice(ctx, denom, types.DefaultMintDenom)
+	price := k.OracleKeeper.GetPrice(ctx, denom, mint.Denom)
 	if price == nil || price.IsNil() {
-		return errors.Wrapf(oracletypes.ErrInvalidOracle, "CreateNewVault: can not get price with base %s quote %s", denom, types.DefaultMintDenom)
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "CreateNewVault: can not get price with base %s quote %s", denom, types.DefaultMintDenoms)
 	}
 	// TODO: recalculate with denom decimal?
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(*price)
@@ -124,7 +127,11 @@ func (k *Keeper) CloseVault(
 	if sender != vault.Owner {
 		return fmt.Errorf("sender is not the vault owner")
 	}
-	
+
+	if !isStatusGood(vault) {
+		return fmt.Errorf("vault is not actived")
+	}
+
 	// User have to pay all the debt to close the vault
 	if vault.Debt.Amount.GT(math.ZeroInt()) {
 		err := k.BankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Owner), sdk.MustAccAddressFromBech32(vault.Address), sdk.NewCoins(vault.Debt))
@@ -152,19 +159,20 @@ func (k *Keeper) MintCoin(
 	sender sdk.AccAddress,
 	mint sdk.Coin,
 ) error {
-	params := k.GetParams(ctx)
-	if mint.Denom != params.MintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
-	}
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
 	}
+	if vault.Status != types.ACTIVE {
+		return fmt.Errorf("vault is not actived")
+	}
+
 	if sender.String() != vault.Owner {
 		return fmt.Errorf("sender is not the vault owner")
 	}
-	if vault.Status != types.ACTIVE {
-		return fmt.Errorf("vault is not actived")
+
+	if mint.Denom != vault.Debt.Denom {
+		return fmt.Errorf("mint denom must be %s, got %s", vault.Debt.Denom, mint.Denom)
 	}
 	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
 	if err != nil {
@@ -172,9 +180,9 @@ func (k *Keeper) MintCoin(
 	}
 
 	lockedCoin := vault.CollateralLocked
-	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, types.DefaultMintDenom)
+	price := k.OracleKeeper.GetPrice(ctx, lockedCoin.Denom, mint.Denom)
 	if price == nil || price.IsNil() {
-		return errors.Wrapf(oracletypes.ErrInvalidOracle, "MintCoin: can not get price with base %s quote %s", lockedCoin.Denom, types.DefaultMintDenom)
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "MintCoin: can not get price with base %s quote %s", lockedCoin.Denom, types.DefaultMintDenoms)
 	}
 	lockedValue := math.LegacyNewDecFromInt(lockedCoin.Amount).Mul(*price)
 
@@ -237,18 +245,20 @@ func (k *Keeper) RepayDebt(
 	sender sdk.AccAddress,
 	repay sdk.Coin,
 ) error {
-	params := k.GetParams(ctx)
-	if repay.Denom != params.MintDenom {
-		return fmt.Errorf("minted denom must be %s", types.DefaultMintDenom)
-	}
 
 	vault, err := k.GetVault(ctx, vaultId)
 	if err != nil {
 		return err
 	}
+
 	if sender.String() != vault.Owner {
 		return fmt.Errorf("sender is not the vault owner")
 	}
+
+	if repay.Denom != vault.Debt.Denom {
+		return fmt.Errorf("repay denom must be %s, got %s", vault.Debt.Denom, repay.Denom)
+	}
+
 	if vault.Status != types.ACTIVE {
 		return fmt.Errorf("vault is not actived")
 	}
@@ -349,7 +359,7 @@ func (k *Keeper) WithdrawFromVault(
 	if err != nil {
 		return err
 	}
-	if vault.Status != types.ACTIVE {
+	if !isStatusGood(vault) {
 		return fmt.Errorf("vault is not actived")
 	}
 
@@ -371,10 +381,10 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLock := vault.CollateralLocked.Sub(collateral)
-	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, types.DefaultMintDenom)
+	price := k.OracleKeeper.GetPrice(ctx, collateral.Denom, vault.Debt.Denom)
 	// defensive programming: should never happen since when withdraw should always have a valid oracle price
 	if price == nil || price.IsNil() {
-		return errors.Wrapf(oracletypes.ErrInvalidOracle, "WithdrawFromVault: can not get price with base %s quote %s", collateral.Denom, types.DefaultMintDenom)
+		return errors.Wrapf(oracletypes.ErrInvalidOracle, "WithdrawFromVault: can not get price with base %s quote %s", collateral.Denom, types.DefaultMintDenoms)
 	}
 
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(*price)
@@ -466,10 +476,11 @@ func (k *Keeper) shouldLiquidate(
 	return false, nil
 }
 
+// GetLiquidations return all liquidations for mint denom and change the potentially liquidated vaults vault status to LIQUIDATING
 func (k *Keeper) GetLiquidations(
 	ctx context.Context,
+	mintDenom string,
 ) ([]*types.Liquidation, error) {
-
 	// denom to liquidationRatios
 	liquidationRatios := make(map[string]math.LegacyDec)
 	// denom to price
@@ -478,13 +489,13 @@ func (k *Keeper) GetLiquidations(
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
-		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, types.DefaultMintDenom)
+		price := k.OracleKeeper.GetPrice(ctx, vm.Denom, mintDenom)
 		if price == nil || price.IsNil() {
-			return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", vm.Denom, types.DefaultMintDenom)
+			return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", vm.Denom, types.DefaultMintDenoms)
 		}
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
-		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom)
+		liquidations[vm.Denom] = types.NewEmptyLiquidation(vm.Denom, mintDenom)
 
 		return false, nil
 	})
@@ -494,6 +505,10 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
+		if vault.Debt.Denom != mintDenom {
+			return false, nil
+		}
+
 		shouldLiquidate, err := k.shouldLiquidate(vault, prices[denom], liquidationRatios[denom])
 		if shouldLiquidate && err == nil {
 			liquidations[denom].LiquidatingVaults = append(liquidations[denom].LiquidatingVaults, &vault)
@@ -527,19 +542,19 @@ func (k *Keeper) GetLiquidations(
 func (k *Keeper) Liquidate(
 	ctx context.Context,
 	liquidation types.Liquidation,
+	mintDenom string,
 ) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
-	params := k.GetParams(ctx)
 
-	vm, err := k.GetVaultManager(ctx, liquidation.Denom)
+	vm, err := k.GetVaultManager(ctx, liquidation.DebtDenom)
 	if err != nil {
 		return err
 	}
 
 	vaultIds := ""
-	totalDebt := sdk.NewCoin(params.MintDenom, math.ZeroInt())
-	sold := sdk.NewCoin(params.MintDenom, math.ZeroInt())
-	totalCollateralRemain := sdk.NewCoin(liquidation.Denom, math.ZeroInt())
+	totalDebt := sdk.NewCoin(mintDenom, math.ZeroInt())
+	sold := sdk.NewCoin(mintDenom, math.ZeroInt())
+	totalCollateralRemain := sdk.NewCoin(liquidation.DebtDenom, math.ZeroInt())
 
 	for _, vault := range liquidation.LiquidatingVaults {
 		vaultIds = vaultIds + fmt.Sprintf("%d, ", vault.Id)
@@ -568,7 +583,7 @@ func (k *Keeper) Liquidate(
 		}
 		// Increase mint available
 		vm.MintAvailable = vm.MintAvailable.Add(totalDebt.Amount)
-		err = k.VaultsManager.Set(ctx, liquidation.Denom, vm)
+		err = k.VaultsManager.Set(ctx, liquidation.DebtDenom, vm)
 		if err != nil {
 			return err
 		}
@@ -625,7 +640,7 @@ func (k *Keeper) Liquidate(
 		}
 		// Increase mint available
 		vm.MintAvailable = vm.MintAvailable.Add(sold.Amount)
-		err = k.VaultsManager.Set(ctx, liquidation.Denom, vm)
+		err = k.VaultsManager.Set(ctx, liquidation.DebtDenom, vm)
 		if err != nil {
 			return err
 		}
@@ -675,7 +690,7 @@ func (k *Keeper) Liquidate(
 				collateralRemain := liquidation.VaultLiquidationStatus[vault.Id].RemainCollateral.Amount
 				penaltyAmount := math.LegacyNewDecFromInt(vault.Debt.Amount).Quo(vault.LiquidationPrice).Mul(vm.Params.LiquidationPenalty).TruncateInt()
 
-				// If remain collateral not enough for penalty,
+				// If collateral locked not enough for penalty,
 				// transfer all and mark vault CLOSED
 				if penaltyAmount.GT(collateralRemain) {
 					soldAmount := liquidation.VaultLiquidationStatus[vault.Id].Sold.Amount
@@ -688,7 +703,7 @@ func (k *Keeper) Liquidate(
 					vault.CollateralLocked.Amount = collateralRemain
 					vault.Status = types.CLOSED
 				}
-				err := k.BankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(liquidation.Denom, penaltyAmount)))
+				err := k.BankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(liquidation.DebtDenom, penaltyAmount)))
 				if err != nil {
 					return err
 				}
@@ -817,4 +832,18 @@ func (k *Keeper) GetVaultIdAndAddress(
 	address := address.Module(types.ModuleName, []byte(strconv.Itoa(int(id))))
 
 	return id, address
+}
+
+func isStatusGood(vault types.Vault) bool {
+	if vault.Status == types.ACTIVE {
+		return true
+	}
+	if vault.Status == types.LIQUIDATED {
+		if vault.Debt.Amount.GT(math.ZeroInt()) {
+			return true
+		} else {
+			return false
+		}
+	}
+	return false
 }

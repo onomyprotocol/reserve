@@ -4,8 +4,8 @@ import (
 	"cosmossdk.io/math"
 )
 
-func GetMsgStablecoin(msg getStablecoinFromMsg) Stablecoin {
-	return Stablecoin{
+func GetMsgStablecoin(msg getStablecoinFromMsg) StablecoinInfo {
+	return StablecoinInfo{
 		Denom:               msg.GetDenom(),
 		LimitTotal:          msg.GetLimitTotal(),
 		FeeIn:               msg.GetFeeIn(),
