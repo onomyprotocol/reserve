@@ -76,6 +76,8 @@ func (k Keeper) GetAuthority() string {
 func (k *Keeper) ActiveCollateralAsset(
 	ctx context.Context,
 	denom string,
+	symbol string,
+	mintDenom string,
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 	maxDebt math.Int,
@@ -90,8 +92,11 @@ func (k *Keeper) ActiveCollateralAsset(
 		return fmt.Errorf("denom %s already be actived", denom)
 	}
 	vm := types.VaultMamager{
-		Denom: denom,
+		Denom:  denom,
+		Symbol: symbol,
 		Params: types.VaultMamagerParams{
+			MintDenom:          mintDenom,
+			MintSymbol:         symbol,
 			MinCollateralRatio: minCollateralRatio,
 			LiquidationRatio:   liquidationRatio,
 			MaxDebt:            maxDebt,

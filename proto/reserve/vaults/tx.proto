@@ -117,6 +117,8 @@ message MsgActiveCollateral {
   uint64 oracl_script = 8;
 
   string authority = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sym_bol = 10;
+  string mint_denom = 11;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
@@ -175,6 +177,8 @@ message MsgUpdatesCollateral {
   uint64 oracl_script = 8;
 
   string authority = 9 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string sym_bol = 10;
+  string mint_denom = 11;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
