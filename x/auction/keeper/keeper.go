@@ -21,10 +21,9 @@ type (
 		logger       log.Logger
 
 		// keepers
-		authKeeper   types.AccountKeeper
-		bankKeeper   types.BankKeeper
-		vaultKeeper  types.VaultKeeper
-		OracleKeeper types.OracleKeeper
+		authKeeper  types.AccountKeeper
+		bankKeeper  types.BankKeeper
+		vaultKeeper types.VaultKeeper
 
 		// the address capable of executing a MsgUpdateParams message. Typically, this
 		// should be the x/gov module account.
@@ -55,7 +54,6 @@ func NewKeeper(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	vk types.VaultKeeper,
-	ok types.OracleKeeper,
 	logger log.Logger,
 	authority string,
 
@@ -73,7 +71,6 @@ func NewKeeper(
 		authKeeper:            ak,
 		bankKeeper:            bk,
 		vaultKeeper:           vk,
-		OracleKeeper:          ok,
 		AuctionIdSeq:          collections.NewSequence(sb, types.AuctionIdSeqPrefix, "auction_id_sequence"),
 		LastestAuctionPeriods: collections.NewItem(sb, types.LastestAuctionPeriodPrefix, "lastestAuctionPeriods", collections.Int64Value),
 		BidIdSeq:              collections.NewMap(sb, types.BidIdSeqPrefix, "bid_id_sequence", collections.Uint64Key, collections.Uint64Value),

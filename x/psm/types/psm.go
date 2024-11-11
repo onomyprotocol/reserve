@@ -19,7 +19,6 @@ func GetMsgStablecoin(msg getStablecoinFromMsg) StablecoinInfo {
 type getStablecoinFromMsg interface {
 	GetDenom() string
 	GetLimitTotal() math.Int
-	// GetPrice() math.LegacyDec
 	GetFeeIn() math.LegacyDec
 	GetFeeOut() math.LegacyDec
 	GetSymBol() string
