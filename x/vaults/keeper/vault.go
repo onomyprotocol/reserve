@@ -128,6 +128,10 @@ func (k *Keeper) CloseVault(
 		return fmt.Errorf("sender is not the vault owner")
 	}
 
+	if !isStatusGood(vault) {
+		return fmt.Errorf("vault is not actived")
+	}
+
 	// User have to pay all the debt to close the vault
 	if vault.Debt.Amount.GT(math.ZeroInt()) {
 		err := k.BankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Owner), sdk.MustAccAddressFromBech32(vault.Address), sdk.NewCoins(vault.Debt))
@@ -355,7 +359,7 @@ func (k *Keeper) WithdrawFromVault(
 	if err != nil {
 		return err
 	}
-	if vault.Status != types.ACTIVE {
+	if !isStatusGood(vault) {
 		return fmt.Errorf("vault is not actived")
 	}
 
@@ -828,4 +832,18 @@ func (k *Keeper) GetVaultIdAndAddress(
 	address := address.Module(types.ModuleName, []byte(strconv.Itoa(int(id))))
 
 	return id, address
+}
+
+func isStatusGood(vault types.Vault) bool {
+	if vault.Status == types.ACTIVE {
+		return true
+	}
+	if vault.Status == types.LIQUIDATED {
+		if vault.Debt.Amount.GT(math.ZeroInt()) {
+			return true
+		} else {
+			return false
+		}
+	}
+	return false
 }

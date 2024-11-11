@@ -110,15 +110,16 @@ message Stablecoin {
 ```
 
 
-## Messages
+## Messages 
 
-### MsgSwapTonomUSD
-Allows users to swap accepted stablecoins for nomUSD. `Address` is the sender's address, `Coin` is the amount of stablecoin the user sent
+### MsgStableSwap (swap to nomUSD)
+Allows users to swap accepted stablecoins for nomUSD. `Address` is the sender's address, `OfferCoin` is the amount of stablecoin the user sent. `ExpectedDenom` is the type of denom expected to be received.
 
 ```{.go}
-type MsgSwapTonomUSD struct {
-	Address string      
-	Coin    *types.Coin 
+type MsgStableSwap struct {
+	Address       string     `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	ExpectedDenom string     `protobuf:"bytes,2,opt,name=expected_denom,json=expectedDenom,proto3" json:"expected_denom,omitempty"`
+	OfferCoin     types.Coin `protobuf:"bytes,3,opt,name=offer_coin,json=offerCoin,proto3" json:"offer_coin"`
 }
 ```
 
@@ -132,14 +133,14 @@ type MsgSwapTonomUSD struct {
 - Transfer stablecoin from user to psm module.
 - Mint nomUSD and send for user
 
-### MsgSwapToStablecoin
-Allows users to swap accepted nomUSD for stablecoins. `Address` is the sender's address, `ToDenom` is the stablecoin name to receive ,`Amount` is the amount of nomUSD the user sent
+### MsgStableSwap (swap to stablecoin)
+Allows users to swap accepted nomUSD for stablecoins. `Address` is the sender's address, `ExpectedDenom` is the stablecoin name to receive ,`OfferCoin` is the amount of nomUSD the user sent
 
 ```{.go}
-type MsgSwapToStablecoin struct {
-	Address string                
-	ToDenom string               
-	Amount  math.Int 
+type MsgStableSwap struct {
+	Address       string     `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	ExpectedDenom string     `protobuf:"bytes,2,opt,name=expected_denom,json=expectedDenom,proto3" json:"expected_denom,omitempty"`
+	OfferCoin     types.Coin `protobuf:"bytes,3,opt,name=offer_coin,json=offerCoin,proto3" json:"offer_coin"`
 }
 ```
 
@@ -158,8 +159,7 @@ type MsgSwapToStablecoin struct {
 The PSM module emits events for various operations:
 - **AddStablecoin**: Emitted when a new stablecoin is added.
 - **UpdateStablecoin**: Emitted when a stablecoin is updates
-- **SwapToStablecoin**: Emitted when exchanging nomUSD for stablecoin
-- **SwapTonomUSD**: Emitted when exchanging stablecoin for nomUSD
+- **Swap**: Emitted when exchanging nomUSD for stablecoin. Emitted when exchanging stablecoin for nomUSD
 
 
 ## ABCI

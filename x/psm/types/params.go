@@ -24,7 +24,7 @@ func NewParams(
 	return Params{
 		LimitTotal:           limitTotal,
 		AcceptablePriceRatio: acceptablePriceRatio,
-		AdjustmentFee:        DefaultAdjustmentFee,
+		AdjustmentFee:        adjustmentFee,
 	}
 }
 

@@ -15,6 +15,9 @@ const (
 
 	// MemStoreKey defines the in-memory store key.
 	MemStoreKey = "mem_psm"
+
+	// Reserve Stable Coin denom prefix
+	ReserveStableCoinDenom = "nomUSD"
 )
 
 var (
@@ -24,12 +27,5 @@ var (
 	ParamsKey              = []byte{0x4}
 	KeyTotalStablecoinLock = []byte{0x5}
 	KeyFeeMax              = []byte{0x6}
+	KeyNoms                = []byte{0x07}
 )
-
-func GetKeyStableCoin(denom string) []byte {
-	return append(KeyStableCoin, []byte(denom)...)
-}
-
-func GetKeyLockCoin(denom string) []byte {
-	return append(KeyLockStableCoin, []byte(denom)...)
-}
