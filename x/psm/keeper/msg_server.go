@@ -151,7 +151,7 @@ func (k Keeper) checkLimitTotalStablecoin(ctx context.Context, coin sdk.Coin) er
 		return err
 	}
 	if (totalStablecoinLock.Add(coin.Amount)).GT(totalLimit) {
-		return fmt.Errorf("unable to perform %s token swap transaction because the amount of %s you want to swap exceeds the allowed limit, can only swap up to %s%s", coin.Denom, coin.Denom, (totalLimit).Sub(totalStablecoinLock).String(), coin.Denom)
+		return fmt.Errorf("unable to perform %s token swap transaction: exceeds the allowed limit %s , can only swap up to %s%s", coin.Denom, coin.Denom, (totalLimit).Sub(totalStablecoinLock).String(), coin.Denom)
 	}
 
 	return nil
