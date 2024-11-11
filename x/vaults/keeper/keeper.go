@@ -75,9 +75,10 @@ func (k Keeper) GetAuthority() string {
 
 func (k *Keeper) ActiveCollateralAsset(
 	ctx context.Context,
-	denom string,
-	symbol string,
-	mintDenom string,
+	CollateralDenom string,
+	CollateralSymbol string,
+	MintDenom string,
+	MintSymbol string,
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 	maxDebt math.Int,
@@ -87,16 +88,16 @@ func (k *Keeper) ActiveCollateralAsset(
 	oracleScript int64,
 ) error {
 	// Check if asset alreay be actived
-	actived := k.IsActived(ctx, denom)
+	actived := k.IsActived(ctx, CollateralDenom)
 	if actived {
-		return fmt.Errorf("denom %s already be actived", denom)
+		return fmt.Errorf("denom %s already be actived", CollateralDenom)
 	}
 	vm := types.VaultMamager{
-		Denom:  denom,
-		Symbol: symbol,
+		Denom:  CollateralDenom,
+		Symbol: CollateralSymbol,
 		Params: types.VaultMamagerParams{
-			MintDenom:          mintDenom,
-			MintSymbol:         symbol,
+			MintDenom:          MintDenom,
+			MintSymbol:         MintSymbol,
 			MinCollateralRatio: minCollateralRatio,
 			LiquidationRatio:   liquidationRatio,
 			MaxDebt:            maxDebt,
@@ -106,12 +107,12 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
-	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, denom, oracleScript)
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymbol, oracleScript)
 	if err != nil {
 		return err
 	}
 
-	return k.VaultsManager.Set(ctx, denom, vm)
+	return k.VaultsManager.Set(ctx, CollateralDenom, vm)
 }
 
 func (k *Keeper) UpdatesCollateralAsset(
