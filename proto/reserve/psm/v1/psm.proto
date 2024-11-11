@@ -43,4 +43,5 @@ message StablecoinInfo {
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
+  string sym_bol = 7;
 }

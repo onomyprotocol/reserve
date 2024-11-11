@@ -12,6 +12,7 @@ func GetMsgStablecoin(msg getStablecoinFromMsg) StablecoinInfo {
 		FeeOut:              msg.GetFeeOut(),
 		TotalStablecoinLock: math.ZeroInt(),
 		FeeMaxStablecoin:    msg.GetFeeIn().Add(msg.GetFeeOut()),
+		SymBol:              msg.GetSymBol(),
 	}
 }
 
@@ -21,4 +22,5 @@ type getStablecoinFromMsg interface {
 	// GetPrice() math.LegacyDec
 	GetFeeIn() math.LegacyDec
 	GetFeeOut() math.LegacyDec
+	GetSymBol() string
 }
