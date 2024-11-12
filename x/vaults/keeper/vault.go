@@ -119,7 +119,7 @@ func (k *Keeper) CreateNewVault(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, denom, vm)
+	return k.VaultsManager.Set(ctx, key, vm)
 }
 
 func (k *Keeper) CloseVault(
