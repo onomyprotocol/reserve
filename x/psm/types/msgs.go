@@ -83,7 +83,7 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
 	}
 
-	if msg.SymBol == "" {
+	if msg.Symbol == "" {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty symbol")
 	}
 
@@ -122,7 +122,7 @@ func (msg MsgUpdatesStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
 	}
 
-	if msg.SymBol == "" {
+	if msg.Symbol == "" {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty symbol")
 	}
 

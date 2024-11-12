@@ -70,7 +70,7 @@ message MsgAddStableCoin {
     (gogoproto.nullable)   = false
   ];
   int64 oracle_script = 6;
-  string sym_bol = 7;
+  string symbol = 7;
 }
 
 message MsgAddStableCoinResponse {}
@@ -102,7 +102,7 @@ message MsgUpdatesStableCoin {
   ];
 
   int64 oracle_script = 6;
-  string sym_bol = 7;
+  string symbol = 7;
 }
 
 message MsgUpdatesStableCoinResponse {}

@@ -64,7 +64,7 @@ func (k msgServer) UpdatesCollateral(ctx context.Context, msg *types.MsgUpdatesC
 		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
 	}
 
-	err = k.UpdatesCollateralAsset(ctx, msg.CollateralDenom, msg.MintDenom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty)
+	err = k.UpdatesCollateralAsset(ctx, msg.CollateralDenom, msg.CollateralSymbol, msg.MintDenom, msg.MinCollateralRatio, msg.LiquidationRatio, msg.MaxDebt, msg.StabilityFee, msg.MintingFee, msg.LiquidationPenalty, msg.CollateralOracleScript)
 	if err != nil {
 		return nil, err
 	}
