@@ -85,10 +85,11 @@ func (k *Keeper) ActiveCollateralAsset(
 	stabilityFee math.LegacyDec,
 	mintingFee math.LegacyDec,
 	liquidationPenalty math.LegacyDec,
-	oracleScript int64,
+	collateralOracleScript int64,
+	mintOracleScript int64,
 ) error {
 	// Check if asset alreay be actived
-	actived := k.IsActived(ctx, CollateralDenom)
+	actived, vmKey := k.IsActived(ctx, CollateralDenom, MintDenom)
 	if actived {
 		return fmt.Errorf("denom %s already be actived", CollateralDenom)
 	}
@@ -107,28 +108,37 @@ func (k *Keeper) ActiveCollateralAsset(
 		},
 		MintAvailable: maxDebt,
 	}
-	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymbol, oracleScript)
+	err := k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymbol, collateralOracleScript)
 	if err != nil {
 		return err
 	}
 
-	return k.VaultsManager.Set(ctx, CollateralDenom, vm)
+	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, MintSymbol, mintOracleScript)
+	if err != nil {
+		return err
+	}
+
+	return k.VaultsManager.Set(ctx, vmKey, vm)
 }
 
 func (k *Keeper) UpdatesCollateralAsset(
 	ctx context.Context,
 	denom string,
+	CollateralSymBol string,
+	mintDenom string,
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
 	maxDebt math.Int,
 	stabilityFee math.LegacyDec,
 	mintingFee math.LegacyDec,
 	liquidationPenalty math.LegacyDec,
+	CollateralOracleScript int64,
 ) error {
 	// Check if asset alreay be actived
-	vm, err := k.GetVaultManager(ctx, denom)
+	key := getVMKey(denom, mintDenom)
+	vm, err := k.GetVaultManager(ctx, denom, mintDenom)
 	if err != nil {
-		return fmt.Errorf("denom %s not activated", denom)
+		return fmt.Errorf("pair %s not activated", key)
 	}
 	amountMinted := vm.Params.MaxDebt.Sub(vm.MintAvailable)
 
@@ -141,14 +151,21 @@ func (k *Keeper) UpdatesCollateralAsset(
 
 	vm.MintAvailable = maxDebt.Sub(amountMinted)
 
-	return k.VaultsManager.Set(ctx, denom, vm)
+	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymBol, CollateralOracleScript)
+	if err != nil {
+		return err
+	}
+
+	return k.VaultsManager.Set(ctx, key, vm)
 }
 
 func (k *Keeper) GetVaultManager(
 	ctx context.Context,
-	denom string,
+	collateralDenom string,
+	mintDenom string,
 ) (types.VaultMamager, error) {
-	vm, err := k.VaultsManager.Get(ctx, denom)
+	key := getVMKey(collateralDenom, mintDenom)
+	vm, err := k.VaultsManager.Get(ctx, key)
 	if err != nil {
 		return types.VaultMamager{}, err
 	}
@@ -157,10 +174,19 @@ func (k *Keeper) GetVaultManager(
 
 func (k *Keeper) IsActived(
 	ctx context.Context,
-	denom string,
-) bool {
-	has, _ := k.VaultsManager.Has(ctx, denom)
-	return has
+	collateralDenom string,
+	mintDenom string,
+) (bool, string) {
+	keyStr := getVMKey(collateralDenom, mintDenom)
+	has, _ := k.VaultsManager.Has(ctx, keyStr)
+	return has, keyStr
+}
+
+func getVMKey(
+	collateralDenom string,
+	mintDenom string,
+) string {
+	return fmt.Sprintf("%s-%s", collateralDenom, mintDenom)
 }
 
 func (k *Keeper) GetAllowedMintDenoms(ctx context.Context) []string {

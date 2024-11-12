@@ -138,8 +138,12 @@ func (msg *MsgActiveCollateral) ValidateBasic() error {
 		return fmt.Errorf("authority is empty")
 	}
 
-	if msg.OraclScript == 0 {
-		return fmt.Errorf("oraclScript is empty")
+	if msg.CollateralOracleScript == 0 {
+		return fmt.Errorf("collateral oracle script is empty")
+	}
+
+	if msg.MintOracleScript == 0 {
+		return fmt.Errorf("mint oracle script is empty")
 	}
 
 	if msg.MinCollateralRatio.LT(math.LegacyZeroDec()) {
@@ -173,7 +177,7 @@ func (msg *MsgUpdatesCollateral) ValidateBasic() error {
 		return fmt.Errorf("denom is empty")
 	}
 
-	if msg.SymBol == "" {
+	if msg.Symbol == "" {
 		return fmt.Errorf("symbol is empty")
 	}
 
@@ -185,8 +189,12 @@ func (msg *MsgUpdatesCollateral) ValidateBasic() error {
 		return fmt.Errorf("authority is empty")
 	}
 
-	if msg.OraclScript == 0 {
-		return fmt.Errorf("oraclScript is empty")
+	if msg.CollateralOracleScript == 0 {
+		return fmt.Errorf("collateral oracle script is empty")
+	}
+
+	if msg.MintOracleScript == 0 {
+		return fmt.Errorf("mint oracle script is empty")
 	}
 
 	if msg.MinCollateralRatio.LT(math.LegacyZeroDec()) {
@@ -220,33 +228,35 @@ var _ govtypes.Content = &UpdatesCollateralProposal{}
 
 func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 	return &MsgActiveCollateral{
-		CollateralDenom:    a.ActiveCollateral.CollateralDenom,
-		MinCollateralRatio: a.ActiveCollateral.MinCollateralRatio,
-		LiquidationRatio:   a.ActiveCollateral.LiquidationRatio,
-		MaxDebt:            a.ActiveCollateral.MaxDebt,
-		StabilityFee:       a.ActiveCollateral.StabilityFee,
-		LiquidationPenalty: a.ActiveCollateral.LiquidationPenalty,
-		MintingFee:         a.ActiveCollateral.MintingFee,
-		OraclScript:        a.ActiveCollateral.OraclScript,
-		Authority:          a.ActiveCollateral.Authority,
-		CollateralSymbol:   a.ActiveCollateral.CollateralSymbol,
-		MintDenom:          a.ActiveCollateral.MintDenom,
+		CollateralDenom:        a.ActiveCollateral.CollateralDenom,
+		MinCollateralRatio:     a.ActiveCollateral.MinCollateralRatio,
+		LiquidationRatio:       a.ActiveCollateral.LiquidationRatio,
+		MaxDebt:                a.ActiveCollateral.MaxDebt,
+		StabilityFee:           a.ActiveCollateral.StabilityFee,
+		LiquidationPenalty:     a.ActiveCollateral.LiquidationPenalty,
+		MintingFee:             a.ActiveCollateral.MintingFee,
+		CollateralOracleScript: a.ActiveCollateral.CollateralOracleScript,
+		MintOracleScript:       a.ActiveCollateral.MintOracleScript,
+		Authority:              a.ActiveCollateral.Authority,
+		CollateralSymbol:       a.ActiveCollateral.CollateralSymbol,
+		MintDenom:              a.ActiveCollateral.MintDenom,
 	}
 }
 
 func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral {
 	return &MsgUpdatesCollateral{
-		CollateralDenom:    u.UpdatesCollateral.CollateralDenom,
-		MinCollateralRatio: u.UpdatesCollateral.MinCollateralRatio,
-		LiquidationRatio:   u.UpdatesCollateral.LiquidationRatio,
-		MaxDebt:            u.UpdatesCollateral.MaxDebt,
-		StabilityFee:       u.UpdatesCollateral.StabilityFee,
-		LiquidationPenalty: u.UpdatesCollateral.LiquidationPenalty,
-		MintingFee:         u.UpdatesCollateral.MintingFee,
-		OraclScript:        u.UpdatesCollateral.OraclScript,
-		Authority:          u.UpdatesCollateral.Authority,
-		SymBol:             u.UpdatesCollateral.SymBol,
-		MintDenom:          u.UpdatesCollateral.MintDenom,
+		CollateralDenom:        u.UpdatesCollateral.CollateralDenom,
+		MinCollateralRatio:     u.UpdatesCollateral.MinCollateralRatio,
+		LiquidationRatio:       u.UpdatesCollateral.LiquidationRatio,
+		MaxDebt:                u.UpdatesCollateral.MaxDebt,
+		StabilityFee:           u.UpdatesCollateral.StabilityFee,
+		LiquidationPenalty:     u.UpdatesCollateral.LiquidationPenalty,
+		MintingFee:             u.UpdatesCollateral.MintingFee,
+		CollateralOracleScript: u.UpdatesCollateral.CollateralOracleScript,
+		MintOracleScript:       u.UpdatesCollateral.MintOracleScript,
+		Authority:              u.UpdatesCollateral.Authority,
+		Symbol:                 u.UpdatesCollateral.Symbol,
+		MintDenom:              u.UpdatesCollateral.MintDenom,
 	}
 }
 

@@ -36,7 +36,7 @@ func (s *KeeperTestSuite) TestSwapToOnomyStableToken() {
 				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
 					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:        usdt,
-					SymBol:       usdt,
+					Symbol:       usdt,
 					LimitTotal:   limitUSDT,
 					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
@@ -55,7 +55,7 @@ func (s *KeeperTestSuite) TestSwapToOnomyStableToken() {
 				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
 					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:        usdc,
-					SymBol:       usdc,
+					Symbol:       usdc,
 					LimitTotal:   limitUSDC,
 					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
@@ -115,7 +115,7 @@ func (s *KeeperTestSuite) TestSwapToOtherStablecoin() {
 				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
 					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:        usdt,
-					SymBol:       usdt,
+					Symbol:       usdt,
 					LimitTotal:   limitUSDT,
 					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
@@ -138,7 +138,7 @@ func (s *KeeperTestSuite) TestSwapToOtherStablecoin() {
 				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
 					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 					Denom:        usdc,
-					SymBol:       usdc,
+					Symbol:       usdc,
 					LimitTotal:   limitUSDC,
 					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
