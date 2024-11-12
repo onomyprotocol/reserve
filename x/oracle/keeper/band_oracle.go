@@ -308,6 +308,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
 	// query ref by using GetBandPriceState
+	println("Check get price with base %s and quote %s", base, quote)
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
 		k.Logger(ctx).Info("Can not get price state of base denom %s: price state is nil or rate is zero", base)
@@ -491,7 +492,8 @@ func (k *Keeper) updateBandPriceStates(
 		if bandPriceState != nil && types.CheckPriceFeedThreshold(bandPriceState.PriceState.Price, price) {
 			continue
 		}
-
+		println("Check update state of symbol: ", symbol)
+		println("Get band price state: ", bandPriceState.String())
 		blockTime := ctx.BlockTime().Unix()
 		if bandPriceState == nil {
 			bandPriceState = &types.BandPriceState{
