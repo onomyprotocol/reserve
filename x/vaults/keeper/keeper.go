@@ -124,6 +124,7 @@ func (k *Keeper) ActiveCollateralAsset(
 func (k *Keeper) UpdatesCollateralAsset(
 	ctx context.Context,
 	denom string,
+	CollateralSymBol string,
 	mintDenom string,
 	minCollateralRatio math.LegacyDec,
 	liquidationRatio math.LegacyDec,
@@ -131,6 +132,7 @@ func (k *Keeper) UpdatesCollateralAsset(
 	stabilityFee math.LegacyDec,
 	mintingFee math.LegacyDec,
 	liquidationPenalty math.LegacyDec,
+	CollateralOracleScript int64,
 ) error {
 	// Check if asset alreay be actived
 	key := getVMKey(denom, mintDenom)
@@ -148,6 +150,11 @@ func (k *Keeper) UpdatesCollateralAsset(
 	vm.Params.LiquidationPenalty = liquidationPenalty
 
 	vm.MintAvailable = maxDebt.Sub(amountMinted)
+
+	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymBol, CollateralOracleScript)
+	if err != nil {
+		return err
+	}
 
 	return k.VaultsManager.Set(ctx, key, vm)
 }

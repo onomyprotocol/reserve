@@ -94,7 +94,7 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
-	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.SymBol, msg.OracleScript)
+	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Symbol, msg.OracleScript)
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
 	}
