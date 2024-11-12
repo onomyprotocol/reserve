@@ -503,7 +503,8 @@ func (k *Keeper) GetLiquidations(
 		mintSymbol := vm.Params.MintSymbol
 		price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if price == nil || price.IsNil() {
-			return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", vm.Denom, types.DefaultMintDenoms)
+			return false, nil
+			// return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", collateralSymbol, mintSymbol)
 		}
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
@@ -517,7 +518,8 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
-		if vault.Debt.Denom != mintDenom {
+		_, ok := liquidations[denom]
+		if vault.Debt.Denom != mintDenom || !ok {
 			return false, nil
 		}
 
