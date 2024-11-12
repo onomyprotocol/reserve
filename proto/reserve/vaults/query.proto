@@ -20,6 +20,10 @@ service Query {
     option (google.api.http).get = "/reserve/vaults/params";
   }
 
+    rpc QueryCollateralsByDenom(QueryCollateralsByDenomRequest) returns (QueryCollateralsByDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
   rpc QueryAllVaults(QueryAllVaultsRequest) returns (QueryAllVaultsResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
@@ -62,6 +66,14 @@ message QueryAllCollateralRequest {}
 
 message QueryAllCollateralResponse{
   repeated  VaultMamager all_vault_mamager = 1; 
+}
+
+message QueryCollateralsByDenomRequest {
+  string denom = 1;
+}
+
+message QueryCollateralsByDenomResponse{
+  repeated  VaultMamager all_vault_mamager_by_denom = 1; 
 }
 
 message QueryVaultByOwnerRequest {
