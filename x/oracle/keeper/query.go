@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"slices"
 	"strconv"
 
 	errors "cosmossdk.io/errors"
@@ -66,6 +67,23 @@ func (k Keeper) BandOracleRequest(c context.Context, q *types.QueryBandOracleReq
 	bandOracleRequest := k.GetBandOracleRequest(ctx, requestID)
 	res := &types.QueryBandOracleRequestResponse{
 		BandOracleRequest: bandOracleRequest,
+	}
+	return res, nil
+}
+
+func (k Keeper) QueryOracleScriptIdByDenom(c context.Context, q *types.QueryOracleScriptIdByDenomRequest) (*types.QueryOracleScriptIdByDenomResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	allIds := []int64{}
+
+	k.IteratorOracleRequests(ctx, func(bandOracleRequest types.BandOracleRequest) bool {
+		if slices.Contains(bandOracleRequest.Symbols, q.Denom) {
+			allIds = append(allIds, bandOracleRequest.OracleScriptId)
+		}
+		return false
+	})
+	res := &types.QueryOracleScriptIdByDenomResponse{
+
+		OracleScriptIds: allIds,
 	}
 	return res, nil
 }
