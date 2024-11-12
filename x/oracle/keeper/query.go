@@ -75,12 +75,15 @@ func (k Keeper) QueryOracleScriptIdByDenom(c context.Context, q *types.QueryOrac
 	ctx := sdk.UnwrapSDKContext(c)
 	allIds := []int64{}
 
-	k.IteratorOracleRequests(ctx, func(bandOracleRequest types.BandOracleRequest) bool {
+	err := k.IteratorOracleRequests(ctx, func(bandOracleRequest types.BandOracleRequest) bool {
 		if slices.Contains(bandOracleRequest.Symbols, q.Denom) {
 			allIds = append(allIds, bandOracleRequest.OracleScriptId)
 		}
 		return false
 	})
+	if err != nil {
+		return nil, err
+	}
 	res := &types.QueryOracleScriptIdByDenomResponse{
 
 		OracleScriptIds: allIds,
