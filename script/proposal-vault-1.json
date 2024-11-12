@@ -2,12 +2,12 @@
     "messages": [{
       "@type": "/reserve.vaults.MsgActiveCollateral",
       "collateral_denom": "usdt",
-      "collateral_symbol":"usdt",
+      "collateral_symbol":"USDT",
       "authority":"onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
       "min_collateral_ratio": "0.5",
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
-      "oracl_script": "44",
+      "oracl_script": "46",
       "mint_denom": "nomUSD",
       "mint_symbol":"USD",
       "stability_fee": "0.1"
@@ -20,7 +20,7 @@
       "min_collateral_ratio": "0.5",
       "liquidation_ratio":"0.5",
       "max_debt":"1000000000000000000000000000",
-      "oracl_script": "44",
+      "oracl_script": "46",
       "mint_denom": "nomUSD",
       "mint_symbol":"USD",
       "stability_fee": "0.1"
