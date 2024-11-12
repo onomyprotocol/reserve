@@ -1,8 +1,8 @@
 package cli
 
 import (
-	"fmt"
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/cosmos/gogoproto/proto"
@@ -31,6 +31,7 @@ func GetQueryCmd() *cobra.Command {
 		GetBandParams(),
 		GetBandOracleRequestParams(),
 		GetBandOracleRequest(),
+		GetQueryOracleScriptIdByDenomCmd(),
 	)
 	return cmd
 }
@@ -173,6 +174,30 @@ func GetBandOracleRequest() *cobra.Command {
 				RequestId: fmt.Sprint(requestID),
 			}
 			res, err = queryClient.BandOracleRequest(context.Background(), req)
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func GetQueryOracleScriptIdByDenomCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "oracle-scriptId-by-symbol [symbol]",
+		Short: "Get oracle-scriptId by symbol",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryOracleScriptIdByDenom(context.Background(), &types.QueryOracleScriptIdByDenomRequest{Denom: args[0]})
 			if err != nil {
 				return err
 			}

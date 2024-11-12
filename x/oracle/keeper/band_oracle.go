@@ -204,6 +204,24 @@ func (k Keeper) GetAllBandOracleRequests(ctx context.Context) []*types.BandOracl
 	return bandOracleRequests
 }
 
+func (k Keeper) IteratorOracleRequests(ctx context.Context, fn func(bandOracleRequest types.BandOracleRequest) bool) error {
+	kvStore := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
+	bandOracleRequestStore := prefix.NewStore(kvStore, types.BandOracleRequestIDKey)
+
+	iterator := bandOracleRequestStore.Iterator(nil, nil)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var bandOracleRequest types.BandOracleRequest
+		k.cdc.MustUnmarshal(iterator.Value(), &bandOracleRequest)
+		if fn(bandOracleRequest) {
+			return nil
+		}
+	}
+
+	return nil
+}
+
 // GetBandPriceState reads the stored band ibc price state.
 func (k *Keeper) GetBandPriceState(ctx context.Context, symbol string) *types.BandPriceState {
 	var priceState types.BandPriceState
