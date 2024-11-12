@@ -17,7 +17,8 @@ func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error
 		return err
 	}
 	for _, vm := range data.VaultManagers {
-		err := k.VaultsManager.Set(ctx, vm.Denom, vm)
+		key := getVMKey(vm.Denom, vm.Params.MintDenom)
+		err := k.VaultsManager.Set(ctx, key, vm)
 		if err != nil {
 			return err
 		}
