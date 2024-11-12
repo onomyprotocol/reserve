@@ -136,7 +136,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 			} else {
 				s.Require().NoError(err)
 
-				vm, err := s.k.GetVaultManager(s.Ctx, denom)
+				vm, err := s.k.GetVaultManager(s.Ctx, denom, "nomUSD")
 				s.Require().NoError(err)
 				s.Require().NotEqual(maxDebt, vm.MintAvailable)
 
