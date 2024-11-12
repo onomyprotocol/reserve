@@ -577,6 +577,36 @@ func (k Keeper) SetInitPrice(ctx context.Context) error {
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
 		},
 		{
+			Symbol:      "USD",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "EUR",
+			Rate:        math.NewInt(10910), //1.091
+			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1.091"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "JPY",
+			Rate:        math.NewInt(66), //0.0066
+			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.0066"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "USDT",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "USDC",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
 			Symbol:      "nomEUR",
 			Rate:        math.NewInt(10910), //1.091
 			ResolveTime: uint64(sdkCtx.BlockTime().Unix()),
