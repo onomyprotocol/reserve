@@ -310,7 +310,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
-		k.Logger(ctx).Info("Can not get price state of base denom %s: price state is nil or rate is zero", base)
+		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of base denom %s: price state is nil or rate is zero", base))
 		return nil
 	}
 
@@ -320,7 +320,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
-		k.Logger(ctx).Info("Can not get price state of quote denom %s: price state is nil or rate is zero", quote)
+		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of quote denom %s: price state is nil or rate is zero", quote))
 		return nil
 	}
 
@@ -510,7 +510,7 @@ func (k *Keeper) updateBandPriceStates(
 
 		err := k.SetBandPriceState(ctx, symbol, bandPriceState)
 		if err != nil {
-			k.Logger(ctx).Info("Can not set band price state for symbol %v", symbol)
+			k.Logger(ctx).Info(fmt.Sprintf("Can not set band price state for symbol %v", symbol))
 		}
 
 		symbols = append(symbols, symbol)
