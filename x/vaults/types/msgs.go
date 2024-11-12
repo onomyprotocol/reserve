@@ -177,7 +177,7 @@ func (msg *MsgUpdatesCollateral) ValidateBasic() error {
 		return fmt.Errorf("denom is empty")
 	}
 
-	if msg.SymBol == "" {
+	if msg.Symbol == "" {
 		return fmt.Errorf("symbol is empty")
 	}
 
@@ -255,7 +255,7 @@ func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral
 		CollateralOracleScript: u.UpdatesCollateral.CollateralOracleScript,
 		MintOracleScript:       u.UpdatesCollateral.MintOracleScript,
 		Authority:              u.UpdatesCollateral.Authority,
-		SymBol:                 u.UpdatesCollateral.SymBol,
+		Symbol:                 u.UpdatesCollateral.Symbol,
 		MintDenom:              u.UpdatesCollateral.MintDenom,
 	}
 }

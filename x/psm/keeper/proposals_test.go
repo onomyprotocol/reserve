@@ -13,7 +13,7 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:        usdt,
 		LimitTotal:   limitUSDT,
-		SymBol:       usdt,
+		Symbol:       usdt,
 		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
@@ -35,7 +35,7 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 	proAdd := types.MsgAddStableCoin{
 		Denom:        usdt,
 		LimitTotal:   limitUSDT,
-		SymBol:       usdt,
+		Symbol:       usdt,
 		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
@@ -59,7 +59,7 @@ func (s *KeeperTestSuite) TestUpdateStableCoinProposal() {
 		Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 		FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
 		FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
-		SymBol:       usdt,
+		Symbol:       usdt,
 		OracleScript: 44,
 	}
 
