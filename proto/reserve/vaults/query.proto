@@ -20,7 +20,15 @@ service Query {
     option (google.api.http).get = "/reserve/vaults/params";
   }
 
-    rpc QueryCollateralsByDenom(QueryCollateralsByDenomRequest) returns (QueryCollateralsByDenomResponse){
+  rpc QueryCollateralsByDenom(QueryCollateralsByDenomRequest) returns (QueryCollateralsByDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryCollateralsByMintDenom(QueryCollateralsByMintDenomRequest) returns (QueryCollateralsByMintDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryCollateralsByDenomMintDenom(QueryCollateralsByDenomMintDenomRequest) returns (QueryCollateralsByDenomMintDenomResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
 
@@ -74,6 +82,23 @@ message QueryCollateralsByDenomRequest {
 
 message QueryCollateralsByDenomResponse{
   repeated  VaultMamager all_vault_mamager_by_denom = 1; 
+}
+
+message QueryCollateralsByMintDenomRequest {
+  string mint_denom = 1;
+}
+
+message QueryCollateralsByMintDenomResponse{
+  repeated  VaultMamager all_vault_mamager_by_mint_denom = 1; 
+}
+
+message QueryCollateralsByDenomMintDenomRequest {
+  string denom = 1;
+  string mint_denom = 2;
+}
+
+message QueryCollateralsByDenomMintDenomResponse{
+  VaultMamager vault_mamager = 1; 
 }
 
 message QueryVaultByOwnerRequest {

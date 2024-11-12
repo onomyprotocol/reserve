@@ -187,8 +187,8 @@ func GetBandOracleRequest() *cobra.Command {
 
 func GetQueryOracleScriptIdByDenomCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "oracle-scriptId-by-denom [denom]",
-		Short: "Get oracle-scriptId by denom",
+		Use:   "oracle-scriptId-by-symbol [symbol]",
+		Short: "Get oracle-scriptId by symbol",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientQueryContext(cmd)

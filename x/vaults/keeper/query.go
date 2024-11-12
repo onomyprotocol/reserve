@@ -63,6 +63,39 @@ func (q queryServer) QueryCollateralsByDenom(ctx context.Context, req *types.Que
 	}, err
 }
 
+func (q queryServer) QueryCollateralsByMintDenom(ctx context.Context, req *types.QueryCollateralsByMintDenomRequest) (*types.QueryCollateralsByMintDenomResponse, error) {
+	allCollateral := []*types.VaultMamager{}
+
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultMamager) (stop bool, err error) {
+		if value.Params.MintDenom == req.MintDenom {
+			allCollateral = append(allCollateral, &value)
+		}
+
+		return false, nil
+	})
+
+	return &types.QueryCollateralsByMintDenomResponse{
+		AllVaultMamagerByMintDenom: allCollateral,
+	}, err
+}
+
+func (q queryServer) QueryCollateralsByDenomMintDenom(ctx context.Context, req *types.QueryCollateralsByDenomMintDenomRequest) (*types.QueryCollateralsByDenomMintDenomResponse, error) {
+	var collateral *types.VaultMamager
+
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultMamager) (stop bool, err error) {
+		if value.Denom == req.Denom && value.Params.MintDenom == req.MintDenom {
+			collateral = &value
+			return true, nil
+		}
+
+		return false, nil
+	})
+
+	return &types.QueryCollateralsByDenomMintDenomResponse{
+		VaultMamager: collateral,
+	}, err
+}
+
 func (q queryServer) QueryAllVaults(ctx context.Context, req *types.QueryAllVaultsRequest) (*types.QueryAllVaultsResponse, error) {
 	allVaults := []*types.Vault{}
 
