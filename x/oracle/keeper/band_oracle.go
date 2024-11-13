@@ -271,7 +271,7 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	for _, req := range allBandOracleRequests {
 		if req.OracleScriptId == oracleScriptId {
 			if slices.Contains(req.Symbols, symbol) {
-				return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "symbol %s already registered", symbol)
+				return nil
 			}
 
 			req.Symbols = append(req.Symbols, symbol)
