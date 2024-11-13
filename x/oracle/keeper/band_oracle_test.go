@@ -429,36 +429,22 @@ func (s *KeeperTestSuite) TestAddNewSymbolToBandOracleRequest() {
 			42: {"ATOM", "OSMO"},
 			52: {"USD", "EUR", "JPY"},
 		}
+
+		setSymbolScript = func() {
+			for oracleScriptId, symbols := range symbolScript {
+				for _, symbol := range symbols {
+					err := s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbol, oracleScriptId)
+					s.Require().NoError(err)
+				}
+			}
+		}
 	)
 
-	// 42-1.ATOM
-	err := s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[42][0], 42)
-	s.Require().NoError(err)
-	// 42-2.OSMO
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[42][1], 42)
-	s.Require().NoError(err)
+	setSymbolScript()
+	// duplicate AddNewSymbolToBandOracleRequest test
+	setSymbolScript()
 
-	// 42-1.ATOM duplicate test
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[42][0], 42)
-	s.Require().NoError(err)
-
-	// 52-1.USD
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[52][0], 52)
-	s.Require().NoError(err)
-
-	// 52-2.EUR
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[52][1], 52)
-	s.Require().NoError(err)
-
-	// 52-3.JPY
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[52][2], 52)
-	s.Require().NoError(err)
-
-	// 52-1.USD duplicate test
-	err = s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbolScript[52][0], 52)
-	s.Require().NoError(err)
-
-	err = s.k.IteratorOracleRequests(s.Ctx, func(bandOracleRequest types.BandOracleRequest) bool {
+	err := s.k.IteratorOracleRequests(s.Ctx, func(bandOracleRequest types.BandOracleRequest) bool {
 		expSymbols, ok := symbolScript[bandOracleRequest.OracleScriptId]
 		s.Require().True(ok)
 		s.Require().Equal(len(expSymbols), len(bandOracleRequest.Symbols))
