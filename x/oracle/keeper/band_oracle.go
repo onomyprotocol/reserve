@@ -270,11 +270,13 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 	// check if new symbol's oracle script id is existing
 	for _, req := range allBandOracleRequests {
 		if req.OracleScriptId == oracleScriptId {
-			if !slices.Contains(req.Symbols, symbol) {
-				req.Symbols = append(req.Symbols, symbol)
-				if err := k.SetBandOracleRequest(ctx, *req); err != nil {
-					return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "can not set symbol %s with oracle script id %v", symbol, oracleScriptId)
-				}
+			if slices.Contains(req.Symbols, symbol) {
+				return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "symbol %s already registered", symbol)
+			}
+
+			req.Symbols = append(req.Symbols, symbol)
+			if err := k.SetBandOracleRequest(ctx, *req); err != nil {
+				return errorsmod.Wrapf(types.ErrSetBandOracleRequest, "can not set symbol %s with oracle script id %v", symbol, oracleScriptId)
 			}
 
 			return nil
