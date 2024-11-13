@@ -422,7 +422,7 @@ func TestProcessBandOraclePrices(t *testing.T) {
 	}
 }
 
-func (s *KeeperTestSuite) TestParams() {
+func (s *KeeperTestSuite) TestAddNewSymbolToBandOracleRequest() {
 	s.SetupTest()
 	var (
 		symbolScript = map[int64][]string{
