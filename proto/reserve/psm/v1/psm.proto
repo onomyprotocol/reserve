@@ -12,33 +12,33 @@ message StablecoinInfo {
   // stablecoin name
   string denom = 1;
   // limit total stablecoin
-  bytes limit_total = 2 [
+  string limit_total = 2 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
   // stablecoin to nom exchange fee, fee_in when 1 stablecoin = 1nomUSD
-  bytes fee_in = 3 [
+  string fee_in = 3 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
   // nom to stablecoin exchange fee, fee_out when 1 stablecoin = 1nomUSD
-  bytes fee_out = 4 [
+  string fee_out = 4 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
   // amount of stablecoins locked in exchange for nomUSD
-  bytes total_stablecoin_lock = 5 [
+  string total_stablecoin_lock = 5 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
   // maximum fee for when either fee = 0
-  bytes fee_max_stablecoin = 6 [
+  string fee_max_stablecoin = 6 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
