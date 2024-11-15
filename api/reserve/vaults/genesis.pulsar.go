@@ -17,7 +17,7 @@ import (
 var _ protoreflect.List = (*_GenesisState_2_list)(nil)
 
 type _GenesisState_2_list struct {
-	list *[]*VaultMamager
+	list *[]*VaultManager
 }
 
 func (x *_GenesisState_2_list) Len() int {
@@ -33,18 +33,18 @@ func (x *_GenesisState_2_list) Get(i int) protoreflect.Value {
 
 func (x *_GenesisState_2_list) Set(i int, value protoreflect.Value) {
 	valueUnwrapped := value.Message()
-	concreteValue := valueUnwrapped.Interface().(*VaultMamager)
+	concreteValue := valueUnwrapped.Interface().(*VaultManager)
 	(*x.list)[i] = concreteValue
 }
 
 func (x *_GenesisState_2_list) Append(value protoreflect.Value) {
 	valueUnwrapped := value.Message()
-	concreteValue := valueUnwrapped.Interface().(*VaultMamager)
+	concreteValue := valueUnwrapped.Interface().(*VaultManager)
 	*x.list = append(*x.list, concreteValue)
 }
 
 func (x *_GenesisState_2_list) AppendMutable() protoreflect.Value {
-	v := new(VaultMamager)
+	v := new(VaultManager)
 	*x.list = append(*x.list, v)
 	return protoreflect.ValueOfMessage(v.ProtoReflect())
 }
@@ -57,7 +57,7 @@ func (x *_GenesisState_2_list) Truncate(n int) {
 }
 
 func (x *_GenesisState_2_list) NewElement() protoreflect.Value {
-	v := new(VaultMamager)
+	v := new(VaultManager)
 	return protoreflect.ValueOfMessage(v.ProtoReflect())
 }
 
@@ -345,7 +345,7 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		return protoreflect.ValueOfMessage(x.Params.ProtoReflect())
 	case "reserve.vaults.GenesisState.vault_managers":
 		if x.VaultManagers == nil {
-			x.VaultManagers = []*VaultMamager{}
+			x.VaultManagers = []*VaultManager{}
 		}
 		value := &_GenesisState_2_list{list: &x.VaultManagers}
 		return protoreflect.ValueOfList(value)
@@ -372,7 +372,7 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 		m := new(Params)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
 	case "reserve.vaults.GenesisState.vault_managers":
-		list := []*VaultMamager{}
+		list := []*VaultManager{}
 		return protoreflect.ValueOfList(&_GenesisState_2_list{list: &list})
 	case "reserve.vaults.GenesisState.vaults":
 		list := []*Vault{}
@@ -651,7 +651,7 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.VaultManagers = append(x.VaultManagers, &VaultMamager{})
+				x.VaultManagers = append(x.VaultManagers, &VaultManager{})
 				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.VaultManagers[len(x.VaultManagers)-1]); err != nil {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
@@ -746,7 +746,7 @@ type GenesisState struct {
 
 	// params defines all the parameters of the module.
 	Params        *Params         `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
-	VaultManagers []*VaultMamager `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers,omitempty"`
+	VaultManagers []*VaultManager `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers,omitempty"`
 	Vaults        []*Vault        `protobuf:"bytes,3,rep,name=vaults,proto3" json:"vaults,omitempty"`
 }
 
@@ -777,7 +777,7 @@ func (x *GenesisState) GetParams() *Params {
 	return nil
 }
 
-func (x *GenesisState) GetVaultManagers() []*VaultMamager {
+func (x *GenesisState) GetVaultManagers() []*VaultManager {
 	if x != nil {
 		return x.VaultManagers
 	}
@@ -845,12 +845,12 @@ var file_reserve_vaults_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1
 var file_reserve_vaults_genesis_proto_goTypes = []interface{}{
 	(*GenesisState)(nil), // 0: reserve.vaults.GenesisState
 	(*Params)(nil),       // 1: reserve.vaults.Params
-	(*VaultMamager)(nil), // 2: reserve.vaults.VaultMamager
+	(*VaultManager)(nil), // 2: reserve.vaults.VaultManager
 	(*Vault)(nil),        // 3: reserve.vaults.Vault
 }
 var file_reserve_vaults_genesis_proto_depIdxs = []int32{
 	1, // 0: reserve.vaults.GenesisState.params:type_name -> reserve.vaults.Params
-	2, // 1: reserve.vaults.GenesisState.vault_managers:type_name -> reserve.vaults.VaultMamager
+	2, // 1: reserve.vaults.GenesisState.vault_managers:type_name -> reserve.vaults.VaultManager
 	3, // 2: reserve.vaults.GenesisState.vaults:type_name -> reserve.vaults.Vault
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type

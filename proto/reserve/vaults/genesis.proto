@@ -15,7 +15,7 @@ message GenesisState {
   Params params = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  repeated VaultMamager vault_managers = 2
+  repeated VaultManager vault_managers = 2
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
   repeated Vault vaults = 3

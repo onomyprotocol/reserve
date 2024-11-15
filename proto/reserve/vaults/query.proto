@@ -73,7 +73,7 @@ message QueryAllVaultsResponse{
 message QueryAllCollateralRequest {}
 
 message QueryAllCollateralResponse{
-  repeated  VaultMamager all_vault_mamager = 1; 
+  repeated  VaultManager all_vault_manager = 1; 
 }
 
 message QueryCollateralsByDenomRequest {
@@ -81,7 +81,7 @@ message QueryCollateralsByDenomRequest {
 }
 
 message QueryCollateralsByDenomResponse{
-  repeated  VaultMamager all_vault_mamager_by_denom = 1; 
+  repeated  VaultManager all_vault_manager_by_denom = 1; 
 }
 
 message QueryCollateralsByMintDenomRequest {
@@ -89,7 +89,7 @@ message QueryCollateralsByMintDenomRequest {
 }
 
 message QueryCollateralsByMintDenomResponse{
-  repeated  VaultMamager all_vault_mamager_by_mint_denom = 1; 
+  repeated  VaultManager all_vault_manager_by_mint_denom = 1; 
 }
 
 message QueryCollateralsByDenomMintDenomRequest {
@@ -98,7 +98,7 @@ message QueryCollateralsByDenomMintDenomRequest {
 }
 
 message QueryCollateralsByDenomMintDenomResponse{
-  VaultMamager vault_mamager = 1; 
+  VaultManager vault_manager = 1; 
 }
 
 message QueryVaultByOwnerRequest {

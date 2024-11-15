@@ -32,7 +32,7 @@ message Params {
 }
 
 // VaultParams defines the parameters for each collateral vault type.
-message VaultMamagerParams {
+message VaultManagerParams {
   string mint_denom = 1;
   string mint_symbol = 2;
 
@@ -79,9 +79,9 @@ message VaultMamagerParams {
   ];
 }
 
-// VaultMamager defines the manager of each collateral vault type.
-message VaultMamager {
-  VaultMamagerParams params = 1
+// VaultManager defines the manager of each collateral vault type.
+message VaultManager {
+  VaultManagerParams params = 1
       [ (amino.dont_omitempty) = true, (gogoproto.nullable) = false ];
 
   string denom = 2;
