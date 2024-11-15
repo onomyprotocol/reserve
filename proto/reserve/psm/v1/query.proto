@@ -47,7 +47,7 @@ message QueryStablecoinRequest {
 message QueryStablecoinResponse {
   StablecoinInfo stablecoin = 1 [(gogoproto.nullable) = false];
   
-  bytes swapable_quantity = 3 [
+  string swapable_quantity = 3 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
@@ -64,7 +64,7 @@ message QueryAllStablecoinResponse {
 
 message StablecoinResponse {
   StablecoinInfo stablecoin = 1 [(gogoproto.nullable) = false];
-  bytes swapable_quantity = 3 [
+  string swapable_quantity = 3 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
