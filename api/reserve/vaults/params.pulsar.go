@@ -683,29 +683,29 @@ func (x *fastReflection_Params) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_VaultMamagerParams                      protoreflect.MessageDescriptor
-	fd_VaultMamagerParams_min_collateral_ratio protoreflect.FieldDescriptor
-	fd_VaultMamagerParams_liquidation_ratio    protoreflect.FieldDescriptor
-	fd_VaultMamagerParams_max_debt             protoreflect.FieldDescriptor
+	md_VaultManagerParams                      protoreflect.MessageDescriptor
+	fd_VaultManagerParams_min_collateral_ratio protoreflect.FieldDescriptor
+	fd_VaultManagerParams_liquidation_ratio    protoreflect.FieldDescriptor
+	fd_VaultManagerParams_max_debt             protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_reserve_vaults_params_proto_init()
-	md_VaultMamagerParams = File_reserve_vaults_params_proto.Messages().ByName("VaultMamagerParams")
-	fd_VaultMamagerParams_min_collateral_ratio = md_VaultMamagerParams.Fields().ByName("min_collateral_ratio")
-	fd_VaultMamagerParams_liquidation_ratio = md_VaultMamagerParams.Fields().ByName("liquidation_ratio")
-	fd_VaultMamagerParams_max_debt = md_VaultMamagerParams.Fields().ByName("max_debt")
+	md_VaultManagerParams = File_reserve_vaults_params_proto.Messages().ByName("VaultManagerParams")
+	fd_VaultManagerParams_min_collateral_ratio = md_VaultManagerParams.Fields().ByName("min_collateral_ratio")
+	fd_VaultManagerParams_liquidation_ratio = md_VaultManagerParams.Fields().ByName("liquidation_ratio")
+	fd_VaultManagerParams_max_debt = md_VaultManagerParams.Fields().ByName("max_debt")
 }
 
-var _ protoreflect.Message = (*fastReflection_VaultMamagerParams)(nil)
+var _ protoreflect.Message = (*fastReflection_VaultManagerParams)(nil)
 
-type fastReflection_VaultMamagerParams VaultMamagerParams
+type fastReflection_VaultManagerParams VaultManagerParams
 
-func (x *VaultMamagerParams) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_VaultMamagerParams)(x)
+func (x *VaultManagerParams) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_VaultManagerParams)(x)
 }
 
-func (x *VaultMamagerParams) slowProtoReflect() protoreflect.Message {
+func (x *VaultManagerParams) slowProtoReflect() protoreflect.Message {
 	mi := &file_reserve_vaults_params_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -717,43 +717,43 @@ func (x *VaultMamagerParams) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_VaultMamagerParams_messageType fastReflection_VaultMamagerParams_messageType
-var _ protoreflect.MessageType = fastReflection_VaultMamagerParams_messageType{}
+var _fastReflection_VaultManagerParams_messageType fastReflection_VaultManagerParams_messageType
+var _ protoreflect.MessageType = fastReflection_VaultManagerParams_messageType{}
 
-type fastReflection_VaultMamagerParams_messageType struct{}
+type fastReflection_VaultManagerParams_messageType struct{}
 
-func (x fastReflection_VaultMamagerParams_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_VaultMamagerParams)(nil)
+func (x fastReflection_VaultManagerParams_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_VaultManagerParams)(nil)
 }
-func (x fastReflection_VaultMamagerParams_messageType) New() protoreflect.Message {
-	return new(fastReflection_VaultMamagerParams)
+func (x fastReflection_VaultManagerParams_messageType) New() protoreflect.Message {
+	return new(fastReflection_VaultManagerParams)
 }
-func (x fastReflection_VaultMamagerParams_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamagerParams
+func (x fastReflection_VaultManagerParams_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_VaultManagerParams
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_VaultMamagerParams) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamagerParams
+func (x *fastReflection_VaultManagerParams) Descriptor() protoreflect.MessageDescriptor {
+	return md_VaultManagerParams
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_VaultMamagerParams) Type() protoreflect.MessageType {
-	return _fastReflection_VaultMamagerParams_messageType
+func (x *fastReflection_VaultManagerParams) Type() protoreflect.MessageType {
+	return _fastReflection_VaultManagerParams_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_VaultMamagerParams) New() protoreflect.Message {
-	return new(fastReflection_VaultMamagerParams)
+func (x *fastReflection_VaultManagerParams) New() protoreflect.Message {
+	return new(fastReflection_VaultManagerParams)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_VaultMamagerParams) Interface() protoreflect.ProtoMessage {
-	return (*VaultMamagerParams)(x)
+func (x *fastReflection_VaultManagerParams) Interface() protoreflect.ProtoMessage {
+	return (*VaultManagerParams)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -761,22 +761,22 @@ func (x *fastReflection_VaultMamagerParams) Interface() protoreflect.ProtoMessag
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_VaultMamagerParams) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_VaultManagerParams) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.MinCollateralRatio != "" {
 		value := protoreflect.ValueOfString(x.MinCollateralRatio)
-		if !f(fd_VaultMamagerParams_min_collateral_ratio, value) {
+		if !f(fd_VaultManagerParams_min_collateral_ratio, value) {
 			return
 		}
 	}
 	if x.LiquidationRatio != "" {
 		value := protoreflect.ValueOfString(x.LiquidationRatio)
-		if !f(fd_VaultMamagerParams_liquidation_ratio, value) {
+		if !f(fd_VaultManagerParams_liquidation_ratio, value) {
 			return
 		}
 	}
 	if x.MaxDebt != "" {
 		value := protoreflect.ValueOfString(x.MaxDebt)
-		if !f(fd_VaultMamagerParams_max_debt, value) {
+		if !f(fd_VaultManagerParams_max_debt, value) {
 			return
 		}
 	}
@@ -793,19 +793,19 @@ func (x *fastReflection_VaultMamagerParams) Range(f func(protoreflect.FieldDescr
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_VaultMamagerParams) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_VaultManagerParams) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
 		return x.MinCollateralRatio != ""
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
 		return x.LiquidationRatio != ""
-	case "reserve.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultManagerParams.max_debt":
 		return x.MaxDebt != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -815,19 +815,19 @@ func (x *fastReflection_VaultMamagerParams) Has(fd protoreflect.FieldDescriptor)
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamagerParams) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_VaultManagerParams) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
 		x.MinCollateralRatio = ""
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
 		x.LiquidationRatio = ""
-	case "reserve.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultManagerParams.max_debt":
 		x.MaxDebt = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -837,22 +837,22 @@ func (x *fastReflection_VaultMamagerParams) Clear(fd protoreflect.FieldDescripto
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_VaultMamagerParams) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManagerParams) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
 		value := x.MinCollateralRatio
 		return protoreflect.ValueOfString(value)
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
 		value := x.LiquidationRatio
 		return protoreflect.ValueOfString(value)
-	case "reserve.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultManagerParams.max_debt":
 		value := x.MaxDebt
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -866,19 +866,19 @@ func (x *fastReflection_VaultMamagerParams) Get(descriptor protoreflect.FieldDes
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamagerParams) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_VaultManagerParams) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
 		x.MinCollateralRatio = value.Interface().(string)
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
 		x.LiquidationRatio = value.Interface().(string)
-	case "reserve.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultManagerParams.max_debt":
 		x.MaxDebt = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -892,48 +892,48 @@ func (x *fastReflection_VaultMamagerParams) Set(fd protoreflect.FieldDescriptor,
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamagerParams) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManagerParams) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
-		panic(fmt.Errorf("field min_collateral_ratio of message reserve.vaults.VaultMamagerParams is not mutable"))
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
-		panic(fmt.Errorf("field liquidation_ratio of message reserve.vaults.VaultMamagerParams is not mutable"))
-	case "reserve.vaults.VaultMamagerParams.max_debt":
-		panic(fmt.Errorf("field max_debt of message reserve.vaults.VaultMamagerParams is not mutable"))
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
+		panic(fmt.Errorf("field min_collateral_ratio of message reserve.vaults.VaultManagerParams is not mutable"))
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
+		panic(fmt.Errorf("field liquidation_ratio of message reserve.vaults.VaultManagerParams is not mutable"))
+	case "reserve.vaults.VaultManagerParams.max_debt":
+		panic(fmt.Errorf("field max_debt of message reserve.vaults.VaultManagerParams is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_VaultMamagerParams) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManagerParams) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamagerParams.min_collateral_ratio":
+	case "reserve.vaults.VaultManagerParams.min_collateral_ratio":
 		return protoreflect.ValueOfString("")
-	case "reserve.vaults.VaultMamagerParams.liquidation_ratio":
+	case "reserve.vaults.VaultManagerParams.liquidation_ratio":
 		return protoreflect.ValueOfString("")
-	case "reserve.vaults.VaultMamagerParams.max_debt":
+	case "reserve.vaults.VaultManagerParams.max_debt":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamagerParams"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManagerParams"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamagerParams does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManagerParams does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_VaultMamagerParams) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_VaultManagerParams) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.VaultMamagerParams", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.VaultManagerParams", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -941,7 +941,7 @@ func (x *fastReflection_VaultMamagerParams) WhichOneof(d protoreflect.OneofDescr
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_VaultMamagerParams) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_VaultManagerParams) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -952,7 +952,7 @@ func (x *fastReflection_VaultMamagerParams) GetUnknown() protoreflect.RawFields 
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamagerParams) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_VaultManagerParams) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -964,7 +964,7 @@ func (x *fastReflection_VaultMamagerParams) SetUnknown(fields protoreflect.RawFi
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_VaultMamagerParams) IsValid() bool {
+func (x *fastReflection_VaultManagerParams) IsValid() bool {
 	return x != nil
 }
 
@@ -974,9 +974,9 @@ func (x *fastReflection_VaultMamagerParams) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_VaultMamagerParams) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_VaultManagerParams) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*VaultMamagerParams)
+		x := input.Message.Interface().(*VaultManagerParams)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1010,7 +1010,7 @@ func (x *fastReflection_VaultMamagerParams) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamagerParams)
+		x := input.Message.Interface().(*VaultManagerParams)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1061,7 +1061,7 @@ func (x *fastReflection_VaultMamagerParams) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamagerParams)
+		x := input.Message.Interface().(*VaultManagerParams)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -1093,10 +1093,10 @@ func (x *fastReflection_VaultMamagerParams) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamagerParams: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultManagerParams: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamagerParams: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultManagerParams: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -1312,7 +1312,7 @@ func (x *Params) GetRecalculateDebtPeriod() uint64 {
 }
 
 // VaultParams defines the parameters for each collateral vault type.
-type VaultMamagerParams struct {
+type VaultManagerParams struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1322,8 +1322,8 @@ type VaultMamagerParams struct {
 	MaxDebt            string `protobuf:"bytes,3,opt,name=max_debt,json=maxDebt,proto3" json:"max_debt,omitempty"`
 }
 
-func (x *VaultMamagerParams) Reset() {
-	*x = VaultMamagerParams{}
+func (x *VaultManagerParams) Reset() {
+	*x = VaultManagerParams{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reserve_vaults_params_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1331,32 +1331,32 @@ func (x *VaultMamagerParams) Reset() {
 	}
 }
 
-func (x *VaultMamagerParams) String() string {
+func (x *VaultManagerParams) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VaultMamagerParams) ProtoMessage() {}
+func (*VaultManagerParams) ProtoMessage() {}
 
-// Deprecated: Use VaultMamagerParams.ProtoReflect.Descriptor instead.
-func (*VaultMamagerParams) Descriptor() ([]byte, []int) {
+// Deprecated: Use VaultManagerParams.ProtoReflect.Descriptor instead.
+func (*VaultManagerParams) Descriptor() ([]byte, []int) {
 	return file_reserve_vaults_params_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *VaultMamagerParams) GetMinCollateralRatio() string {
+func (x *VaultManagerParams) GetMinCollateralRatio() string {
 	if x != nil {
 		return x.MinCollateralRatio
 	}
 	return ""
 }
 
-func (x *VaultMamagerParams) GetLiquidationRatio() string {
+func (x *VaultManagerParams) GetLiquidationRatio() string {
 	if x != nil {
 		return x.LiquidationRatio
 	}
 	return ""
 }
 
-func (x *VaultMamagerParams) GetMaxDebt() string {
+func (x *VaultManagerParams) GetMaxDebt() string {
 	if x != nil {
 		return x.MaxDebt
 	}
@@ -1457,7 +1457,7 @@ func file_reserve_vaults_params_proto_rawDescGZIP() []byte {
 var file_reserve_vaults_params_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_reserve_vaults_params_proto_goTypes = []interface{}{
 	(*Params)(nil),             // 0: reserve.vaults.Params
-	(*VaultMamagerParams)(nil), // 1: reserve.vaults.VaultMamagerParams
+	(*VaultManagerParams)(nil), // 1: reserve.vaults.VaultManagerParams
 }
 var file_reserve_vaults_params_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1486,7 +1486,7 @@ func file_reserve_vaults_params_proto_init() {
 			}
 		}
 		file_reserve_vaults_params_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VaultMamagerParams); i {
+			switch v := v.(*VaultManagerParams); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -30,7 +30,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	// params defines all the parameters of the module.
 	Params          Params                `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	VaultManagers   []VaultMamager        `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers"`
+	VaultManagers   []VaultManager        `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers"`
 	Vaults          []Vault               `protobuf:"bytes,3,rep,name=vaults,proto3" json:"vaults"`
 	LastUpdate      *LastUpdate           `protobuf:"bytes,4,opt,name=last_update,json=lastUpdate,proto3" json:"last_update,omitempty"`
 	ShortfallAmount cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=shortfall_amount,json=shortfallAmount,proto3,customtype=cosmossdk.io/math.Int" json:"shortfall_amount"`
@@ -76,7 +76,7 @@ func (m *GenesisState) GetParams() Params {
 	return Params{}
 }
 
-func (m *GenesisState) GetVaultManagers() []VaultMamager {
+func (m *GenesisState) GetVaultManagers() []VaultManager {
 	if m != nil {
 		return m.VaultManagers
 	}
@@ -352,7 +352,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.VaultManagers = append(m.VaultManagers, VaultMamager{})
+			m.VaultManagers = append(m.VaultManagers, VaultManager{})
 			if err := m.VaultManagers[len(m.VaultManagers)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

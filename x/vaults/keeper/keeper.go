@@ -28,7 +28,7 @@ type Keeper struct {
 
 	Schema          collections.Schema
 	Params          collections.Item[types.Params]
-	VaultsManager   collections.Map[string, types.VaultMamager]
+	VaultsManager   collections.Map[string, types.VaultManager]
 	Vaults          collections.Map[uint64, types.Vault]
 	VaultsSequence  collections.Sequence
 	LastUpdateTime  collections.Item[types.LastUpdate]
@@ -53,7 +53,7 @@ func NewKeeper(
 		OracleKeeper:    ok,
 		BankKeeper:      bk,
 		Params:          collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		VaultsManager:   collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultMamager](cdc)),
+		VaultsManager:   collections.NewMap(sb, types.VaultManagerKeyPrefix, "vaultmanagers", collections.StringKey, codec.CollValue[types.VaultManager](cdc)),
 		Vaults:          collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
 		VaultsSequence:  collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
 		LastUpdateTime:  collections.NewItem(sb, types.LastUpdateKeyPrefix, "last_update", codec.CollValue[types.LastUpdate](cdc)),
@@ -93,10 +93,10 @@ func (k *Keeper) ActiveCollateralAsset(
 	if actived {
 		return fmt.Errorf("denom %s already be actived", CollateralDenom)
 	}
-	vm := types.VaultMamager{
+	vm := types.VaultManager{
 		Denom:  CollateralDenom,
 		Symbol: CollateralSymbol,
-		Params: types.VaultMamagerParams{
+		Params: types.VaultManagerParams{
 			MintDenom:          MintDenom,
 			MintSymbol:         MintSymbol,
 			MinCollateralRatio: minCollateralRatio,
@@ -163,11 +163,11 @@ func (k *Keeper) GetVaultManager(
 	ctx context.Context,
 	collateralDenom string,
 	mintDenom string,
-) (types.VaultMamager, error) {
+) (types.VaultManager, error) {
 	key := getVMKey(collateralDenom, mintDenom)
 	vm, err := k.VaultsManager.Get(ctx, key)
 	if err != nil {
-		return types.VaultMamager{}, err
+		return types.VaultManager{}, err
 	}
 	return vm, nil
 }

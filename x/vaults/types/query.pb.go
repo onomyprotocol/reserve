@@ -319,7 +319,7 @@ func (m *QueryAllCollateralRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryAllCollateralRequest proto.InternalMessageInfo
 
 type QueryAllCollateralResponse struct {
-	AllVaultMamager []*VaultMamager `protobuf:"bytes,1,rep,name=all_vault_mamager,json=allVaultMamager,proto3" json:"all_vault_mamager,omitempty"`
+	AllVaultManager []*VaultManager `protobuf:"bytes,1,rep,name=all_vault_manager,json=allVaultManager,proto3" json:"all_vault_manager,omitempty"`
 }
 
 func (m *QueryAllCollateralResponse) Reset()         { *m = QueryAllCollateralResponse{} }
@@ -355,9 +355,9 @@ func (m *QueryAllCollateralResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAllCollateralResponse proto.InternalMessageInfo
 
-func (m *QueryAllCollateralResponse) GetAllVaultMamager() []*VaultMamager {
+func (m *QueryAllCollateralResponse) GetAllVaultManager() []*VaultManager {
 	if m != nil {
-		return m.AllVaultMamager
+		return m.AllVaultManager
 	}
 	return nil
 }
@@ -407,7 +407,7 @@ func (m *QueryCollateralsByDenomRequest) GetDenom() string {
 }
 
 type QueryCollateralsByDenomResponse struct {
-	AllVaultMamagerByDenom []*VaultMamager `protobuf:"bytes,1,rep,name=all_vault_mamager_by_denom,json=allVaultMamagerByDenom,proto3" json:"all_vault_mamager_by_denom,omitempty"`
+	AllVaultManagerByDenom []*VaultManager `protobuf:"bytes,1,rep,name=all_vault_manager_by_denom,json=allVaultManagerByDenom,proto3" json:"all_vault_manager_by_denom,omitempty"`
 }
 
 func (m *QueryCollateralsByDenomResponse) Reset()         { *m = QueryCollateralsByDenomResponse{} }
@@ -443,9 +443,9 @@ func (m *QueryCollateralsByDenomResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryCollateralsByDenomResponse proto.InternalMessageInfo
 
-func (m *QueryCollateralsByDenomResponse) GetAllVaultMamagerByDenom() []*VaultMamager {
+func (m *QueryCollateralsByDenomResponse) GetAllVaultManagerByDenom() []*VaultManager {
 	if m != nil {
-		return m.AllVaultMamagerByDenom
+		return m.AllVaultManagerByDenom
 	}
 	return nil
 }
@@ -495,7 +495,7 @@ func (m *QueryCollateralsByMintDenomRequest) GetMintDenom() string {
 }
 
 type QueryCollateralsByMintDenomResponse struct {
-	AllVaultMamagerByMintDenom []*VaultMamager `protobuf:"bytes,1,rep,name=all_vault_mamager_by_mint_denom,json=allVaultMamagerByMintDenom,proto3" json:"all_vault_mamager_by_mint_denom,omitempty"`
+	AllVaultManagerByMintDenom []*VaultManager `protobuf:"bytes,1,rep,name=all_vault_manager_by_mint_denom,json=allVaultManagerByMintDenom,proto3" json:"all_vault_manager_by_mint_denom,omitempty"`
 }
 
 func (m *QueryCollateralsByMintDenomResponse) Reset()         { *m = QueryCollateralsByMintDenomResponse{} }
@@ -531,9 +531,9 @@ func (m *QueryCollateralsByMintDenomResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryCollateralsByMintDenomResponse proto.InternalMessageInfo
 
-func (m *QueryCollateralsByMintDenomResponse) GetAllVaultMamagerByMintDenom() []*VaultMamager {
+func (m *QueryCollateralsByMintDenomResponse) GetAllVaultManagerByMintDenom() []*VaultManager {
 	if m != nil {
-		return m.AllVaultMamagerByMintDenom
+		return m.AllVaultManagerByMintDenom
 	}
 	return nil
 }
@@ -593,7 +593,7 @@ func (m *QueryCollateralsByDenomMintDenomRequest) GetMintDenom() string {
 }
 
 type QueryCollateralsByDenomMintDenomResponse struct {
-	VaultMamager *VaultMamager `protobuf:"bytes,1,opt,name=vault_mamager,json=vaultMamager,proto3" json:"vault_mamager,omitempty"`
+	VaultManager *VaultManager `protobuf:"bytes,1,opt,name=vault_manager,json=VaultManager,proto3" json:"vault_manager,omitempty"`
 }
 
 func (m *QueryCollateralsByDenomMintDenomResponse) Reset() {
@@ -631,9 +631,9 @@ func (m *QueryCollateralsByDenomMintDenomResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryCollateralsByDenomMintDenomResponse proto.InternalMessageInfo
 
-func (m *QueryCollateralsByDenomMintDenomResponse) GetVaultMamager() *VaultMamager {
+func (m *QueryCollateralsByDenomMintDenomResponse) GetVaultManager() *VaultManager {
 	if m != nil {
-		return m.VaultMamager
+		return m.VaultManager
 	}
 	return nil
 }
@@ -1356,10 +1356,10 @@ func (m *QueryAllCollateralResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 	_ = i
 	var l int
 	_ = l
-	if len(m.AllVaultMamager) > 0 {
-		for iNdEx := len(m.AllVaultMamager) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.AllVaultManager) > 0 {
+		for iNdEx := len(m.AllVaultManager) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.AllVaultMamager[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.AllVaultManager[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1423,10 +1423,10 @@ func (m *QueryCollateralsByDenomResponse) MarshalToSizedBuffer(dAtA []byte) (int
 	_ = i
 	var l int
 	_ = l
-	if len(m.AllVaultMamagerByDenom) > 0 {
-		for iNdEx := len(m.AllVaultMamagerByDenom) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.AllVaultManagerByDenom) > 0 {
+		for iNdEx := len(m.AllVaultManagerByDenom) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.AllVaultMamagerByDenom[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.AllVaultManagerByDenom[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1490,10 +1490,10 @@ func (m *QueryCollateralsByMintDenomResponse) MarshalToSizedBuffer(dAtA []byte) 
 	_ = i
 	var l int
 	_ = l
-	if len(m.AllVaultMamagerByMintDenom) > 0 {
-		for iNdEx := len(m.AllVaultMamagerByMintDenom) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.AllVaultManagerByMintDenom) > 0 {
+		for iNdEx := len(m.AllVaultManagerByMintDenom) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.AllVaultMamagerByMintDenom[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.AllVaultManagerByMintDenom[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1564,9 +1564,9 @@ func (m *QueryCollateralsByDenomMintDenomResponse) MarshalToSizedBuffer(dAtA []b
 	_ = i
 	var l int
 	_ = l
-	if m.VaultMamager != nil {
+	if m.VaultManager != nil {
 		{
-			size, err := m.VaultMamager.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.VaultManager.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -1741,8 +1741,8 @@ func (m *QueryAllCollateralResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.AllVaultMamager) > 0 {
-		for _, e := range m.AllVaultMamager {
+	if len(m.AllVaultManager) > 0 {
+		for _, e := range m.AllVaultManager {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1769,8 +1769,8 @@ func (m *QueryCollateralsByDenomResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.AllVaultMamagerByDenom) > 0 {
-		for _, e := range m.AllVaultMamagerByDenom {
+	if len(m.AllVaultManagerByDenom) > 0 {
+		for _, e := range m.AllVaultManagerByDenom {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1797,8 +1797,8 @@ func (m *QueryCollateralsByMintDenomResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.AllVaultMamagerByMintDenom) > 0 {
-		for _, e := range m.AllVaultMamagerByMintDenom {
+	if len(m.AllVaultManagerByMintDenom) > 0 {
+		for _, e := range m.AllVaultManagerByMintDenom {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1829,8 +1829,8 @@ func (m *QueryCollateralsByDenomMintDenomResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.VaultMamager != nil {
-		l = m.VaultMamager.Size()
+	if m.VaultManager != nil {
+		l = m.VaultManager.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
@@ -2373,7 +2373,7 @@ func (m *QueryAllCollateralResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultMamager", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultManager", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2400,8 +2400,8 @@ func (m *QueryAllCollateralResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.AllVaultMamager = append(m.AllVaultMamager, &VaultMamager{})
-			if err := m.AllVaultMamager[len(m.AllVaultMamager)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.AllVaultManager = append(m.AllVaultManager, &VaultManager{})
+			if err := m.AllVaultManager[len(m.AllVaultManager)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2539,7 +2539,7 @@ func (m *QueryCollateralsByDenomResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultMamagerByDenom", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultManagerByDenom", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2566,8 +2566,8 @@ func (m *QueryCollateralsByDenomResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.AllVaultMamagerByDenom = append(m.AllVaultMamagerByDenom, &VaultMamager{})
-			if err := m.AllVaultMamagerByDenom[len(m.AllVaultMamagerByDenom)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.AllVaultManagerByDenom = append(m.AllVaultManagerByDenom, &VaultManager{})
+			if err := m.AllVaultManagerByDenom[len(m.AllVaultManagerByDenom)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2705,7 +2705,7 @@ func (m *QueryCollateralsByMintDenomResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultMamagerByMintDenom", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field AllVaultManagerByMintDenom", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2732,8 +2732,8 @@ func (m *QueryCollateralsByMintDenomResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.AllVaultMamagerByMintDenom = append(m.AllVaultMamagerByMintDenom, &VaultMamager{})
-			if err := m.AllVaultMamagerByMintDenom[len(m.AllVaultMamagerByMintDenom)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.AllVaultManagerByMintDenom = append(m.AllVaultManagerByMintDenom, &VaultManager{})
+			if err := m.AllVaultManagerByMintDenom[len(m.AllVaultManagerByMintDenom)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2903,7 +2903,7 @@ func (m *QueryCollateralsByDenomMintDenomResponse) Unmarshal(dAtA []byte) error 
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VaultMamager", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field VaultManager", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2930,10 +2930,10 @@ func (m *QueryCollateralsByDenomMintDenomResponse) Unmarshal(dAtA []byte) error 
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.VaultMamager == nil {
-				m.VaultMamager = &VaultMamager{}
+			if m.VaultManager == nil {
+				m.VaultManager = &VaultManager{}
 			}
-			if err := m.VaultMamager.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.VaultManager.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

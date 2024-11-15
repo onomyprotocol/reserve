@@ -436,7 +436,7 @@ func (k *Keeper) UpdateVaultsDebt(
 	rate := math.LegacyNewDec(deltaDur.Milliseconds()).Quo(math.LegacyNewDec((time.Hour * 24 * 365).Milliseconds())) // divice 365 days
 	// Get stability fee of all denoms
 	fees := make(map[string]math.LegacyDec, 0)
-	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
+	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultManager) (bool, error) {
 		fees[key] = vm.Params.StabilityFee.Mul(rate)
 		return false, nil
 	})
@@ -498,7 +498,7 @@ func (k *Keeper) GetLiquidations(
 	// denom to Liquidation
 	liquidations := make(map[string]*types.Liquidation)
 
-	err := k.VaultsManager.Walk(ctx, nil, func(_ string, vm types.VaultMamager) (bool, error) {
+	err := k.VaultsManager.Walk(ctx, nil, func(_ string, vm types.VaultManager) (bool, error) {
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
 		price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
