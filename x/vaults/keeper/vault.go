@@ -153,6 +153,7 @@ func (k *Keeper) CloseVault(
 	// Update vault
 	vault.CollateralLocked.Amount = math.ZeroInt()
 	vault.Status = types.CLOSED
+	vault.Debt.Amount = math.ZeroInt()
 	return k.SetVault(ctx, vault)
 }
 
