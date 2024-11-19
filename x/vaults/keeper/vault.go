@@ -500,12 +500,14 @@ func (k *Keeper) GetLiquidations(
 	liquidations := make(map[string]*types.Liquidation)
 
 	err := k.VaultsManager.Walk(ctx, nil, func(_ string, vm types.VaultManager) (bool, error) {
+		if mintDenom != vm.Params.MintDenom {
+			return false, nil
+		}
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
 		price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if price == nil || price.IsNil() {
 			return false, nil
-			// return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", collateralSymbol, mintSymbol)
 		}
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
