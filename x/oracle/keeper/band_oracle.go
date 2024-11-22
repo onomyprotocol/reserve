@@ -313,6 +313,8 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.LegacyDec, err error) {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+	allowedPriceDelay := k.GetParams(ctx).AllowedPriceDelay
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
@@ -320,7 +322,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		k.Logger(ctx).Info(err.Error())
 		return price, err
 	}
-	if sdkCtx.BlockTime().Unix()-basePriceState.ResolveTime > int64(time.Hour*6) {
+	if sdkCtx.BlockTime().Sub(time.Unix(basePriceState.ResolveTime, 0)) > allowedPriceDelay {
 		return price, fmt.Errorf("symbol %s old price state", base)
 	}
 	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenoms[0] {
@@ -333,8 +335,8 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		k.Logger(ctx).Info(err.Error())
 		return price, err
 	}
-	if sdkCtx.BlockTime().Unix()-quotePriceState.ResolveTime > int64(time.Hour*6) {
-		return price, fmt.Errorf("symbol %s old price state", quote)
+	if sdkCtx.BlockTime().Sub(time.Unix(quotePriceState.ResolveTime, 0)) > allowedPriceDelay {
+		return price, fmt.Errorf("symbol %s old price state", base)
 	}
 
 	baseRate := basePriceState.Rate.ToLegacyDec()
