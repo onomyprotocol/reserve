@@ -464,7 +464,7 @@ func (k *Keeper) updateBandPriceStates(
 	var (
 		inputSymbols = input.PriceSymbols()
 		requestID    = packet.RequestID
-		resolveTime  = uint64(packet.ResolveTime)
+		resolveTime  = packet.ResolveTime
 		symbols      = make([]string, 0, len(inputSymbols))
 		prices       = make([]math.LegacyDec, 0, len(inputSymbols))
 	)
