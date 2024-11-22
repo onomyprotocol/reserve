@@ -31,7 +31,7 @@ func TestBandPriceState(t *testing.T) {
 	bandPriceState := &types.BandPriceState{
 		Symbol:      "ATOM",
 		Rate:        math.NewInt(10),
-		ResolveTime: 1,
+		ResolveTime: time.Now().Unix(),
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
 	}
@@ -300,6 +300,53 @@ func TestGetPrice(t *testing.T) {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestPriceOld() {
+	s.SetupTest()
+	allowedPriceDelay := s.App.OracleKeeper.GetParams(s.Ctx).AllowedPriceDelay
+	var (
+		timeLate = -allowedPriceDelay - time.Hour // 6h +1h =7h
+		priceNOM = math.LegacyNewDec(2)
+	)
+
+	PricesState := []*types.BandPriceState{
+		{
+			Symbol:      "ATOM",
+			Rate:        math.NewInt(10),
+			ResolveTime: time.Now().Add(timeLate).Unix(), // old price
+			Request_ID:  1,
+			PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
+		},
+		{
+			Symbol:      "USD",
+			Rate:        math.NewInt(1),
+			ResolveTime: time.Now().Unix(),
+			Request_ID:  1,
+			PriceState:  *types.NewPriceState(math.LegacyNewDec(1), 1),
+		},
+		{
+			Symbol:      "NOM",
+			Rate:        math.NewInt(2),
+			ResolveTime: time.Now().Unix(),
+			Request_ID:  1,
+			PriceState:  *types.NewPriceState(priceNOM, 1),
+		},
+	}
+
+	for _, priceState := range PricesState {
+		err := s.App.OracleKeeper.SetBandPriceState(s.Ctx, priceState.Symbol, priceState)
+		s.Require().NoError(err)
+	}
+
+	// ATOM price old
+	_, err := s.App.OracleKeeper.GetPrice(s.Ctx, "ATOM", "USD")
+	s.Require().Error(err)
+
+	// NOM price new (6h)
+	price, err := s.App.OracleKeeper.GetPrice(s.Ctx, "NOM", "USD")
+	s.Require().NoError(err)
+	s.Require().Equal(priceNOM, price)
 }
 
 func TestProcessBandOraclePrices(t *testing.T) {
