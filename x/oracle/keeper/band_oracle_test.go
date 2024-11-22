@@ -25,8 +25,8 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
-	price := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
-	require.Nil(t, price)
+	_, err := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.Error(t, err)
 
 	bandPriceState := &types.BandPriceState{
 		Symbol:      "ATOM",
@@ -36,15 +36,17 @@ func TestBandPriceState(t *testing.T) {
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
 	}
 	// set band price state for ATOM
-	err := app.OracleKeeper.SetBandPriceState(ctx, "ATOM", bandPriceState)
+	err = app.OracleKeeper.SetBandPriceState(ctx, "ATOM", bandPriceState)
 	require.NoError(t, err)
 
 	data = app.OracleKeeper.GetBandPriceState(ctx, "ATOM")
 	require.Equal(t, bandPriceState, data)
 
-	price = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	price, err := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	require.NoError(t, err)
+
 	expect := math.LegacyNewDec(10)
-	require.Equal(t, &expect, price)
+	require.Equal(t, expect, price)
 
 	states = app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 1, len(states))
@@ -166,28 +168,28 @@ func TestGetPrice(t *testing.T) {
 	bandPriceStateATOM := &types.BandPriceState{
 		Symbol:      "ATOM",
 		Rate:        math.NewInt(10),
-		ResolveTime: 1,
+		ResolveTime: time.Now().Unix(),
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(10), 1),
 	}
 	bandPriceStateUSD := &types.BandPriceState{
 		Symbol:      "USD",
 		Rate:        math.NewInt(1),
-		ResolveTime: 1,
+		ResolveTime: time.Now().Unix(),
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(1), 1),
 	}
 	bandPriceStateNOM := &types.BandPriceState{
 		Symbol:      "NOM",
 		Rate:        math.NewInt(2),
-		ResolveTime: 1,
+		ResolveTime: time.Now().Unix(),
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(2), 1),
 	}
 	invalidPriceStateATOM := &types.BandPriceState{
 		Symbol:      "ATOM",
 		Rate:        math.NewInt(0), // Invalid base rate
-		ResolveTime: 1,
+		ResolveTime: time.Now().Unix(),
 		Request_ID:  1,
 		PriceState:  *types.NewPriceState(math.LegacyNewDec(0), 1),
 	}
@@ -203,7 +205,7 @@ func TestGetPrice(t *testing.T) {
 		quoteSymbol     string
 		basePriceState  *types.BandPriceState
 		quotePriceState *types.BandPriceState
-		expectedPrice   *math.LegacyDec
+		expectedPrice   math.LegacyDec
 		expectNil       bool
 	}{
 		// Return nil cases first
@@ -213,7 +215,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  nil,
 			quotePriceState: nil,
-			expectedPrice:   nil,
+			expectedPrice:   math.LegacyNewDec(-1),
 			expectNil:       true,
 		},
 		{
@@ -222,7 +224,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  invalidPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:   nil,
+			expectedPrice:   math.LegacyNewDec(-1),
 			expectNil:       true,
 		},
 		{
@@ -231,7 +233,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "NOM",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
-			expectedPrice:   nil, // Since NOM doesn't exist, expect nil
+			expectedPrice:   math.LegacyNewDec(-1), // Since NOM doesn't exist, expect nil
 			expectNil:       true,
 		},
 		// return a valid price
@@ -241,7 +243,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "NOM",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateNOM,
-			expectedPrice:   &expectedPrice05, // 10/2 = 5
+			expectedPrice:   expectedPrice05, // 10/2 = 5
 			expectNil:       false,
 		},
 		{
@@ -250,7 +252,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
-			expectedPrice:   &expectedPrice10, // Since quote = USD, we return base price directly
+			expectedPrice:   expectedPrice10, // Since quote = USD, we return base price directly
 			expectNil:       false,
 		},
 		{
@@ -259,7 +261,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
-			expectedPrice:   &expectedPrice10,
+			expectedPrice:   expectedPrice10,
 			expectNil:       false,
 		},
 		{
@@ -268,7 +270,7 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "ATOM",
 			basePriceState:  bandPriceStateUSD,
 			quotePriceState: bandPriceStateATOM,
-			expectedPrice:   &expectedPrice01,
+			expectedPrice:   expectedPrice01,
 			expectNil:       false,
 		},
 	}
@@ -286,12 +288,13 @@ func TestGetPrice(t *testing.T) {
 			}
 
 			// Execute GetPrice
-			price := app.OracleKeeper.GetPrice(ctx, tc.baseSymbol, tc.quoteSymbol)
+			price, err := app.OracleKeeper.GetPrice(ctx, tc.baseSymbol, tc.quoteSymbol)
 
 			// Check expectations
 			if tc.expectNil {
-				require.Nil(t, price)
+				require.Error(t, err)
 			} else {
+				require.NoError(t, err)
 				require.NotNil(t, price)
 				require.Equal(t, tc.expectedPrice, price)
 			}
