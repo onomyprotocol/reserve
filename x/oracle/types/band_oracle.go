@@ -14,6 +14,7 @@ const (
 	BandPriceMultiplier uint64 = 1000000000 // 1e9
 	MaxDataSize                = 256        // 256B
 	QuoteUSD                   = "USD"
+	SafeIntervalTime           = 300        // 5 minutes
 )
 
 type RequestID int64

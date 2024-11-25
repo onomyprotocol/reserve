@@ -312,10 +312,16 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
 func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
 		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of base denom %s: price state is nil or rate is zero", base))
+		return nil
+	}
+
+	if sdkCtx.BlockTime().Unix() - basePriceState.PriceState.Timestamp > types.SafeIntervalTime {
+		k.Logger(ctx).Info(fmt.Sprintf("Price of base denom %s was not updated, falling back to get price state", base))
 		return nil
 	}
 
@@ -326,6 +332,11 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDe
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
 		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of quote denom %s: price state is nil or rate is zero", quote))
+		return nil
+	}
+
+	if sdkCtx.BlockTime().Unix() - quotePriceState.PriceState.Timestamp > types.SafeIntervalTime {
+		k.Logger(ctx).Info(fmt.Sprintf("Price of quote denom %s was not updated, falling back to get price state", quote))
 		return nil
 	}
 
