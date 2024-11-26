@@ -473,9 +473,10 @@ func (k *Keeper) updateBandPriceStates(
 	for idx, symbol := range inputSymbols {
 		if !output.Valid(idx) {
 			//	failed response for given symbol, skip it
+			println("Plz not go to here bro")
 			continue
 		}
-
+		println("Check symbol: ", symbol)
 		var (
 			rate       = output.Rate(idx)
 			multiplier = input.PriceMultiplier()
@@ -484,7 +485,7 @@ func (k *Keeper) updateBandPriceStates(
 		if price.IsZero() {
 			continue
 		}
-
+		println("Check price: ", price.String())
 		bandPriceState := k.GetBandPriceState(ctx, symbol)
 
 		// don't update band prices with an older price

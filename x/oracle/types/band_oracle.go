@@ -99,10 +99,12 @@ func DecodeOracleOutput(data []byte) (OracleOutput, error) {
 	)
 
 	if err = utils.Decode(data, &legacyOutput); err == nil {
+		println("go to legacy Output: ", legacyOutput.Rate(0))
 		return legacyOutput, nil
 	}
 
 	if err = utils.Decode(data, &newOutput); err == nil {
+		println("go to new Output: ", newOutput.Responses)
 		return newOutput, nil
 	}
 
