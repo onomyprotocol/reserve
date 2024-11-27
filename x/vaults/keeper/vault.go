@@ -396,10 +396,13 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(price)
-	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
-	if ratio.LT(vm.Params.MinCollateralRatio) {
-		return fmt.Errorf("ratio less than min ratio. Got: %d, min: %d", ratio, vm.Params.MinCollateralRatio)
+	// collateral ratio check
+	if !vault.Debt.Amount.IsZero() {
+		collateralRatio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
+		if collateralRatio.LT(vm.Params.MinCollateralRatio) {
+			return fmt.Errorf("ratio less than min ratio. Got: %d, min: %d", collateralRatio, vm.Params.MinCollateralRatio)
+		}
 	}
 
 	err = k.BankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), sender, sdk.NewCoins(collateral))
@@ -726,6 +729,7 @@ func (k *Keeper) Liquidate(
 				vault.CollateralLocked.Amount = vault.CollateralLocked.Amount.Sub(penaltyAmount)
 				totalCollateralRemain.Amount = totalCollateralRemain.Amount.Sub(penaltyAmount)
 
+				// vault with zero debt never be liquidated so we don't need to check zero value here
 				ratio := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(vault.LiquidationPrice).Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 				ratios = append(ratios, ratio)
 			}
