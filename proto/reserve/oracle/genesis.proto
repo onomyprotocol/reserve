@@ -56,7 +56,7 @@ message BandPriceState {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
-  uint64 resolve_time = 3;
+  int64 resolve_time = 3;
   uint64 request_ID = 4;
   PriceState price_state = 5 [ (gogoproto.nullable) = false ];
 }

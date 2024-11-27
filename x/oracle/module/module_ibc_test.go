@@ -2,6 +2,7 @@ package oracle_test
 
 import (
 	"encoding/hex"
+	"time"
 
 	"cosmossdk.io/math"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
@@ -265,7 +266,7 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 				RequestID:     1,
 				AnsCount:      1,
 				RequestTime:   1000000000,
-				ResolveTime:   1000000000,
+				ResolveTime:   time.Now().Unix(),
 				ResolveStatus: oracletypes.RESOLVE_STATUS_SUCCESS,
 				Result:        result,
 			}
@@ -314,7 +315,8 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 				suite.Require().True(ack.Success())
 				suite.Require().Equal(expectedAck, ack)
 
-				price := onomyApp.OracleKeeper.GetPrice(suite.chainO.GetContext(), "ATOM", "USD")
+				price, err := onomyApp.OracleKeeper.GetPrice(suite.chainO.GetContext(), "ATOM", "USD")
+				suite.Require().NoError(err)
 				suite.Require().Equal("10.822375461000000000", price.String())
 			} else {
 				suite.Require().False(ack.Success())
