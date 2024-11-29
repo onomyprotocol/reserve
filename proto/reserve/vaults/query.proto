@@ -20,6 +20,18 @@ service Query {
     option (google.api.http).get = "/reserve/vaults/params";
   }
 
+  rpc QueryCollateralsByDenom(QueryCollateralsByDenomRequest) returns (QueryCollateralsByDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryCollateralsByMintDenom(QueryCollateralsByMintDenomRequest) returns (QueryCollateralsByMintDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryCollateralsByDenomMintDenom(QueryCollateralsByDenomMintDenomRequest) returns (QueryCollateralsByDenomMintDenomResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
   rpc QueryAllVaults(QueryAllVaultsRequest) returns (QueryAllVaultsResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
@@ -61,7 +73,32 @@ message QueryAllVaultsResponse{
 message QueryAllCollateralRequest {}
 
 message QueryAllCollateralResponse{
-  repeated  VaultMamager all_vault_mamager = 1; 
+  repeated  VaultManager all_vault_manager = 1; 
+}
+
+message QueryCollateralsByDenomRequest {
+  string denom = 1;
+}
+
+message QueryCollateralsByDenomResponse{
+  repeated  VaultManager all_vault_manager_by_denom = 1; 
+}
+
+message QueryCollateralsByMintDenomRequest {
+  string mint_denom = 1;
+}
+
+message QueryCollateralsByMintDenomResponse{
+  repeated  VaultManager all_vault_manager_by_mint_denom = 1; 
+}
+
+message QueryCollateralsByDenomMintDenomRequest {
+  string denom = 1;
+  string mint_denom = 2;
+}
+
+message QueryCollateralsByDenomMintDenomResponse{
+  VaultManager vault_manager = 1; 
 }
 
 message QueryVaultByOwnerRequest {

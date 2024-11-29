@@ -44,7 +44,13 @@ service Query {
       returns (QueryBandOracleRequestResponse) {
     option (google.api.http).get =
       "/reserve/oracle/band_oracle_request";
-}
+  }
+
+  rpc QueryOracleScriptIdByDenom(QueryOracleScriptIdByDenomRequest)
+      returns (QueryOracleScriptIdByDenomResponse) {
+    option (google.api.http).get =
+        "/reserve/oracle/band_price_states";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -111,4 +117,13 @@ message QueryBandOracleRequestRequest {
 // Query/QueryBandOracleRequest RPC method.
 message QueryBandOracleRequestResponse {
   BandOracleRequest band_oracle_request = 1;
+}
+
+message QueryOracleScriptIdByDenomRequest {
+  string denom = 1;
+}
+
+
+message QueryOracleScriptIdByDenomResponse {
+  repeated int64 oracle_script_ids = 1;
 }

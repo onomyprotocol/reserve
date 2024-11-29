@@ -88,7 +88,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	}
 
 	// check balance user and calculate amount of coins received
-	receiveAmountnomUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin, stablecoin.SymBol)
+	receiveAmountnomUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin, stablecoin.Symbol)
 	if err != nil {
 		return err
 	}
@@ -151,9 +151,9 @@ func (k Keeper) PayFeesIn(ctx context.Context, amount math.Int, denom string) (m
 
 // SwapToStablecoin return receiveAmount, fee, error
 func (k Keeper) calculateSwapToStablecoin(ctx context.Context, amount math.Int, sc types.StablecoinInfo) (math.Int, sdk.DecCoin, error) {
-	multiplier := k.OracleKeeper.GetPrice(ctx, sc.SymBol, types.SymBolUSD)
+	multiplier := k.OracleKeeper.GetPrice(ctx, sc.Symbol, types.SymBolUSD)
 	if multiplier == nil || multiplier.IsNil() {
-		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", sc.SymBol, types.ReserveStableCoinDenom)
+		return math.Int{}, sdk.DecCoin{}, errors.Wrapf(oracletypes.ErrInvalidOracle, "can not get price with base %s quote %s", sc.Symbol, types.ReserveStableCoinDenom)
 	}
 	amountStablecoin := amount.ToLegacyDec().Quo(*multiplier)
 

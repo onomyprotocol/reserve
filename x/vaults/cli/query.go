@@ -27,6 +27,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(CmdQueryVaultByID())
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdQueryVaultFromAddress())
+	cmd.AddCommand(CmdQueryCollateralsByDenom())
 	return cmd
 }
 
@@ -41,6 +42,71 @@ func CmdQueryAllCollateral() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.QueryAllCollateral(context.Background(), &types.QueryAllCollateralRequest{})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryCollateralsByDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "collateral-by-denom [denom]",
+		Short: "show all collateral by denom",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryCollateralsByDenom(context.Background(), &types.QueryCollateralsByDenomRequest{Denom: args[0]})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryCollateralsByMintDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "collateral-by-mint-denom [mint-denom]",
+		Short: "show all collateral by mint denom",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryCollateralsByMintDenom(context.Background(), &types.QueryCollateralsByMintDenomRequest{MintDenom: args[0]})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+func CmdQueryCollateralsByDenomMintDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "collateral-by-denom [denom] [mint-denom]",
+		Short: "show collateral by denom and mint denom",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryCollateralsByDenomMintDenom(context.Background(), &types.QueryCollateralsByDenomMintDenomRequest{Denom: args[0], MintDenom: args[1]})
 			if err != nil {
 				return err
 			}

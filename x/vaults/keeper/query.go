@@ -35,15 +35,64 @@ func (q queryServer) Params(ctx context.Context, req *types.QueryParamsRequest) 
 }
 
 func (q queryServer) QueryAllCollateral(ctx context.Context, req *types.QueryAllCollateralRequest) (*types.QueryAllCollateralResponse, error) {
-	allCollateral := []*types.VaultMamager{}
+	allCollateral := []*types.VaultManager{}
 
-	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultMamager) (stop bool, err error) {
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultManager) (stop bool, err error) {
 		allCollateral = append(allCollateral, &value)
 		return false, nil
 	})
 
 	return &types.QueryAllCollateralResponse{
-		AllVaultMamager: allCollateral,
+		AllVaultManager: allCollateral,
+	}, err
+}
+
+func (q queryServer) QueryCollateralsByDenom(ctx context.Context, req *types.QueryCollateralsByDenomRequest) (*types.QueryCollateralsByDenomResponse, error) {
+	allCollateral := []*types.VaultManager{}
+
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultManager) (stop bool, err error) {
+		if value.Denom == req.Denom {
+			allCollateral = append(allCollateral, &value)
+		}
+
+		return false, nil
+	})
+
+	return &types.QueryCollateralsByDenomResponse{
+		AllVaultManagerByDenom: allCollateral,
+	}, err
+}
+
+func (q queryServer) QueryCollateralsByMintDenom(ctx context.Context, req *types.QueryCollateralsByMintDenomRequest) (*types.QueryCollateralsByMintDenomResponse, error) {
+	allCollateral := []*types.VaultManager{}
+
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultManager) (stop bool, err error) {
+		if value.Params.MintDenom == req.MintDenom {
+			allCollateral = append(allCollateral, &value)
+		}
+
+		return false, nil
+	})
+
+	return &types.QueryCollateralsByMintDenomResponse{
+		AllVaultManagerByMintDenom: allCollateral,
+	}, err
+}
+
+func (q queryServer) QueryCollateralsByDenomMintDenom(ctx context.Context, req *types.QueryCollateralsByDenomMintDenomRequest) (*types.QueryCollateralsByDenomMintDenomResponse, error) {
+	var collateral *types.VaultManager
+
+	err := q.keeper.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultManager) (stop bool, err error) {
+		if value.Denom == req.Denom && value.Params.MintDenom == req.MintDenom {
+			collateral = &value
+			return true, nil
+		}
+
+		return false, nil
+	})
+
+	return &types.QueryCollateralsByDenomMintDenomResponse{
+		VaultManager: collateral,
 	}, err
 }
 

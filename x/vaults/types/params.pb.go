@@ -131,7 +131,7 @@ func (m *Params) GetChargingPeriod() time.Duration {
 }
 
 // VaultParams defines the parameters for each collateral vault type.
-type VaultMamagerParams struct {
+type VaultManagerParams struct {
 	MintDenom          string                      `protobuf:"bytes,1,opt,name=mint_denom,json=mintDenom,proto3" json:"mint_denom,omitempty"`
 	MintSymbol         string                      `protobuf:"bytes,2,opt,name=mint_symbol,json=mintSymbol,proto3" json:"mint_symbol,omitempty"`
 	MinCollateralRatio cosmossdk_io_math.LegacyDec `protobuf:"bytes,3,opt,name=min_collateral_ratio,json=minCollateralRatio,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"min_collateral_ratio"`
@@ -142,18 +142,18 @@ type VaultMamagerParams struct {
 	MintingFee         cosmossdk_io_math.LegacyDec `protobuf:"bytes,8,opt,name=minting_fee,json=mintingFee,proto3,customtype=cosmossdk.io/math.LegacyDec" json:"minting_fee"`
 }
 
-func (m *VaultMamagerParams) Reset()         { *m = VaultMamagerParams{} }
-func (m *VaultMamagerParams) String() string { return proto.CompactTextString(m) }
-func (*VaultMamagerParams) ProtoMessage()    {}
-func (*VaultMamagerParams) Descriptor() ([]byte, []int) {
+func (m *VaultManagerParams) Reset()         { *m = VaultManagerParams{} }
+func (m *VaultManagerParams) String() string { return proto.CompactTextString(m) }
+func (*VaultManagerParams) ProtoMessage()    {}
+func (*VaultManagerParams) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1f12ab0d072f9f7c, []int{1}
 }
-func (m *VaultMamagerParams) XXX_Unmarshal(b []byte) error {
+func (m *VaultManagerParams) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *VaultMamagerParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *VaultManagerParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_VaultMamagerParams.Marshal(b, m, deterministic)
+		return xxx_messageInfo_VaultManagerParams.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -163,52 +163,52 @@ func (m *VaultMamagerParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-func (m *VaultMamagerParams) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_VaultMamagerParams.Merge(m, src)
+func (m *VaultManagerParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VaultManagerParams.Merge(m, src)
 }
-func (m *VaultMamagerParams) XXX_Size() int {
+func (m *VaultManagerParams) XXX_Size() int {
 	return m.Size()
 }
-func (m *VaultMamagerParams) XXX_DiscardUnknown() {
-	xxx_messageInfo_VaultMamagerParams.DiscardUnknown(m)
+func (m *VaultManagerParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_VaultManagerParams.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_VaultMamagerParams proto.InternalMessageInfo
+var xxx_messageInfo_VaultManagerParams proto.InternalMessageInfo
 
-func (m *VaultMamagerParams) GetMintDenom() string {
+func (m *VaultManagerParams) GetMintDenom() string {
 	if m != nil {
 		return m.MintDenom
 	}
 	return ""
 }
 
-func (m *VaultMamagerParams) GetMintSymbol() string {
+func (m *VaultManagerParams) GetMintSymbol() string {
 	if m != nil {
 		return m.MintSymbol
 	}
 	return ""
 }
 
-// VaultMamager defines the manager of each collateral vault type.
-type VaultMamager struct {
-	Params        VaultMamagerParams    `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+// VaultManager defines the manager of each collateral vault type.
+type VaultManager struct {
+	Params        VaultManagerParams    `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 	Denom         string                `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
 	Symbol        string                `protobuf:"bytes,3,opt,name=symbol,proto3" json:"symbol,omitempty"`
 	MintAvailable cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=mint_available,json=mintAvailable,proto3,customtype=cosmossdk.io/math.Int" json:"mint_available"`
 }
 
-func (m *VaultMamager) Reset()         { *m = VaultMamager{} }
-func (m *VaultMamager) String() string { return proto.CompactTextString(m) }
-func (*VaultMamager) ProtoMessage()    {}
-func (*VaultMamager) Descriptor() ([]byte, []int) {
+func (m *VaultManager) Reset()         { *m = VaultManager{} }
+func (m *VaultManager) String() string { return proto.CompactTextString(m) }
+func (*VaultManager) ProtoMessage()    {}
+func (*VaultManager) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1f12ab0d072f9f7c, []int{2}
 }
-func (m *VaultMamager) XXX_Unmarshal(b []byte) error {
+func (m *VaultManager) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *VaultMamager) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *VaultManager) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_VaultMamager.Marshal(b, m, deterministic)
+		return xxx_messageInfo_VaultManager.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -218,33 +218,33 @@ func (m *VaultMamager) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 		return b[:n], nil
 	}
 }
-func (m *VaultMamager) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_VaultMamager.Merge(m, src)
+func (m *VaultManager) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VaultManager.Merge(m, src)
 }
-func (m *VaultMamager) XXX_Size() int {
+func (m *VaultManager) XXX_Size() int {
 	return m.Size()
 }
-func (m *VaultMamager) XXX_DiscardUnknown() {
-	xxx_messageInfo_VaultMamager.DiscardUnknown(m)
+func (m *VaultManager) XXX_DiscardUnknown() {
+	xxx_messageInfo_VaultManager.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_VaultMamager proto.InternalMessageInfo
+var xxx_messageInfo_VaultManager proto.InternalMessageInfo
 
-func (m *VaultMamager) GetParams() VaultMamagerParams {
+func (m *VaultManager) GetParams() VaultManagerParams {
 	if m != nil {
 		return m.Params
 	}
-	return VaultMamagerParams{}
+	return VaultManagerParams{}
 }
 
-func (m *VaultMamager) GetDenom() string {
+func (m *VaultManager) GetDenom() string {
 	if m != nil {
 		return m.Denom
 	}
 	return ""
 }
 
-func (m *VaultMamager) GetSymbol() string {
+func (m *VaultManager) GetSymbol() string {
 	if m != nil {
 		return m.Symbol
 	}
@@ -503,8 +503,8 @@ func (m *LastUpdate) GetTime() time.Time {
 func init() {
 	proto.RegisterEnum("reserve.vaults.VaultStatus", VaultStatus_name, VaultStatus_value)
 	proto.RegisterType((*Params)(nil), "reserve.vaults.Params")
-	proto.RegisterType((*VaultMamagerParams)(nil), "reserve.vaults.VaultMamagerParams")
-	proto.RegisterType((*VaultMamager)(nil), "reserve.vaults.VaultMamager")
+	proto.RegisterType((*VaultManagerParams)(nil), "reserve.vaults.VaultManagerParams")
+	proto.RegisterType((*VaultManager)(nil), "reserve.vaults.VaultManager")
 	proto.RegisterType((*Vault)(nil), "reserve.vaults.Vault")
 	proto.RegisterType((*VaultLiquidationStatus)(nil), "reserve.vaults.VaultLiquidationStatus")
 	proto.RegisterType((*Liquidation)(nil), "reserve.vaults.Liquidation")
@@ -673,7 +673,7 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *VaultMamagerParams) Marshal() (dAtA []byte, err error) {
+func (m *VaultManagerParams) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -683,12 +683,12 @@ func (m *VaultMamagerParams) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *VaultMamagerParams) MarshalTo(dAtA []byte) (int, error) {
+func (m *VaultManagerParams) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *VaultMamagerParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *VaultManagerParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -770,7 +770,7 @@ func (m *VaultMamagerParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *VaultMamager) Marshal() (dAtA []byte, err error) {
+func (m *VaultManager) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -780,12 +780,12 @@ func (m *VaultMamager) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *VaultMamager) MarshalTo(dAtA []byte) (int, error) {
+func (m *VaultManager) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *VaultMamager) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *VaultManager) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1083,7 +1083,7 @@ func (m *Params) Size() (n int) {
 	return n
 }
 
-func (m *VaultMamagerParams) Size() (n int) {
+func (m *VaultManagerParams) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1112,7 +1112,7 @@ func (m *VaultMamagerParams) Size() (n int) {
 	return n
 }
 
-func (m *VaultMamager) Size() (n int) {
+func (m *VaultManager) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1377,7 +1377,7 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *VaultMamagerParams) Unmarshal(dAtA []byte) error {
+func (m *VaultManagerParams) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1400,10 +1400,10 @@ func (m *VaultMamagerParams) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: VaultMamagerParams: wiretype end group for non-group")
+			return fmt.Errorf("proto: VaultManagerParams: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: VaultMamagerParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: VaultManagerParams: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1695,7 +1695,7 @@ func (m *VaultMamagerParams) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *VaultMamager) Unmarshal(dAtA []byte) error {
+func (m *VaultManager) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1718,10 +1718,10 @@ func (m *VaultMamager) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: VaultMamager: wiretype end group for non-group")
+			return fmt.Errorf("proto: VaultManager: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: VaultMamager: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: VaultManager: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

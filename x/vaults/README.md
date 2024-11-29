@@ -75,8 +75,8 @@ Beside of that, vault manager keep track of:
 - `MintAvailable`: The remaining capacity for minting tokens.
 
 ```protobuf
-message VaultMamager {
-  VaultMamagerParams params = 1
+message VaultManager {
+  VaultManagerParams params = 1
       [ (amino.dont_omitempty) = true, (gogoproto.nullable) = false ];
 
   string denom = 2;

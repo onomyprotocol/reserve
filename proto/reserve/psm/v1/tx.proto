@@ -52,25 +52,25 @@ message MsgAddStableCoin {
 
   string denom = 2;
 
- bytes limit_total = 3 [
+ string limit_total = 3 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
 
-  bytes fee_in = 4 [
+  string fee_in = 4 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  bytes fee_out = 5 [
+  string fee_out = 5 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
   int64 oracle_script = 6;
-  string sym_bol = 7;
+  string symbol = 7;
 }
 
 message MsgAddStableCoinResponse {}
@@ -83,26 +83,26 @@ message MsgUpdatesStableCoin {
 
   string denom = 2;
 
- bytes limit_total = 3 [
+ string limit_total = 3 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
 
-  bytes fee_in = 4 [
+  string fee_in = 4 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  bytes fee_out = 5 [
+  string fee_out = 5 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
 
   int64 oracle_script = 6;
-  string sym_bol = 7;
+  string symbol = 7;
 }
 
 message MsgUpdatesStableCoinResponse {}

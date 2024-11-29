@@ -17,29 +17,29 @@ import (
 )
 
 var (
-	md_VaultMamager                protoreflect.MessageDescriptor
-	fd_VaultMamager_params         protoreflect.FieldDescriptor
-	fd_VaultMamager_denom          protoreflect.FieldDescriptor
-	fd_VaultMamager_mint_available protoreflect.FieldDescriptor
+	md_VaultManager                protoreflect.MessageDescriptor
+	fd_VaultManager_params         protoreflect.FieldDescriptor
+	fd_VaultManager_denom          protoreflect.FieldDescriptor
+	fd_VaultManager_mint_available protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_reserve_vaults_vault_proto_init()
-	md_VaultMamager = File_reserve_vaults_vault_proto.Messages().ByName("VaultMamager")
-	fd_VaultMamager_params = md_VaultMamager.Fields().ByName("params")
-	fd_VaultMamager_denom = md_VaultMamager.Fields().ByName("denom")
-	fd_VaultMamager_mint_available = md_VaultMamager.Fields().ByName("mint_available")
+	md_VaultManager = File_reserve_vaults_vault_proto.Messages().ByName("VaultManager")
+	fd_VaultManager_params = md_VaultManager.Fields().ByName("params")
+	fd_VaultManager_denom = md_VaultManager.Fields().ByName("denom")
+	fd_VaultManager_mint_available = md_VaultManager.Fields().ByName("mint_available")
 }
 
-var _ protoreflect.Message = (*fastReflection_VaultMamager)(nil)
+var _ protoreflect.Message = (*fastReflection_VaultManager)(nil)
 
-type fastReflection_VaultMamager VaultMamager
+type fastReflection_VaultManager VaultManager
 
-func (x *VaultMamager) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_VaultMamager)(x)
+func (x *VaultManager) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_VaultManager)(x)
 }
 
-func (x *VaultMamager) slowProtoReflect() protoreflect.Message {
+func (x *VaultManager) slowProtoReflect() protoreflect.Message {
 	mi := &file_reserve_vaults_vault_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -51,43 +51,43 @@ func (x *VaultMamager) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_VaultMamager_messageType fastReflection_VaultMamager_messageType
-var _ protoreflect.MessageType = fastReflection_VaultMamager_messageType{}
+var _fastReflection_VaultManager_messageType fastReflection_VaultManager_messageType
+var _ protoreflect.MessageType = fastReflection_VaultManager_messageType{}
 
-type fastReflection_VaultMamager_messageType struct{}
+type fastReflection_VaultManager_messageType struct{}
 
-func (x fastReflection_VaultMamager_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_VaultMamager)(nil)
+func (x fastReflection_VaultManager_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_VaultManager)(nil)
 }
-func (x fastReflection_VaultMamager_messageType) New() protoreflect.Message {
-	return new(fastReflection_VaultMamager)
+func (x fastReflection_VaultManager_messageType) New() protoreflect.Message {
+	return new(fastReflection_VaultManager)
 }
-func (x fastReflection_VaultMamager_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamager
+func (x fastReflection_VaultManager_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_VaultManager
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_VaultMamager) Descriptor() protoreflect.MessageDescriptor {
-	return md_VaultMamager
+func (x *fastReflection_VaultManager) Descriptor() protoreflect.MessageDescriptor {
+	return md_VaultManager
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_VaultMamager) Type() protoreflect.MessageType {
-	return _fastReflection_VaultMamager_messageType
+func (x *fastReflection_VaultManager) Type() protoreflect.MessageType {
+	return _fastReflection_VaultManager_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_VaultMamager) New() protoreflect.Message {
-	return new(fastReflection_VaultMamager)
+func (x *fastReflection_VaultManager) New() protoreflect.Message {
+	return new(fastReflection_VaultManager)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_VaultMamager) Interface() protoreflect.ProtoMessage {
-	return (*VaultMamager)(x)
+func (x *fastReflection_VaultManager) Interface() protoreflect.ProtoMessage {
+	return (*VaultManager)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -95,22 +95,22 @@ func (x *fastReflection_VaultMamager) Interface() protoreflect.ProtoMessage {
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_VaultMamager) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_VaultManager) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
 	if x.Params != nil {
 		value := protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-		if !f(fd_VaultMamager_params, value) {
+		if !f(fd_VaultManager_params, value) {
 			return
 		}
 	}
 	if x.Denom != "" {
 		value := protoreflect.ValueOfString(x.Denom)
-		if !f(fd_VaultMamager_denom, value) {
+		if !f(fd_VaultManager_denom, value) {
 			return
 		}
 	}
 	if x.MintAvailable != "" {
 		value := protoreflect.ValueOfString(x.MintAvailable)
-		if !f(fd_VaultMamager_mint_available, value) {
+		if !f(fd_VaultManager_mint_available, value) {
 			return
 		}
 	}
@@ -127,19 +127,19 @@ func (x *fastReflection_VaultMamager) Range(f func(protoreflect.FieldDescriptor,
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_VaultMamager) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_VaultManager) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamager.params":
+	case "reserve.vaults.VaultManager.params":
 		return x.Params != nil
-	case "reserve.vaults.VaultMamager.denom":
+	case "reserve.vaults.VaultManager.denom":
 		return x.Denom != ""
-	case "reserve.vaults.VaultMamager.mint_available":
+	case "reserve.vaults.VaultManager.mint_available":
 		return x.MintAvailable != ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -149,19 +149,19 @@ func (x *fastReflection_VaultMamager) Has(fd protoreflect.FieldDescriptor) bool 
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_VaultManager) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamager.params":
+	case "reserve.vaults.VaultManager.params":
 		x.Params = nil
-	case "reserve.vaults.VaultMamager.denom":
+	case "reserve.vaults.VaultManager.denom":
 		x.Denom = ""
-	case "reserve.vaults.VaultMamager.mint_available":
+	case "reserve.vaults.VaultManager.mint_available":
 		x.MintAvailable = ""
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -171,22 +171,22 @@ func (x *fastReflection_VaultMamager) Clear(fd protoreflect.FieldDescriptor) {
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_VaultMamager) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManager) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "reserve.vaults.VaultMamager.params":
+	case "reserve.vaults.VaultManager.params":
 		value := x.Params
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
-	case "reserve.vaults.VaultMamager.denom":
+	case "reserve.vaults.VaultManager.denom":
 		value := x.Denom
 		return protoreflect.ValueOfString(value)
-	case "reserve.vaults.VaultMamager.mint_available":
+	case "reserve.vaults.VaultManager.mint_available":
 		value := x.MintAvailable
 		return protoreflect.ValueOfString(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -200,19 +200,19 @@ func (x *fastReflection_VaultMamager) Get(descriptor protoreflect.FieldDescripto
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_VaultManager) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamager.params":
-		x.Params = value.Message().Interface().(*VaultMamagerParams)
-	case "reserve.vaults.VaultMamager.denom":
+	case "reserve.vaults.VaultManager.params":
+		x.Params = value.Message().Interface().(*VaultManagerParams)
+	case "reserve.vaults.VaultManager.denom":
 		x.Denom = value.Interface().(string)
-	case "reserve.vaults.VaultMamager.mint_available":
+	case "reserve.vaults.VaultManager.mint_available":
 		x.MintAvailable = value.Interface().(string)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -226,52 +226,52 @@ func (x *fastReflection_VaultMamager) Set(fd protoreflect.FieldDescriptor, value
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManager) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamager.params":
+	case "reserve.vaults.VaultManager.params":
 		if x.Params == nil {
-			x.Params = new(VaultMamagerParams)
+			x.Params = new(VaultManagerParams)
 		}
 		return protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-	case "reserve.vaults.VaultMamager.denom":
-		panic(fmt.Errorf("field denom of message reserve.vaults.VaultMamager is not mutable"))
-	case "reserve.vaults.VaultMamager.mint_available":
-		panic(fmt.Errorf("field mint_available of message reserve.vaults.VaultMamager is not mutable"))
+	case "reserve.vaults.VaultManager.denom":
+		panic(fmt.Errorf("field denom of message reserve.vaults.VaultManager is not mutable"))
+	case "reserve.vaults.VaultManager.mint_available":
+		panic(fmt.Errorf("field mint_available of message reserve.vaults.VaultManager is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_VaultMamager) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_VaultManager) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.vaults.VaultMamager.params":
-		m := new(VaultMamagerParams)
+	case "reserve.vaults.VaultManager.params":
+		m := new(VaultManagerParams)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
-	case "reserve.vaults.VaultMamager.denom":
+	case "reserve.vaults.VaultManager.denom":
 		return protoreflect.ValueOfString("")
-	case "reserve.vaults.VaultMamager.mint_available":
+	case "reserve.vaults.VaultManager.mint_available":
 		return protoreflect.ValueOfString("")
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultMamager"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.VaultManager"))
 		}
-		panic(fmt.Errorf("message reserve.vaults.VaultMamager does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.vaults.VaultManager does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_VaultMamager) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_VaultManager) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.VaultMamager", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.vaults.VaultManager", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -279,7 +279,7 @@ func (x *fastReflection_VaultMamager) WhichOneof(d protoreflect.OneofDescriptor)
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_VaultMamager) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_VaultManager) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -290,7 +290,7 @@ func (x *fastReflection_VaultMamager) GetUnknown() protoreflect.RawFields {
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_VaultMamager) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_VaultManager) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -302,7 +302,7 @@ func (x *fastReflection_VaultMamager) SetUnknown(fields protoreflect.RawFields) 
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_VaultMamager) IsValid() bool {
+func (x *fastReflection_VaultManager) IsValid() bool {
 	return x != nil
 }
 
@@ -312,9 +312,9 @@ func (x *fastReflection_VaultMamager) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_VaultManager) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*VaultMamager)
+		x := input.Message.Interface().(*VaultManager)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -348,7 +348,7 @@ func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamager)
+		x := input.Message.Interface().(*VaultManager)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -406,7 +406,7 @@ func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*VaultMamager)
+		x := input.Message.Interface().(*VaultManager)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -438,10 +438,10 @@ func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamager: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultManager: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultMamager: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: VaultManager: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
@@ -474,7 +474,7 @@ func (x *fastReflection_VaultMamager) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
 				if x.Params == nil {
-					x.Params = &VaultMamagerParams{}
+					x.Params = &VaultManagerParams{}
 				}
 				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.Params); err != nil {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
@@ -1282,19 +1282,19 @@ func (VaultStatus) EnumDescriptor() ([]byte, []int) {
 	return file_reserve_vaults_vault_proto_rawDescGZIP(), []int{0}
 }
 
-// VaultMamager defines the manager of each collateral vault type.
-type VaultMamager struct {
+// VaultManager defines the manager of each collateral vault type.
+type VaultManager struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Params        *VaultMamagerParams `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
+	Params        *VaultManagerParams `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
 	Denom         string              `protobuf:"bytes,2,opt,name=denom,proto3" json:"denom,omitempty"`
 	MintAvailable string              `protobuf:"bytes,3,opt,name=mint_available,json=mintAvailable,proto3" json:"mint_available,omitempty"`
 }
 
-func (x *VaultMamager) Reset() {
-	*x = VaultMamager{}
+func (x *VaultManager) Reset() {
+	*x = VaultManager{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reserve_vaults_vault_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1302,32 +1302,32 @@ func (x *VaultMamager) Reset() {
 	}
 }
 
-func (x *VaultMamager) String() string {
+func (x *VaultManager) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*VaultMamager) ProtoMessage() {}
+func (*VaultManager) ProtoMessage() {}
 
-// Deprecated: Use VaultMamager.ProtoReflect.Descriptor instead.
-func (*VaultMamager) Descriptor() ([]byte, []int) {
+// Deprecated: Use VaultManager.ProtoReflect.Descriptor instead.
+func (*VaultManager) Descriptor() ([]byte, []int) {
 	return file_reserve_vaults_vault_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *VaultMamager) GetParams() *VaultMamagerParams {
+func (x *VaultManager) GetParams() *VaultManagerParams {
 	if x != nil {
 		return x.Params
 	}
 	return nil
 }
 
-func (x *VaultMamager) GetDenom() string {
+func (x *VaultManager) GetDenom() string {
 	if x != nil {
 		return x.Denom
 	}
 	return ""
 }
 
-func (x *VaultMamager) GetMintAvailable() string {
+func (x *VaultManager) GetMintAvailable() string {
 	if x != nil {
 		return x.MintAvailable
 	}
@@ -1476,13 +1476,13 @@ var file_reserve_vaults_vault_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_reserve_vaults_vault_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_reserve_vaults_vault_proto_goTypes = []interface{}{
 	(VaultStatus)(0),           // 0: reserve.vaults.VaultStatus
-	(*VaultMamager)(nil),       // 1: reserve.vaults.VaultMamager
+	(*VaultManager)(nil),       // 1: reserve.vaults.VaultManager
 	(*Vault)(nil),              // 2: reserve.vaults.Vault
-	(*VaultMamagerParams)(nil), // 3: reserve.vaults.VaultMamagerParams
+	(*VaultManagerParams)(nil), // 3: reserve.vaults.VaultManagerParams
 	(*v1beta1.Coin)(nil),       // 4: cosmos.base.v1beta1.Coin
 }
 var file_reserve_vaults_vault_proto_depIdxs = []int32{
-	3, // 0: reserve.vaults.VaultMamager.params:type_name -> reserve.vaults.VaultMamagerParams
+	3, // 0: reserve.vaults.VaultManager.params:type_name -> reserve.vaults.VaultManagerParams
 	4, // 1: reserve.vaults.Vault.debt:type_name -> cosmos.base.v1beta1.Coin
 	4, // 2: reserve.vaults.Vault.collateral_locked:type_name -> cosmos.base.v1beta1.Coin
 	0, // 3: reserve.vaults.Vault.status:type_name -> reserve.vaults.VaultStatus
@@ -1501,7 +1501,7 @@ func file_reserve_vaults_vault_proto_init() {
 	file_reserve_vaults_params_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_reserve_vaults_vault_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*VaultMamager); i {
+			switch v := v.(*VaultManager); i {
 			case 0:
 				return &v.state
 			case 1:

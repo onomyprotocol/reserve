@@ -23,9 +23,10 @@ func (k *Keeper) CreateNewVault(
 	mint sdk.Coin,
 ) error {
 	denom := collateral.Denom
-	vm, err := k.GetVaultManager(ctx, denom)
+	key := getVMKey(denom, mint.Denom)
+	vm, err := k.GetVaultManager(ctx, denom, mint.Denom)
 	if err != nil {
-		return fmt.Errorf("%s was not actived", denom)
+		return fmt.Errorf("%s was not actived", key)
 	}
 	collateralSymbol := vm.Symbol
 	mintSymbol := vm.Params.MintSymbol
@@ -118,7 +119,7 @@ func (k *Keeper) CreateNewVault(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, denom, vm)
+	return k.VaultsManager.Set(ctx, key, vm)
 }
 
 func (k *Keeper) CloseVault(
@@ -152,6 +153,7 @@ func (k *Keeper) CloseVault(
 	// Update vault
 	vault.CollateralLocked.Amount = math.ZeroInt()
 	vault.Status = types.CLOSED
+	vault.Debt.Amount = math.ZeroInt()
 	return k.SetVault(ctx, vault)
 }
 
@@ -176,9 +178,10 @@ func (k *Keeper) MintCoin(
 	if mint.Denom != vault.Debt.Denom {
 		return fmt.Errorf("mint denom must be %s, got %s", vault.Debt.Denom, mint.Denom)
 	}
-	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
+	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom, mint.Denom)
+	key := getVMKey(vault.CollateralLocked.Denom, mint.Denom)
 	if err != nil {
-		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
+		return fmt.Errorf("%s was not actived", key)
 	}
 
 	lockedCoin := vault.CollateralLocked
@@ -240,7 +243,7 @@ func (k *Keeper) MintCoin(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, vault.CollateralLocked.Denom, vm)
+	return k.VaultsManager.Set(ctx, key, vm)
 }
 
 func (k *Keeper) RepayDebt(
@@ -266,9 +269,10 @@ func (k *Keeper) RepayDebt(
 	if vault.Status != types.ACTIVE {
 		return fmt.Errorf("vault is not actived")
 	}
-	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
+	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom, repay.Denom)
+	key := getVMKey(vault.CollateralLocked.Denom, repay.Denom)
 	if err != nil {
-		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
+		return fmt.Errorf("%s was not actived", key)
 	}
 
 	burnAmount := repay
@@ -305,7 +309,7 @@ func (k *Keeper) RepayDebt(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, vm.Denom, vm)
+	return k.VaultsManager.Set(ctx, key, vm)
 }
 
 func (k *Keeper) DepositToVault(
@@ -379,7 +383,7 @@ func (k *Keeper) WithdrawFromVault(
 		return fmt.Errorf("%d exeed locked amount: %d", collateral.Amount, vault.CollateralLocked.Amount)
 	}
 
-	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom)
+	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom, vault.Debt.Denom)
 	if err != nil {
 		return fmt.Errorf("%s was not actived", vault.CollateralLocked.Denom)
 	}
@@ -394,10 +398,13 @@ func (k *Keeper) WithdrawFromVault(
 	}
 
 	newLockValue := math.LegacyNewDecFromInt(newLock.Amount).Mul(*price)
-	ratio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
-	if ratio.LT(vm.Params.MinCollateralRatio) {
-		return fmt.Errorf("ratio less than min ratio. Got: %d, min: %d", ratio, vm.Params.MinCollateralRatio)
+	// collateral ratio check
+	if !vault.Debt.Amount.IsZero() {
+		collateralRatio := newLockValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
+		if collateralRatio.LT(vm.Params.MinCollateralRatio) {
+			return fmt.Errorf("ratio less than min ratio. Got: %d, min: %d", collateralRatio, vm.Params.MinCollateralRatio)
+		}
 	}
 
 	err = k.BankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), sender, sdk.NewCoins(collateral))
@@ -433,8 +440,8 @@ func (k *Keeper) UpdateVaultsDebt(
 	rate := math.LegacyNewDec(deltaDur.Milliseconds()).Quo(math.LegacyNewDec((time.Hour * 24 * 365).Milliseconds())) // divice 365 days
 	// Get stability fee of all denoms
 	fees := make(map[string]math.LegacyDec, 0)
-	err := k.VaultsManager.Walk(ctx, nil, func(denom string, vm types.VaultMamager) (bool, error) {
-		fees[denom] = vm.Params.StabilityFee.Mul(rate)
+	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultManager) (bool, error) {
+		fees[key] = vm.Params.StabilityFee.Mul(rate)
 		return false, nil
 	})
 	if err != nil {
@@ -444,8 +451,9 @@ func (k *Keeper) UpdateVaultsDebt(
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		var err error
 		if vault.Status == types.ACTIVE {
+			key := getVMKey(vault.CollateralLocked.Denom, vault.Debt.Denom)
 			debtAmount := vault.Debt.Amount
-			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fees[vault.CollateralLocked.Denom])).TruncateInt()
+			newDebtAmount := math.LegacyNewDecFromInt(debtAmount).Add(math.LegacyNewDecFromInt(debtAmount).Mul(fees[key])).TruncateInt()
 			vault.Debt.Amount = newDebtAmount
 			err = k.Vaults.Set(ctx, id, vault)
 		}
@@ -474,6 +482,7 @@ func (k *Keeper) shouldLiquidate(
 	if math.LegacyNewDecFromInt(vault.Debt.Amount).Equal(math.LegacyZeroDec()) {
 		return false, nil
 	}
+
 	ratio := collateralValue.Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 
 	if ratio.LTE(liquidationRatio) {
@@ -494,12 +503,15 @@ func (k *Keeper) GetLiquidations(
 	// denom to Liquidation
 	liquidations := make(map[string]*types.Liquidation)
 
-	err := k.VaultsManager.Walk(ctx, nil, func(key string, vm types.VaultMamager) (bool, error) {
+	err := k.VaultsManager.Walk(ctx, nil, func(_ string, vm types.VaultManager) (bool, error) {
+		if mintDenom != vm.Params.MintDenom {
+			return false, nil
+		}
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
 		price := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if price == nil || price.IsNil() {
-			return true, errors.Wrapf(oracletypes.ErrInvalidOracle, "GetLiquidations: can not get price with base %s quote %s", vm.Denom, types.DefaultMintDenoms)
+			return false, nil
 		}
 		prices[vm.Denom] = *price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
@@ -513,7 +525,8 @@ func (k *Keeper) GetLiquidations(
 
 	err = k.Vaults.Walk(ctx, nil, func(id uint64, vault types.Vault) (bool, error) {
 		denom := vault.CollateralLocked.Denom
-		if vault.Debt.Denom != mintDenom {
+		_, ok := liquidations[denom]
+		if vault.Debt.Denom != mintDenom || !ok {
 			return false, nil
 		}
 
@@ -554,7 +567,8 @@ func (k *Keeper) Liquidate(
 ) error {
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 
-	vm, err := k.GetVaultManager(ctx, liquidation.DebtDenom)
+	key := getVMKey(liquidation.DebtDenom, mintDenom)
+	vm, err := k.GetVaultManager(ctx, liquidation.DebtDenom, mintDenom)
 	if err != nil {
 		return err
 	}
@@ -591,7 +605,7 @@ func (k *Keeper) Liquidate(
 		}
 		// Increase mint available
 		vm.MintAvailable = vm.MintAvailable.Add(totalDebt.Amount)
-		err = k.VaultsManager.Set(ctx, liquidation.DebtDenom, vm)
+		err = k.VaultsManager.Set(ctx, key, vm)
 		if err != nil {
 			return err
 		}
@@ -648,7 +662,7 @@ func (k *Keeper) Liquidate(
 		}
 		// Increase mint available
 		vm.MintAvailable = vm.MintAvailable.Add(sold.Amount)
-		err = k.VaultsManager.Set(ctx, liquidation.DebtDenom, vm)
+		err = k.VaultsManager.Set(ctx, key, vm)
 		if err != nil {
 			return err
 		}
@@ -718,6 +732,7 @@ func (k *Keeper) Liquidate(
 				vault.CollateralLocked.Amount = vault.CollateralLocked.Amount.Sub(penaltyAmount)
 				totalCollateralRemain.Amount = totalCollateralRemain.Amount.Sub(penaltyAmount)
 
+				// vault with zero debt never be liquidated so we don't need to check zero value here
 				ratio := math.LegacyNewDecFromInt(vault.CollateralLocked.Amount).Mul(vault.LiquidationPrice).Quo(math.LegacyNewDecFromInt(vault.Debt.Amount))
 				ratios = append(ratios, ratio)
 			}

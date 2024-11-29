@@ -362,8 +362,8 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			},
 			oracleOutput: types.BandOutput{
 				Responses: []types.Response{
-					{Symbol: "ATOM", ResponseCode: 0, Rate: 100 * types.BandPriceMultiplier},  
-					{Symbol: "BTC", ResponseCode: 0, Rate: 50000 * types.BandPriceMultiplier}, 
+					{Symbol: "ATOM", ResponseCode: 0, Rate: 100 * types.BandPriceMultiplier},
+					{Symbol: "BTC", ResponseCode: 0, Rate: 50000 * types.BandPriceMultiplier},
 				},
 			},
 			expectedError: false,
@@ -420,4 +420,35 @@ func TestProcessBandOraclePrices(t *testing.T) {
 			}
 		})
 	}
+}
+
+func (s *KeeperTestSuite) TestAddNewSymbolToBandOracleRequest() {
+	s.SetupTest()
+	var (
+		symbolScript = map[int64][]string{
+			42: {"ATOM", "OSMO"},
+			52: {"USD", "EUR", "JPY"},
+		}
+
+		setSymbolScript = func() {
+			for oracleScriptId, symbols := range symbolScript {
+				for _, symbol := range symbols {
+					err := s.k.AddNewSymbolToBandOracleRequest(s.Ctx, symbol, oracleScriptId)
+					s.Require().NoError(err)
+				}
+			}
+		}
+	)
+
+	setSymbolScript()
+	// duplicate AddNewSymbolToBandOracleRequest test
+	setSymbolScript()
+
+	err := s.k.IteratorOracleRequests(s.Ctx, func(bandOracleRequest types.BandOracleRequest) bool {
+		expSymbols, ok := symbolScript[bandOracleRequest.OracleScriptId]
+		s.Require().True(ok)
+		s.Require().Equal(len(expSymbols), len(bandOracleRequest.Symbols))
+		return false
+	})
+	s.Require().NoError(err)
 }
