@@ -6,10 +6,11 @@ import (
 
 	"cosmossdk.io/errors"
 	"cosmossdk.io/math"
-	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	oracletypes "github.com/onomyprotocol/reserve/x/oracle/types"
 	"github.com/onomyprotocol/reserve/x/psm/types"
+	vaultstypes "github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 // SwapToStablecoin return receiveAmount, fee, error
@@ -33,7 +34,7 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 	}
 
 	// locked stablecoin is greater than the amount desired
-	if totalStablecoinLock.LT(receiveAmountStablecoin) {
+	if totalStablecoinLock.LT(receiveAmountStablecoin.Add(fee_out.Amount.TruncateInt())) {
 		return fmt.Errorf("amount %s locked lesser than amount desired", expectedDenom)
 	}
 
@@ -57,6 +58,12 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 	}
 	// send stablecoin to user
 	err = k.BankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, addr, sdk.NewCoins(stablecoinReceive))
+	if err != nil {
+		return err
+	}
+
+	coinFee, _ := fee_out.TruncateDecimal()
+	err = k.BankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, vaultstypes.ReserveModuleName, sdk.NewCoins(coinFee))
 	if err != nil {
 		return err
 	}
