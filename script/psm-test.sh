@@ -145,3 +145,10 @@ sleep 7
 reserved tx psm swap 1000nomUSD usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
 reserved tx psm swap 1000nomUSD usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
+sleep 7
+reserved tx psm swap 999999000nomUSD usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+
+
+9999999999999999999999000000000-
+998001000
