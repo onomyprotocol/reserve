@@ -311,33 +311,43 @@ func (k Keeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol stri
 }
 
 // GetPrice fetches band ibc prices for a given pair in math.LegacyDec
-func (k Keeper) GetPrice(ctx context.Context, base, quote string) *math.LegacyDec {
+func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.LegacyDec, err error) {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+	allowedPriceDelay := k.GetParams(ctx).AllowedPriceDelay
 	// query ref by using GetBandPriceState
 	basePriceState := k.GetBandPriceState(ctx, base)
 	if basePriceState == nil || basePriceState.Rate.IsZero() {
-		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of base denom %s: price state is nil or rate is zero", base))
-		return nil
+		err = fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", base)
+		k.Logger(ctx).Info(err.Error())
+		return price, err
 	}
-
+	if sdkCtx.BlockTime().Sub(time.Unix(basePriceState.ResolveTime, 0)) > allowedPriceDelay {
+		return price, fmt.Errorf("symbol %s old price state", base)
+	}
 	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenoms[0] {
-		return &basePriceState.PriceState.Price
+		return basePriceState.PriceState.Price, nil
 	}
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
-		k.Logger(ctx).Info(fmt.Sprintf("Can not get price state of quote denom %s: price state is nil or rate is zero", quote))
-		return nil
+		err = fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", quote)
+		k.Logger(ctx).Info(err.Error())
+		return price, err
+	}
+	if sdkCtx.BlockTime().Sub(time.Unix(quotePriceState.ResolveTime, 0)) > allowedPriceDelay {
+		return price, fmt.Errorf("symbol %s old price state", quote)
 	}
 
 	baseRate := basePriceState.Rate.ToLegacyDec()
 	quoteRate := quotePriceState.Rate.ToLegacyDec()
 
 	if baseRate.IsNil() || quoteRate.IsNil() || !baseRate.IsPositive() || !quoteRate.IsPositive() {
-		return nil
+		return price, fmt.Errorf("get price error validate for baseRate %s(%s) or quoteRate %s(%s)", base, baseRate.String(), quote, quoteRate.String())
 	}
 
-	price := baseRate.Quo(quoteRate)
-	return &price
+	price = baseRate.Quo(quoteRate)
+	return price, nil
 }
 
 // RequestBandOraclePrices creates and sends an IBC packet to fetch band oracle price feed data through IBC.
@@ -464,7 +474,7 @@ func (k *Keeper) updateBandPriceStates(
 	var (
 		inputSymbols = input.PriceSymbols()
 		requestID    = packet.RequestID
-		resolveTime  = uint64(packet.ResolveTime)
+		resolveTime  = packet.ResolveTime
 		symbols      = make([]string, 0, len(inputSymbols))
 		prices       = make([]math.LegacyDec, 0, len(inputSymbols))
 	)
