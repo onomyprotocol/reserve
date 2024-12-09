@@ -331,19 +331,19 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
-		err = fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", base)
+		err = fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", quote)
 		k.Logger(ctx).Info(err.Error())
 		return price, err
 	}
 	if sdkCtx.BlockTime().Sub(time.Unix(quotePriceState.ResolveTime, 0)) > allowedPriceDelay {
-		return price, fmt.Errorf("symbol %s old price state", base)
+		return price, fmt.Errorf("symbol %s old price state", quote)
 	}
 
 	baseRate := basePriceState.Rate.ToLegacyDec()
 	quoteRate := quotePriceState.Rate.ToLegacyDec()
 
 	if baseRate.IsNil() || quoteRate.IsNil() || !baseRate.IsPositive() || !quoteRate.IsPositive() {
-		return price, fmt.Errorf("erorr validate")
+		return price, fmt.Errorf("get price error validate for baseRate %s(%s) or quoteRate %s(%s)", base, baseRate.String(), quote, quoteRate.String())
 	}
 
 	price = baseRate.Quo(quoteRate)
