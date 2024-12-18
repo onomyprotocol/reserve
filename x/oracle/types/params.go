@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -25,6 +27,9 @@ var (
 	DefaultPrepareGas     = uint64(20000)
 	DefaultExecuteGas     = uint64(100000)
 	DefaultMinSourceCount = uint64(3)
+
+	// Params
+	DefauAllowedPriceDelay = time.Hour * 6
 )
 
 // ParamKeyTable the param key table for launch module
@@ -33,13 +38,15 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams() Params {
-	return Params{}
+func NewParams(allowed_price_delay time.Duration) Params {
+	return Params{
+		AllowedPriceDelay: allowed_price_delay,
+	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams()
+	return NewParams(DefauAllowedPriceDelay)
 }
 
 // ParamSetPairs get the params.ParamSet
