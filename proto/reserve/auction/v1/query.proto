@@ -28,6 +28,11 @@ service Query {
   rpc QueryAllBidderBids(QueryAllBidderBidsRequest) returns (QueryAllBidderBidsResponse){
     option (google.api.http).get = "/reserve/auction/bids/{bidder}";
   }
+
+    rpc QueryAllBidsByAddress(QueryAllBidsByAddressRequest) returns (QueryAllBidsByAddressResponse){
+    option (google.api.http).get = "/reserve/auction/bids";
+  }
+
 }
 
 
@@ -66,6 +71,16 @@ message QueryAllBidderBidsRequest {
 }
 
 message QueryAllBidderBidsResponse {
+  // params holds all the parameters of this module.
+  repeated Bid Bids = 1
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+message QueryAllBidsByAddressRequest {
+  string bidder = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message QueryAllBidsByAddressResponse {
   // params holds all the parameters of this module.
   repeated Bid Bids = 1
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
