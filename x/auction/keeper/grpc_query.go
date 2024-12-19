@@ -99,7 +99,7 @@ func (k Querier) QueryAllBidsByAddress(ctx context.Context, req *types.QueryAllB
 	}
 
 	var Bids []types.Bid
-	k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+	err = k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
 		bidsByAddress, err := k.k.BidByAddress.Get(ctx, collections.Join(key, sdk.AccAddress(bidderAddr)))
 		if err != nil {
 			return true, err
@@ -108,6 +108,9 @@ func (k Querier) QueryAllBidsByAddress(ctx context.Context, req *types.QueryAllB
 		Bids = append(Bids, bidsByAddress.Bids...)
 		return false, nil
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.QueryAllBidsByAddressResponse{
 		Bids: Bids,
