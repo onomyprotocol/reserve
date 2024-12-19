@@ -50,7 +50,9 @@ message QueryAllAuctionResponse {
 }
 
 
-message QueryAllBidsRequest {}
+message QueryAllBidsRequest {
+  string auction_id = 1;
+}
 
 message QueryAllBidsResponse {
   // params holds all the parameters of this module.

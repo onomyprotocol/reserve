@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strconv"
 
 	"cosmossdk.io/collections"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -52,15 +53,18 @@ func (k Querier) QueryAllBids(ctx context.Context, req *types.QueryAllBidsReques
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	allBids := []types.Bid{}
+	auction_id, err := strconv.ParseUint(req.AuctionId, 10, 64)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "auction id canot convert to uint64")
+	}
 
-	err := k.k.Bids.Walk(ctx, nil, func(key uint64, value types.BidQueue) (stop bool, err error) {
-		allBids = append(allBids, value.Bids...)
-		return false, nil
-	})
+	bids, err := k.k.Bids.Get(ctx, auction_id)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.QueryAllBidsResponse{
-		Bids: allBids,
+		Bids: bids.Bids,
 	}, err
 }
 
