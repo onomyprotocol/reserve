@@ -23,6 +23,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(CmdParams())
 	cmd.AddCommand(CmdQueryAllAuctions())
 	cmd.AddCommand(CmdQueryAllBids())
+	cmd.AddCommand(CmdQueryAllBidsByAddress())
 	return cmd
 }
 
@@ -81,6 +82,28 @@ func CmdQueryAllBids() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.QueryAllBids(context.Background(), &types.QueryAllBidsRequest{AuctionId: args[0]})
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryAllBidsByAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "all-bids-by-address [address]",
+		Short: "show all bids by address",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			res, err := queryClient.QueryAllBidsByAddress(context.Background(), &types.QueryAllBidsByAddressRequest{Bidder: args[0]})
 			if err != nil {
 				return err
 			}

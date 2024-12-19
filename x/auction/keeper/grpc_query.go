@@ -87,3 +87,32 @@ func (k Querier) QueryAllBidderBids(ctx context.Context, req *types.QueryAllBidd
 		Bids: bidsByAddress.Bids,
 	}, err
 }
+
+func (k Querier) QueryAllBidsByAddress(ctx context.Context, req *types.QueryAllBidsByAddressRequest) (*types.QueryAllBidsByAddressResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	bidderAddr, err := k.k.authKeeper.AddressCodec().StringToBytes(req.Bidder)
+	if err != nil {
+		return nil, err
+	}
+
+	var Bids []types.Bid
+	err = k.k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+		bidsByAddress, err := k.k.BidByAddress.Get(ctx, collections.Join(key, sdk.AccAddress(bidderAddr)))
+		if err != nil {
+			return true, err
+		}
+
+		Bids = append(Bids, bidsByAddress.Bids...)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryAllBidsByAddressResponse{
+		Bids: Bids,
+	}, nil
+}
