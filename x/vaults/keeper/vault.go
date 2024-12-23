@@ -89,6 +89,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Set vault
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	vault := types.Vault{
 		Id:               vaultId,
 		Owner:            owner.String(),
@@ -96,6 +97,7 @@ func (k *Keeper) CreateNewVault(
 		CollateralLocked: collateral,
 		Status:           types.ACTIVE,
 		Address:          vaultAddress.String(),
+		CreateTime:       sdkCtx.BlockHeader().Time,
 	}
 	err = k.SetVault(ctx, vault)
 	if err != nil {
@@ -104,7 +106,6 @@ func (k *Keeper) CreateNewVault(
 	// Update vault manager
 	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
 
-	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.TypeEvtCreateVault,
@@ -586,6 +587,8 @@ func (k *Keeper) Liquidate(
 			return err
 		}
 		vault.Status = types.LIQUIDATED
+		liquidateTime := sdkCtx.BlockHeader().Time
+		vault.LiquidateTime = &liquidateTime
 	}
 
 	for _, status := range liquidation.VaultLiquidationStatus {
@@ -759,6 +762,7 @@ func (k *Keeper) Liquidate(
 					totalCollateralRemain = totalCollateralRemain.Sub(vault.CollateralLocked)
 
 					vault.Status = types.ACTIVE
+					vault.LiquidateTime = nil
 				} else {
 					// Update debt then mark liquidated
 					soldAmount := liquidation.VaultLiquidationStatus[vault.Id].Sold.Amount
