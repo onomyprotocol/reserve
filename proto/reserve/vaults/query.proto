@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "reserve/vaults/params.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/onomyprotocol/reserve/x/vaults/types";
 
@@ -41,6 +42,10 @@ service Query {
   }
 
   rpc QueryVaultByOwner(QueryVaultByOwnerRequest) returns (QueryVaultByOwnerResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
+
+  rpc QueryTotalCollateralLockedByDenom(QueryTotalCollateralLockedByDenomRequest) returns (QueryTotalCollateralLockedByDenomResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
 }
@@ -107,4 +112,17 @@ message QueryVaultByOwnerRequest {
 
 message QueryVaultByOwnerResponse{
   repeated  Vault vaults = 1; 
+}
+
+message QueryTotalCollateralLockedByDenomRequest {
+  string denom  = 1;
+}
+
+message QueryTotalCollateralLockedByDenomResponse{
+  string total = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
 }

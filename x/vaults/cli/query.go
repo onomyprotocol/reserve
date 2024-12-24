@@ -28,6 +28,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdQueryVaultFromAddress())
 	cmd.AddCommand(CmdQueryCollateralsByDenom())
+	cmd.AddCommand(CmdQueryTotalCollateralLockedByDenom())
 	return cmd
 }
 
@@ -208,6 +209,32 @@ func CmdQueryVaultFromAddress() *cobra.Command {
 			}
 
 			res, err := queryClient.QueryVaultByOwner(context.Background(), &msg)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryTotalCollateralLockedByDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "total-collateral-locked-by-denom [denom]",
+		Short: "show total collateral locked by denom",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			msg := types.QueryTotalCollateralLockedByDenomRequest{
+				Denom: args[0],
+			}
+
+			res, err := queryClient.QueryTotalCollateralLockedByDenom(context.Background(), &msg)
 			if err != nil {
 				return err
 			}
