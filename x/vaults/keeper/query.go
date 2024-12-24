@@ -6,6 +6,7 @@ import (
 
 	// "cosmossdk.io/collections"
 
+	"cosmossdk.io/math"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -135,5 +136,20 @@ func (q queryServer) QueryVaultByOwner(ctx context.Context, req *types.QueryVaul
 
 	return &types.QueryVaultByOwnerResponse{
 		Vaults: allVaults,
+	}, err
+}
+
+func (q queryServer) QueryTotalCollateralLockedByDenom(ctx context.Context, req *types.QueryTotalCollateralLockedByDenomRequest) (*types.QueryTotalCollateralLockedByDenomResponse, error) {
+	total := math.ZeroInt()
+
+	err := q.keeper.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
+		if req.Denom == value.CollateralLocked.Denom {
+			total = total.Add(value.CollateralLocked.Amount)
+		}
+		return false, nil
+	})
+
+	return &types.QueryTotalCollateralLockedByDenomResponse{
+		Total: total,
 	}, err
 }
