@@ -32,6 +32,7 @@ func GetQueryCmd() *cobra.Command {
 		GetBandOracleRequestParams(),
 		GetBandOracleRequest(),
 		GetQueryOracleScriptIdByDenomCmd(),
+		GetParams(),
 	)
 	return cmd
 }
@@ -198,6 +199,33 @@ func GetQueryOracleScriptIdByDenomCmd() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			res, err := queryClient.QueryOracleScriptIdByDenom(context.Background(), &types.QueryOracleScriptIdByDenomRequest{Denom: args[0]})
+			if err != nil {
+				return err
+			}
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+// GetBandParams queries the band parameters
+func GetParams() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "params",
+		Short: "Get parameters",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			var res proto.Message
+			req := &types.QueryParamsRequest{}
+			res, err = queryClient.Params(context.Background(), req)
 			if err != nil {
 				return err
 			}
