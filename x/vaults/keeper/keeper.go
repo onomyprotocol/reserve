@@ -87,6 +87,7 @@ func (k *Keeper) ActiveCollateralAsset(
 	liquidationPenalty math.LegacyDec,
 	collateralOracleScript int64,
 	mintOracleScript int64,
+	collateralDecimals, mintDecimals uint64,
 ) error {
 	// Check if asset alreay be actived
 	actived, vmKey := k.IsActived(ctx, CollateralDenom, MintDenom)
@@ -117,6 +118,8 @@ func (k *Keeper) ActiveCollateralAsset(
 	if err != nil {
 		return err
 	}
+
+	err = k.OracleKeeper.SetPairDecimalsRate(ctx, CollateralSymbol, MintSymbol, collateralDecimals, mintDecimals)
 
 	return k.VaultsManager.Set(ctx, vmKey, vm)
 }
