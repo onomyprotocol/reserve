@@ -346,7 +346,12 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		return price, fmt.Errorf("get price error validate for baseRate %s(%s) or quoteRate %s(%s)", base, baseRate.String(), quote, quoteRate.String())
 	}
 
-	price = baseRate.Quo(quoteRate)
+	pairDecimalsRate, err := k.GetPairDecimalsRate(ctx, base, quote)
+	if err != nil {
+		return price, err
+	}
+
+	price = baseRate.Quo(quoteRate).Mul(pairDecimalsRate)
 	return price, nil
 }
 
@@ -579,4 +584,20 @@ func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []ui
 	}
 
 	return staleIDs
+}
+
+func (k Keeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
+	store := k.storeService.OpenKVStore(ctx)
+	rate := math.LegacyNewDec(10).Power(baseDecimals).Quo(math.LegacyNewDec(10).Power(quoteDecimals))
+	bz := []byte(rate.String())
+	return store.Set(types.GetPairDecimalsKey(base, quote), bz)
+}
+
+func (k Keeper) GetPairDecimalsRate(ctx context.Context, base, quote string) (math.LegacyDec, error) {
+	store := k.storeService.OpenKVStore(ctx)
+	bz, err := store.Get(types.GetPairDecimalsKey(base, quote))
+	if err != nil {
+		return math.LegacyZeroDec(), err
+	}
+	return math.LegacyMustNewDecFromStr(string(bz)), nil
 }

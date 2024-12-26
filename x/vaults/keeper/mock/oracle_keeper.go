@@ -35,3 +35,7 @@ func (s *MockOracleKeeper) SetPrice(denom string, price math.LegacyDec) {
 func (s *MockOracleKeeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
 	return nil
 }
+
+func (s *MockOracleKeeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
+	return nil
+}
