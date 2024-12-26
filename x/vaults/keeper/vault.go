@@ -507,9 +507,11 @@ func (k *Keeper) GetLiquidations(
 		}
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
+		
+		// If can not get price of denom, skip!
 		price, err := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if err != nil {
-			return false, err
+			return false, nil
 		}
 		prices[vm.Denom] = price
 		liquidationRatios[vm.Denom] = vm.Params.LiquidationRatio
