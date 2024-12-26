@@ -143,7 +143,7 @@ func (q queryServer) QueryTotalCollateralLockedByDenom(ctx context.Context, req 
 	total := math.ZeroInt()
 
 	err := q.keeper.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
-		if req.Denom == value.CollateralLocked.Denom {
+		if req.Denom == value.CollateralLocked.Denom && value.Status == types.ACTIVE {
 			total = total.Add(value.CollateralLocked.Amount)
 		}
 		return false, nil
