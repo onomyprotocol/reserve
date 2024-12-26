@@ -628,6 +628,12 @@ func (k Keeper) SetInitPrice(ctx context.Context) error {
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.03"), sdkCtx.BlockTime().Unix()),
 		},
 		{
+			Symbol:      "NOM",
+			Rate:        math.NewInt(330), //0.03
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.03"), sdkCtx.BlockTime().Unix()),
+		},
+		{
 			Symbol:      "usdt",
 			Rate:        math.NewInt(10000), //1
 			ResolveTime: (sdkCtx.BlockTime().Unix()),
