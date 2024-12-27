@@ -71,6 +71,8 @@ message MsgAddStableCoin {
   ];
   int64 oracle_script = 6;
   string symbol = 7;
+  uint64 stable_decimal = 8;
+  uint64 mint_decimal = 9;
 }
 
 message MsgAddStableCoinResponse {}
@@ -103,6 +105,9 @@ message MsgUpdatesStableCoin {
 
   int64 oracle_script = 6;
   string symbol = 7;
+
+  uint64 stable_decimal = 8;
+  uint64 mint_decimal = 9;
 }
 
 message MsgUpdatesStableCoinResponse {}
