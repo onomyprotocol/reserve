@@ -18,6 +18,8 @@ var (
 
 	_ govtypes.Content = &MsgAddStableCoin{}
 	_ govtypes.Content = &MsgUpdatesStableCoin{}
+
+	Msg_serviceDesc = _Msg_serviceDesc
 )
 
 const (

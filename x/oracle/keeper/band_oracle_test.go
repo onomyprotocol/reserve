@@ -205,6 +205,8 @@ func TestGetPrice(t *testing.T) {
 		quoteSymbol     string
 		basePriceState  *types.BandPriceState
 		quotePriceState *types.BandPriceState
+		baseDecimals    uint64
+		quoteDecimals   uint64
 		expectedPrice   math.LegacyDec
 		expectNil       bool
 	}{
@@ -215,6 +217,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  nil,
 			quotePriceState: nil,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   math.LegacyNewDec(-1),
 			expectNil:       true,
 		},
@@ -224,6 +228,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  invalidPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   math.LegacyNewDec(-1),
 			expectNil:       true,
 		},
@@ -233,6 +239,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "NOM",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   math.LegacyNewDec(-1), // Since NOM doesn't exist, expect nil
 			expectNil:       true,
 		},
@@ -243,6 +251,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "NOM",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateNOM,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   expectedPrice05, // 10/2 = 5
 			expectNil:       false,
 		},
@@ -252,6 +262,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: nil,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   expectedPrice10, // Since quote = USD, we return base price directly
 			expectNil:       false,
 		},
@@ -261,6 +273,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "USD",
 			basePriceState:  bandPriceStateATOM,
 			quotePriceState: bandPriceStateUSD,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   expectedPrice10,
 			expectNil:       false,
 		},
@@ -270,6 +284,8 @@ func TestGetPrice(t *testing.T) {
 			quoteSymbol:     "ATOM",
 			basePriceState:  bandPriceStateUSD,
 			quotePriceState: bandPriceStateATOM,
+			baseDecimals:    6,
+			quoteDecimals:   6,
 			expectedPrice:   expectedPrice01,
 			expectNil:       false,
 		},
@@ -287,6 +303,8 @@ func TestGetPrice(t *testing.T) {
 				require.NoError(t, err)
 			}
 
+			err := app.OracleKeeper.SetPairDecimalsRate(ctx, tc.baseSymbol, tc.quoteSymbol, tc.baseDecimals, tc.quoteDecimals)
+			require.NoError(t, err)
 			// Execute GetPrice
 			price, err := app.OracleKeeper.GetPrice(ctx, tc.baseSymbol, tc.quoteSymbol)
 

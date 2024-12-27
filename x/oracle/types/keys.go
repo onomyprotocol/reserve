@@ -30,6 +30,7 @@ var (
 	BandPriceKey               = []byte{0x05}
 	LatestRequestIDKey         = []byte{0x06}
 	BandOracleRequestParamsKey = []byte{0x07}
+	PairDecimalsKeys           = []byte{0x08}
 )
 
 var (
@@ -51,4 +52,9 @@ func GetBandPriceStoreKey(symbol string) []byte {
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+func GetPairDecimalsKey(base, quote string) []byte {
+	pairBz := append([]byte(base), []byte(quote)...)
+	return append(PairDecimalsKeys, pairBz...)
 }
