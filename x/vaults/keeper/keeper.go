@@ -120,7 +120,9 @@ func (k *Keeper) ActiveCollateralAsset(
 	}
 
 	err = k.OracleKeeper.SetPairDecimalsRate(ctx, CollateralSymbol, MintSymbol, collateralDecimals, mintDecimals)
-
+	if err != nil {
+		return err
+	}
 	return k.VaultsManager.Set(ctx, vmKey, vm)
 }
 
