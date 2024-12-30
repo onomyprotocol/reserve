@@ -599,13 +599,13 @@ func (k Keeper) SetInitPrice(ctx context.Context) error {
 		},
 		{
 			Symbol:      "EUR",
-			Rate:        math.NewInt(10000), //1
+			Rate:        math.NewInt(10910), //1
 			ResolveTime: (sdkCtx.BlockTime().Unix()),
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
 		},
 		{
 			Symbol:      "JPY",
-			Rate:        math.NewInt(10000), //1
+			Rate:        math.NewInt(66), //1
 			ResolveTime: (sdkCtx.BlockTime().Unix()),
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
 		},
