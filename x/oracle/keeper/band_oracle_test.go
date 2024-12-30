@@ -25,7 +25,10 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
-	_, err := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	err := app.OracleKeeper.SetPairDecimalsRate(ctx, "ATOM", "USD", 6, 6)
+	require.NoError(t, err)
+
+	_, err = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
 	require.Error(t, err)
 
 	bandPriceState := &types.BandPriceState{
