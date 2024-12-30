@@ -323,7 +323,7 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		return price, err
 	}
 	if sdkCtx.BlockTime().Sub(time.Unix(basePriceState.ResolveTime, 0)) > allowedPriceDelay {
-		return price, fmt.Errorf("symbol %s old price state", base)
+		return price, fmt.Errorf("symbol base %s old price state", base)
 	}
 	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenoms[0] {
 		return basePriceState.PriceState.Price, nil
@@ -331,12 +331,12 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
 	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
-		err = fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", quote)
+		err = fmt.Errorf("can not get price state of quote denom %s: price state is nil or rate is zero", quote)
 		k.Logger(ctx).Info(err.Error())
 		return price, err
 	}
 	if sdkCtx.BlockTime().Sub(time.Unix(quotePriceState.ResolveTime, 0)) > allowedPriceDelay {
-		return price, fmt.Errorf("symbol %s old price state", quote)
+		return price, fmt.Errorf("symbol quote %s old price state", quote)
 	}
 
 	baseRate := basePriceState.Rate.ToLegacyDec()
