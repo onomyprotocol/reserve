@@ -25,7 +25,10 @@ func TestBandPriceState(t *testing.T) {
 	states := app.OracleKeeper.GetAllBandPriceStates(ctx)
 	require.Equal(t, 0, len(states))
 
-	_, err := app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
+	err := app.OracleKeeper.SetPairDecimalsRate(ctx, "ATOM", "USD", 6, 6)
+	require.NoError(t, err)
+
+	_, err = app.OracleKeeper.GetPrice(ctx, "ATOM", "USD")
 	require.Error(t, err)
 
 	bandPriceState := &types.BandPriceState{
@@ -357,8 +360,14 @@ func (s *KeeperTestSuite) TestPriceOld() {
 		s.Require().NoError(err)
 	}
 
+	err := s.App.OracleKeeper.SetPairDecimalsRate(s.Ctx, "ATOM", "USD", 6, 6)
+	s.Require().NoError(err)
+
+	err = s.App.OracleKeeper.SetPairDecimalsRate(s.Ctx, "NOM", "USD", 6, 6)
+	s.Require().NoError(err)
+
 	// ATOM price old
-	_, err := s.App.OracleKeeper.GetPrice(s.Ctx, "ATOM", "USD")
+	_, err = s.App.OracleKeeper.GetPrice(s.Ctx, "ATOM", "USD")
 	s.Require().Error(err)
 
 	// NOM price new (6h)
