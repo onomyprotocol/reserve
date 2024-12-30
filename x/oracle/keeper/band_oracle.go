@@ -326,7 +326,12 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		return price, fmt.Errorf("symbol base %s old price state", base)
 	}
 	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenoms[0] {
-		return basePriceState.PriceState.Price, nil
+		pairDecimalsRate, err := k.GetPairDecimalsRate(ctx, base, quote)
+		if err != nil {
+			return price, err
+		}
+
+		return basePriceState.PriceState.Price.Mul(pairDecimalsRate), nil
 	}
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
@@ -588,7 +593,7 @@ func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []ui
 
 func (k Keeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
-	rate := math.LegacyNewDec(10).Power(quoteDecimals).Quo(math.LegacyNewDec(10).Power(baseDecimals))
+	rate := math.LegacyNewDec(10).Power(quoteDecimals - baseDecimals)
 	bz := []byte(rate.String())
 	return store.Set(types.GetPairDecimalsKey(base, quote), bz)
 }
