@@ -326,7 +326,12 @@ func (k Keeper) GetPrice(ctx context.Context, base, quote string) (price math.Le
 		return price, fmt.Errorf("symbol base %s old price state", base)
 	}
 	if quote == types.QuoteUSD || quote == vaultstypes.DefaultMintDenoms[0] {
-		return basePriceState.PriceState.Price, nil
+		pairDecimalsRate, err := k.GetPairDecimalsRate(ctx, base, quote)
+		if err != nil {
+			return price, err
+		}
+
+		return basePriceState.PriceState.Price.Mul(pairDecimalsRate), nil
 	}
 
 	quotePriceState := k.GetBandPriceState(ctx, quote)
