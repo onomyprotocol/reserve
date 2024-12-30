@@ -360,8 +360,14 @@ func (s *KeeperTestSuite) TestPriceOld() {
 		s.Require().NoError(err)
 	}
 
+	err := s.App.OracleKeeper.SetPairDecimalsRate(s.Ctx, "ATOM", "USD", 6, 6)
+	s.Require().NoError(err)
+
+	err = s.App.OracleKeeper.SetPairDecimalsRate(s.Ctx, "NOM", "USD", 6, 6)
+	s.Require().NoError(err)
+
 	// ATOM price old
-	_, err := s.App.OracleKeeper.GetPrice(s.Ctx, "ATOM", "USD")
+	_, err = s.App.OracleKeeper.GetPrice(s.Ctx, "ATOM", "USD")
 	s.Require().Error(err)
 
 	// NOM price new (6h)
