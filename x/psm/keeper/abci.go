@@ -71,9 +71,7 @@ func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, s
 	rate := math.LegacyOneDec().Quo(newPrice)
 	if rate.LT(math.LegacyOneDec()) {
 		feeOut := feeMax.QuoInt64(2)
-		for i := 0; i < int(params.AdjustmentFee); i++ {
-			feeOut = feeOut.Quo(rate)
-		}
+		feeOut = feeOut.Quo(rate.Power(uint64(params.AdjustmentFee)))
 		feeOut = math.LegacyMinDec(feeOut, feeMax)
 		feeIn := feeMax.Sub(feeOut)
 
@@ -81,9 +79,7 @@ func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, s
 		stablecoin.FeeOut = feeOut
 	} else {
 		feeIn := feeMax.QuoInt64(2)
-		for i := 0; i < int(params.AdjustmentFee); i++ {
-			feeIn = feeIn.Mul(rate)
-		}
+		feeIn = feeIn.Mul(rate.Power(uint64(params.AdjustmentFee)))
 		feeIn = math.LegacyMinDec(feeIn, feeMax)
 		feeOut := feeMax.Sub(feeIn)
 

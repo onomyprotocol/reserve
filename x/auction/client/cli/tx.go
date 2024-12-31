@@ -31,7 +31,7 @@ func GetTxCmd() *cobra.Command {
 
 func NewBidCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bid [auction-id] [amount] [recive_rate]",
+		Use:   "bid [auction-id] [amount] [recive-price]",
 		Args:  cobra.ExactArgs(3),
 		Short: "create vaults ",
 		Long: `create vaults.
