@@ -43,6 +43,10 @@ func (s MockOracleKeeper) GetPrice(ctx context.Context, denom1 string, denom2 st
 	return p, nil
 }
 
+func (s MockOracleKeeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
+	return nil
+}
+
 func (s MockOracleKeeper) AddNewSymbolToBandOracleRequest(ctx context.Context, symbol string, oracleScriptId int64) error {
 	_, ok := s.prices[symbol]
 
