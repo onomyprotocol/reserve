@@ -593,7 +593,7 @@ func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []ui
 
 func (k Keeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
 	store := k.storeService.OpenKVStore(ctx)
-	rate := math.LegacyNewDec(10).Power(quoteDecimals - baseDecimals)
+	rate := math.LegacyNewDec(10).Power(baseDecimals - quoteDecimals)
 	bz := []byte(rate.String())
 	return store.Set(types.GetPairDecimalsKey(base, quote), bz)
 }
