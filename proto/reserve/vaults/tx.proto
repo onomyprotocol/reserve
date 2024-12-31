@@ -122,6 +122,9 @@ message MsgActiveCollateral {
   string mint_denom = 11;
   string mint_symbol = 12;
   int64 mint_oracle_script = 13;
+
+  uint64 collateral_decimals = 14;
+  uint64 mint_decimals = 15;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.
@@ -184,6 +187,8 @@ message MsgUpdatesCollateral {
   string symbol = 11;
   string mint_denom = 12;
   int64 mint_oracle_script = 13;
+  uint64 collateral_decimals = 14;
+  uint64 mint_decimals = 15;
 }
 
 // MsgActiveCollateralResponse defines the Msg/ActiveCollateral response type.

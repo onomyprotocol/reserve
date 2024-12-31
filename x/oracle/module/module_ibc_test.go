@@ -315,6 +315,9 @@ func (suite *PriceRelayTestSuite) TestOnRecvPacket() {
 				suite.Require().True(ack.Success())
 				suite.Require().Equal(expectedAck, ack)
 
+				err := onomyApp.OracleKeeper.SetPairDecimalsRate(suite.chainO.GetContext(), "ATOM", "USD", 6, 6)
+				suite.Require().NoError(err)
+
 				price, err := onomyApp.OracleKeeper.GetPrice(suite.chainO.GetContext(), "ATOM", "USD")
 				suite.Require().NoError(err)
 				suite.Require().Equal("10.822375461000000000", price.String())

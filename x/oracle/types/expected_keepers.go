@@ -4,6 +4,7 @@ import (
 	"context"
 	"cosmossdk.io/core/address"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
 // AccountKeeper defines the expected interface for the Account module.
@@ -16,6 +17,7 @@ type AccountKeeper interface {
 // BankKeeper defines the expected interface for the Bank module.
 type BankKeeper interface {
 	SpendableCoins(context.Context, sdk.AccAddress) sdk.Coins
+	GetDenomMetaData(ctx context.Context, denom string) (banktypes.Metadata, bool)
 	// Methods imported from bank should be defined here
 }
 
