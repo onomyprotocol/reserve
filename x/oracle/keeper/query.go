@@ -2,8 +2,10 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"strconv"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/oracle/types"
@@ -24,15 +26,41 @@ func (k Keeper) BandPriceStates(c context.Context, _ *types.QueryBandPriceStates
 func (k Keeper) Price(c context.Context, q *types.QueryPriceRequest) (*types.QueryPriceResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	price, err := k.GetPrice(ctx, q.BaseDenom, q.QuoteDenom)
-	if err != nil {
-		return nil, err
-	} else {
-		res := &types.QueryPriceResponse{
-			Price: price.String(),
-		}
-		return res, nil
+	allowedPriceDelay := k.GetParams(ctx).AllowedPriceDelay
+	// query ref by using GetBandPriceState
+	basePriceState := k.GetBandPriceState(ctx, q.BaseDenom)
+	if basePriceState == nil || basePriceState.Rate.IsZero() {
+		return nil, fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", q.BaseDenom)
 	}
+	if ctx.BlockTime().Sub(time.Unix(basePriceState.ResolveTime, 0)) > allowedPriceDelay {
+		return nil, fmt.Errorf("symbol %s old price state", q.BaseDenom)
+	}
+	if q.QuoteDenom == types.QuoteUSD {
+		return &types.QueryPriceResponse{
+			Price: basePriceState.PriceState.Price.String(),
+		}, nil
+	}
+
+	quotePriceState := k.GetBandPriceState(ctx, q.QuoteDenom)
+	if quotePriceState == nil || quotePriceState.Rate.IsZero() {
+		return nil, fmt.Errorf("can not get price state of base denom %s: price state is nil or rate is zero", q.QuoteDenom)
+	}
+	if ctx.BlockTime().Sub(time.Unix(quotePriceState.ResolveTime, 0)) > allowedPriceDelay {
+		return nil, fmt.Errorf("symbol %s old price state", q.QuoteDenom)
+	}
+
+	baseRate := basePriceState.Rate.ToLegacyDec()
+	quoteRate := quotePriceState.Rate.ToLegacyDec()
+
+	if baseRate.IsNil() || quoteRate.IsNil() || !baseRate.IsPositive() || !quoteRate.IsPositive() {
+		return nil, fmt.Errorf("get price error validate for baseRate %s(%s) or quoteRate %s(%s)", q.BaseDenom, baseRate.String(), q.QuoteDenom, quoteRate.String())
+	}
+
+	price := baseRate.Quo(quoteRate)
+
+	return &types.QueryPriceResponse{
+		Price: price.String(),
+	}, nil
 }
 
 func (k Keeper) BandParams(c context.Context, q *types.QueryBandParamsRequest) (*types.QueryBandParamsResponse, error) {
