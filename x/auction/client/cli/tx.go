@@ -31,13 +31,13 @@ func GetTxCmd() *cobra.Command {
 
 func NewBidCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bid [auction-id] [amount] [recive-price]",
+		Use:   "bid [auction-id] [amount] [recive_rate]",
 		Args:  cobra.ExactArgs(3),
-		Short: "create vaults ",
-		Long: `create vaults.
+		Short: "create new bid",
+		Long: `create new bid.
 
 			Example:
-			$ onomyd tx bid 0 1000nomUSD 0.8 --from mykey
+			$ onomyd tx bid 0 1000nomUSD 0.95 --from mykey
 	`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
