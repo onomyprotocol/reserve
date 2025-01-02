@@ -7,12 +7,12 @@ var (
 	Msg_serviceDesc   = _Msg_serviceDesc
 )
 
-func NewMsgBid(addr string, auctionID uint64, amount sdk.Coin, RecivePrice string) MsgBid {
+func NewMsgBid(addr string, auctionID uint64, amount sdk.Coin, ReciveRate string) MsgBid {
 	return MsgBid{
-		Bidder:      addr,
-		AuctionId:   auctionID,
-		RecivePrice: RecivePrice,
-		Amount:      amount,
+		Bidder:     addr,
+		AuctionId:  auctionID,
+		ReciveRate: ReciveRate,
+		Amount:     amount,
 	}
 }
 
