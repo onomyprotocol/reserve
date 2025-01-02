@@ -60,8 +60,8 @@ message MsgBid {
   cosmos.base.v1beta1.Coin amount = 3
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  // recive_price defines the price that the bid is willing to pay
-  string recive_price = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
+  // recive_rate defines the price that the bid is willing to pay
+  string recive_rate = 4 [ (cosmos_proto.scalar) = "cosmos.Dec" ];
 }
 
 // MsgBidResponse defines the response structure for executing a
