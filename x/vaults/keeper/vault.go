@@ -840,18 +840,6 @@ func (k *Keeper) GetVaultIdAndAddress(
 	return id, address
 }
 
-func (k *Keeper) updateVaultDebt(
-	ctx context.Context,
-) (uint64, sdk.AccAddress) {
-	id, err := k.VaultsSequence.Next(ctx)
-	if err != nil {
-		return 0, sdk.AccAddress{}
-	}
-	address := address.Module(types.ModuleName, []byte(strconv.Itoa(int(id))))
-
-	return id, address
-}
-
 func isStatusGood(vault types.Vault) bool {
 	if vault.Status == types.ACTIVE {
 		return true
