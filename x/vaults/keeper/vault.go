@@ -48,17 +48,16 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-	// TODO: recalculate with denom decimal?
+
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(price)
-	ratio := collateralValue.QuoInt(mint.Amount)
-
-	if ratio.LT(vmParams.MinCollateralRatio) {
-		return fmt.Errorf("collateral ratio invalid, got %d, min %d", ratio, vmParams.MinCollateralRatio)
-	}
-
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(vmParams.MintingFee).TruncateInt()
 	feeCoin := sdk.NewCoin(mint.Denom, feeAmount)
 	mintedCoin := feeCoin.Add(mint)
+
+	ratio := collateralValue.QuoInt(mintedCoin.Amount)
+	if ratio.LT(vmParams.MinCollateralRatio) {
+		return fmt.Errorf("collateral ratio invalid, got %d, min %d", ratio, vmParams.MinCollateralRatio)
+	}
 
 	if vm.MintAvailable.LT(mintedCoin.Amount) {
 		return fmt.Errorf("exeed max debt")
