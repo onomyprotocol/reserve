@@ -73,7 +73,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Mint and transfer to user and reserve
-	err = k.BankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintedCoin))
+	err = k.mintDebt(ctx, key, vm, mintedCoin)
 	if err != nil {
 		return err
 	}
@@ -103,8 +103,6 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-	// Update vault manager
-	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -118,7 +116,7 @@ func (k *Keeper) CreateNewVault(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) CloseVault(
@@ -207,7 +205,7 @@ func (k *Keeper) MintCoin(
 	}
 
 	// Mint and transfer to user and reserve
-	err = k.BankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintedCoin))
+	err = k.mintDebt(ctx, key, vm, mintedCoin)
 	if err != nil {
 		return err
 	}
@@ -229,9 +227,6 @@ func (k *Keeper) MintCoin(
 		return err
 	}
 
-	// Update vault manager
-	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
-
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -242,7 +237,7 @@ func (k *Keeper) MintCoin(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) RepayDebt(
@@ -284,7 +279,7 @@ func (k *Keeper) RepayDebt(
 		return err
 	}
 
-	err = k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burnAmount))
+	err = k.burnDebt(ctx, key, vm, burnAmount)
 	if err != nil {
 		return err
 	}
@@ -296,8 +291,6 @@ func (k *Keeper) RepayDebt(
 		return err
 	}
 
-	vm.MintAvailable = vm.MintAvailable.Add(burnAmount.Amount)
-
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -308,7 +301,7 @@ func (k *Keeper) RepayDebt(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) DepositToVault(
@@ -600,14 +593,8 @@ func (k *Keeper) Liquidate(
 
 	// Sold amount enough to cover debt
 	if sold.Amount.GTE(totalDebt.Amount) {
-		// Burn debt
-		err := k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(totalDebt))
-		if err != nil {
-			return err
-		}
-		// Increase mint available
-		vm.MintAvailable = vm.MintAvailable.Add(totalDebt.Amount)
-		err = k.VaultsManager.Set(ctx, key, vm)
+		// Burn debt and increase mint available
+		err := k.burnDebt(ctx, key, vm, totalDebt)
 		if err != nil {
 			return err
 		}
@@ -657,14 +644,8 @@ func (k *Keeper) Liquidate(
 	} else {
 		// does not raise enough to cover nomUSD debt
 
-		// Burn sold amount
-		err := k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(sold))
-		if err != nil {
-			return err
-		}
-		// Increase mint available
-		vm.MintAvailable = vm.MintAvailable.Add(sold.Amount)
-		err = k.VaultsManager.Set(ctx, key, vm)
+		// Burn sold amount and increase mint available
+		err := k.burnDebt(ctx, key, vm, sold)
 		if err != nil {
 			return err
 		}
@@ -849,6 +830,18 @@ func (k *Keeper) SetVault(
 }
 
 func (k *Keeper) GetVaultIdAndAddress(
+	ctx context.Context,
+) (uint64, sdk.AccAddress) {
+	id, err := k.VaultsSequence.Next(ctx)
+	if err != nil {
+		return 0, sdk.AccAddress{}
+	}
+	address := address.Module(types.ModuleName, []byte(strconv.Itoa(int(id))))
+
+	return id, address
+}
+
+func (k *Keeper) updateVaultDebt(
 	ctx context.Context,
 ) (uint64, sdk.AccAddress) {
 	id, err := k.VaultsSequence.Next(ctx)
