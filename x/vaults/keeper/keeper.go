@@ -154,7 +154,10 @@ func (k *Keeper) UpdatesCollateralAsset(
 	vm.Params.MintingFee = mintingFee
 	vm.Params.LiquidationPenalty = liquidationPenalty
 
-	vm.MintAvailable = maxDebt.Sub(amountMinted)
+	vm.MintAvailable, err = maxDebt.SafeSub(amountMinted)
+	if err != nil {
+		return err
+	}
 
 	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymBol, CollateralOracleScript)
 	if err != nil {
