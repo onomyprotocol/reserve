@@ -32,7 +32,7 @@ func (k *Keeper) CreateNewVault(
 	allowedMintDenoms := k.GetAllowedMintDenoms(ctx)
 	// TODO: Check if mint denom is allowed
 	if !slices.Contains(allowedMintDenoms, mint.Denom) {
-		return fmt.Errorf("minted denom must in list %s, but got %s", types.DefaultMintDenoms, mint.Denom)
+		return fmt.Errorf("minted denom must in list %v, but got %s", allowedMintDenoms, mint.Denom)
 	}
 
 	params := k.GetParams(ctx)
