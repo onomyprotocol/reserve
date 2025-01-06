@@ -146,6 +146,14 @@ func (k *Keeper) CloseVault(
 		return err
 	}
 
+	// burn debt
+	key := getVMKey(vault.CollateralLocked.Denom, vault.Debt.Denom)
+	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom, vault.Debt.Denom)
+	err = k.burnDebt(ctx, key, vm, vault.Debt)
+	if err != nil {
+		return err
+	}
+
 	// Update vault
 	vault.CollateralLocked.Amount = math.ZeroInt()
 	vault.Status = types.CLOSED
