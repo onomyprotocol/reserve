@@ -8,7 +8,7 @@ import (
 )
 
 // InitGenesis - Init store state from genesis data
-func (k *Keeper) InitGenesis(ctx context.Context, data *types.GenesisState) error {
+func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error {
 	err := k.SetParams(ctx, data.Params)
 	if err != nil {
 		return err
