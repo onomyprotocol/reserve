@@ -2,6 +2,8 @@ package oracle
 
 import (
 	"context"
+
+	"cosmossdk.io/collections"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/onomyprotocol/reserve/x/oracle/keeper"
@@ -75,9 +77,12 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 		sdkCtx.Logger().Info("can not set band oracle request params")
 		// should we set panic here
 	}
-	// for _, pair := range genState.PairDecimalsRates {
-	// 	k.SetPairDecimalsRate(ctx, pair.Base, pair.Quote)
-	// }
+	for _, pair := range genState.PairDecimalsRates {
+		err = k.PairDecimalsRate.Set(ctx, collections.Join(pair.Base, pair.Quote), pair)
+		if err != nil {
+			sdkCtx.Logger().Info("can not set pair decimals rate")
+		}
+	}
 }
 
 // ExportGenesis returns the module's exported genesis.
@@ -91,6 +96,6 @@ func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
 		CalldataRecords:         k.GetAllBandCalldataRecords(ctx),
 		BandLatestRequestId:     k.GetBandLatestRequestID(ctx),
 		BandOracleRequestParams: k.GetBandOracleRequestParams(ctx),
-		// PairDecimalsRates: ,
+		PairDecimalsRates:       k.GetAllPairDecimalsRate(ctx),
 	}
 }

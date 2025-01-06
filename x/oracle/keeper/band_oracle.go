@@ -607,3 +607,17 @@ func (k Keeper) GetPairDecimalsRate(ctx context.Context, base, quote string) (ma
 	v, err := k.PairDecimalsRate.Get(ctx, collections.Join(base, quote))
 	return v.Rate, err
 }
+
+func (k Keeper) GetAllPairDecimalsRate(ctx context.Context) []types.PairDecimalsRate {
+	var allPair []types.PairDecimalsRate
+	err := k.PairDecimalsRate.Walk(ctx, nil, func(key collections.Pair[string, string], value types.PairDecimalsRate) (stop bool, err error) {
+		allPair = append(allPair, value)
+
+		return false, nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return allPair
+}
