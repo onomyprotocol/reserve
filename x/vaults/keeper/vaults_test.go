@@ -744,7 +744,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 			}
 
 			if !t.shortfallAmount.IsNil() {
-				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx)
+				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx, types.DefaultMintDenoms[0])
 				s.Require().NoError(err)
 				s.Require().Equal(t.shortfallAmount.Amount, shortfallAmount)
 			}

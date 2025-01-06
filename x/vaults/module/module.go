@@ -43,10 +43,10 @@ var (
 )
 
 type AppModuleBasic struct {
-	cdc codec.BinaryCodec
+	cdc codec.Codec
 }
 
-func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic {
+func NewAppModuleBasic(cdc codec.Codec) AppModuleBasic {
 	return AppModuleBasic{cdc: cdc}
 }
 
@@ -67,13 +67,14 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 	return genState.Validate()
 }
 
-func (a AppModule) ExportGenesis(_ sdk.Context, cdc codec.JSONCodec) json.RawMessage {
-	return a.DefaultGenesis(cdc)
+func (a AppModule) ExportGenesis(ctx context.Context, marshaler codec.JSONCodec,) json.RawMessage {
+	gs := a.keeper.ExportGenesis(ctx)
+	return marshaler.MustMarshalJSON(gs)
 }
 
 func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) {
-	var genesisState types.GenesisState
-	marshaler.MustUnmarshalJSON(message, &genesisState)
+	var genesisState *types.GenesisState
+	marshaler.MustUnmarshalJSON(message, genesisState)
 	err := a.keeper.InitGenesis(ctx, genesisState)
 	if err != nil {
 		panic(err)
