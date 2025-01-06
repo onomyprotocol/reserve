@@ -529,3 +529,23 @@ func (s *KeeperTestSuite) TestAddNewSymbolToBandOracleRequest() {
 	})
 	s.Require().NoError(err)
 }
+
+func (s *KeeperTestSuite) TestSetGetPairDecimalsRate() {
+	s.SetupTest()
+
+	err := s.k.SetPairDecimalsRate(s.Ctx, "ATOM", "USD", 6, 6)
+	s.Require().NoError(err)
+
+	err = s.k.SetPairDecimalsRate(s.Ctx, "NOM", "USD", 18, 6)
+	s.Require().NoError(err)
+
+	rate1, err := s.k.GetPairDecimalsRate(s.Ctx, "ATOM", "USD") // 10^0
+	s.Require().NoError(err)
+	expRate1 := math.LegacyOneDec()
+	s.Require().Equal(rate1, expRate1)
+
+	rate2, err := s.k.GetPairDecimalsRate(s.Ctx, "NOM", "USD") // 10^-12
+	s.Require().NoError(err)
+	expRate2 := math.LegacyOneDec().Quo(math.LegacyNewDec(10).Power(12))
+	s.Require().Equal(rate2, expRate2)
+}
