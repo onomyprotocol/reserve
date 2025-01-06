@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"cosmossdk.io/collections"
 	errorsmod "cosmossdk.io/errors"
 	math "cosmossdk.io/math"
 	prefix "cosmossdk.io/store/prefix"
@@ -592,17 +593,17 @@ func (k *Keeper) getPreviousRecordIDs(ctx context.Context, clientID uint64) []ui
 }
 
 func (k Keeper) SetPairDecimalsRate(ctx context.Context, base, quote string, baseDecimals, quoteDecimals uint64) error {
-	store := k.storeService.OpenKVStore(ctx)
 	rate := math.LegacyNewDec(10).Power(quoteDecimals).Quo(math.LegacyNewDec(10).Power(baseDecimals))
-	bz := []byte(rate.String())
-	return store.Set(types.GetPairDecimalsKey(base, quote), bz)
+
+	pairDecimalsRate := types.PairDecimalsRate{
+		Base:  base,
+		Quote: quote,
+		Rate:  rate,
+	}
+	return k.PairDecimalsRate.Set(ctx, collections.Join(base, quote), pairDecimalsRate)
 }
 
 func (k Keeper) GetPairDecimalsRate(ctx context.Context, base, quote string) (math.LegacyDec, error) {
-	store := k.storeService.OpenKVStore(ctx)
-	bz, err := store.Get(types.GetPairDecimalsKey(base, quote))
-	if err != nil {
-		return math.LegacyZeroDec(), err
-	}
-	return math.LegacyMustNewDecFromStr(string(bz)), nil
+	v, err := k.PairDecimalsRate.Get(ctx, collections.Join(base, quote))
+	return v.Rate, err
 }

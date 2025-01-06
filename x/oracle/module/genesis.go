@@ -75,6 +75,9 @@ func InitGenesis(ctx context.Context, k keeper.Keeper, genState types.GenesisSta
 		sdkCtx.Logger().Info("can not set band oracle request params")
 		// should we set panic here
 	}
+	// for _, pair := range genState.PairDecimalsRates {
+	// 	k.SetPairDecimalsRate(ctx, pair.Base, pair.Quote)
+	// }
 }
 
 // ExportGenesis returns the module's exported genesis.
@@ -88,5 +91,6 @@ func ExportGenesis(ctx context.Context, k keeper.Keeper) *types.GenesisState {
 		CalldataRecords:         k.GetAllBandCalldataRecords(ctx),
 		BandLatestRequestId:     k.GetBandLatestRequestID(ctx),
 		BandOracleRequestParams: k.GetBandOracleRequestParams(ctx),
+		// PairDecimalsRates: ,
 	}
 }
