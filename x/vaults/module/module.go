@@ -40,13 +40,14 @@ const consensusVersion uint64 = 1
 var (
 	_ module.AppModule          = AppModule{}
 	_ appmodule.HasBeginBlocker = (*AppModule)(nil)
+	_ module.HasGenesis         = (*AppModule)(nil)
 )
 
 type AppModuleBasic struct {
-	cdc codec.Codec
+	cdc codec.BinaryCodec
 }
 
-func NewAppModuleBasic(cdc codec.Codec) AppModuleBasic {
+func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic {
 	return AppModuleBasic{cdc: cdc}
 }
 
@@ -67,18 +68,19 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 	return genState.Validate()
 }
 
-func (a AppModule) ExportGenesis(ctx context.Context, marshaler codec.JSONCodec,) json.RawMessage {
+func (a AppModule) ExportGenesis(ctx sdk.Context, marshaler codec.JSONCodec) json.RawMessage {
 	gs := a.keeper.ExportGenesis(ctx)
 	return marshaler.MustMarshalJSON(gs)
 }
 
-func (a AppModule) InitGenesis(ctx sdk.Context, marshaler codec.JSONCodec, message json.RawMessage) {
-	var genesisState *types.GenesisState
-	marshaler.MustUnmarshalJSON(message, genesisState)
-	err := a.keeper.InitGenesis(ctx, genesisState)
-	if err != nil {
-		panic(err)
-	}
+
+func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, gs json.RawMessage) {
+	fmt.Println("vaults Init")
+	var genState types.GenesisState
+	// Initialize global index to index in genesis state
+	cdc.MustUnmarshalJSON(gs, &genState)
+
+	InitGenesis(ctx, am.keeper, genState)
 }
 
 func (AppModule) ConsensusVersion() uint64 { return consensusVersion }
