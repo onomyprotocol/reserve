@@ -138,8 +138,8 @@ reserved tx oracle set-price atom 8  --home=$HOME/.reserved/validator2  --from v
 
 sleep 7
 
-reserved tx vaults create-vault 1250000000usdt 50000000nomUSD --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
-reserved tx vaults create-vault 1250000000atom 50000000nomUSD --home=$HOME/.reserved/validator2  --from validator2 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+reserved tx vaults create-vault 1250000000usdt 50000000fxUSD --home=$HOME/.reserved/validator1  --from validator1 --keyring-backend test --fees 20stake --chain-id testing-1 -y
+reserved tx vaults create-vault 1250000000atom 50000000fxUSD --home=$HOME/.reserved/validator2  --from validator2 --keyring-backend test --fees 20stake --chain-id testing-1 -y
 # killall reserved || true
 
 
