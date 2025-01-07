@@ -83,6 +83,14 @@ func (msg MsgAddStableCoin) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty denom")
 	}
 
+	if msg.AddressPayStableInit == "" {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty address pay stable init")
+	}
+
+	if msg.AmountStableInit.LTE(math.ZeroInt()) {
+		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "amount pay stable init less than zero")
+	}
+
 	if msg.Symbol == "" {
 		return sdkerrors.Wrap(ErrInvalidAddStableCoinProposal, "empty symbol")
 	}

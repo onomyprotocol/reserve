@@ -34,13 +34,15 @@ func (s *KeeperTestSuite) TestSwapToOnomyStableToken() {
 				s.Require().NoError(err)
 
 				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
-					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-					Denom:        usdt,
-					Symbol:       usdt,
-					LimitTotal:   limitUSDT,
-					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
-					OracleScript: 44,
+					Authority:            authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:                usdt,
+					Symbol:               usdt,
+					AddressPayStableInit: s.communityAddress.String(),
+					AmountStableInit:     amountStableInit,
+					LimitTotal:           limitUSDT,
+					FeeIn:                math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:               math.LegacyMustNewDecFromStr("0.001"),
+					OracleScript:         44,
 				})
 				s.Require().NoError(err)
 			},
@@ -53,13 +55,15 @@ func (s *KeeperTestSuite) TestSwapToOnomyStableToken() {
 			addr: s.TestAccs[1],
 			setup: func() {
 				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
-					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-					Denom:        usdc,
-					Symbol:       usdc,
-					LimitTotal:   limitUSDC,
-					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
-					OracleScript: 44,
+					Authority:            authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:                usdc,
+					Symbol:               usdc,
+					AddressPayStableInit: s.communityAddress.String(),
+					AmountStableInit:     amountStableInit,
+					LimitTotal:           limitUSDC,
+					FeeIn:                math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:               math.LegacyMustNewDecFromStr("0.001"),
+					OracleScript:         44,
 				})
 				s.Require().NoError(err)
 			},
@@ -113,13 +117,15 @@ func (s *KeeperTestSuite) TestSwapToOtherStablecoin() {
 				s.Require().NoError(err)
 
 				_, err = s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
-					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-					Denom:        usdt,
-					Symbol:       usdt,
-					LimitTotal:   limitUSDT,
-					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
-					OracleScript: 44,
+					Authority:            authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:                usdt,
+					Symbol:               usdt,
+					AddressPayStableInit: s.communityAddress.String(),
+					AmountStableInit:     amountStableInit,
+					LimitTotal:           limitUSDT,
+					FeeIn:                math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:               math.LegacyMustNewDecFromStr("0.001"),
+					OracleScript:         44,
 				})
 				s.Require().NoError(err)
 
@@ -136,13 +142,15 @@ func (s *KeeperTestSuite) TestSwapToOtherStablecoin() {
 			addr: s.TestAccs[1],
 			setup: func() {
 				_, err := s.msgServer.AddStableCoinProposal(s.Ctx, &types.MsgAddStableCoin{
-					Authority:    authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-					Denom:        usdc,
-					Symbol:       usdc,
-					LimitTotal:   limitUSDC,
-					FeeIn:        math.LegacyMustNewDecFromStr("0.001"),
-					FeeOut:       math.LegacyMustNewDecFromStr("0.001"),
-					OracleScript: 44,
+					Authority:            authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+					Denom:                usdc,
+					Symbol:               usdc,
+					AddressPayStableInit: s.communityAddress.String(),
+					AmountStableInit:     amountStableInit,
+					LimitTotal:           limitUSDC,
+					FeeIn:                math.LegacyMustNewDecFromStr("0.001"),
+					FeeOut:               math.LegacyMustNewDecFromStr("0.001"),
+					OracleScript:         44,
 				})
 				s.Require().NoError(err)
 			},

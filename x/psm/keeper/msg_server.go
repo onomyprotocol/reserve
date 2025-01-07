@@ -99,6 +99,16 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
+	addrPay, err := sdk.AccAddressFromBech32(msg.AddressPayStableInit)
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
+	err = k.keeper.BankKeeper.SendCoinsFromAccountToModule(ctx, addrPay, types.ModuleName, sdk.NewCoins(sdk.NewCoin(msg.Denom, msg.AmountStableInit)))
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventAddStablecoin,
