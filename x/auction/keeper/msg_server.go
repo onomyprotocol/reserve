@@ -6,6 +6,7 @@ import (
 
 	"cosmossdk.io/collections"
 	errorsmod "cosmossdk.io/errors"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/onomyprotocol/reserve/x/auction/types"
 )
@@ -72,11 +73,13 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 		return nil, err
 	}
 
+	recivePrice := math.LegacyMustNewDecFromStr(auction.InitialPrice).Mul(math.LegacyMustNewDecFromStr(msg.ReciveRate))
+	// auction.InitialPrice.
 	bid := types.Bid{
 		BidId:       newBidId,
 		Bidder:      msg.Bidder,
 		Amount:      msg.Amount,
-		RecivePrice: msg.RecivePrice,
+		RecivePrice: recivePrice.String(),
 		IsHandle:    false,
 	}
 	err = k.AddBidEntry(ctx, msg.AuctionId, bidderAddr, bid)

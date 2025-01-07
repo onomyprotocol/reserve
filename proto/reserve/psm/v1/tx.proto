@@ -80,6 +80,8 @@ message MsgAddStableCoin {
     (gogoproto.nullable)   = false
   ];
   int64 oracle_script = 9;
+  uint64 stable_decimal = 10;
+  uint64 mint_decimal = 11;
 }
 
 message MsgAddStableCoinResponse {}
@@ -112,6 +114,9 @@ message MsgUpdatesStableCoin {
   ];
 
   int64 oracle_script = 7;
+
+  uint64 stable_decimal = 8;
+  uint64 mint_decimal = 9;
 }
 
 message MsgUpdatesStableCoinResponse {}

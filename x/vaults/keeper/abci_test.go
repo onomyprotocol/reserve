@@ -35,7 +35,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 					math.LegacyMustNewDecFromStr("1.5"),
 					maxDebt, stabilityFee,
 					types.DefaultMintingFee,
-					types.DefaultLiquidationPenalty, 1, 1,
+					types.DefaultLiquidationPenalty, 1, 1, 6, 6,
 				)
 				s.Require().NoError(err)
 
@@ -66,7 +66,7 @@ func (s *KeeperTestSuite) TestBeginBlock() {
 					math.LegacyMustNewDecFromStr("1.5"),
 					maxDebt, stabilityFee,
 					types.DefaultMintingFee,
-					types.DefaultLiquidationPenalty, 1, 1,
+					types.DefaultLiquidationPenalty, 1, 1, 6, 6,
 				)
 				s.Require().NoError(err)
 

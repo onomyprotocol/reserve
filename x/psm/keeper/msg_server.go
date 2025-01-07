@@ -99,6 +99,11 @@ func (k msgServer) AddStableCoinProposal(ctx context.Context, msg *types.MsgAddS
 		return &types.MsgAddStableCoinResponse{}, err
 	}
 
+	err = k.keeper.OracleKeeper.SetPairDecimalsRate(ctx, msg.Symbol, types.SymBolUSD, msg.StableDecimal, msg.MintDecimal)
+	if err != nil {
+		return &types.MsgAddStableCoinResponse{}, err
+	}
+
 	addrPay, err := sdk.AccAddressFromBech32(msg.AddressPayStableInit)
 	if err != nil {
 		return &types.MsgAddStableCoinResponse{}, err
@@ -142,6 +147,11 @@ func (k msgServer) UpdatesStableCoinProposal(ctx context.Context, msg *types.Msg
 	}
 
 	err = k.keeper.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, msg.Symbol, msg.OracleScript)
+	if err != nil {
+		return &types.MsgUpdatesStableCoinResponse{}, err
+	}
+
+	err = k.keeper.OracleKeeper.SetPairDecimalsRate(ctx, msg.Symbol, types.SymBolUSD, msg.StableDecimal, msg.MintDecimal)
 	if err != nil {
 		return &types.MsgUpdatesStableCoinResponse{}, err
 	}
