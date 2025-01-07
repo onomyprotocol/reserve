@@ -57,7 +57,7 @@ func (s *KeeperTestSuite) TestAddStableCoinProposal() {
 	s.Require().Equal(coinsStable.AmountOf(usdc), amountStableInit)
 }
 
-func (s *KeeperTestSuite) TestAddStableCoinProposalFromAnyAddress() {
+func (s *KeeperTestSuite) TestAddStableCoinProposalPayFromAnyAddress() {
 	s.SetupTest()
 
 	s.FundAccount(s.TestAccs[2], types.ModuleName, sdk.NewCoins(sdk.NewCoin(usdt, amountStableInit)))
