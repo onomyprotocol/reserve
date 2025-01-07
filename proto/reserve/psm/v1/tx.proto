@@ -51,26 +51,35 @@ message MsgAddStableCoin {
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   string denom = 2;
+  string symbol = 3;
 
- string limit_total = 3 [
+  string address_pay_stable_init = 4 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  string amount_stable_init = 5 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
 
-  string fee_in = 4 [
+  string limit_total = 6 [
+    (cosmos_proto.scalar)  = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable)   = false,
+    (amino.dont_omitempty) = true
+  ];
+
+  string fee_in = 7 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  string fee_out = 5 [
+  string fee_out = 8 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  int64 oracle_script = 6;
-  string symbol = 7;
+  int64 oracle_script = 9;
 }
 
 message MsgAddStableCoinResponse {}
@@ -82,27 +91,27 @@ message MsgUpdatesStableCoin {
   string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 
   string denom = 2;
+  string symbol = 3;
 
- string limit_total = 3 [
+  string limit_total = 4 [
     (cosmos_proto.scalar)  = "cosmos.Int",
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable)   = false,
     (amino.dont_omitempty) = true
   ];
 
-  string fee_in = 4 [
+  string fee_in = 5 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
-  string fee_out = 5 [
+  string fee_out = 6 [
     (cosmos_proto.scalar)  = "cosmos.Dec",
     (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable)   = false
   ];
 
-  int64 oracle_script = 6;
-  string symbol = 7;
+  int64 oracle_script = 7;
 }
 
 message MsgUpdatesStableCoinResponse {}
