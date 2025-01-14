@@ -7,6 +7,7 @@ import (
 	"cosmossdk.io/core/store"
 	errorsmod "cosmossdk.io/errors"
 
+	"cosmossdk.io/collections"
 	"cosmossdk.io/log"
 	"cosmossdk.io/store/prefix"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -33,6 +34,8 @@ type (
 		channelKeeper types.ChannelKeeper
 		portKeeper    types.PortKeeper
 		scopedKeeper  capabilitykeeper.ScopedKeeper
+
+		PairDecimalsRate collections.Map[collections.Pair[string, string], types.PairDecimalsRate]
 	}
 )
 
@@ -51,15 +54,17 @@ func NewKeeper(
 		panic(fmt.Sprintf("invalid authority address: %s", authority))
 	}
 
+	sb := collections.NewSchemaBuilder(storeService)
 	return Keeper{
-		cdc:           cdc,
-		storeService:  storeService,
-		authority:     authority,
-		authKeeper:    ak,
-		logger:        logger,
-		channelKeeper: channelKeeper,
-		portKeeper:    portKeeper,
-		scopedKeeper:  scopedKeeper,
+		cdc:              cdc,
+		storeService:     storeService,
+		authority:        authority,
+		authKeeper:       ak,
+		logger:           logger,
+		channelKeeper:    channelKeeper,
+		portKeeper:       portKeeper,
+		scopedKeeper:     scopedKeeper,
+		PairDecimalsRate: collections.NewMap(sb, types.PairDecimalsKeys, "pair_decimals_keys", collections.PairKeyCodec(collections.StringKey, collections.StringKey), codec.CollValue[types.PairDecimalsRate](cdc)),
 	}
 }
 
