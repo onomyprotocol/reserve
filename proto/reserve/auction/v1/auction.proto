@@ -96,3 +96,9 @@ message Bids {
   // array of bid entries with bidder address
   repeated Bid bids = 1 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
+
+message BidByAddress {
+  uint64 auction_id = 1;
+  bytes bidder = 2;
+  Bids bids = 3 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}

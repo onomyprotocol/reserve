@@ -30,7 +30,7 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	var (
 		denom      = "atom"
 		mintDenom  = types.DefaultMintDenoms[0]
-		collateral = sdk.NewCoin(denom, math.NewInt(10_000_000)) // 10 atom = 80$
+		collateral = sdk.NewCoin(denom, math.NewInt(11_000_000)) // 11 atom = 88$
 		maxDebt    = math.NewInt(100_000_000)
 	)
 	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("1.6"), math.LegacyMustNewDecFromStr("1.5"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
@@ -744,7 +744,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 			}
 
 			if !t.shortfallAmount.IsNil() {
-				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx)
+				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx, types.DefaultMintDenoms[0])
 				s.Require().NoError(err)
 				s.Require().Equal(t.shortfallAmount.Amount, shortfallAmount)
 			}

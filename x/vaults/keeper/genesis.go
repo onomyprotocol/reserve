@@ -8,9 +8,6 @@ import (
 )
 
 // InitGenesis - Init store state from genesis data
-//
-// CONTRACT: old coins from the FeeCollectionKeeper need to be transferred through
-// a genesis port script to the new fee collector account
 func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error {
 	err := k.SetParams(ctx, data.Params)
 	if err != nil {
@@ -43,5 +40,50 @@ func (k *Keeper) InitGenesis(ctx context.Context, data types.GenesisState) error
 		}
 	}
 
-	return k.ShortfallAmount.Set(ctx, data.ShortfallAmount)
+	for _, shortfall := range data.ShortfallAmounts {
+		err = k.ShortfallAmount.Set(ctx, shortfall.Denom, shortfall.Amount)
+		if err != nil {
+			return err
+		}
+	}
+
+	return k.VaultsSequence.Set(ctx, data.VaultSequence)
+}
+
+func (k *Keeper) ExportGenesis(ctx context.Context) *types.GenesisState{
+	vaults, err := k.GetAllVault(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	vms, err := k.GetAllVaultManagers(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	shortfalls, err := k.GetAllShortfall(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	lastUpdate, err := k.LastUpdateTime.Get(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	vaultSequence, err := k.VaultsSequence.Peek(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genState := types.NewGenesisState(
+		k.GetParams(ctx),
+		vms,
+		vaults,
+		&lastUpdate,
+		shortfalls,
+		vaultSequence,
+	)
+
+	return genState
 }

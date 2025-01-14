@@ -22,6 +22,7 @@ message GenesisState {
   repeated CalldataRecord calldata_records = 6;
   uint64 band_latest_request_id = 7;
   BandOracleRequestParams band_oracle_request_params = 8 [ (gogoproto.nullable) = false ];
+  repeated PairDecimalsRate pair_decimals_rates = 9 [ (gogoproto.nullable) = false ];
 }
 
 message BandOracleRequestParams {
@@ -115,4 +116,13 @@ message BandOracleRequest {
   // MinSourceCount is the minimum number of data sources that must be used by
   // each validator
   uint64 min_source_count = 9;
+}
+
+message PairDecimalsRate {
+  string base = 1;
+  string quote = 2;
+  string rate = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
 }

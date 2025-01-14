@@ -233,3 +233,46 @@ func (k Keeper) refundToken(ctx context.Context, amt sdk.Coins, bidderAdrr strin
 
 	return k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, bidderAcc, amt)
 }
+
+func (k Keeper) GetAllAuctions(ctx context.Context) ([]types.Auction, error) {
+	allAuction := []types.Auction{}
+
+	err := k.Auctions.Walk(ctx, nil, func(key uint64, value types.Auction) (stop bool, err error) {
+		allAuction = append(allAuction, value)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allAuction, nil
+}
+
+func (k Keeper) GetAllBidByAddress(ctx context.Context) ([]types.BidByAddress, error) {
+	allAuction := []types.BidByAddress{}
+
+	err := k.BidByAddress.Walk(ctx, nil, func(key collections.Pair[uint64, sdk.AccAddress], value types.Bids) (stop bool, err error) {
+		allAuction = append(allAuction, types.BidByAddress{
+			AuctionId: key.K1(),
+			Bidder: key.K2(),
+			Bids: value,
+		})
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allAuction, nil
+}
+
+func (k Keeper) GetAllBidsSequence(ctx context.Context) ([]types.BidSequence, error) {
+	allBidsSequence := []types.BidSequence{}
+
+	err := k.BidIdSeq.Walk(ctx, nil, func(key uint64, value uint64) (stop bool, err error) {
+		allBidsSequence = append(allBidsSequence, types.BidSequence{AuctionId: key, Sequence: value})
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allBidsSequence, nil
+}

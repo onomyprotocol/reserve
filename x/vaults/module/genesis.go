@@ -1,10 +1,10 @@
-package auction
+package vaults
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/onomyprotocol/reserve/x/auction/keeper"
-	"github.com/onomyprotocol/reserve/x/auction/types"
+	"github.com/onomyprotocol/reserve/x/vaults/keeper"
+	"github.com/onomyprotocol/reserve/x/vaults/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.
