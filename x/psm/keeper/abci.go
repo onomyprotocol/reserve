@@ -31,7 +31,7 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 	}) //k.IterateStablecoin(ctx, updatePrice)
 }
 
-// price is $nomUSD amount to exchange for 1 $stabalecoin
+// price is $fxUSD amount to exchange for 1 $stabalecoin
 // price taget = 1
 //	 	ex:
 // 			oldPrice:1
@@ -41,20 +41,20 @@ func (k Keeper) UpdatesStablecoinEpoch(ctx context.Context) error {
 // 			k = AdjustmentFeeIn = 40
 // 			----------------------------------------------------------------------------------------
 // 			case 1:
-//			newPrice: 1.01 (1.01$nomUSD = 1USDT)
+//			newPrice: 1.01 (1.01$fxUSD = 1USDT)
 // 			rate = 1/1.01 = 0.990099
 // 			newfeeOut = 0.01/(0.990099)**k = 0.01 * (1.01**40)= 0.014888637335882209
 //			newfeeIn  = 0.02 - 0.014888637335882209 = 0.005111362664117791
 
-// 			So $USDT swap to $nomUSD will be cheaper than $nomUSD swap to $USDT
+// 			So $USDT swap to $fxUSD will be cheaper than $fxUSD swap to $USDT
 // 			----------------------------------------------------------------------------------------
 // 			case 2:
-//			newPrice: 0.99 (0.98$nomUSD = 1USDT)
+//			newPrice: 0.99 (0.98$fxUSD = 1USDT)
 // 			rate = 1/0.99 = 1.0101010101
 // 			deltaP < 0
 //			newfeeIn  = 0.01 * (1.0101010101)**40 = 0.014948314143157351
 // 			newfeeOut = 0.02 - 0.014948314143157351 = 0.005051685856842649
-// 			So $nomUSD swap to $USDT will be cheaper than $USDT swap to $nomUSD
+// 			So $fxUSD swap to $USDT will be cheaper than $USDT swap to $fxUSD
 
 func (k Keeper) stablecoinUpdate(ctx context.Context, newPrice math.LegacyDec, stablecoin types.StablecoinInfo) types.StablecoinInfo {
 	params, err := k.GetParams(ctx)

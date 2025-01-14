@@ -36,7 +36,7 @@ func (k Keeper) SwapToOtherStablecoin(ctx context.Context, addr sdk.AccAddress, 
 		return fmt.Errorf("amount %s locked lesser than amount desired", expectedDenom)
 	}
 
-	// burn nomUSD
+	// burn fxUSD
 	coinsBurn := sdk.NewCoins(offerCoin)
 	err = k.BankKeeper.SendCoinsFromAccountToModule(ctx, addr, types.ModuleName, coinsBurn)
 	if err != nil {
@@ -93,7 +93,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	}
 
 	// check balance user and calculate amount of coins received
-	receiveAmountnomUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin, stablecoin.Symbol)
+	receiveAmountfxUSD, fee_in, err := k.calculateSwapToOnomyStableToken(ctx, offerCoin, stablecoin.Symbol)
 	if err != nil {
 		return err
 	}
@@ -110,8 +110,8 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 		return err
 	}
 
-	// mint nomUSD
-	coinsMint := sdk.NewCoins(sdk.NewCoin(types.ReserveStableCoinDenom, receiveAmountnomUSD))
+	// mint fxUSD
+	coinsMint := sdk.NewCoins(sdk.NewCoin(types.ReserveStableCoinDenom, receiveAmountfxUSD))
 	err = k.BankKeeper.MintCoins(ctx, types.ModuleName, coinsMint)
 	if err != nil {
 		return err
@@ -126,7 +126,7 @@ func (k Keeper) SwapToOnomyStableToken(ctx context.Context, accAddress sdk.AccAd
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
-			types.EventSwapTonomUSD,
+			types.EventSwapTofxUSD,
 			sdk.NewAttribute(types.AttributeAmount, offerCoin.String()),
 			sdk.NewAttribute(types.AttributeReceive, coinsMint.String()),
 			sdk.NewAttribute(types.AttributeFeeIn, fee_in.String()),
@@ -177,13 +177,13 @@ func (k Keeper) calculateSwapToOnomyStableToken(ctx context.Context, stablecoin 
 		return math.Int{}, sdk.DecCoin{}, err
 	}
 
-	amountnomUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
+	amountfxUSD := multiplier.Mul(stablecoin.Amount.ToLegacyDec())
 
-	fee, err := k.PayFeesIn(ctx, amountnomUSD.RoundInt(), stablecoin.Denom)
+	fee, err := k.PayFeesIn(ctx, amountfxUSD.RoundInt(), stablecoin.Denom)
 	if err != nil {
 		return math.Int{}, sdk.DecCoin{}, err
 	}
 
-	receiveAmountnomUSD := amountnomUSD.Sub(fee)
-	return receiveAmountnomUSD.RoundInt(), sdk.NewDecCoinFromDec(types.ReserveStableCoinDenom, fee), nil
+	receiveAmountfxUSD := amountfxUSD.Sub(fee)
+	return receiveAmountfxUSD.RoundInt(), sdk.NewDecCoinFromDec(types.ReserveStableCoinDenom, fee), nil
 }

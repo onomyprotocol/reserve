@@ -34,7 +34,7 @@ func NewSwapToNomCmd() *cobra.Command {
 		Long: `swap between stable coins.
 
 			Example:
-			$ onomyd tx psm swap 100000000000000000000000nomUSD ibc/xxxxx --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+			$ onomyd tx psm swap 100000000000000000000000fxUSD ibc/xxxxx --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 	`,
 

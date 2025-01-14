@@ -510,7 +510,7 @@ func (k *Keeper) GetLiquidations(
 		}
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
-		
+
 		// If can not get price of denom, skip!
 		price, err := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if err != nil {
@@ -652,7 +652,7 @@ func (k *Keeper) Liquidate(
 			}
 		}
 	} else {
-		// does not raise enough to cover nomUSD debt
+		// does not raise enough to cover fxUSD debt
 
 		// Burn sold amount and increase mint available
 		err := k.burnDebt(ctx, key, vm, sold)
