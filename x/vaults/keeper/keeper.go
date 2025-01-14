@@ -167,7 +167,10 @@ func (k *Keeper) UpdatesCollateralAsset(
 	vm.Params.MintingFee = mintingFee
 	vm.Params.LiquidationPenalty = liquidationPenalty
 
-	vm.MintAvailable = maxDebt.Sub(amountMinted)
+	vm.MintAvailable, err = maxDebt.SafeSub(amountMinted)
+	if err != nil {
+		return err
+	}
 
 	err = k.OracleKeeper.AddNewSymbolToBandOracleRequest(ctx, CollateralSymBol, CollateralOracleScript)
 	if err != nil {
@@ -239,4 +242,25 @@ func getVMKey(
 
 func (k *Keeper) GetAllowedMintDenoms(ctx context.Context) []string {
 	return k.GetParams(ctx).AllowedMintDenom
+}
+
+func (k *Keeper) mintDebt(ctx context.Context, vmKey string, vm types.VaultManager, coin sdk.Coin) error {
+	err := k.BankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
+	if err != nil {
+		return err
+	}
+	vm.MintAvailable, err = vm.MintAvailable.SafeSub(coin.Amount)
+	if err != nil {
+		return err
+	}
+	return k.VaultsManager.Set(ctx, vmKey, vm)
+}
+
+func (k *Keeper) burnDebt(ctx context.Context, vmKey string, vm types.VaultManager, coin sdk.Coin) error {
+	err := k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(coin))
+	if err != nil {
+		return err
+	}
+	vm.MintAvailable = vm.MintAvailable.Add(coin.Amount)
+	return k.VaultsManager.Set(ctx, vmKey, vm)
 }
