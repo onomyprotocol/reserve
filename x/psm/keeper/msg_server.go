@@ -23,7 +23,7 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 var _ types.MsgServer = msgServer{}
 
 func (k msgServer) UpdateParams(ctx context.Context, req *types.MsgUpdateParams) (*types.MsgUpdateParamsResponse, error) {
-	if _, err := k.keeper.addressCodec.StringToBytes(req.Authority); err != nil {
+	if _, err := k.keeper.AccountKeeper.AddressCodec().StringToBytes(req.Authority); err != nil {
 		return nil, errorsmod.Wrap(err, "invalid authority address")
 	}
 
