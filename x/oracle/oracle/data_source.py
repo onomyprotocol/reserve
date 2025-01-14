@@ -72,7 +72,7 @@ def get_price_mecx(symbols):
     result = []
       # Set request parameters
     PARAMETERS = {
-        "symbol": "NOMUSDT",
+        "symbol": "FXUSDT",
     }
 
 

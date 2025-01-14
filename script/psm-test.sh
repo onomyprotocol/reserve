@@ -134,9 +134,9 @@ sleep 15
 # # reserved q psm  all-stablecoin
 reserved q bank balances $(reserved keys show validator1 -a --keyring-backend test --home /Users/donglieu/.reserved/validator1)
 
-# # # tx swap usdt to nomUSD
+# # # tx swap usdt to fxUSD
 # # echo "========swap==========="
-reserved tx psm swap 100000000000000000000000usdt nomUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
+reserved tx psm swap 100000000000000000000000usdt fxUSD --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 
 sleep 7
 
@@ -145,10 +145,3 @@ sleep 7
 reserved tx psm swap 1000nomUSD usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
 sleep 7
 reserved tx psm swap 1000nomUSD usdt --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
-sleep 7
-reserved tx psm swap 999999000nomUSD usdc --from validator1 --keyring-backend test --home ~/.reserved/validator1 --chain-id testing-1 -y --fees 20stake
-
-
-9999999999999999999999000000000-
-998001000

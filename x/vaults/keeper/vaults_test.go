@@ -30,10 +30,10 @@ func (s *KeeperTestSuite) TestCreateNewVault() {
 	var (
 		denom      = "atom"
 		mintDenom  = types.DefaultMintDenoms[0]
-		collateral = sdk.NewCoin(denom, math.NewInt(10_000_000)) // 10 atom = 80$
+		collateral = sdk.NewCoin(denom, math.NewInt(11_000_000)) // 11 atom = 88$
 		maxDebt    = math.NewInt(100_000_000)
 	)
-	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("1.6"), math.LegacyMustNewDecFromStr("1.5"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("1.6"), math.LegacyMustNewDecFromStr("1.5"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 	s.Require().NoError(err)
 
 	tests := []struct {
@@ -166,7 +166,7 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 		maxDebt         = math.NewInt(2000000000)
 		mintedCoin      = sdk.NewCoin(types.DefaultMintDenoms[0], math.NewInt(300000000))
 	)
-	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 	s.Require().NoError(err)
 
 	tests := []struct {
@@ -200,7 +200,7 @@ func (s *KeeperTestSuite) TestRepayDebt() {
 			},
 			vaultId:    1,
 			sender:     s.TestAccs[0],
-			repayAsset: sdk.NewCoin("nomUSD", math.NewInt(500000000)),
+			repayAsset: sdk.NewCoin("fxUSD", math.NewInt(500000000)),
 			expErr:     false,
 			isZeroDebt: true,
 		},
@@ -284,7 +284,7 @@ func (s *KeeperTestSuite) TestDepositToVault() {
 		maxDebt         = math.NewInt(2000000000)
 		mintedCoin      = sdk.NewCoin(types.DefaultMintDenoms[0], math.NewInt(200000000))
 	)
-	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+	err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 	s.Require().NoError(err)
 
 	tests := []struct {
@@ -407,7 +407,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 			setup: func() {
 				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
 
-				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 				s.Require().NoError(err)
 
 				err = s.k.CreateNewVault(s.Ctx, s.TestAccs[0], coinMintToAcc, mintedCoin)
@@ -443,7 +443,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 			setup: func() {
 				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
 
-				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 				s.Require().NoError(err)
 
 				err = s.k.CreateNewVault(s.Ctx, s.TestAccs[0], coinMintToAcc, mintedCoin)
@@ -460,7 +460,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 			setup: func() {
 				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
 
-				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 				s.Require().NoError(err)
 
 				err = s.k.CreateNewVault(s.Ctx, s.TestAccs[0], coinMintToAcc, mintedCoin)
@@ -477,7 +477,7 @@ func (s *KeeperTestSuite) TestWithdrawFromVault() {
 			setup: func() {
 				s.FundAccount(s.TestAccs[0], types.ModuleName, sdk.NewCoins(fund))
 
-				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+				err := s.k.ActiveCollateralAsset(s.Ctx, denom, denom, "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), maxDebt, types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 				s.Require().NoError(err)
 
 				err = s.k.CreateNewVault(s.Ctx, s.TestAccs[0], coinMintToAcc, mintedCoin)
@@ -709,7 +709,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 	for _, t := range tests {
 		s.Run(t.name, func() {
 			s.SetupTest()
-			err := s.k.ActiveCollateralAsset(s.Ctx, "atom", "atom", "nomUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), math.NewInt(1000_000_000), types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
+			err := s.k.ActiveCollateralAsset(s.Ctx, "atom", "atom", "fxUSD", "USD", math.LegacyMustNewDecFromStr("0.1"), math.LegacyMustNewDecFromStr("0.1"), math.NewInt(1000_000_000), types.DefaultStabilityFee, types.DefaultMintingFee, types.DefaultLiquidationPenalty, 1, 1, 6, 6)
 			s.Require().NoError(err)
 
 			for _, vault := range t.liquidation.LiquidatingVaults {
@@ -744,7 +744,7 @@ func (s *KeeperTestSuite) TestLiquidate() {
 			}
 
 			if !t.shortfallAmount.IsNil() {
-				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx)
+				shortfallAmount, err := s.App.VaultsKeeper.ShortfallAmount.Get(s.Ctx, types.DefaultMintDenoms[0])
 				s.Require().NoError(err)
 				s.Require().Equal(t.shortfallAmount.Amount, shortfallAmount)
 			}

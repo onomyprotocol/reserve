@@ -32,7 +32,7 @@ func (k *Keeper) CreateNewVault(
 	allowedMintDenoms := k.GetAllowedMintDenoms(ctx)
 	// TODO: Check if mint denom is allowed
 	if !slices.Contains(allowedMintDenoms, mint.Denom) {
-		return fmt.Errorf("minted denom must in list %s, but got %s", types.DefaultMintDenoms, mint.Denom)
+		return fmt.Errorf("minted denom must in list %v, but got %s", allowedMintDenoms, mint.Denom)
 	}
 
 	params := k.GetParams(ctx)
@@ -48,17 +48,16 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-	// TODO: recalculate with denom decimal?
+
 	collateralValue := math.LegacyNewDecFromInt(collateral.Amount).Mul(price)
-	ratio := collateralValue.QuoInt(mint.Amount)
-
-	if ratio.LT(vmParams.MinCollateralRatio) {
-		return fmt.Errorf("collateral ratio invalid, got %d, min %d", ratio, vmParams.MinCollateralRatio)
-	}
-
 	feeAmount := math.LegacyNewDecFromInt(mint.Amount).Mul(vmParams.MintingFee).TruncateInt()
 	feeCoin := sdk.NewCoin(mint.Denom, feeAmount)
 	mintedCoin := feeCoin.Add(mint)
+
+	ratio := collateralValue.QuoInt(mintedCoin.Amount)
+	if ratio.LT(vmParams.MinCollateralRatio) {
+		return fmt.Errorf("collateral ratio invalid, got %d, min %d", ratio, vmParams.MinCollateralRatio)
+	}
 
 	if vm.MintAvailable.LT(mintedCoin.Amount) {
 		return fmt.Errorf("exeed max debt")
@@ -73,7 +72,7 @@ func (k *Keeper) CreateNewVault(
 	}
 
 	// Mint and transfer to user and reserve
-	err = k.BankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintedCoin))
+	err = k.mintDebt(ctx, key, vm, mintedCoin)
 	if err != nil {
 		return err
 	}
@@ -103,8 +102,6 @@ func (k *Keeper) CreateNewVault(
 	if err != nil {
 		return err
 	}
-	// Update vault manager
-	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
 
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -118,7 +115,7 @@ func (k *Keeper) CreateNewVault(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) CloseVault(
@@ -145,6 +142,17 @@ func (k *Keeper) CloseVault(
 	// transfer all collateral locked to owner
 	lockedCoins := sdk.NewCoins(vault.CollateralLocked)
 	err := k.BankKeeper.SendCoins(ctx, sdk.MustAccAddressFromBech32(vault.Address), sdk.MustAccAddressFromBech32(vault.Owner), lockedCoins)
+	if err != nil {
+		return err
+	}
+
+	// burn debt
+	key := getVMKey(vault.CollateralLocked.Denom, vault.Debt.Denom)
+	vm, err := k.GetVaultManager(ctx, vault.CollateralLocked.Denom, vault.Debt.Denom)
+	if err != nil {
+		return err
+	}
+	err = k.burnDebt(ctx, key, vm, vault.Debt)
 	if err != nil {
 		return err
 	}
@@ -207,7 +215,7 @@ func (k *Keeper) MintCoin(
 	}
 
 	// Mint and transfer to user and reserve
-	err = k.BankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(mintedCoin))
+	err = k.mintDebt(ctx, key, vm, mintedCoin)
 	if err != nil {
 		return err
 	}
@@ -229,9 +237,6 @@ func (k *Keeper) MintCoin(
 		return err
 	}
 
-	// Update vault manager
-	vm.MintAvailable = vm.MintAvailable.Sub(mintedCoin.Amount)
-
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -242,7 +247,7 @@ func (k *Keeper) MintCoin(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) RepayDebt(
@@ -284,7 +289,7 @@ func (k *Keeper) RepayDebt(
 		return err
 	}
 
-	err = k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(burnAmount))
+	err = k.burnDebt(ctx, key, vm, burnAmount)
 	if err != nil {
 		return err
 	}
@@ -296,8 +301,6 @@ func (k *Keeper) RepayDebt(
 		return err
 	}
 
-	vm.MintAvailable = vm.MintAvailable.Add(burnAmount.Amount)
-
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -308,7 +311,7 @@ func (k *Keeper) RepayDebt(
 		),
 	)
 
-	return k.VaultsManager.Set(ctx, key, vm)
+	return nil
 }
 
 func (k *Keeper) DepositToVault(
@@ -507,7 +510,7 @@ func (k *Keeper) GetLiquidations(
 		}
 		collateralSymbol := vm.Symbol
 		mintSymbol := vm.Params.MintSymbol
-		
+
 		// If can not get price of denom, skip!
 		price, err := k.OracleKeeper.GetPrice(ctx, collateralSymbol, mintSymbol)
 		if err != nil {
@@ -600,14 +603,8 @@ func (k *Keeper) Liquidate(
 
 	// Sold amount enough to cover debt
 	if sold.Amount.GTE(totalDebt.Amount) {
-		// Burn debt
-		err := k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(totalDebt))
-		if err != nil {
-			return err
-		}
-		// Increase mint available
-		vm.MintAvailable = vm.MintAvailable.Add(totalDebt.Amount)
-		err = k.VaultsManager.Set(ctx, key, vm)
+		// Burn debt and increase mint available
+		err := k.burnDebt(ctx, key, vm, totalDebt)
 		if err != nil {
 			return err
 		}
@@ -655,16 +652,10 @@ func (k *Keeper) Liquidate(
 			}
 		}
 	} else {
-		// does not raise enough to cover nomUSD debt
+		// does not raise enough to cover fxUSD debt
 
-		// Burn sold amount
-		err := k.BankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(sold))
-		if err != nil {
-			return err
-		}
-		// Increase mint available
-		vm.MintAvailable = vm.MintAvailable.Add(sold.Amount)
-		err = k.VaultsManager.Set(ctx, key, vm)
+		// Burn sold amount and increase mint available
+		err := k.burnDebt(ctx, key, vm, sold)
 		if err != nil {
 			return err
 		}
@@ -686,7 +677,7 @@ func (k *Keeper) Liquidate(
 					return err
 				}
 			}
-			currentShortfall, err := k.ShortfallAmount.Get(ctx)
+			currentShortfall, err := k.ShortfallAmount.Get(ctx, mintDenom)
 			if err != nil {
 				return err
 			}
@@ -702,7 +693,7 @@ func (k *Keeper) Liquidate(
 				),
 			)
 
-			return k.ShortfallAmount.Set(ctx, newShortfall)
+			return k.ShortfallAmount.Set(ctx, mintDenom, newShortfall)
 		} else {
 			// If there some collateral asset remain, try to reconstitue vault
 			// Priority by collateral ratio at momment
@@ -794,7 +785,7 @@ func (k *Keeper) Liquidate(
 						return err
 					}
 				}
-				currentShortfall, err := k.ShortfallAmount.Get(ctx)
+				currentShortfall, err := k.ShortfallAmount.Get(ctx, mintDenom)
 				if err != nil {
 					return err
 				}
@@ -809,7 +800,7 @@ func (k *Keeper) Liquidate(
 					),
 				)
 
-				return k.ShortfallAmount.Set(ctx, newShortfall)
+				return k.ShortfallAmount.Set(ctx, mintDenom, newShortfall)
 			}
 
 		}
@@ -828,6 +819,21 @@ func (k *Keeper) Liquidate(
 	)
 
 	return err
+}
+
+func (k *Keeper) GetAllVault(
+	ctx context.Context,
+) ([]types.Vault, error) {
+	allVaults := []types.Vault{}
+
+	err := k.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
+		allVaults = append(allVaults, value)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allVaults, nil
 }
 
 func (k *Keeper) GetVault(

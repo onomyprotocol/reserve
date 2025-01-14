@@ -40,7 +40,7 @@ func NewCreateVaultCmd() *cobra.Command {
 		Long: `create vaults.
 
 			Example:
-			$ onomyd tx vautls create-vault 1000atom 8000nomUSD --from mykey
+			$ onomyd tx vautls create-vault 1000atom 8000fxUSD --from mykey
 	`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)

@@ -17,7 +17,7 @@ const (
 	MemStoreKey = "mem_psm"
 
 	// Reserve Stable Coin denom prefix
-	ReserveStableCoinDenom = "nomUSD"
+	ReserveStableCoinDenom = "fxUSD"
 
 	// symbol USD
 	SymBolUSD = "USD"

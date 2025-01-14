@@ -16,7 +16,7 @@ onomyd tx auction bid [auction-id] [amount] [recive_rate] [flags]
 Example:
 
 ```shell
-onomyd tx bid 0 1000nomUSD 0.8 --from mykey
+onomyd tx bid 0 1000fxUSD 0.8 --from mykey
 ```
 
 #### Cancel bid

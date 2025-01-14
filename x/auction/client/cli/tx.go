@@ -37,7 +37,7 @@ func NewBidCmd() *cobra.Command {
 		Long: `create new bid.
 
 			Example:
-			$ onomyd tx bid 0 1000nomUSD 0.95 --from mykey
+			$ onomyd tx bid 0 1000fxUSD 0.95 --from mykey
 	`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
