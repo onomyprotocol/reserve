@@ -627,7 +627,7 @@ func (k Keeper) SetInitPrice(ctx context.Context) error {
 	initPrice := []*types.BandPriceState{
 		// multiplier = 1000
 		{
-			Symbol:      "nomUSD",
+			Symbol:      "fxUSD",
 			Rate:        math.NewInt(10000), //1
 			ResolveTime: sdkCtx.BlockTime().Unix(),
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
@@ -651,13 +651,13 @@ func (k Keeper) SetInitPrice(ctx context.Context) error {
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
 		},
 		{
-			Symbol:      "nomEUR",
+			Symbol:      "fxEUR",
 			Rate:        math.NewInt(10910), //1.091
 			ResolveTime: (sdkCtx.BlockTime().Unix()),
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1.091"), sdkCtx.BlockTime().Unix()),
 		},
 		{
-			Symbol:      "nomJPY",
+			Symbol:      "fxJPY",
 			Rate:        math.NewInt(66), //0.0066
 			ResolveTime: (sdkCtx.BlockTime().Unix()),
 			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.0066"), sdkCtx.BlockTime().Unix()),
