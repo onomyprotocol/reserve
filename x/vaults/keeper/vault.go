@@ -686,7 +686,7 @@ func (k *Keeper) Liquidate(
 					return err
 				}
 			}
-			currentShortfall, err := k.ShortfallAmount.Get(ctx)
+			currentShortfall, err := k.ShortfallAmount.Get(ctx, mintDenom)
 			if err != nil {
 				return err
 			}
@@ -702,7 +702,7 @@ func (k *Keeper) Liquidate(
 				),
 			)
 
-			return k.ShortfallAmount.Set(ctx, newShortfall)
+			return k.ShortfallAmount.Set(ctx, mintDenom, newShortfall)
 		} else {
 			// If there some collateral asset remain, try to reconstitue vault
 			// Priority by collateral ratio at momment
@@ -794,7 +794,7 @@ func (k *Keeper) Liquidate(
 						return err
 					}
 				}
-				currentShortfall, err := k.ShortfallAmount.Get(ctx)
+				currentShortfall, err := k.ShortfallAmount.Get(ctx, mintDenom)
 				if err != nil {
 					return err
 				}
@@ -809,7 +809,7 @@ func (k *Keeper) Liquidate(
 					),
 				)
 
-				return k.ShortfallAmount.Set(ctx, newShortfall)
+				return k.ShortfallAmount.Set(ctx, mintDenom, newShortfall)
 			}
 
 		}
@@ -828,6 +828,21 @@ func (k *Keeper) Liquidate(
 	)
 
 	return err
+}
+
+func (k *Keeper) GetAllVault(
+	ctx context.Context,
+) ([]types.Vault, error) {
+	allVaults := []types.Vault{}
+
+	err := k.Vaults.Walk(ctx, nil, func(key uint64, value types.Vault) (stop bool, err error) {
+		allVaults = append(allVaults, value)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allVaults, nil
 }
 
 func (k *Keeper) GetVault(

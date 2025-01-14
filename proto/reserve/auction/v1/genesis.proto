@@ -16,8 +16,19 @@ message GenesisState {
       [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
   // list of auctions
-  repeated Auction auctions = 2;
+  repeated Auction auctions = 2 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 
-  // list of all bid entries
-  repeated Bid bid_entries = 3;
+  // list of all bid by address
+  repeated BidByAddress bid_by_address = 3 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+
+  uint64 auction_sequence = 4;
+
+  int64 lastest_auction_periods = 5;
+
+  repeated BidSequence bid_sequences = 6 [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
+}
+
+message BidSequence {
+  uint64 auction_id = 1;
+  uint64 sequence = 2;
 }

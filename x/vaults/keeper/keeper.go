@@ -32,7 +32,7 @@ type Keeper struct {
 	Vaults          collections.Map[uint64, types.Vault]
 	VaultsSequence  collections.Sequence
 	LastUpdateTime  collections.Item[types.LastUpdate]
-	ShortfallAmount collections.Item[math.Int]
+	ShortfallAmount collections.Map[string, math.Int]
 }
 
 // NewKeeper returns a new keeper by codec and storeKey inputs.
@@ -57,7 +57,7 @@ func NewKeeper(
 		Vaults:          collections.NewMap(sb, types.VaultKeyPrefix, "vaults", collections.Uint64Key, codec.CollValue[types.Vault](cdc)),
 		VaultsSequence:  collections.NewSequence(sb, types.VaultSequenceKeyPrefix, "sequence"),
 		LastUpdateTime:  collections.NewItem(sb, types.LastUpdateKeyPrefix, "last_update", codec.CollValue[types.LastUpdate](cdc)),
-		ShortfallAmount: collections.NewItem(sb, types.ShortfallKeyPrefix, "shortfall", sdk.IntValue),
+		ShortfallAmount: collections.NewMap(sb, types.ShortfallKeyPrefix, "shortfall", collections.StringKey, sdk.IntValue),
 	}
 
 	schema, err := sb.Build()
@@ -123,7 +123,20 @@ func (k *Keeper) ActiveCollateralAsset(
 	if err != nil {
 		return err
 	}
-	return k.VaultsManager.Set(ctx, vmKey, vm)
+	err = k.VaultsManager.Set(ctx, vmKey, vm)
+	if err != nil {
+		return err
+	}
+
+	// Init shortfall for mint denom if not there
+	exist, err := k.ShortfallAmount.Has(ctx, MintDenom)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return k.ShortfallAmount.Set(ctx, MintDenom, math.ZeroInt())
+	}
+	return nil
 }
 
 func (k *Keeper) UpdatesCollateralAsset(
@@ -175,6 +188,36 @@ func (k *Keeper) GetVaultManager(
 		return types.VaultManager{}, err
 	}
 	return vm, nil
+}
+
+func (k *Keeper) GetAllVaultManagers(
+	ctx context.Context,
+) ([]types.VaultManager, error) {
+	allCollateral := []types.VaultManager{}
+
+	err := k.VaultsManager.Walk(ctx, nil, func(key string, value types.VaultManager) (stop bool, err error) {
+		allCollateral = append(allCollateral, value)
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allCollateral, nil
+}
+
+func (k *Keeper) GetAllShortfall(
+	ctx context.Context,
+) (sdk.Coins, error) {
+	allShortfall := sdk.NewCoins()
+
+	err := k.ShortfallAmount.Walk(ctx, nil, func(key string, value math.Int) (stop bool, err error) {
+		allShortfall = append(allShortfall, sdk.NewCoin(key, value))
+		return false, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return allShortfall, nil
 }
 
 func (k *Keeper) IsActived(
