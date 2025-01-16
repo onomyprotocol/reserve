@@ -151,23 +151,23 @@ func (msg *MsgActiveCollateral) ValidateBasic() error {
 	}
 
 	if msg.LiquidationRatio.LT(math.LegacyZeroDec()) {
-		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+		return fmt.Errorf("LiquidationRatio cannot be less than 0")
 	}
 
 	if msg.StabilityFee.LTE(math.LegacyZeroDec()) {
 		return fmt.Errorf("StabilityFee cannot be less than 0")
 	}
 
-	if msg.LiquidationPenalty.LT(math.LegacyZeroDec()) {
-		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	if msg.LiquidationPenalty.LTE(math.LegacyZeroDec()) {
+		return fmt.Errorf("LiquidationPenalty cannot be less than 0")
 	}
 
-	if msg.MaxDebt.LT(math.ZeroInt()) {
-		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+	if msg.MaxDebt.LTE(math.ZeroInt()) {
+		return fmt.Errorf("MaxDebt cannot be less than 0")
 	}
 
 	if msg.MintingFee.LT(math.LegacyZeroDec()) {
-		return fmt.Errorf("minCollateralRatio cannot be less than 0")
+		return fmt.Errorf("MintingFee cannot be less than 0")
 	}
 	return nil
 }
