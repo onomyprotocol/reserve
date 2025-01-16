@@ -6,7 +6,6 @@ import (
 	"context"
 
 	"cosmossdk.io/collections"
-	"cosmossdk.io/core/address"
 	"cosmossdk.io/core/store"
 	"cosmossdk.io/log"
 	"cosmossdk.io/math"
@@ -20,7 +19,6 @@ import (
 type (
 	Keeper struct {
 		cdc          codec.BinaryCodec
-		addressCodec address.Codec
 		storeService store.KVStoreService
 		logger       log.Logger
 
@@ -42,9 +40,7 @@ type (
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	// addressCodec address.Codec,
 	storeService store.KVStoreService,
-	// logger log.Logger,
 	authority string,
 
 	bankKeeper types.BankKeeper,
@@ -58,11 +54,9 @@ func NewKeeper(
 	sb := collections.NewSchemaBuilder(storeService)
 
 	k := Keeper{
-		cdc: cdc,
-		// addressCodec: addressCodec,
+		cdc:          cdc,
 		storeService: storeService,
 		authority:    authority,
-		// logger:       logger,
 
 		BankKeeper:      bankKeeper,
 		AccountKeeper:   accountKeeper,

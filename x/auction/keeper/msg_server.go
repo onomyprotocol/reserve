@@ -73,7 +73,12 @@ func (k msgServer) Bid(ctx context.Context, msg *types.MsgBid) (*types.MsgBidRes
 		return nil, err
 	}
 
-	recivePrice := math.LegacyMustNewDecFromStr(auction.InitialPrice).Mul(math.LegacyMustNewDecFromStr(msg.ReciveRate))
+	reciveRate := math.LegacyMustNewDecFromStr(msg.ReciveRate)
+	params := k.GetParams(ctx)
+	if reciveRate.LT(math.LegacyMustNewDecFromStr(params.LowestRate)) || reciveRate.GT(math.LegacyMustNewDecFromStr(params.StartingRate)) {
+		return nil, fmt.Errorf("reciveRate must be greater than or equal to %s and less than or equal to %s", params.LowestRate, params.StartingRate)
+	}
+	recivePrice := math.LegacyMustNewDecFromStr(auction.InitialPrice).Mul(reciveRate)
 	// auction.InitialPrice.
 	bid := types.Bid{
 		BidId:       newBidId,
