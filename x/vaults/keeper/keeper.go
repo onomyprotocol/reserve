@@ -264,3 +264,31 @@ func (k *Keeper) burnDebt(ctx context.Context, vmKey string, vm types.VaultManag
 	vm.MintAvailable = vm.MintAvailable.Add(coin.Amount)
 	return k.VaultsManager.Set(ctx, vmKey, vm)
 }
+
+func (k *Keeper) BurnShortfallByMintDenom(ctx context.Context, mintDenom string) error {
+	// get amount shortfall by mintdenom
+	amountShortfall, err := k.ShortfallAmount.Get(ctx, mintDenom)
+	if err != nil {
+		return err
+	}
+	// get amount reserve by mintdenom
+	amountReserve := k.BankKeeper.GetAllBalances(ctx, k.accountKeeper.GetModuleAddress(types.ReserveModuleName)).AmountOf(mintDenom)
+
+	// Calculate the actual amount to burn
+	burnAmount := math.MinInt(amountShortfall, amountReserve)
+	if burnAmount.IsZero() {
+		return nil
+	}
+
+	// Burn token from Reserve module
+	if err := k.BankKeeper.BurnCoins(ctx, types.ReserveModuleName, sdk.NewCoins(sdk.NewCoin(mintDenom, burnAmount))); err != nil {
+		return err
+	}
+
+	// Update shortfall amount after burning
+	remainingShortfall := amountShortfall.Sub(burnAmount)
+	if err := k.ShortfallAmount.Set(ctx, mintDenom, remainingShortfall); err != nil {
+		return err
+	}
+	return nil
+}
