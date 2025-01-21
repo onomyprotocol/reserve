@@ -11,6 +11,7 @@ import (
 const (
 	ProposalTypeActiveCollateralProposal  string = "ActiveCollateralProposal"
 	ProposalTypeUpdatesCollateralProposal string = "UpdatesCollateralProposal"
+	ProposalTypeBurnShortfallProposal     string = "BurnShortfallProposal"
 )
 
 var (
@@ -225,6 +226,7 @@ func (msg *MsgUpdatesCollateral) ValidateBasic() error {
 
 var _ govtypes.Content = &ActiveCollateralProposal{}
 var _ govtypes.Content = &UpdatesCollateralProposal{}
+var _ govtypes.Content = &BurnShortfallProposal{}
 
 func NewMsgActiveCollateral(a *ActiveCollateralProposal) *MsgActiveCollateral {
 	return &MsgActiveCollateral{
@@ -257,6 +259,14 @@ func NewMsgUpdatesCollateral(u *UpdatesCollateralProposal) *MsgUpdatesCollateral
 		Authority:              u.UpdatesCollateral.Authority,
 		Symbol:                 u.UpdatesCollateral.Symbol,
 		MintDenom:              u.UpdatesCollateral.MintDenom,
+	}
+}
+
+// NewMsgBurnShortfall
+func NewMsgBurnShortfall(a *BurnShortfallProposal) *MsgBurnShortfall {
+	return &MsgBurnShortfall{
+		Authority: a.BurnShortfall.Authority,
+		MintDenom: a.BurnShortfall.MintDenom,
 	}
 }
 
@@ -295,11 +305,42 @@ func (m *UpdatesCollateralProposal) ProposalRoute() string {
 }
 
 func (m *UpdatesCollateralProposal) ProposalType() string {
-	return ProposalTypeActiveCollateralProposal
+	return ProposalTypeUpdatesCollateralProposal
 }
 
 func (m *UpdatesCollateralProposal) ValidateBasic() error {
 	a := m.UpdatesCollateral
 
 	return a.ValidateBasic()
+}
+
+// ValidateBasic
+func (msg *MsgBurnShortfall) ValidateBasic() error {
+	if msg.Authority == "" {
+		return fmt.Errorf("authority is empty")
+	}
+	if msg.MintDenom == "" {
+		return fmt.Errorf("authority is empty")
+	}
+	return nil
+}
+
+func (m *BurnShortfallProposal) GetDescription() string {
+	return m.Description
+}
+
+func (m *BurnShortfallProposal) GetTitle() string {
+	return m.Title
+}
+
+func (m *BurnShortfallProposal) ProposalRoute() string {
+	return RouterKey
+}
+
+func (m *BurnShortfallProposal) ProposalType() string {
+	return ProposalTypeBurnShortfallProposal
+}
+
+func (m *BurnShortfallProposal) ValidateBasic() error {
+	return m.BurnShortfall.ValidateBasic()
 }
