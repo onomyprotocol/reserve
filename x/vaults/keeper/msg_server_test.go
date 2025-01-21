@@ -24,10 +24,12 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				// make sure reserve has money
 				mintCoin := sdk.NewCoins(sdk.NewCoin("fxUSD", math.NewInt(10_000_000)))
 				s.FundAccount(s.TestAccs[0], types.ModuleName, mintCoin)
-				s.k.BankKeeper.SendCoinsFromAccountToModule(s.Ctx, s.TestAccs[0], types.ReserveModuleName, mintCoin)
+				err := s.k.BankKeeper.SendCoinsFromAccountToModule(s.Ctx, s.TestAccs[0], types.ReserveModuleName, mintCoin)
+				s.Require().NoError(err)
 
 				// make sure Guaranteed Shortfall Amount
-				s.k.ShortfallAmount.Set(s.Ctx, "fxUSD", math.NewInt(1_000_000))
+				err = s.k.ShortfallAmount.Set(s.Ctx, "fxUSD", math.NewInt(1_000_000))
+				s.Require().NoError(err)
 				return types.MsgBurnShortfall{
 					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
 					MintDenom: "fxUSD",
@@ -44,7 +46,7 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 			s.SetupTest()
 			msg := t.setup()
 
-			// burn
+			// burn Shortfall
 			_, err := s.msgServer.BurnShortfall(s.Ctx, &msg)
 			if t.expPass {
 				s.Require().NoError(err)
