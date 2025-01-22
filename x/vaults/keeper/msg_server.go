@@ -197,7 +197,7 @@ func (k msgServer) BurnShortfall(ctx context.Context, msg *types.MsgBurnShortfal
 		return nil, fmt.Errorf("denom %s is not in the allowed mint denom list", msg.MintDenom)
 	}
 
-	err = k.BurnShortfallByMintDenom(ctx, msg.MintDenom)
+	err = k.BurnShortfallByMintDenom(ctx, msg.MintDenom, msg.Amount)
 	if err != nil {
 		return nil, err
 	}

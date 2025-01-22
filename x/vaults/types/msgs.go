@@ -322,6 +322,9 @@ func (msg *MsgBurnShortfall) ValidateBasic() error {
 	if msg.MintDenom == "" {
 		return fmt.Errorf("authority is empty")
 	}
+	if msg.Amount.LTE(math.ZeroInt()) {
+		return fmt.Errorf("amount cannot be less than 0")
+	}
 	return nil
 }
 
