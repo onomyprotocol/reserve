@@ -153,3 +153,13 @@ func (q queryServer) QueryTotalCollateralLockedByDenom(ctx context.Context, req 
 		Total: total,
 	}, err
 }
+
+func (q queryServer) QueryShortfallAmount(ctx context.Context, req *types.QueryShortfallAmountRequest) (*types.QueryShortfallAmountResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	amount, err := q.keeper.ShortfallAmount.Get(ctx, req.MintDenom)
+
+	return &types.QueryShortfallAmountResponse{Amount: amount}, err
+}
