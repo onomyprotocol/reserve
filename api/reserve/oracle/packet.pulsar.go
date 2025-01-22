@@ -2,8 +2,10 @@
 package oracle
 
 import (
+	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
 	fmt "fmt"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoiface "google.golang.org/protobuf/runtime/protoiface"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -12,26 +14,91 @@ import (
 	sync "sync"
 )
 
+var _ protoreflect.List = (*_OracleRequestPacketData_6_list)(nil)
+
+type _OracleRequestPacketData_6_list struct {
+	list *[]*v1beta1.Coin
+}
+
+func (x *_OracleRequestPacketData_6_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_OracleRequestPacketData_6_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_OracleRequestPacketData_6_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_OracleRequestPacketData_6_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_OracleRequestPacketData_6_list) AppendMutable() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_OracleRequestPacketData_6_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_OracleRequestPacketData_6_list) NewElement() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_OracleRequestPacketData_6_list) IsValid() bool {
+	return x.list != nil
+}
+
 var (
-	md_OraclePacketData        protoreflect.MessageDescriptor
-	fd_OraclePacketData_noData protoreflect.FieldDescriptor
+	md_OracleRequestPacketData                  protoreflect.MessageDescriptor
+	fd_OracleRequestPacketData_client_id        protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_oracle_script_id protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_calldata         protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_ask_count        protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_min_count        protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_fee_limit        protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_prepare_gas      protoreflect.FieldDescriptor
+	fd_OracleRequestPacketData_execute_gas      protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_reserve_oracle_packet_proto_init()
-	md_OraclePacketData = File_reserve_oracle_packet_proto.Messages().ByName("OraclePacketData")
-	fd_OraclePacketData_noData = md_OraclePacketData.Fields().ByName("noData")
+	md_OracleRequestPacketData = File_reserve_oracle_packet_proto.Messages().ByName("OracleRequestPacketData")
+	fd_OracleRequestPacketData_client_id = md_OracleRequestPacketData.Fields().ByName("client_id")
+	fd_OracleRequestPacketData_oracle_script_id = md_OracleRequestPacketData.Fields().ByName("oracle_script_id")
+	fd_OracleRequestPacketData_calldata = md_OracleRequestPacketData.Fields().ByName("calldata")
+	fd_OracleRequestPacketData_ask_count = md_OracleRequestPacketData.Fields().ByName("ask_count")
+	fd_OracleRequestPacketData_min_count = md_OracleRequestPacketData.Fields().ByName("min_count")
+	fd_OracleRequestPacketData_fee_limit = md_OracleRequestPacketData.Fields().ByName("fee_limit")
+	fd_OracleRequestPacketData_prepare_gas = md_OracleRequestPacketData.Fields().ByName("prepare_gas")
+	fd_OracleRequestPacketData_execute_gas = md_OracleRequestPacketData.Fields().ByName("execute_gas")
 }
 
-var _ protoreflect.Message = (*fastReflection_OraclePacketData)(nil)
+var _ protoreflect.Message = (*fastReflection_OracleRequestPacketData)(nil)
 
-type fastReflection_OraclePacketData OraclePacketData
+type fastReflection_OracleRequestPacketData OracleRequestPacketData
 
-func (x *OraclePacketData) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_OraclePacketData)(x)
+func (x *OracleRequestPacketData) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_OracleRequestPacketData)(x)
 }
 
-func (x *OraclePacketData) slowProtoReflect() protoreflect.Message {
+func (x *OracleRequestPacketData) slowProtoReflect() protoreflect.Message {
 	mi := &file_reserve_oracle_packet_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -43,43 +110,43 @@ func (x *OraclePacketData) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_OraclePacketData_messageType fastReflection_OraclePacketData_messageType
-var _ protoreflect.MessageType = fastReflection_OraclePacketData_messageType{}
+var _fastReflection_OracleRequestPacketData_messageType fastReflection_OracleRequestPacketData_messageType
+var _ protoreflect.MessageType = fastReflection_OracleRequestPacketData_messageType{}
 
-type fastReflection_OraclePacketData_messageType struct{}
+type fastReflection_OracleRequestPacketData_messageType struct{}
 
-func (x fastReflection_OraclePacketData_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_OraclePacketData)(nil)
+func (x fastReflection_OracleRequestPacketData_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_OracleRequestPacketData)(nil)
 }
-func (x fastReflection_OraclePacketData_messageType) New() protoreflect.Message {
-	return new(fastReflection_OraclePacketData)
+func (x fastReflection_OracleRequestPacketData_messageType) New() protoreflect.Message {
+	return new(fastReflection_OracleRequestPacketData)
 }
-func (x fastReflection_OraclePacketData_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_OraclePacketData
+func (x fastReflection_OracleRequestPacketData_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_OracleRequestPacketData
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_OraclePacketData) Descriptor() protoreflect.MessageDescriptor {
-	return md_OraclePacketData
+func (x *fastReflection_OracleRequestPacketData) Descriptor() protoreflect.MessageDescriptor {
+	return md_OracleRequestPacketData
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_OraclePacketData) Type() protoreflect.MessageType {
-	return _fastReflection_OraclePacketData_messageType
+func (x *fastReflection_OracleRequestPacketData) Type() protoreflect.MessageType {
+	return _fastReflection_OracleRequestPacketData_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_OraclePacketData) New() protoreflect.Message {
-	return new(fastReflection_OraclePacketData)
+func (x *fastReflection_OracleRequestPacketData) New() protoreflect.Message {
+	return new(fastReflection_OracleRequestPacketData)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_OraclePacketData) Interface() protoreflect.ProtoMessage {
-	return (*OraclePacketData)(x)
+func (x *fastReflection_OracleRequestPacketData) Interface() protoreflect.ProtoMessage {
+	return (*OracleRequestPacketData)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -87,15 +154,53 @@ func (x *fastReflection_OraclePacketData) Interface() protoreflect.ProtoMessage 
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_OraclePacketData) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
-	if x.Packet != nil {
-		switch o := x.Packet.(type) {
-		case *OraclePacketData_NoData:
-			v := o.NoData
-			value := protoreflect.ValueOfMessage(v.ProtoReflect())
-			if !f(fd_OraclePacketData_noData, value) {
-				return
-			}
+func (x *fastReflection_OracleRequestPacketData) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.ClientId != "" {
+		value := protoreflect.ValueOfString(x.ClientId)
+		if !f(fd_OracleRequestPacketData_client_id, value) {
+			return
+		}
+	}
+	if x.OracleScriptId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.OracleScriptId)
+		if !f(fd_OracleRequestPacketData_oracle_script_id, value) {
+			return
+		}
+	}
+	if len(x.Calldata) != 0 {
+		value := protoreflect.ValueOfBytes(x.Calldata)
+		if !f(fd_OracleRequestPacketData_calldata, value) {
+			return
+		}
+	}
+	if x.AskCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.AskCount)
+		if !f(fd_OracleRequestPacketData_ask_count, value) {
+			return
+		}
+	}
+	if x.MinCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MinCount)
+		if !f(fd_OracleRequestPacketData_min_count, value) {
+			return
+		}
+	}
+	if len(x.FeeLimit) != 0 {
+		value := protoreflect.ValueOfList(&_OracleRequestPacketData_6_list{list: &x.FeeLimit})
+		if !f(fd_OracleRequestPacketData_fee_limit, value) {
+			return
+		}
+	}
+	if x.PrepareGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.PrepareGas)
+		if !f(fd_OracleRequestPacketData_prepare_gas, value) {
+			return
+		}
+	}
+	if x.ExecuteGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.ExecuteGas)
+		if !f(fd_OracleRequestPacketData_execute_gas, value) {
+			return
 		}
 	}
 }
@@ -111,21 +216,29 @@ func (x *fastReflection_OraclePacketData) Range(f func(protoreflect.FieldDescrip
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_OraclePacketData) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_OracleRequestPacketData) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		if x.Packet == nil {
-			return false
-		} else if _, ok := x.Packet.(*OraclePacketData_NoData); ok {
-			return true
-		} else {
-			return false
-		}
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		return x.ClientId != ""
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		return x.OracleScriptId != uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		return len(x.Calldata) != 0
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		return x.AskCount != uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		return x.MinCount != uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		return len(x.FeeLimit) != 0
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		return x.PrepareGas != uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		return x.ExecuteGas != uint64(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -135,15 +248,29 @@ func (x *fastReflection_OraclePacketData) Has(fd protoreflect.FieldDescriptor) b
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_OraclePacketData) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_OracleRequestPacketData) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		x.Packet = nil
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		x.ClientId = ""
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		x.OracleScriptId = uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		x.Calldata = nil
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		x.AskCount = uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		x.MinCount = uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		x.FeeLimit = nil
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		x.PrepareGas = uint64(0)
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		x.ExecuteGas = uint64(0)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -153,21 +280,40 @@ func (x *fastReflection_OraclePacketData) Clear(fd protoreflect.FieldDescriptor)
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_OraclePacketData) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleRequestPacketData) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		if x.Packet == nil {
-			return protoreflect.ValueOfMessage((*NoData)(nil).ProtoReflect())
-		} else if v, ok := x.Packet.(*OraclePacketData_NoData); ok {
-			return protoreflect.ValueOfMessage(v.NoData.ProtoReflect())
-		} else {
-			return protoreflect.ValueOfMessage((*NoData)(nil).ProtoReflect())
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		value := x.ClientId
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		value := x.OracleScriptId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		value := x.Calldata
+		return protoreflect.ValueOfBytes(value)
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		value := x.AskCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		value := x.MinCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		if len(x.FeeLimit) == 0 {
+			return protoreflect.ValueOfList(&_OracleRequestPacketData_6_list{})
 		}
+		listValue := &_OracleRequestPacketData_6_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		value := x.PrepareGas
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		value := x.ExecuteGas
+		return protoreflect.ValueOfUint64(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -181,16 +327,31 @@ func (x *fastReflection_OraclePacketData) Get(descriptor protoreflect.FieldDescr
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_OraclePacketData) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_OracleRequestPacketData) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		cv := value.Message().Interface().(*NoData)
-		x.Packet = &OraclePacketData_NoData{NoData: cv}
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		x.ClientId = value.Interface().(string)
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		x.OracleScriptId = value.Uint()
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		x.Calldata = value.Bytes()
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		x.AskCount = value.Uint()
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		x.MinCount = value.Uint()
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		lv := value.List()
+		clv := lv.(*_OracleRequestPacketData_6_list)
+		x.FeeLimit = *clv.list
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		x.PrepareGas = value.Uint()
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		x.ExecuteGas = value.Uint()
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -204,63 +365,73 @@ func (x *fastReflection_OraclePacketData) Set(fd protoreflect.FieldDescriptor, v
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_OraclePacketData) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleRequestPacketData) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		if x.Packet == nil {
-			value := &NoData{}
-			oneofValue := &OraclePacketData_NoData{NoData: value}
-			x.Packet = oneofValue
-			return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		if x.FeeLimit == nil {
+			x.FeeLimit = []*v1beta1.Coin{}
 		}
-		switch m := x.Packet.(type) {
-		case *OraclePacketData_NoData:
-			return protoreflect.ValueOfMessage(m.NoData.ProtoReflect())
-		default:
-			value := &NoData{}
-			oneofValue := &OraclePacketData_NoData{NoData: value}
-			x.Packet = oneofValue
-			return protoreflect.ValueOfMessage(value.ProtoReflect())
-		}
+		value := &_OracleRequestPacketData_6_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		panic(fmt.Errorf("field client_id of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		panic(fmt.Errorf("field oracle_script_id of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		panic(fmt.Errorf("field calldata of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		panic(fmt.Errorf("field ask_count of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		panic(fmt.Errorf("field min_count of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		panic(fmt.Errorf("field prepare_gas of message reserve.oracle.OracleRequestPacketData is not mutable"))
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		panic(fmt.Errorf("field execute_gas of message reserve.oracle.OracleRequestPacketData is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_OraclePacketData) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleRequestPacketData) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
-	case "reserve.oracle.OraclePacketData.noData":
-		value := &NoData{}
-		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "reserve.oracle.OracleRequestPacketData.client_id":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.OracleRequestPacketData.oracle_script_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleRequestPacketData.calldata":
+		return protoreflect.ValueOfBytes(nil)
+	case "reserve.oracle.OracleRequestPacketData.ask_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleRequestPacketData.min_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleRequestPacketData.fee_limit":
+		list := []*v1beta1.Coin{}
+		return protoreflect.ValueOfList(&_OracleRequestPacketData_6_list{list: &list})
+	case "reserve.oracle.OracleRequestPacketData.prepare_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleRequestPacketData.execute_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OraclePacketData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleRequestPacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.OraclePacketData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleRequestPacketData does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_OraclePacketData) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_OracleRequestPacketData) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
-	case "reserve.oracle.OraclePacketData.packet":
-		if x.Packet == nil {
-			return nil
-		}
-		switch x.Packet.(type) {
-		case *OraclePacketData_NoData:
-			return x.Descriptor().Fields().ByName("noData")
-		}
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.OraclePacketData", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.OracleRequestPacketData", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -268,7 +439,7 @@ func (x *fastReflection_OraclePacketData) WhichOneof(d protoreflect.OneofDescrip
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_OraclePacketData) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_OracleRequestPacketData) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -279,7 +450,7 @@ func (x *fastReflection_OraclePacketData) GetUnknown() protoreflect.RawFields {
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_OraclePacketData) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_OracleRequestPacketData) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -291,7 +462,7 @@ func (x *fastReflection_OraclePacketData) SetUnknown(fields protoreflect.RawFiel
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_OraclePacketData) IsValid() bool {
+func (x *fastReflection_OracleRequestPacketData) IsValid() bool {
 	return x != nil
 }
 
@@ -301,9 +472,9 @@ func (x *fastReflection_OraclePacketData) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_OracleRequestPacketData) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*OraclePacketData)
+		x := input.Message.Interface().(*OracleRequestPacketData)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -315,13 +486,34 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
-		switch x := x.Packet.(type) {
-		case *OraclePacketData_NoData:
-			if x == nil {
-				break
-			}
-			l = options.Size(x.NoData)
+		l = len(x.ClientId)
+		if l > 0 {
 			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.OracleScriptId != 0 {
+			n += 1 + runtime.Sov(uint64(x.OracleScriptId))
+		}
+		l = len(x.Calldata)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.AskCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.AskCount))
+		}
+		if x.MinCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.MinCount))
+		}
+		if len(x.FeeLimit) > 0 {
+			for _, e := range x.FeeLimit {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.PrepareGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.PrepareGas))
+		}
+		if x.ExecuteGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.ExecuteGas))
 		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
@@ -333,7 +525,7 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*OraclePacketData)
+		x := input.Message.Interface().(*OracleRequestPacketData)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -352,18 +544,58 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		switch x := x.Packet.(type) {
-		case *OraclePacketData_NoData:
-			encoded, err := options.Marshal(x.NoData)
-			if err != nil {
-				return protoiface.MarshalOutput{
-					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
-					Buf:               input.Buf,
-				}, err
+		if x.ExecuteGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ExecuteGas))
+			i--
+			dAtA[i] = 0x40
+		}
+		if x.PrepareGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.PrepareGas))
+			i--
+			dAtA[i] = 0x38
+		}
+		if len(x.FeeLimit) > 0 {
+			for iNdEx := len(x.FeeLimit) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.FeeLimit[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x32
 			}
-			i -= len(encoded)
-			copy(dAtA[i:], encoded)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+		}
+		if x.MinCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinCount))
+			i--
+			dAtA[i] = 0x28
+		}
+		if x.AskCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.AskCount))
+			i--
+			dAtA[i] = 0x20
+		}
+		if len(x.Calldata) > 0 {
+			i -= len(x.Calldata)
+			copy(dAtA[i:], x.Calldata)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Calldata)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if x.OracleScriptId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.OracleScriptId))
+			i--
+			dAtA[i] = 0x10
+		}
+		if len(x.ClientId) > 0 {
+			i -= len(x.ClientId)
+			copy(dAtA[i:], x.ClientId)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.ClientId)))
 			i--
 			dAtA[i] = 0xa
 		}
@@ -378,7 +610,7 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*OraclePacketData)
+		x := input.Message.Interface().(*OracleRequestPacketData)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -410,15 +642,138 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OraclePacketData: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OracleRequestPacketData: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OraclePacketData: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OracleRequestPacketData: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
 			case 1:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field NoData", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.ClientId = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field OracleScriptId", wireType)
+				}
+				x.OracleScriptId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.OracleScriptId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Calldata", wireType)
+				}
+				var byteLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					byteLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if byteLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + byteLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Calldata = append(x.Calldata[:0], dAtA[iNdEx:postIndex]...)
+				if x.Calldata == nil {
+					x.Calldata = []byte{}
+				}
+				iNdEx = postIndex
+			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AskCount", wireType)
+				}
+				x.AskCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.AskCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinCount", wireType)
+				}
+				x.MinCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.MinCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FeeLimit", wireType)
 				}
 				var msglen int
 				for shift := uint(0); ; shift += 7 {
@@ -445,12 +800,49 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				v := &NoData{}
-				if err := options.Unmarshal(dAtA[iNdEx:postIndex], v); err != nil {
+				x.FeeLimit = append(x.FeeLimit, &v1beta1.Coin{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.FeeLimit[len(x.FeeLimit)-1]); err != nil {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
-				x.Packet = &OraclePacketData_NoData{v}
 				iNdEx = postIndex
+			case 7:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PrepareGas", wireType)
+				}
+				x.PrepareGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.PrepareGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 8:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ExecuteGas", wireType)
+				}
+				x.ExecuteGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ExecuteGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -487,23 +879,37 @@ func (x *fastReflection_OraclePacketData) ProtoMethods() *protoiface.Methods {
 }
 
 var (
-	md_NoData protoreflect.MessageDescriptor
+	md_OracleResponsePacketData                protoreflect.MessageDescriptor
+	fd_OracleResponsePacketData_client_id      protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_request_id     protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_ans_count      protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_request_time   protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_resolve_time   protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_resolve_status protoreflect.FieldDescriptor
+	fd_OracleResponsePacketData_result         protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_reserve_oracle_packet_proto_init()
-	md_NoData = File_reserve_oracle_packet_proto.Messages().ByName("NoData")
+	md_OracleResponsePacketData = File_reserve_oracle_packet_proto.Messages().ByName("OracleResponsePacketData")
+	fd_OracleResponsePacketData_client_id = md_OracleResponsePacketData.Fields().ByName("client_id")
+	fd_OracleResponsePacketData_request_id = md_OracleResponsePacketData.Fields().ByName("request_id")
+	fd_OracleResponsePacketData_ans_count = md_OracleResponsePacketData.Fields().ByName("ans_count")
+	fd_OracleResponsePacketData_request_time = md_OracleResponsePacketData.Fields().ByName("request_time")
+	fd_OracleResponsePacketData_resolve_time = md_OracleResponsePacketData.Fields().ByName("resolve_time")
+	fd_OracleResponsePacketData_resolve_status = md_OracleResponsePacketData.Fields().ByName("resolve_status")
+	fd_OracleResponsePacketData_result = md_OracleResponsePacketData.Fields().ByName("result")
 }
 
-var _ protoreflect.Message = (*fastReflection_NoData)(nil)
+var _ protoreflect.Message = (*fastReflection_OracleResponsePacketData)(nil)
 
-type fastReflection_NoData NoData
+type fastReflection_OracleResponsePacketData OracleResponsePacketData
 
-func (x *NoData) ProtoReflect() protoreflect.Message {
-	return (*fastReflection_NoData)(x)
+func (x *OracleResponsePacketData) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_OracleResponsePacketData)(x)
 }
 
-func (x *NoData) slowProtoReflect() protoreflect.Message {
+func (x *OracleResponsePacketData) slowProtoReflect() protoreflect.Message {
 	mi := &file_reserve_oracle_packet_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -515,43 +921,43 @@ func (x *NoData) slowProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-var _fastReflection_NoData_messageType fastReflection_NoData_messageType
-var _ protoreflect.MessageType = fastReflection_NoData_messageType{}
+var _fastReflection_OracleResponsePacketData_messageType fastReflection_OracleResponsePacketData_messageType
+var _ protoreflect.MessageType = fastReflection_OracleResponsePacketData_messageType{}
 
-type fastReflection_NoData_messageType struct{}
+type fastReflection_OracleResponsePacketData_messageType struct{}
 
-func (x fastReflection_NoData_messageType) Zero() protoreflect.Message {
-	return (*fastReflection_NoData)(nil)
+func (x fastReflection_OracleResponsePacketData_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_OracleResponsePacketData)(nil)
 }
-func (x fastReflection_NoData_messageType) New() protoreflect.Message {
-	return new(fastReflection_NoData)
+func (x fastReflection_OracleResponsePacketData_messageType) New() protoreflect.Message {
+	return new(fastReflection_OracleResponsePacketData)
 }
-func (x fastReflection_NoData_messageType) Descriptor() protoreflect.MessageDescriptor {
-	return md_NoData
+func (x fastReflection_OracleResponsePacketData_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_OracleResponsePacketData
 }
 
 // Descriptor returns message descriptor, which contains only the protobuf
 // type information for the message.
-func (x *fastReflection_NoData) Descriptor() protoreflect.MessageDescriptor {
-	return md_NoData
+func (x *fastReflection_OracleResponsePacketData) Descriptor() protoreflect.MessageDescriptor {
+	return md_OracleResponsePacketData
 }
 
 // Type returns the message type, which encapsulates both Go and protobuf
 // type information. If the Go type information is not needed,
 // it is recommended that the message descriptor be used instead.
-func (x *fastReflection_NoData) Type() protoreflect.MessageType {
-	return _fastReflection_NoData_messageType
+func (x *fastReflection_OracleResponsePacketData) Type() protoreflect.MessageType {
+	return _fastReflection_OracleResponsePacketData_messageType
 }
 
 // New returns a newly allocated and mutable empty message.
-func (x *fastReflection_NoData) New() protoreflect.Message {
-	return new(fastReflection_NoData)
+func (x *fastReflection_OracleResponsePacketData) New() protoreflect.Message {
+	return new(fastReflection_OracleResponsePacketData)
 }
 
 // Interface unwraps the message reflection interface and
 // returns the underlying ProtoMessage interface.
-func (x *fastReflection_NoData) Interface() protoreflect.ProtoMessage {
-	return (*NoData)(x)
+func (x *fastReflection_OracleResponsePacketData) Interface() protoreflect.ProtoMessage {
+	return (*OracleResponsePacketData)(x)
 }
 
 // Range iterates over every populated field in an undefined order,
@@ -559,7 +965,49 @@ func (x *fastReflection_NoData) Interface() protoreflect.ProtoMessage {
 // Range returns immediately if f returns false.
 // While iterating, mutating operations may only be performed
 // on the current field descriptor.
-func (x *fastReflection_NoData) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+func (x *fastReflection_OracleResponsePacketData) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.ClientId != "" {
+		value := protoreflect.ValueOfString(x.ClientId)
+		if !f(fd_OracleResponsePacketData_client_id, value) {
+			return
+		}
+	}
+	if x.RequestId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.RequestId)
+		if !f(fd_OracleResponsePacketData_request_id, value) {
+			return
+		}
+	}
+	if x.AnsCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.AnsCount)
+		if !f(fd_OracleResponsePacketData_ans_count, value) {
+			return
+		}
+	}
+	if x.RequestTime != int64(0) {
+		value := protoreflect.ValueOfInt64(x.RequestTime)
+		if !f(fd_OracleResponsePacketData_request_time, value) {
+			return
+		}
+	}
+	if x.ResolveTime != int64(0) {
+		value := protoreflect.ValueOfInt64(x.ResolveTime)
+		if !f(fd_OracleResponsePacketData_resolve_time, value) {
+			return
+		}
+	}
+	if x.ResolveStatus != 0 {
+		value := protoreflect.ValueOfEnum((protoreflect.EnumNumber)(x.ResolveStatus))
+		if !f(fd_OracleResponsePacketData_resolve_status, value) {
+			return
+		}
+	}
+	if len(x.Result) != 0 {
+		value := protoreflect.ValueOfBytes(x.Result)
+		if !f(fd_OracleResponsePacketData_result, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -573,13 +1021,27 @@ func (x *fastReflection_NoData) Range(f func(protoreflect.FieldDescriptor, proto
 // In other cases (aside from the nullable cases above),
 // a proto3 scalar field is populated if it contains a non-zero value, and
 // a repeated field is populated if it is non-empty.
-func (x *fastReflection_NoData) Has(fd protoreflect.FieldDescriptor) bool {
+func (x *fastReflection_OracleResponsePacketData) Has(fd protoreflect.FieldDescriptor) bool {
 	switch fd.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		return x.ClientId != ""
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		return x.RequestId != uint64(0)
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		return x.AnsCount != uint64(0)
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		return x.RequestTime != int64(0)
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		return x.ResolveTime != int64(0)
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		return x.ResolveStatus != 0
+	case "reserve.oracle.OracleResponsePacketData.result":
+		return len(x.Result) != 0
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -589,13 +1051,27 @@ func (x *fastReflection_NoData) Has(fd protoreflect.FieldDescriptor) bool {
 // associated with the given field number.
 //
 // Clear is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_NoData) Clear(fd protoreflect.FieldDescriptor) {
+func (x *fastReflection_OracleResponsePacketData) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		x.ClientId = ""
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		x.RequestId = uint64(0)
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		x.AnsCount = uint64(0)
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		x.RequestTime = int64(0)
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		x.ResolveTime = int64(0)
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		x.ResolveStatus = 0
+	case "reserve.oracle.OracleResponsePacketData.result":
+		x.Result = nil
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -605,13 +1081,34 @@ func (x *fastReflection_NoData) Clear(fd protoreflect.FieldDescriptor) {
 // the default value of a bytes scalar is guaranteed to be a copy.
 // For unpopulated composite types, it returns an empty, read-only view
 // of the value; to obtain a mutable reference, use Mutable.
-func (x *fastReflection_NoData) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleResponsePacketData) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
 	switch descriptor.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		value := x.ClientId
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		value := x.RequestId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		value := x.AnsCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		value := x.RequestTime
+		return protoreflect.ValueOfInt64(value)
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		value := x.ResolveTime
+		return protoreflect.ValueOfInt64(value)
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		value := x.ResolveStatus
+		return protoreflect.ValueOfEnum((protoreflect.EnumNumber)(value))
+	case "reserve.oracle.OracleResponsePacketData.result":
+		value := x.Result
+		return protoreflect.ValueOfBytes(value)
 	default:
 		if descriptor.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", descriptor.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", descriptor.FullName()))
 	}
 }
 
@@ -625,13 +1122,27 @@ func (x *fastReflection_NoData) Get(descriptor protoreflect.FieldDescriptor) pro
 // empty, read-only value, then it panics.
 //
 // Set is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_NoData) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+func (x *fastReflection_OracleResponsePacketData) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
 	switch fd.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		x.ClientId = value.Interface().(string)
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		x.RequestId = value.Uint()
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		x.AnsCount = value.Uint()
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		x.RequestTime = value.Int()
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		x.ResolveTime = value.Int()
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		x.ResolveStatus = (ResolveStatus)(value.Enum())
+	case "reserve.oracle.OracleResponsePacketData.result":
+		x.Result = value.Bytes()
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", fd.FullName()))
 	}
 }
 
@@ -645,36 +1156,64 @@ func (x *fastReflection_NoData) Set(fd protoreflect.FieldDescriptor, value proto
 // It panics if the field does not contain a composite type.
 //
 // Mutable is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_NoData) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleResponsePacketData) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		panic(fmt.Errorf("field client_id of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		panic(fmt.Errorf("field request_id of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		panic(fmt.Errorf("field ans_count of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		panic(fmt.Errorf("field request_time of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		panic(fmt.Errorf("field resolve_time of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		panic(fmt.Errorf("field resolve_status of message reserve.oracle.OracleResponsePacketData is not mutable"))
+	case "reserve.oracle.OracleResponsePacketData.result":
+		panic(fmt.Errorf("field result of message reserve.oracle.OracleResponsePacketData is not mutable"))
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", fd.FullName()))
 	}
 }
 
 // NewField returns a new value that is assignable to the field
 // for the given descriptor. For scalars, this returns the default value.
 // For lists, maps, and messages, this returns a new, empty, mutable value.
-func (x *fastReflection_NoData) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+func (x *fastReflection_OracleResponsePacketData) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
 	switch fd.FullName() {
+	case "reserve.oracle.OracleResponsePacketData.client_id":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.OracleResponsePacketData.request_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleResponsePacketData.ans_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.OracleResponsePacketData.request_time":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "reserve.oracle.OracleResponsePacketData.resolve_time":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "reserve.oracle.OracleResponsePacketData.resolve_status":
+		return protoreflect.ValueOfEnum(0)
+	case "reserve.oracle.OracleResponsePacketData.result":
+		return protoreflect.ValueOfBytes(nil)
 	default:
 		if fd.IsExtension() {
-			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.NoData"))
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.OracleResponsePacketData"))
 		}
-		panic(fmt.Errorf("message reserve.oracle.NoData does not contain field %s", fd.FullName()))
+		panic(fmt.Errorf("message reserve.oracle.OracleResponsePacketData does not contain field %s", fd.FullName()))
 	}
 }
 
 // WhichOneof reports which field within the oneof is populated,
 // returning nil if none are populated.
 // It panics if the oneof descriptor does not belong to this message.
-func (x *fastReflection_NoData) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+func (x *fastReflection_OracleResponsePacketData) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
 	switch d.FullName() {
 	default:
-		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.NoData", d.FullName()))
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.OracleResponsePacketData", d.FullName()))
 	}
 	panic("unreachable")
 }
@@ -682,7 +1221,7 @@ func (x *fastReflection_NoData) WhichOneof(d protoreflect.OneofDescriptor) proto
 // GetUnknown retrieves the entire list of unknown fields.
 // The caller may only mutate the contents of the RawFields
 // if the mutated bytes are stored back into the message with SetUnknown.
-func (x *fastReflection_NoData) GetUnknown() protoreflect.RawFields {
+func (x *fastReflection_OracleResponsePacketData) GetUnknown() protoreflect.RawFields {
 	return x.unknownFields
 }
 
@@ -693,7 +1232,7 @@ func (x *fastReflection_NoData) GetUnknown() protoreflect.RawFields {
 // An empty RawFields may be passed to clear the fields.
 //
 // SetUnknown is a mutating operation and unsafe for concurrent use.
-func (x *fastReflection_NoData) SetUnknown(fields protoreflect.RawFields) {
+func (x *fastReflection_OracleResponsePacketData) SetUnknown(fields protoreflect.RawFields) {
 	x.unknownFields = fields
 }
 
@@ -705,7 +1244,7 @@ func (x *fastReflection_NoData) SetUnknown(fields protoreflect.RawFields) {
 // message type, but the details are implementation dependent.
 // Validity is not part of the protobuf data model, and may not
 // be preserved in marshaling or other operations.
-func (x *fastReflection_NoData) IsValid() bool {
+func (x *fastReflection_OracleResponsePacketData) IsValid() bool {
 	return x != nil
 }
 
@@ -715,9 +1254,9 @@ func (x *fastReflection_NoData) IsValid() bool {
 // The returned methods type is identical to
 // "google.golang.org/protobuf/runtime/protoiface".Methods.
 // Consult the protoiface package documentation for details.
-func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
+func (x *fastReflection_OracleResponsePacketData) ProtoMethods() *protoiface.Methods {
 	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
-		x := input.Message.Interface().(*NoData)
+		x := input.Message.Interface().(*OracleResponsePacketData)
 		if x == nil {
 			return protoiface.SizeOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -729,6 +1268,29 @@ func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
 		var n int
 		var l int
 		_ = l
+		l = len(x.ClientId)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.RequestId != 0 {
+			n += 1 + runtime.Sov(uint64(x.RequestId))
+		}
+		if x.AnsCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.AnsCount))
+		}
+		if x.RequestTime != 0 {
+			n += 1 + runtime.Sov(uint64(x.RequestTime))
+		}
+		if x.ResolveTime != 0 {
+			n += 1 + runtime.Sov(uint64(x.ResolveTime))
+		}
+		if x.ResolveStatus != 0 {
+			n += 1 + runtime.Sov(uint64(x.ResolveStatus))
+		}
+		l = len(x.Result)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -739,7 +1301,7 @@ func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
 	}
 
 	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
-		x := input.Message.Interface().(*NoData)
+		x := input.Message.Interface().(*OracleResponsePacketData)
 		if x == nil {
 			return protoiface.MarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -758,6 +1320,45 @@ func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
+		if len(x.Result) > 0 {
+			i -= len(x.Result)
+			copy(dAtA[i:], x.Result)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Result)))
+			i--
+			dAtA[i] = 0x3a
+		}
+		if x.ResolveStatus != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ResolveStatus))
+			i--
+			dAtA[i] = 0x30
+		}
+		if x.ResolveTime != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ResolveTime))
+			i--
+			dAtA[i] = 0x28
+		}
+		if x.RequestTime != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.RequestTime))
+			i--
+			dAtA[i] = 0x20
+		}
+		if x.AnsCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.AnsCount))
+			i--
+			dAtA[i] = 0x18
+		}
+		if x.RequestId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.RequestId))
+			i--
+			dAtA[i] = 0x10
+		}
+		if len(x.ClientId) > 0 {
+			i -= len(x.ClientId)
+			copy(dAtA[i:], x.ClientId)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.ClientId)))
+			i--
+			dAtA[i] = 0xa
+		}
 		if input.Buf != nil {
 			input.Buf = append(input.Buf, dAtA...)
 		} else {
@@ -769,7 +1370,7 @@ func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
 		}, nil
 	}
 	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
-		x := input.Message.Interface().(*NoData)
+		x := input.Message.Interface().(*OracleResponsePacketData)
 		if x == nil {
 			return protoiface.UnmarshalOutput{
 				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
@@ -801,12 +1402,173 @@ func (x *fastReflection_NoData) ProtoMethods() *protoiface.Methods {
 			fieldNum := int32(wire >> 3)
 			wireType := int(wire & 0x7)
 			if wireType == 4 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: NoData: wiretype end group for non-group")
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OracleResponsePacketData: wiretype end group for non-group")
 			}
 			if fieldNum <= 0 {
-				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: NoData: illegal tag %d (wire type %d)", fieldNum, wire)
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: OracleResponsePacketData: illegal tag %d (wire type %d)", fieldNum, wire)
 			}
 			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.ClientId = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field RequestId", wireType)
+				}
+				x.RequestId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.RequestId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 3:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AnsCount", wireType)
+				}
+				x.AnsCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.AnsCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field RequestTime", wireType)
+				}
+				x.RequestTime = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.RequestTime |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ResolveTime", wireType)
+				}
+				x.ResolveTime = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ResolveTime |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ResolveStatus", wireType)
+				}
+				x.ResolveStatus = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ResolveStatus |= ResolveStatus(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 7:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Result", wireType)
+				}
+				var byteLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					byteLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if byteLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + byteLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Result = append(x.Result[:0], dAtA[iNdEx:postIndex]...)
+				if x.Result == nil {
+					x.Result = []byte{}
+				}
+				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -855,19 +1617,97 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type OraclePacketData struct {
+// ResolveStatus encodes the status of an oracle request.
+type ResolveStatus int32
+
+const (
+	// Open - the request is not yet resolved.
+	ResolveStatus_RESOLVE_STATUS_OPEN_UNSPECIFIED ResolveStatus = 0
+	// Success - the request has been resolved successfully with no errors.
+	ResolveStatus_RESOLVE_STATUS_SUCCESS ResolveStatus = 1
+	// Failure - an error occured during the request's resolve call.
+	ResolveStatus_RESOLVE_STATUS_FAILURE ResolveStatus = 2
+	// Expired - the request does not get enough reports from validator within the
+	// timeframe.
+	ResolveStatus_RESOLVE_STATUS_EXPIRED ResolveStatus = 3
+)
+
+// Enum value maps for ResolveStatus.
+var (
+	ResolveStatus_name = map[int32]string{
+		0: "RESOLVE_STATUS_OPEN_UNSPECIFIED",
+		1: "RESOLVE_STATUS_SUCCESS",
+		2: "RESOLVE_STATUS_FAILURE",
+		3: "RESOLVE_STATUS_EXPIRED",
+	}
+	ResolveStatus_value = map[string]int32{
+		"RESOLVE_STATUS_OPEN_UNSPECIFIED": 0,
+		"RESOLVE_STATUS_SUCCESS":          1,
+		"RESOLVE_STATUS_FAILURE":          2,
+		"RESOLVE_STATUS_EXPIRED":          3,
+	}
+)
+
+func (x ResolveStatus) Enum() *ResolveStatus {
+	p := new(ResolveStatus)
+	*p = x
+	return p
+}
+
+func (x ResolveStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ResolveStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_reserve_oracle_packet_proto_enumTypes[0].Descriptor()
+}
+
+func (ResolveStatus) Type() protoreflect.EnumType {
+	return &file_reserve_oracle_packet_proto_enumTypes[0]
+}
+
+func (x ResolveStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ResolveStatus.Descriptor instead.
+func (ResolveStatus) EnumDescriptor() ([]byte, []int) {
+	return file_reserve_oracle_packet_proto_rawDescGZIP(), []int{0}
+}
+
+type OracleRequestPacketData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// Types that are assignable to Packet:
-	//
-	//	*OraclePacketData_NoData
-	Packet isOraclePacketData_Packet `protobuf_oneof:"packet"`
+	// ClientID is the unique identifier of this oracle request, as specified by
+	// the client. This same unique ID will be sent back to the requester with the
+	// oracle response.
+	ClientId string `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	// OracleScriptID is the unique identifier of the oracle script to be
+	// executed.
+	OracleScriptId uint64 `protobuf:"varint,2,opt,name=oracle_script_id,json=oracleScriptId,proto3" json:"oracle_script_id,omitempty"`
+	// Calldata is the OBI-encoded calldata bytes available for oracle executor to
+	// read.
+	Calldata []byte `protobuf:"bytes,3,opt,name=calldata,proto3" json:"calldata,omitempty"`
+	// AskCount is the number of validators that are requested to respond to this
+	// oracle request. Higher value means more security, at a higher gas cost.
+	AskCount uint64 `protobuf:"varint,4,opt,name=ask_count,json=askCount,proto3" json:"ask_count,omitempty"`
+	// MinCount is the minimum number of validators necessary for the request to
+	// proceed to the execution phase. Higher value means more security, at the
+	// cost of liveness.
+	MinCount uint64 `protobuf:"varint,5,opt,name=min_count,json=minCount,proto3" json:"min_count,omitempty"`
+	// FeeLimit is the maximum tokens that will be paid to all data source
+	// providers.
+	FeeLimit []*v1beta1.Coin `protobuf:"bytes,6,rep,name=fee_limit,json=feeLimit,proto3" json:"fee_limit,omitempty"`
+	// PrepareGas is amount of gas to pay to prepare raw requests
+	PrepareGas uint64 `protobuf:"varint,7,opt,name=prepare_gas,json=prepareGas,proto3" json:"prepare_gas,omitempty"`
+	// ExecuteGas is amount of gas to reserve for executing
+	ExecuteGas uint64 `protobuf:"varint,8,opt,name=execute_gas,json=executeGas,proto3" json:"execute_gas,omitempty"`
 }
 
-func (x *OraclePacketData) Reset() {
-	*x = OraclePacketData{}
+func (x *OracleRequestPacketData) Reset() {
+	*x = OracleRequestPacketData{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reserve_oracle_packet_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -875,49 +1715,105 @@ func (x *OraclePacketData) Reset() {
 	}
 }
 
-func (x *OraclePacketData) String() string {
+func (x *OracleRequestPacketData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*OraclePacketData) ProtoMessage() {}
+func (*OracleRequestPacketData) ProtoMessage() {}
 
-// Deprecated: Use OraclePacketData.ProtoReflect.Descriptor instead.
-func (*OraclePacketData) Descriptor() ([]byte, []int) {
+// Deprecated: Use OracleRequestPacketData.ProtoReflect.Descriptor instead.
+func (*OracleRequestPacketData) Descriptor() ([]byte, []int) {
 	return file_reserve_oracle_packet_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *OraclePacketData) GetPacket() isOraclePacketData_Packet {
+func (x *OracleRequestPacketData) GetClientId() string {
 	if x != nil {
-		return x.Packet
+		return x.ClientId
+	}
+	return ""
+}
+
+func (x *OracleRequestPacketData) GetOracleScriptId() uint64 {
+	if x != nil {
+		return x.OracleScriptId
+	}
+	return 0
+}
+
+func (x *OracleRequestPacketData) GetCalldata() []byte {
+	if x != nil {
+		return x.Calldata
 	}
 	return nil
 }
 
-func (x *OraclePacketData) GetNoData() *NoData {
-	if x, ok := x.GetPacket().(*OraclePacketData_NoData); ok {
-		return x.NoData
+func (x *OracleRequestPacketData) GetAskCount() uint64 {
+	if x != nil {
+		return x.AskCount
+	}
+	return 0
+}
+
+func (x *OracleRequestPacketData) GetMinCount() uint64 {
+	if x != nil {
+		return x.MinCount
+	}
+	return 0
+}
+
+func (x *OracleRequestPacketData) GetFeeLimit() []*v1beta1.Coin {
+	if x != nil {
+		return x.FeeLimit
 	}
 	return nil
 }
 
-type isOraclePacketData_Packet interface {
-	isOraclePacketData_Packet()
+func (x *OracleRequestPacketData) GetPrepareGas() uint64 {
+	if x != nil {
+		return x.PrepareGas
+	}
+	return 0
 }
 
-type OraclePacketData_NoData struct {
-	NoData *NoData `protobuf:"bytes,1,opt,name=noData,proto3,oneof"`
+func (x *OracleRequestPacketData) GetExecuteGas() uint64 {
+	if x != nil {
+		return x.ExecuteGas
+	}
+	return 0
 }
 
-func (*OraclePacketData_NoData) isOraclePacketData_Packet() {}
-
-type NoData struct {
+// OracleResponsePacketData encodes an oracle response from BandChain to the
+// requester.
+type OracleResponsePacketData struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	// ClientID is the unique identifier matched with that of the oracle request
+	// packet.
+	ClientId string `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	// RequestID is BandChain's unique identifier for this oracle request.
+	RequestId uint64 `protobuf:"varint,2,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	// AnsCount is the number of validators among to the asked validators that
+	// actually responded to this oracle request prior to this oracle request
+	// being resolved.
+	AnsCount uint64 `protobuf:"varint,3,opt,name=ans_count,json=ansCount,proto3" json:"ans_count,omitempty"`
+	// RequestTime is the UNIX epoch time at which the request was sent to
+	// BandChain.
+	RequestTime int64 `protobuf:"varint,4,opt,name=request_time,json=requestTime,proto3" json:"request_time,omitempty"`
+	// ResolveTime is the UNIX epoch time at which the request was resolved to the
+	// final result.
+	ResolveTime int64 `protobuf:"varint,5,opt,name=resolve_time,json=resolveTime,proto3" json:"resolve_time,omitempty"`
+	// ResolveStatus is the status of this oracle request, which can be OK,
+	// FAILURE, or EXPIRED.
+	ResolveStatus ResolveStatus `protobuf:"varint,6,opt,name=resolve_status,json=resolveStatus,proto3,enum=reserve.oracle.ResolveStatus" json:"resolve_status,omitempty"`
+	// Result is the final aggregated value encoded in OBI format. Only available
+	// if status if OK.
+	Result []byte `protobuf:"bytes,7,opt,name=result,proto3" json:"result,omitempty"`
 }
 
-func (x *NoData) Reset() {
-	*x = NoData{}
+func (x *OracleResponsePacketData) Reset() {
+	*x = OracleResponsePacketData{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_reserve_oracle_packet_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -925,15 +1821,64 @@ func (x *NoData) Reset() {
 	}
 }
 
-func (x *NoData) String() string {
+func (x *OracleResponsePacketData) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NoData) ProtoMessage() {}
+func (*OracleResponsePacketData) ProtoMessage() {}
 
-// Deprecated: Use NoData.ProtoReflect.Descriptor instead.
-func (*NoData) Descriptor() ([]byte, []int) {
+// Deprecated: Use OracleResponsePacketData.ProtoReflect.Descriptor instead.
+func (*OracleResponsePacketData) Descriptor() ([]byte, []int) {
 	return file_reserve_oracle_packet_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *OracleResponsePacketData) GetClientId() string {
+	if x != nil {
+		return x.ClientId
+	}
+	return ""
+}
+
+func (x *OracleResponsePacketData) GetRequestId() uint64 {
+	if x != nil {
+		return x.RequestId
+	}
+	return 0
+}
+
+func (x *OracleResponsePacketData) GetAnsCount() uint64 {
+	if x != nil {
+		return x.AnsCount
+	}
+	return 0
+}
+
+func (x *OracleResponsePacketData) GetRequestTime() int64 {
+	if x != nil {
+		return x.RequestTime
+	}
+	return 0
+}
+
+func (x *OracleResponsePacketData) GetResolveTime() int64 {
+	if x != nil {
+		return x.ResolveTime
+	}
+	return 0
+}
+
+func (x *OracleResponsePacketData) GetResolveStatus() ResolveStatus {
+	if x != nil {
+		return x.ResolveStatus
+	}
+	return ResolveStatus_RESOLVE_STATUS_OPEN_UNSPECIFIED
+}
+
+func (x *OracleResponsePacketData) GetResult() []byte {
+	if x != nil {
+		return x.Result
+	}
+	return nil
 }
 
 var File_reserve_oracle_packet_proto protoreflect.FileDescriptor
@@ -941,23 +1886,82 @@ var File_reserve_oracle_packet_proto protoreflect.FileDescriptor
 var file_reserve_oracle_packet_proto_rawDesc = []byte{
 	0x0a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65,
 	0x2f, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0e, 0x72,
-	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x22, 0x4e, 0x0a,
-	0x10, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x44, 0x61, 0x74,
-	0x61, 0x12, 0x30, 0x0a, 0x06, 0x6e, 0x6f, 0x44, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63,
-	0x6c, 0x65, 0x2e, 0x4e, 0x6f, 0x44, 0x61, 0x74, 0x61, 0x48, 0x00, 0x52, 0x06, 0x6e, 0x6f, 0x44,
-	0x61, 0x74, 0x61, 0x42, 0x08, 0x0a, 0x06, 0x70, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x22, 0x08, 0x0a,
-	0x06, 0x4e, 0x6f, 0x44, 0x61, 0x74, 0x61, 0x42, 0x9b, 0x01, 0x0a, 0x12, 0x63, 0x6f, 0x6d, 0x2e,
-	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x42, 0x0b,
-	0x50, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1f, 0x63,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f,
-	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0xa2, 0x02,
-	0x03, 0x52, 0x4f, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x4f,
-	0x72, 0x61, 0x63, 0x6c, 0x65, 0xca, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x5c,
-	0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0xe2, 0x02, 0x1a, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65,
-	0x5c, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64,
-	0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x3a, 0x3a, 0x4f,
-	0x72, 0x61, 0x63, 0x6c, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x1a, 0x14, 0x67,
+	0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67, 0x6f, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x1a, 0x1e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x62, 0x61, 0x73, 0x65,
+	0x2f, 0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2f, 0x63, 0x6f, 0x69, 0x6e, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x22, 0x8a, 0x03, 0x0a, 0x17, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12,
+	0x29, 0x0a, 0x09, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x42, 0x0c, 0xe2, 0xde, 0x1f, 0x08, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x44,
+	0x52, 0x08, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x3c, 0x0a, 0x10, 0x6f, 0x72,
+	0x61, 0x63, 0x6c, 0x65, 0x5f, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x04, 0x42, 0x12, 0xe2, 0xde, 0x1f, 0x0e, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65,
+	0x53, 0x63, 0x72, 0x69, 0x70, 0x74, 0x49, 0x44, 0x52, 0x0e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65,
+	0x53, 0x63, 0x72, 0x69, 0x70, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x63, 0x61, 0x6c, 0x6c,
+	0x64, 0x61, 0x74, 0x61, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x08, 0x63, 0x61, 0x6c, 0x6c,
+	0x64, 0x61, 0x74, 0x61, 0x12, 0x1b, 0x0a, 0x09, 0x61, 0x73, 0x6b, 0x5f, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x61, 0x73, 0x6b, 0x43, 0x6f, 0x75, 0x6e,
+	0x74, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x69, 0x6e, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x6d, 0x69, 0x6e, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x68,
+	0x0a, 0x09, 0x66, 0x65, 0x65, 0x5f, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x06, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x19, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x2e,
+	0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x42, 0x30, 0xc8, 0xde,
+	0x1f, 0x00, 0xaa, 0xdf, 0x1f, 0x28, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2d, 0x73,
+	0x64, 0x6b, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x73, 0x52, 0x08,
+	0x66, 0x65, 0x65, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x72, 0x65, 0x70,
+	0x61, 0x72, 0x65, 0x5f, 0x67, 0x61, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x70,
+	0x72, 0x65, 0x70, 0x61, 0x72, 0x65, 0x47, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x65, 0x78, 0x65,
+	0x63, 0x75, 0x74, 0x65, 0x5f, 0x67, 0x61, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a,
+	0x65, 0x78, 0x65, 0x63, 0x75, 0x74, 0x65, 0x47, 0x61, 0x73, 0x3a, 0x04, 0xe8, 0xa0, 0x1f, 0x01,
+	0x22, 0xba, 0x02, 0x0a, 0x18, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x44, 0x61, 0x74, 0x61, 0x12, 0x29, 0x0a,
+	0x09, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x42, 0x0c, 0xe2, 0xde, 0x1f, 0x08, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x44, 0x52, 0x08,
+	0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x2c, 0x0a, 0x0a, 0x72, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x42, 0x0d, 0xe2, 0xde,
+	0x1f, 0x09, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x49, 0x44, 0x52, 0x09, 0x72, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x61, 0x6e, 0x73, 0x5f, 0x63, 0x6f,
+	0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x61, 0x6e, 0x73, 0x43, 0x6f,
+	0x75, 0x6e, 0x74, 0x12, 0x21, 0x0a, 0x0c, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x5f, 0x74,
+	0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b, 0x72, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x72, 0x65, 0x73, 0x6f, 0x6c, 0x76,
+	0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b, 0x72, 0x65,
+	0x73, 0x6f, 0x6c, 0x76, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x44, 0x0a, 0x0e, 0x72, 0x65, 0x73,
+	0x6f, 0x6c, 0x76, 0x65, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28,
+	0x0e, 0x32, 0x1d, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63,
+	0x6c, 0x65, 0x2e, 0x52, 0x65, 0x73, 0x6f, 0x6c, 0x76, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x52, 0x0d, 0x72, 0x65, 0x73, 0x6f, 0x6c, 0x76, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12,
+	0x16, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0c, 0x52,
+	0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x3a, 0x04, 0xe8, 0xa0, 0x1f, 0x01, 0x2a, 0xfb, 0x01,
+	0x0a, 0x0d, 0x52, 0x65, 0x73, 0x6f, 0x6c, 0x76, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12,
+	0x3c, 0x0a, 0x1f, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55,
+	0x53, 0x5f, 0x4f, 0x50, 0x45, 0x4e, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49,
+	0x45, 0x44, 0x10, 0x00, 0x1a, 0x17, 0x8a, 0x9d, 0x20, 0x13, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56,
+	0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x4f, 0x50, 0x45, 0x4e, 0x12, 0x36, 0x0a,
+	0x16, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f,
+	0x53, 0x55, 0x43, 0x43, 0x45, 0x53, 0x53, 0x10, 0x01, 0x1a, 0x1a, 0x8a, 0x9d, 0x20, 0x16, 0x52,
+	0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x53, 0x55,
+	0x43, 0x43, 0x45, 0x53, 0x53, 0x12, 0x36, 0x0a, 0x16, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45,
+	0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x46, 0x41, 0x49, 0x4c, 0x55, 0x52, 0x45, 0x10,
+	0x02, 0x1a, 0x1a, 0x8a, 0x9d, 0x20, 0x16, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53,
+	0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x46, 0x41, 0x49, 0x4c, 0x55, 0x52, 0x45, 0x12, 0x36, 0x0a,
+	0x16, 0x52, 0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f,
+	0x45, 0x58, 0x50, 0x49, 0x52, 0x45, 0x44, 0x10, 0x03, 0x1a, 0x1a, 0x8a, 0x9d, 0x20, 0x16, 0x52,
+	0x45, 0x53, 0x4f, 0x4c, 0x56, 0x45, 0x5f, 0x53, 0x54, 0x41, 0x54, 0x55, 0x53, 0x5f, 0x45, 0x58,
+	0x50, 0x49, 0x52, 0x45, 0x44, 0x1a, 0x04, 0x88, 0xa3, 0x1e, 0x00, 0x42, 0x9b, 0x01, 0x0a, 0x12,
+	0x63, 0x6f, 0x6d, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63,
+	0x6c, 0x65, 0x42, 0x0b, 0x50, 0x61, 0x63, 0x6b, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50,
+	0x01, 0x5a, 0x1f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x6f, 0x72, 0x61, 0x63,
+	0x6c, 0x65, 0xa2, 0x02, 0x03, 0x52, 0x4f, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72,
+	0x76, 0x65, 0x2e, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0xca, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65,
+	0x72, 0x76, 0x65, 0x5c, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0xe2, 0x02, 0x1a, 0x52, 0x65, 0x73,
+	0x65, 0x72, 0x76, 0x65, 0x5c, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5c, 0x47, 0x50, 0x42, 0x4d,
+	0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76,
+	0x65, 0x3a, 0x3a, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -972,18 +1976,22 @@ func file_reserve_oracle_packet_proto_rawDescGZIP() []byte {
 	return file_reserve_oracle_packet_proto_rawDescData
 }
 
+var file_reserve_oracle_packet_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_reserve_oracle_packet_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_reserve_oracle_packet_proto_goTypes = []interface{}{
-	(*OraclePacketData)(nil), // 0: reserve.oracle.OraclePacketData
-	(*NoData)(nil),           // 1: reserve.oracle.NoData
+	(ResolveStatus)(0),               // 0: reserve.oracle.ResolveStatus
+	(*OracleRequestPacketData)(nil),  // 1: reserve.oracle.OracleRequestPacketData
+	(*OracleResponsePacketData)(nil), // 2: reserve.oracle.OracleResponsePacketData
+	(*v1beta1.Coin)(nil),             // 3: cosmos.base.v1beta1.Coin
 }
 var file_reserve_oracle_packet_proto_depIdxs = []int32{
-	1, // 0: reserve.oracle.OraclePacketData.noData:type_name -> reserve.oracle.NoData
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3, // 0: reserve.oracle.OracleRequestPacketData.fee_limit:type_name -> cosmos.base.v1beta1.Coin
+	0, // 1: reserve.oracle.OracleResponsePacketData.resolve_status:type_name -> reserve.oracle.ResolveStatus
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_reserve_oracle_packet_proto_init() }
@@ -993,7 +2001,7 @@ func file_reserve_oracle_packet_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_reserve_oracle_packet_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OraclePacketData); i {
+			switch v := v.(*OracleRequestPacketData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1005,7 +2013,7 @@ func file_reserve_oracle_packet_proto_init() {
 			}
 		}
 		file_reserve_oracle_packet_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*NoData); i {
+			switch v := v.(*OracleResponsePacketData); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1017,21 +2025,19 @@ func file_reserve_oracle_packet_proto_init() {
 			}
 		}
 	}
-	file_reserve_oracle_packet_proto_msgTypes[0].OneofWrappers = []interface{}{
-		(*OraclePacketData_NoData)(nil),
-	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_reserve_oracle_packet_proto_rawDesc,
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_reserve_oracle_packet_proto_goTypes,
 		DependencyIndexes: file_reserve_oracle_packet_proto_depIdxs,
+		EnumInfos:         file_reserve_oracle_packet_proto_enumTypes,
 		MessageInfos:      file_reserve_oracle_packet_proto_msgTypes,
 	}.Build()
 	File_reserve_oracle_packet_proto = out.File

@@ -3,6 +3,7 @@ package oracle
 
 import (
 	_ "cosmossdk.io/api/amino"
+	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
 	fmt "fmt"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
@@ -14,17 +15,235 @@ import (
 	sync "sync"
 )
 
+var _ protoreflect.List = (*_GenesisState_3_list)(nil)
+
+type _GenesisState_3_list struct {
+	list *[]*BandPriceState
+}
+
+func (x *_GenesisState_3_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_3_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_GenesisState_3_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*BandPriceState)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_3_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*BandPriceState)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_3_list) AppendMutable() protoreflect.Value {
+	v := new(BandPriceState)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_3_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_3_list) NewElement() protoreflect.Value {
+	v := new(BandPriceState)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_3_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_GenesisState_4_list)(nil)
+
+type _GenesisState_4_list struct {
+	list *[]*BandOracleRequest
+}
+
+func (x *_GenesisState_4_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_4_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_GenesisState_4_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*BandOracleRequest)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_4_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*BandOracleRequest)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_4_list) AppendMutable() protoreflect.Value {
+	v := new(BandOracleRequest)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_4_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_4_list) NewElement() protoreflect.Value {
+	v := new(BandOracleRequest)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_4_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_GenesisState_6_list)(nil)
+
+type _GenesisState_6_list struct {
+	list *[]*CalldataRecord
+}
+
+func (x *_GenesisState_6_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_6_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_GenesisState_6_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*CalldataRecord)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_6_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*CalldataRecord)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_6_list) AppendMutable() protoreflect.Value {
+	v := new(CalldataRecord)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_6_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_6_list) NewElement() protoreflect.Value {
+	v := new(CalldataRecord)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_6_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_GenesisState_9_list)(nil)
+
+type _GenesisState_9_list struct {
+	list *[]*PairDecimalsRate
+}
+
+func (x *_GenesisState_9_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_9_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_GenesisState_9_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*PairDecimalsRate)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_9_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*PairDecimalsRate)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_9_list) AppendMutable() protoreflect.Value {
+	v := new(PairDecimalsRate)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_9_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_9_list) NewElement() protoreflect.Value {
+	v := new(PairDecimalsRate)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_9_list) IsValid() bool {
+	return x.list != nil
+}
+
 var (
-	md_GenesisState         protoreflect.MessageDescriptor
-	fd_GenesisState_params  protoreflect.FieldDescriptor
-	fd_GenesisState_port_id protoreflect.FieldDescriptor
+	md_GenesisState                            protoreflect.MessageDescriptor
+	fd_GenesisState_params                     protoreflect.FieldDescriptor
+	fd_GenesisState_band_params                protoreflect.FieldDescriptor
+	fd_GenesisState_band_price_states          protoreflect.FieldDescriptor
+	fd_GenesisState_band_oracle_requests       protoreflect.FieldDescriptor
+	fd_GenesisState_band_latest_client_id      protoreflect.FieldDescriptor
+	fd_GenesisState_calldata_records           protoreflect.FieldDescriptor
+	fd_GenesisState_band_latest_request_id     protoreflect.FieldDescriptor
+	fd_GenesisState_band_oracle_request_params protoreflect.FieldDescriptor
+	fd_GenesisState_pair_decimals_rates        protoreflect.FieldDescriptor
 )
 
 func init() {
 	file_reserve_oracle_genesis_proto_init()
 	md_GenesisState = File_reserve_oracle_genesis_proto.Messages().ByName("GenesisState")
 	fd_GenesisState_params = md_GenesisState.Fields().ByName("params")
-	fd_GenesisState_port_id = md_GenesisState.Fields().ByName("port_id")
+	fd_GenesisState_band_params = md_GenesisState.Fields().ByName("band_params")
+	fd_GenesisState_band_price_states = md_GenesisState.Fields().ByName("band_price_states")
+	fd_GenesisState_band_oracle_requests = md_GenesisState.Fields().ByName("band_oracle_requests")
+	fd_GenesisState_band_latest_client_id = md_GenesisState.Fields().ByName("band_latest_client_id")
+	fd_GenesisState_calldata_records = md_GenesisState.Fields().ByName("calldata_records")
+	fd_GenesisState_band_latest_request_id = md_GenesisState.Fields().ByName("band_latest_request_id")
+	fd_GenesisState_band_oracle_request_params = md_GenesisState.Fields().ByName("band_oracle_request_params")
+	fd_GenesisState_pair_decimals_rates = md_GenesisState.Fields().ByName("pair_decimals_rates")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -98,9 +317,51 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
-	if x.PortId != "" {
-		value := protoreflect.ValueOfString(x.PortId)
-		if !f(fd_GenesisState_port_id, value) {
+	if x.BandParams != nil {
+		value := protoreflect.ValueOfMessage(x.BandParams.ProtoReflect())
+		if !f(fd_GenesisState_band_params, value) {
+			return
+		}
+	}
+	if len(x.BandPriceStates) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_3_list{list: &x.BandPriceStates})
+		if !f(fd_GenesisState_band_price_states, value) {
+			return
+		}
+	}
+	if len(x.BandOracleRequests) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_4_list{list: &x.BandOracleRequests})
+		if !f(fd_GenesisState_band_oracle_requests, value) {
+			return
+		}
+	}
+	if x.BandLatestClientId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.BandLatestClientId)
+		if !f(fd_GenesisState_band_latest_client_id, value) {
+			return
+		}
+	}
+	if len(x.CalldataRecords) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_6_list{list: &x.CalldataRecords})
+		if !f(fd_GenesisState_calldata_records, value) {
+			return
+		}
+	}
+	if x.BandLatestRequestId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.BandLatestRequestId)
+		if !f(fd_GenesisState_band_latest_request_id, value) {
+			return
+		}
+	}
+	if x.BandOracleRequestParams != nil {
+		value := protoreflect.ValueOfMessage(x.BandOracleRequestParams.ProtoReflect())
+		if !f(fd_GenesisState_band_oracle_request_params, value) {
+			return
+		}
+	}
+	if len(x.PairDecimalsRates) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_9_list{list: &x.PairDecimalsRates})
+		if !f(fd_GenesisState_pair_decimals_rates, value) {
 			return
 		}
 	}
@@ -121,8 +382,22 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 	switch fd.FullName() {
 	case "reserve.oracle.GenesisState.params":
 		return x.Params != nil
-	case "reserve.oracle.GenesisState.port_id":
-		return x.PortId != ""
+	case "reserve.oracle.GenesisState.band_params":
+		return x.BandParams != nil
+	case "reserve.oracle.GenesisState.band_price_states":
+		return len(x.BandPriceStates) != 0
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		return len(x.BandOracleRequests) != 0
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		return x.BandLatestClientId != uint64(0)
+	case "reserve.oracle.GenesisState.calldata_records":
+		return len(x.CalldataRecords) != 0
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		return x.BandLatestRequestId != uint64(0)
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		return x.BandOracleRequestParams != nil
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		return len(x.PairDecimalsRates) != 0
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -141,8 +416,22 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 	switch fd.FullName() {
 	case "reserve.oracle.GenesisState.params":
 		x.Params = nil
-	case "reserve.oracle.GenesisState.port_id":
-		x.PortId = ""
+	case "reserve.oracle.GenesisState.band_params":
+		x.BandParams = nil
+	case "reserve.oracle.GenesisState.band_price_states":
+		x.BandPriceStates = nil
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		x.BandOracleRequests = nil
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		x.BandLatestClientId = uint64(0)
+	case "reserve.oracle.GenesisState.calldata_records":
+		x.CalldataRecords = nil
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		x.BandLatestRequestId = uint64(0)
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		x.BandOracleRequestParams = nil
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		x.PairDecimalsRates = nil
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -162,9 +451,42 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 	case "reserve.oracle.GenesisState.params":
 		value := x.Params
 		return protoreflect.ValueOfMessage(value.ProtoReflect())
-	case "reserve.oracle.GenesisState.port_id":
-		value := x.PortId
-		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.GenesisState.band_params":
+		value := x.BandParams
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "reserve.oracle.GenesisState.band_price_states":
+		if len(x.BandPriceStates) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_3_list{})
+		}
+		listValue := &_GenesisState_3_list{list: &x.BandPriceStates}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		if len(x.BandOracleRequests) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_4_list{})
+		}
+		listValue := &_GenesisState_4_list{list: &x.BandOracleRequests}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		value := x.BandLatestClientId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.GenesisState.calldata_records":
+		if len(x.CalldataRecords) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_6_list{})
+		}
+		listValue := &_GenesisState_6_list{list: &x.CalldataRecords}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		value := x.BandLatestRequestId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		value := x.BandOracleRequestParams
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		if len(x.PairDecimalsRates) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_9_list{})
+		}
+		listValue := &_GenesisState_9_list{list: &x.PairDecimalsRates}
+		return protoreflect.ValueOfList(listValue)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -187,8 +509,30 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 	switch fd.FullName() {
 	case "reserve.oracle.GenesisState.params":
 		x.Params = value.Message().Interface().(*Params)
-	case "reserve.oracle.GenesisState.port_id":
-		x.PortId = value.Interface().(string)
+	case "reserve.oracle.GenesisState.band_params":
+		x.BandParams = value.Message().Interface().(*BandParams)
+	case "reserve.oracle.GenesisState.band_price_states":
+		lv := value.List()
+		clv := lv.(*_GenesisState_3_list)
+		x.BandPriceStates = *clv.list
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		lv := value.List()
+		clv := lv.(*_GenesisState_4_list)
+		x.BandOracleRequests = *clv.list
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		x.BandLatestClientId = value.Uint()
+	case "reserve.oracle.GenesisState.calldata_records":
+		lv := value.List()
+		clv := lv.(*_GenesisState_6_list)
+		x.CalldataRecords = *clv.list
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		x.BandLatestRequestId = value.Uint()
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		x.BandOracleRequestParams = value.Message().Interface().(*BandOracleRequestParams)
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		lv := value.List()
+		clv := lv.(*_GenesisState_9_list)
+		x.PairDecimalsRates = *clv.list
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -214,8 +558,44 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 			x.Params = new(Params)
 		}
 		return protoreflect.ValueOfMessage(x.Params.ProtoReflect())
-	case "reserve.oracle.GenesisState.port_id":
-		panic(fmt.Errorf("field port_id of message reserve.oracle.GenesisState is not mutable"))
+	case "reserve.oracle.GenesisState.band_params":
+		if x.BandParams == nil {
+			x.BandParams = new(BandParams)
+		}
+		return protoreflect.ValueOfMessage(x.BandParams.ProtoReflect())
+	case "reserve.oracle.GenesisState.band_price_states":
+		if x.BandPriceStates == nil {
+			x.BandPriceStates = []*BandPriceState{}
+		}
+		value := &_GenesisState_3_list{list: &x.BandPriceStates}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		if x.BandOracleRequests == nil {
+			x.BandOracleRequests = []*BandOracleRequest{}
+		}
+		value := &_GenesisState_4_list{list: &x.BandOracleRequests}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.GenesisState.calldata_records":
+		if x.CalldataRecords == nil {
+			x.CalldataRecords = []*CalldataRecord{}
+		}
+		value := &_GenesisState_6_list{list: &x.CalldataRecords}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		if x.BandOracleRequestParams == nil {
+			x.BandOracleRequestParams = new(BandOracleRequestParams)
+		}
+		return protoreflect.ValueOfMessage(x.BandOracleRequestParams.ProtoReflect())
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		if x.PairDecimalsRates == nil {
+			x.PairDecimalsRates = []*PairDecimalsRate{}
+		}
+		value := &_GenesisState_9_list{list: &x.PairDecimalsRates}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		panic(fmt.Errorf("field band_latest_client_id of message reserve.oracle.GenesisState is not mutable"))
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		panic(fmt.Errorf("field band_latest_request_id of message reserve.oracle.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -232,8 +612,28 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 	case "reserve.oracle.GenesisState.params":
 		m := new(Params)
 		return protoreflect.ValueOfMessage(m.ProtoReflect())
-	case "reserve.oracle.GenesisState.port_id":
-		return protoreflect.ValueOfString("")
+	case "reserve.oracle.GenesisState.band_params":
+		m := new(BandParams)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "reserve.oracle.GenesisState.band_price_states":
+		list := []*BandPriceState{}
+		return protoreflect.ValueOfList(&_GenesisState_3_list{list: &list})
+	case "reserve.oracle.GenesisState.band_oracle_requests":
+		list := []*BandOracleRequest{}
+		return protoreflect.ValueOfList(&_GenesisState_4_list{list: &list})
+	case "reserve.oracle.GenesisState.band_latest_client_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.GenesisState.calldata_records":
+		list := []*CalldataRecord{}
+		return protoreflect.ValueOfList(&_GenesisState_6_list{list: &list})
+	case "reserve.oracle.GenesisState.band_latest_request_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.GenesisState.band_oracle_request_params":
+		m := new(BandOracleRequestParams)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "reserve.oracle.GenesisState.pair_decimals_rates":
+		list := []*PairDecimalsRate{}
+		return protoreflect.ValueOfList(&_GenesisState_9_list{list: &list})
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.GenesisState"))
@@ -307,9 +707,43 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			l = options.Size(x.Params)
 			n += 1 + l + runtime.Sov(uint64(l))
 		}
-		l = len(x.PortId)
-		if l > 0 {
+		if x.BandParams != nil {
+			l = options.Size(x.BandParams)
 			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if len(x.BandPriceStates) > 0 {
+			for _, e := range x.BandPriceStates {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if len(x.BandOracleRequests) > 0 {
+			for _, e := range x.BandOracleRequests {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.BandLatestClientId != 0 {
+			n += 1 + runtime.Sov(uint64(x.BandLatestClientId))
+		}
+		if len(x.CalldataRecords) > 0 {
+			for _, e := range x.CalldataRecords {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.BandLatestRequestId != 0 {
+			n += 1 + runtime.Sov(uint64(x.BandLatestRequestId))
+		}
+		if x.BandOracleRequestParams != nil {
+			l = options.Size(x.BandOracleRequestParams)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if len(x.PairDecimalsRates) > 0 {
+			for _, e := range x.PairDecimalsRates {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
 		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
@@ -340,10 +774,105 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
 		}
-		if len(x.PortId) > 0 {
-			i -= len(x.PortId)
-			copy(dAtA[i:], x.PortId)
-			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.PortId)))
+		if len(x.PairDecimalsRates) > 0 {
+			for iNdEx := len(x.PairDecimalsRates) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.PairDecimalsRates[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x4a
+			}
+		}
+		if x.BandOracleRequestParams != nil {
+			encoded, err := options.Marshal(x.BandOracleRequestParams)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+			i--
+			dAtA[i] = 0x42
+		}
+		if x.BandLatestRequestId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.BandLatestRequestId))
+			i--
+			dAtA[i] = 0x38
+		}
+		if len(x.CalldataRecords) > 0 {
+			for iNdEx := len(x.CalldataRecords) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.CalldataRecords[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x32
+			}
+		}
+		if x.BandLatestClientId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.BandLatestClientId))
+			i--
+			dAtA[i] = 0x28
+		}
+		if len(x.BandOracleRequests) > 0 {
+			for iNdEx := len(x.BandOracleRequests) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.BandOracleRequests[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x22
+			}
+		}
+		if len(x.BandPriceStates) > 0 {
+			for iNdEx := len(x.BandPriceStates) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.BandPriceStates[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x1a
+			}
+		}
+		if x.BandParams != nil {
+			encoded, err := options.Marshal(x.BandParams)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
 			i--
 			dAtA[i] = 0x12
 		}
@@ -448,7 +977,1508 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				iNdEx = postIndex
 			case 2:
 				if wireType != 2 {
-					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PortId", wireType)
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandParams", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.BandParams == nil {
+					x.BandParams = &BandParams{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.BandParams); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandPriceStates", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.BandPriceStates = append(x.BandPriceStates, &BandPriceState{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.BandPriceStates[len(x.BandPriceStates)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandOracleRequests", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.BandOracleRequests = append(x.BandOracleRequests, &BandOracleRequest{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.BandOracleRequests[len(x.BandOracleRequests)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandLatestClientId", wireType)
+				}
+				x.BandLatestClientId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.BandLatestClientId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field CalldataRecords", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.CalldataRecords = append(x.CalldataRecords, &CalldataRecord{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.CalldataRecords[len(x.CalldataRecords)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 7:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandLatestRequestId", wireType)
+				}
+				x.BandLatestRequestId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.BandLatestRequestId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 8:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field BandOracleRequestParams", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.BandOracleRequestParams == nil {
+					x.BandOracleRequestParams = &BandOracleRequestParams{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.BandOracleRequestParams); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 9:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PairDecimalsRates", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.PairDecimalsRates = append(x.PairDecimalsRates, &PairDecimalsRate{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.PairDecimalsRates[len(x.PairDecimalsRates)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var _ protoreflect.List = (*_BandOracleRequestParams_3_list)(nil)
+
+type _BandOracleRequestParams_3_list struct {
+	list *[]*v1beta1.Coin
+}
+
+func (x *_BandOracleRequestParams_3_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_BandOracleRequestParams_3_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_BandOracleRequestParams_3_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_BandOracleRequestParams_3_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_BandOracleRequestParams_3_list) AppendMutable() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_BandOracleRequestParams_3_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_BandOracleRequestParams_3_list) NewElement() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_BandOracleRequestParams_3_list) IsValid() bool {
+	return x.list != nil
+}
+
+var (
+	md_BandOracleRequestParams                  protoreflect.MessageDescriptor
+	fd_BandOracleRequestParams_ask_count        protoreflect.FieldDescriptor
+	fd_BandOracleRequestParams_min_count        protoreflect.FieldDescriptor
+	fd_BandOracleRequestParams_fee_limit        protoreflect.FieldDescriptor
+	fd_BandOracleRequestParams_prepare_gas      protoreflect.FieldDescriptor
+	fd_BandOracleRequestParams_execute_gas      protoreflect.FieldDescriptor
+	fd_BandOracleRequestParams_min_source_count protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_BandOracleRequestParams = File_reserve_oracle_genesis_proto.Messages().ByName("BandOracleRequestParams")
+	fd_BandOracleRequestParams_ask_count = md_BandOracleRequestParams.Fields().ByName("ask_count")
+	fd_BandOracleRequestParams_min_count = md_BandOracleRequestParams.Fields().ByName("min_count")
+	fd_BandOracleRequestParams_fee_limit = md_BandOracleRequestParams.Fields().ByName("fee_limit")
+	fd_BandOracleRequestParams_prepare_gas = md_BandOracleRequestParams.Fields().ByName("prepare_gas")
+	fd_BandOracleRequestParams_execute_gas = md_BandOracleRequestParams.Fields().ByName("execute_gas")
+	fd_BandOracleRequestParams_min_source_count = md_BandOracleRequestParams.Fields().ByName("min_source_count")
+}
+
+var _ protoreflect.Message = (*fastReflection_BandOracleRequestParams)(nil)
+
+type fastReflection_BandOracleRequestParams BandOracleRequestParams
+
+func (x *BandOracleRequestParams) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_BandOracleRequestParams)(x)
+}
+
+func (x *BandOracleRequestParams) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_BandOracleRequestParams_messageType fastReflection_BandOracleRequestParams_messageType
+var _ protoreflect.MessageType = fastReflection_BandOracleRequestParams_messageType{}
+
+type fastReflection_BandOracleRequestParams_messageType struct{}
+
+func (x fastReflection_BandOracleRequestParams_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_BandOracleRequestParams)(nil)
+}
+func (x fastReflection_BandOracleRequestParams_messageType) New() protoreflect.Message {
+	return new(fastReflection_BandOracleRequestParams)
+}
+func (x fastReflection_BandOracleRequestParams_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandOracleRequestParams
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_BandOracleRequestParams) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandOracleRequestParams
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_BandOracleRequestParams) Type() protoreflect.MessageType {
+	return _fastReflection_BandOracleRequestParams_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_BandOracleRequestParams) New() protoreflect.Message {
+	return new(fastReflection_BandOracleRequestParams)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_BandOracleRequestParams) Interface() protoreflect.ProtoMessage {
+	return (*BandOracleRequestParams)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_BandOracleRequestParams) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.AskCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.AskCount)
+		if !f(fd_BandOracleRequestParams_ask_count, value) {
+			return
+		}
+	}
+	if x.MinCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MinCount)
+		if !f(fd_BandOracleRequestParams_min_count, value) {
+			return
+		}
+	}
+	if len(x.FeeLimit) != 0 {
+		value := protoreflect.ValueOfList(&_BandOracleRequestParams_3_list{list: &x.FeeLimit})
+		if !f(fd_BandOracleRequestParams_fee_limit, value) {
+			return
+		}
+	}
+	if x.PrepareGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.PrepareGas)
+		if !f(fd_BandOracleRequestParams_prepare_gas, value) {
+			return
+		}
+	}
+	if x.ExecuteGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.ExecuteGas)
+		if !f(fd_BandOracleRequestParams_execute_gas, value) {
+			return
+		}
+	}
+	if x.MinSourceCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MinSourceCount)
+		if !f(fd_BandOracleRequestParams_min_source_count, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_BandOracleRequestParams) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		return x.AskCount != uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		return x.MinCount != uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		return len(x.FeeLimit) != 0
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		return x.PrepareGas != uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		return x.ExecuteGas != uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		return x.MinSourceCount != uint64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequestParams) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		x.AskCount = uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		x.MinCount = uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		x.FeeLimit = nil
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		x.PrepareGas = uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		x.ExecuteGas = uint64(0)
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		x.MinSourceCount = uint64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_BandOracleRequestParams) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		value := x.AskCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		value := x.MinCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		if len(x.FeeLimit) == 0 {
+			return protoreflect.ValueOfList(&_BandOracleRequestParams_3_list{})
+		}
+		listValue := &_BandOracleRequestParams_3_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		value := x.PrepareGas
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		value := x.ExecuteGas
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		value := x.MinSourceCount
+		return protoreflect.ValueOfUint64(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequestParams) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		x.AskCount = value.Uint()
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		x.MinCount = value.Uint()
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		lv := value.List()
+		clv := lv.(*_BandOracleRequestParams_3_list)
+		x.FeeLimit = *clv.list
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		x.PrepareGas = value.Uint()
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		x.ExecuteGas = value.Uint()
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		x.MinSourceCount = value.Uint()
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequestParams) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		if x.FeeLimit == nil {
+			x.FeeLimit = []*v1beta1.Coin{}
+		}
+		value := &_BandOracleRequestParams_3_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		panic(fmt.Errorf("field ask_count of message reserve.oracle.BandOracleRequestParams is not mutable"))
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		panic(fmt.Errorf("field min_count of message reserve.oracle.BandOracleRequestParams is not mutable"))
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		panic(fmt.Errorf("field prepare_gas of message reserve.oracle.BandOracleRequestParams is not mutable"))
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		panic(fmt.Errorf("field execute_gas of message reserve.oracle.BandOracleRequestParams is not mutable"))
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		panic(fmt.Errorf("field min_source_count of message reserve.oracle.BandOracleRequestParams is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_BandOracleRequestParams) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequestParams.ask_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequestParams.min_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequestParams.fee_limit":
+		list := []*v1beta1.Coin{}
+		return protoreflect.ValueOfList(&_BandOracleRequestParams_3_list{list: &list})
+	case "reserve.oracle.BandOracleRequestParams.prepare_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequestParams.execute_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequestParams.min_source_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequestParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequestParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_BandOracleRequestParams) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.BandOracleRequestParams", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_BandOracleRequestParams) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequestParams) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_BandOracleRequestParams) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_BandOracleRequestParams) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*BandOracleRequestParams)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		if x.AskCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.AskCount))
+		}
+		if x.MinCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.MinCount))
+		}
+		if len(x.FeeLimit) > 0 {
+			for _, e := range x.FeeLimit {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.PrepareGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.PrepareGas))
+		}
+		if x.ExecuteGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.ExecuteGas))
+		}
+		if x.MinSourceCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.MinSourceCount))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*BandOracleRequestParams)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.MinSourceCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinSourceCount))
+			i--
+			dAtA[i] = 0x30
+		}
+		if x.ExecuteGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ExecuteGas))
+			i--
+			dAtA[i] = 0x28
+		}
+		if x.PrepareGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.PrepareGas))
+			i--
+			dAtA[i] = 0x20
+		}
+		if len(x.FeeLimit) > 0 {
+			for iNdEx := len(x.FeeLimit) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.FeeLimit[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x1a
+			}
+		}
+		if x.MinCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinCount))
+			i--
+			dAtA[i] = 0x10
+		}
+		if x.AskCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.AskCount))
+			i--
+			dAtA[i] = 0x8
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*BandOracleRequestParams)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandOracleRequestParams: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandOracleRequestParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AskCount", wireType)
+				}
+				x.AskCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.AskCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 2:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinCount", wireType)
+				}
+				x.MinCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.MinCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FeeLimit", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.FeeLimit = append(x.FeeLimit, &v1beta1.Coin{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.FeeLimit[len(x.FeeLimit)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PrepareGas", wireType)
+				}
+				x.PrepareGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.PrepareGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ExecuteGas", wireType)
+				}
+				x.ExecuteGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ExecuteGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinSourceCount", wireType)
+				}
+				x.MinSourceCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.MinSourceCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var (
+	md_BandPriceState              protoreflect.MessageDescriptor
+	fd_BandPriceState_symbol       protoreflect.FieldDescriptor
+	fd_BandPriceState_rate         protoreflect.FieldDescriptor
+	fd_BandPriceState_resolve_time protoreflect.FieldDescriptor
+	fd_BandPriceState_request_ID   protoreflect.FieldDescriptor
+	fd_BandPriceState_price_state  protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_BandPriceState = File_reserve_oracle_genesis_proto.Messages().ByName("BandPriceState")
+	fd_BandPriceState_symbol = md_BandPriceState.Fields().ByName("symbol")
+	fd_BandPriceState_rate = md_BandPriceState.Fields().ByName("rate")
+	fd_BandPriceState_resolve_time = md_BandPriceState.Fields().ByName("resolve_time")
+	fd_BandPriceState_request_ID = md_BandPriceState.Fields().ByName("request_ID")
+	fd_BandPriceState_price_state = md_BandPriceState.Fields().ByName("price_state")
+}
+
+var _ protoreflect.Message = (*fastReflection_BandPriceState)(nil)
+
+type fastReflection_BandPriceState BandPriceState
+
+func (x *BandPriceState) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_BandPriceState)(x)
+}
+
+func (x *BandPriceState) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_BandPriceState_messageType fastReflection_BandPriceState_messageType
+var _ protoreflect.MessageType = fastReflection_BandPriceState_messageType{}
+
+type fastReflection_BandPriceState_messageType struct{}
+
+func (x fastReflection_BandPriceState_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_BandPriceState)(nil)
+}
+func (x fastReflection_BandPriceState_messageType) New() protoreflect.Message {
+	return new(fastReflection_BandPriceState)
+}
+func (x fastReflection_BandPriceState_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandPriceState
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_BandPriceState) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandPriceState
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_BandPriceState) Type() protoreflect.MessageType {
+	return _fastReflection_BandPriceState_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_BandPriceState) New() protoreflect.Message {
+	return new(fastReflection_BandPriceState)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_BandPriceState) Interface() protoreflect.ProtoMessage {
+	return (*BandPriceState)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_BandPriceState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.Symbol != "" {
+		value := protoreflect.ValueOfString(x.Symbol)
+		if !f(fd_BandPriceState_symbol, value) {
+			return
+		}
+	}
+	if x.Rate != "" {
+		value := protoreflect.ValueOfString(x.Rate)
+		if !f(fd_BandPriceState_rate, value) {
+			return
+		}
+	}
+	if x.ResolveTime != int64(0) {
+		value := protoreflect.ValueOfInt64(x.ResolveTime)
+		if !f(fd_BandPriceState_resolve_time, value) {
+			return
+		}
+	}
+	if x.Request_ID != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.Request_ID)
+		if !f(fd_BandPriceState_request_ID, value) {
+			return
+		}
+	}
+	if x.PriceState != nil {
+		value := protoreflect.ValueOfMessage(x.PriceState.ProtoReflect())
+		if !f(fd_BandPriceState_price_state, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_BandPriceState) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.BandPriceState.symbol":
+		return x.Symbol != ""
+	case "reserve.oracle.BandPriceState.rate":
+		return x.Rate != ""
+	case "reserve.oracle.BandPriceState.resolve_time":
+		return x.ResolveTime != int64(0)
+	case "reserve.oracle.BandPriceState.request_ID":
+		return x.Request_ID != uint64(0)
+	case "reserve.oracle.BandPriceState.price_state":
+		return x.PriceState != nil
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandPriceState) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandPriceState.symbol":
+		x.Symbol = ""
+	case "reserve.oracle.BandPriceState.rate":
+		x.Rate = ""
+	case "reserve.oracle.BandPriceState.resolve_time":
+		x.ResolveTime = int64(0)
+	case "reserve.oracle.BandPriceState.request_ID":
+		x.Request_ID = uint64(0)
+	case "reserve.oracle.BandPriceState.price_state":
+		x.PriceState = nil
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_BandPriceState) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.BandPriceState.symbol":
+		value := x.Symbol
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.BandPriceState.rate":
+		value := x.Rate
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.BandPriceState.resolve_time":
+		value := x.ResolveTime
+		return protoreflect.ValueOfInt64(value)
+	case "reserve.oracle.BandPriceState.request_ID":
+		value := x.Request_ID
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandPriceState.price_state":
+		value := x.PriceState
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandPriceState) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandPriceState.symbol":
+		x.Symbol = value.Interface().(string)
+	case "reserve.oracle.BandPriceState.rate":
+		x.Rate = value.Interface().(string)
+	case "reserve.oracle.BandPriceState.resolve_time":
+		x.ResolveTime = value.Int()
+	case "reserve.oracle.BandPriceState.request_ID":
+		x.Request_ID = value.Uint()
+	case "reserve.oracle.BandPriceState.price_state":
+		x.PriceState = value.Message().Interface().(*PriceState)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandPriceState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandPriceState.price_state":
+		if x.PriceState == nil {
+			x.PriceState = new(PriceState)
+		}
+		return protoreflect.ValueOfMessage(x.PriceState.ProtoReflect())
+	case "reserve.oracle.BandPriceState.symbol":
+		panic(fmt.Errorf("field symbol of message reserve.oracle.BandPriceState is not mutable"))
+	case "reserve.oracle.BandPriceState.rate":
+		panic(fmt.Errorf("field rate of message reserve.oracle.BandPriceState is not mutable"))
+	case "reserve.oracle.BandPriceState.resolve_time":
+		panic(fmt.Errorf("field resolve_time of message reserve.oracle.BandPriceState is not mutable"))
+	case "reserve.oracle.BandPriceState.request_ID":
+		panic(fmt.Errorf("field request_ID of message reserve.oracle.BandPriceState is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_BandPriceState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandPriceState.symbol":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.BandPriceState.rate":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.BandPriceState.resolve_time":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "reserve.oracle.BandPriceState.request_ID":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandPriceState.price_state":
+		m := new(PriceState)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandPriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandPriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_BandPriceState) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.BandPriceState", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_BandPriceState) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandPriceState) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_BandPriceState) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_BandPriceState) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*BandPriceState)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		l = len(x.Symbol)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.Rate)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.ResolveTime != 0 {
+			n += 1 + runtime.Sov(uint64(x.ResolveTime))
+		}
+		if x.Request_ID != 0 {
+			n += 1 + runtime.Sov(uint64(x.Request_ID))
+		}
+		if x.PriceState != nil {
+			l = options.Size(x.PriceState)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*BandPriceState)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.PriceState != nil {
+			encoded, err := options.Marshal(x.PriceState)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+			i--
+			dAtA[i] = 0x2a
+		}
+		if x.Request_ID != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.Request_ID))
+			i--
+			dAtA[i] = 0x20
+		}
+		if x.ResolveTime != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ResolveTime))
+			i--
+			dAtA[i] = 0x18
+		}
+		if len(x.Rate) > 0 {
+			i -= len(x.Rate)
+			copy(dAtA[i:], x.Rate)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Rate)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if len(x.Symbol) > 0 {
+			i -= len(x.Symbol)
+			copy(dAtA[i:], x.Symbol)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Symbol)))
+			i--
+			dAtA[i] = 0xa
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*BandPriceState)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandPriceState: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandPriceState: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Symbol", wireType)
 				}
 				var stringLen uint64
 				for shift := uint(0); ; shift += 7 {
@@ -476,7 +2506,3330 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				if postIndex > l {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
 				}
-				x.PortId = string(dAtA[iNdEx:postIndex])
+				x.Symbol = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Rate", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Rate = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ResolveTime", wireType)
+				}
+				x.ResolveTime = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ResolveTime |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Request_ID", wireType)
+				}
+				x.Request_ID = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.Request_ID |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PriceState", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.PriceState == nil {
+					x.PriceState = &PriceState{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.PriceState); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var (
+	md_PriceState           protoreflect.MessageDescriptor
+	fd_PriceState_price     protoreflect.FieldDescriptor
+	fd_PriceState_timestamp protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_PriceState = File_reserve_oracle_genesis_proto.Messages().ByName("PriceState")
+	fd_PriceState_price = md_PriceState.Fields().ByName("price")
+	fd_PriceState_timestamp = md_PriceState.Fields().ByName("timestamp")
+}
+
+var _ protoreflect.Message = (*fastReflection_PriceState)(nil)
+
+type fastReflection_PriceState PriceState
+
+func (x *PriceState) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_PriceState)(x)
+}
+
+func (x *PriceState) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_PriceState_messageType fastReflection_PriceState_messageType
+var _ protoreflect.MessageType = fastReflection_PriceState_messageType{}
+
+type fastReflection_PriceState_messageType struct{}
+
+func (x fastReflection_PriceState_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_PriceState)(nil)
+}
+func (x fastReflection_PriceState_messageType) New() protoreflect.Message {
+	return new(fastReflection_PriceState)
+}
+func (x fastReflection_PriceState_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_PriceState
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_PriceState) Descriptor() protoreflect.MessageDescriptor {
+	return md_PriceState
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_PriceState) Type() protoreflect.MessageType {
+	return _fastReflection_PriceState_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_PriceState) New() protoreflect.Message {
+	return new(fastReflection_PriceState)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_PriceState) Interface() protoreflect.ProtoMessage {
+	return (*PriceState)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_PriceState) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.Price != "" {
+		value := protoreflect.ValueOfString(x.Price)
+		if !f(fd_PriceState_price, value) {
+			return
+		}
+	}
+	if x.Timestamp != int64(0) {
+		value := protoreflect.ValueOfInt64(x.Timestamp)
+		if !f(fd_PriceState_timestamp, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_PriceState) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.PriceState.price":
+		return x.Price != ""
+	case "reserve.oracle.PriceState.timestamp":
+		return x.Timestamp != int64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PriceState) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.PriceState.price":
+		x.Price = ""
+	case "reserve.oracle.PriceState.timestamp":
+		x.Timestamp = int64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_PriceState) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.PriceState.price":
+		value := x.Price
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.PriceState.timestamp":
+		value := x.Timestamp
+		return protoreflect.ValueOfInt64(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PriceState) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.PriceState.price":
+		x.Price = value.Interface().(string)
+	case "reserve.oracle.PriceState.timestamp":
+		x.Timestamp = value.Int()
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PriceState) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.PriceState.price":
+		panic(fmt.Errorf("field price of message reserve.oracle.PriceState is not mutable"))
+	case "reserve.oracle.PriceState.timestamp":
+		panic(fmt.Errorf("field timestamp of message reserve.oracle.PriceState is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_PriceState) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.PriceState.price":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.PriceState.timestamp":
+		return protoreflect.ValueOfInt64(int64(0))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PriceState"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PriceState does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_PriceState) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.PriceState", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_PriceState) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PriceState) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_PriceState) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_PriceState) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*PriceState)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		l = len(x.Price)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.Timestamp != 0 {
+			n += 1 + runtime.Sov(uint64(x.Timestamp))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*PriceState)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.Timestamp != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.Timestamp))
+			i--
+			dAtA[i] = 0x10
+		}
+		if len(x.Price) > 0 {
+			i -= len(x.Price)
+			copy(dAtA[i:], x.Price)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Price)))
+			i--
+			dAtA[i] = 0xa
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*PriceState)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PriceState: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PriceState: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Price", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Price = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
+				}
+				x.Timestamp = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.Timestamp |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var (
+	md_CalldataRecord           protoreflect.MessageDescriptor
+	fd_CalldataRecord_client_id protoreflect.FieldDescriptor
+	fd_CalldataRecord_calldata  protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_CalldataRecord = File_reserve_oracle_genesis_proto.Messages().ByName("CalldataRecord")
+	fd_CalldataRecord_client_id = md_CalldataRecord.Fields().ByName("client_id")
+	fd_CalldataRecord_calldata = md_CalldataRecord.Fields().ByName("calldata")
+}
+
+var _ protoreflect.Message = (*fastReflection_CalldataRecord)(nil)
+
+type fastReflection_CalldataRecord CalldataRecord
+
+func (x *CalldataRecord) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_CalldataRecord)(x)
+}
+
+func (x *CalldataRecord) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_CalldataRecord_messageType fastReflection_CalldataRecord_messageType
+var _ protoreflect.MessageType = fastReflection_CalldataRecord_messageType{}
+
+type fastReflection_CalldataRecord_messageType struct{}
+
+func (x fastReflection_CalldataRecord_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_CalldataRecord)(nil)
+}
+func (x fastReflection_CalldataRecord_messageType) New() protoreflect.Message {
+	return new(fastReflection_CalldataRecord)
+}
+func (x fastReflection_CalldataRecord_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_CalldataRecord
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_CalldataRecord) Descriptor() protoreflect.MessageDescriptor {
+	return md_CalldataRecord
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_CalldataRecord) Type() protoreflect.MessageType {
+	return _fastReflection_CalldataRecord_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_CalldataRecord) New() protoreflect.Message {
+	return new(fastReflection_CalldataRecord)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_CalldataRecord) Interface() protoreflect.ProtoMessage {
+	return (*CalldataRecord)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_CalldataRecord) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.ClientId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.ClientId)
+		if !f(fd_CalldataRecord_client_id, value) {
+			return
+		}
+	}
+	if len(x.Calldata) != 0 {
+		value := protoreflect.ValueOfBytes(x.Calldata)
+		if !f(fd_CalldataRecord_calldata, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_CalldataRecord) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		return x.ClientId != uint64(0)
+	case "reserve.oracle.CalldataRecord.calldata":
+		return len(x.Calldata) != 0
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_CalldataRecord) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		x.ClientId = uint64(0)
+	case "reserve.oracle.CalldataRecord.calldata":
+		x.Calldata = nil
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_CalldataRecord) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		value := x.ClientId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.CalldataRecord.calldata":
+		value := x.Calldata
+		return protoreflect.ValueOfBytes(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_CalldataRecord) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		x.ClientId = value.Uint()
+	case "reserve.oracle.CalldataRecord.calldata":
+		x.Calldata = value.Bytes()
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_CalldataRecord) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		panic(fmt.Errorf("field client_id of message reserve.oracle.CalldataRecord is not mutable"))
+	case "reserve.oracle.CalldataRecord.calldata":
+		panic(fmt.Errorf("field calldata of message reserve.oracle.CalldataRecord is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_CalldataRecord) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.CalldataRecord.client_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.CalldataRecord.calldata":
+		return protoreflect.ValueOfBytes(nil)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.CalldataRecord"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.CalldataRecord does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_CalldataRecord) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.CalldataRecord", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_CalldataRecord) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_CalldataRecord) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_CalldataRecord) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_CalldataRecord) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*CalldataRecord)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		if x.ClientId != 0 {
+			n += 1 + runtime.Sov(uint64(x.ClientId))
+		}
+		l = len(x.Calldata)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*CalldataRecord)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.Calldata) > 0 {
+			i -= len(x.Calldata)
+			copy(dAtA[i:], x.Calldata)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Calldata)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if x.ClientId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ClientId))
+			i--
+			dAtA[i] = 0x8
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*CalldataRecord)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: CalldataRecord: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: CalldataRecord: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+				}
+				x.ClientId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ClientId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Calldata", wireType)
+				}
+				var byteLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					byteLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if byteLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + byteLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Calldata = append(x.Calldata[:0], dAtA[iNdEx:postIndex]...)
+				if x.Calldata == nil {
+					x.Calldata = []byte{}
+				}
+				iNdEx = postIndex
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var _ protoreflect.List = (*_BandParams_5_list)(nil)
+
+type _BandParams_5_list struct {
+	list *[]int64
+}
+
+func (x *_BandParams_5_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_BandParams_5_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfInt64((*x.list)[i])
+}
+
+func (x *_BandParams_5_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Int()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_BandParams_5_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Int()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_BandParams_5_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message BandParams at list field LegacyOracleIds as it is not of Message kind"))
+}
+
+func (x *_BandParams_5_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_BandParams_5_list) NewElement() protoreflect.Value {
+	v := int64(0)
+	return protoreflect.ValueOfInt64(v)
+}
+
+func (x *_BandParams_5_list) IsValid() bool {
+	return x.list != nil
+}
+
+var (
+	md_BandParams                      protoreflect.MessageDescriptor
+	fd_BandParams_ibc_request_interval protoreflect.FieldDescriptor
+	fd_BandParams_ibc_source_channel   protoreflect.FieldDescriptor
+	fd_BandParams_ibc_version          protoreflect.FieldDescriptor
+	fd_BandParams_ibc_port_id          protoreflect.FieldDescriptor
+	fd_BandParams_legacy_oracle_ids    protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_BandParams = File_reserve_oracle_genesis_proto.Messages().ByName("BandParams")
+	fd_BandParams_ibc_request_interval = md_BandParams.Fields().ByName("ibc_request_interval")
+	fd_BandParams_ibc_source_channel = md_BandParams.Fields().ByName("ibc_source_channel")
+	fd_BandParams_ibc_version = md_BandParams.Fields().ByName("ibc_version")
+	fd_BandParams_ibc_port_id = md_BandParams.Fields().ByName("ibc_port_id")
+	fd_BandParams_legacy_oracle_ids = md_BandParams.Fields().ByName("legacy_oracle_ids")
+}
+
+var _ protoreflect.Message = (*fastReflection_BandParams)(nil)
+
+type fastReflection_BandParams BandParams
+
+func (x *BandParams) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_BandParams)(x)
+}
+
+func (x *BandParams) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_BandParams_messageType fastReflection_BandParams_messageType
+var _ protoreflect.MessageType = fastReflection_BandParams_messageType{}
+
+type fastReflection_BandParams_messageType struct{}
+
+func (x fastReflection_BandParams_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_BandParams)(nil)
+}
+func (x fastReflection_BandParams_messageType) New() protoreflect.Message {
+	return new(fastReflection_BandParams)
+}
+func (x fastReflection_BandParams_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandParams
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_BandParams) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandParams
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_BandParams) Type() protoreflect.MessageType {
+	return _fastReflection_BandParams_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_BandParams) New() protoreflect.Message {
+	return new(fastReflection_BandParams)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_BandParams) Interface() protoreflect.ProtoMessage {
+	return (*BandParams)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_BandParams) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.IbcRequestInterval != int64(0) {
+		value := protoreflect.ValueOfInt64(x.IbcRequestInterval)
+		if !f(fd_BandParams_ibc_request_interval, value) {
+			return
+		}
+	}
+	if x.IbcSourceChannel != "" {
+		value := protoreflect.ValueOfString(x.IbcSourceChannel)
+		if !f(fd_BandParams_ibc_source_channel, value) {
+			return
+		}
+	}
+	if x.IbcVersion != "" {
+		value := protoreflect.ValueOfString(x.IbcVersion)
+		if !f(fd_BandParams_ibc_version, value) {
+			return
+		}
+	}
+	if x.IbcPortId != "" {
+		value := protoreflect.ValueOfString(x.IbcPortId)
+		if !f(fd_BandParams_ibc_port_id, value) {
+			return
+		}
+	}
+	if len(x.LegacyOracleIds) != 0 {
+		value := protoreflect.ValueOfList(&_BandParams_5_list{list: &x.LegacyOracleIds})
+		if !f(fd_BandParams_legacy_oracle_ids, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_BandParams) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		return x.IbcRequestInterval != int64(0)
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		return x.IbcSourceChannel != ""
+	case "reserve.oracle.BandParams.ibc_version":
+		return x.IbcVersion != ""
+	case "reserve.oracle.BandParams.ibc_port_id":
+		return x.IbcPortId != ""
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		return len(x.LegacyOracleIds) != 0
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandParams) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		x.IbcRequestInterval = int64(0)
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		x.IbcSourceChannel = ""
+	case "reserve.oracle.BandParams.ibc_version":
+		x.IbcVersion = ""
+	case "reserve.oracle.BandParams.ibc_port_id":
+		x.IbcPortId = ""
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		x.LegacyOracleIds = nil
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_BandParams) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		value := x.IbcRequestInterval
+		return protoreflect.ValueOfInt64(value)
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		value := x.IbcSourceChannel
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.BandParams.ibc_version":
+		value := x.IbcVersion
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.BandParams.ibc_port_id":
+		value := x.IbcPortId
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		if len(x.LegacyOracleIds) == 0 {
+			return protoreflect.ValueOfList(&_BandParams_5_list{})
+		}
+		listValue := &_BandParams_5_list{list: &x.LegacyOracleIds}
+		return protoreflect.ValueOfList(listValue)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandParams) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		x.IbcRequestInterval = value.Int()
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		x.IbcSourceChannel = value.Interface().(string)
+	case "reserve.oracle.BandParams.ibc_version":
+		x.IbcVersion = value.Interface().(string)
+	case "reserve.oracle.BandParams.ibc_port_id":
+		x.IbcPortId = value.Interface().(string)
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		lv := value.List()
+		clv := lv.(*_BandParams_5_list)
+		x.LegacyOracleIds = *clv.list
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandParams) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		if x.LegacyOracleIds == nil {
+			x.LegacyOracleIds = []int64{}
+		}
+		value := &_BandParams_5_list{list: &x.LegacyOracleIds}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		panic(fmt.Errorf("field ibc_request_interval of message reserve.oracle.BandParams is not mutable"))
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		panic(fmt.Errorf("field ibc_source_channel of message reserve.oracle.BandParams is not mutable"))
+	case "reserve.oracle.BandParams.ibc_version":
+		panic(fmt.Errorf("field ibc_version of message reserve.oracle.BandParams is not mutable"))
+	case "reserve.oracle.BandParams.ibc_port_id":
+		panic(fmt.Errorf("field ibc_port_id of message reserve.oracle.BandParams is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_BandParams) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandParams.ibc_request_interval":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "reserve.oracle.BandParams.ibc_source_channel":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.BandParams.ibc_version":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.BandParams.ibc_port_id":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.BandParams.legacy_oracle_ids":
+		list := []int64{}
+		return protoreflect.ValueOfList(&_BandParams_5_list{list: &list})
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandParams"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandParams does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_BandParams) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.BandParams", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_BandParams) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandParams) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_BandParams) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_BandParams) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*BandParams)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		if x.IbcRequestInterval != 0 {
+			n += 1 + runtime.Sov(uint64(x.IbcRequestInterval))
+		}
+		l = len(x.IbcSourceChannel)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.IbcVersion)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.IbcPortId)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if len(x.LegacyOracleIds) > 0 {
+			l = 0
+			for _, e := range x.LegacyOracleIds {
+				l += runtime.Sov(uint64(e))
+			}
+			n += 1 + runtime.Sov(uint64(l)) + l
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*BandParams)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.LegacyOracleIds) > 0 {
+			var pksize2 int
+			for _, num := range x.LegacyOracleIds {
+				pksize2 += runtime.Sov(uint64(num))
+			}
+			i -= pksize2
+			j1 := i
+			for _, num1 := range x.LegacyOracleIds {
+				num := uint64(num1)
+				for num >= 1<<7 {
+					dAtA[j1] = uint8(uint64(num)&0x7f | 0x80)
+					num >>= 7
+					j1++
+				}
+				dAtA[j1] = uint8(num)
+				j1++
+			}
+			i = runtime.EncodeVarint(dAtA, i, uint64(pksize2))
+			i--
+			dAtA[i] = 0x2a
+		}
+		if len(x.IbcPortId) > 0 {
+			i -= len(x.IbcPortId)
+			copy(dAtA[i:], x.IbcPortId)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.IbcPortId)))
+			i--
+			dAtA[i] = 0x22
+		}
+		if len(x.IbcVersion) > 0 {
+			i -= len(x.IbcVersion)
+			copy(dAtA[i:], x.IbcVersion)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.IbcVersion)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if len(x.IbcSourceChannel) > 0 {
+			i -= len(x.IbcSourceChannel)
+			copy(dAtA[i:], x.IbcSourceChannel)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.IbcSourceChannel)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if x.IbcRequestInterval != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.IbcRequestInterval))
+			i--
+			dAtA[i] = 0x8
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*BandParams)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandParams: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandParams: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field IbcRequestInterval", wireType)
+				}
+				x.IbcRequestInterval = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.IbcRequestInterval |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field IbcSourceChannel", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.IbcSourceChannel = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field IbcVersion", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.IbcVersion = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field IbcPortId", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.IbcPortId = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 5:
+				if wireType == 0 {
+					var v int64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= int64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					x.LegacyOracleIds = append(x.LegacyOracleIds, v)
+				} else if wireType == 2 {
+					var packedLen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+						}
+						if iNdEx >= l {
+							return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						packedLen |= int(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if packedLen < 0 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+					}
+					postIndex := iNdEx + packedLen
+					if postIndex < 0 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+					}
+					if postIndex > l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					var elementCount int
+					var count int
+					for _, integer := range dAtA[iNdEx:postIndex] {
+						if integer < 128 {
+							count++
+						}
+					}
+					elementCount = count
+					if elementCount != 0 && len(x.LegacyOracleIds) == 0 {
+						x.LegacyOracleIds = make([]int64, 0, elementCount)
+					}
+					for iNdEx < postIndex {
+						var v int64
+						for shift := uint(0); ; shift += 7 {
+							if shift >= 64 {
+								return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+							}
+							if iNdEx >= l {
+								return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+							}
+							b := dAtA[iNdEx]
+							iNdEx++
+							v |= int64(b&0x7F) << shift
+							if b < 0x80 {
+								break
+							}
+						}
+						x.LegacyOracleIds = append(x.LegacyOracleIds, v)
+					}
+				} else {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field LegacyOracleIds", wireType)
+				}
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var _ protoreflect.List = (*_BandOracleRequest_3_list)(nil)
+
+type _BandOracleRequest_3_list struct {
+	list *[]string
+}
+
+func (x *_BandOracleRequest_3_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_BandOracleRequest_3_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfString((*x.list)[i])
+}
+
+func (x *_BandOracleRequest_3_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_BandOracleRequest_3_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.String()
+	concreteValue := valueUnwrapped
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_BandOracleRequest_3_list) AppendMutable() protoreflect.Value {
+	panic(fmt.Errorf("AppendMutable can not be called on message BandOracleRequest at list field Symbols as it is not of Message kind"))
+}
+
+func (x *_BandOracleRequest_3_list) Truncate(n int) {
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_BandOracleRequest_3_list) NewElement() protoreflect.Value {
+	v := ""
+	return protoreflect.ValueOfString(v)
+}
+
+func (x *_BandOracleRequest_3_list) IsValid() bool {
+	return x.list != nil
+}
+
+var _ protoreflect.List = (*_BandOracleRequest_6_list)(nil)
+
+type _BandOracleRequest_6_list struct {
+	list *[]*v1beta1.Coin
+}
+
+func (x *_BandOracleRequest_6_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_BandOracleRequest_6_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_BandOracleRequest_6_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_BandOracleRequest_6_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_BandOracleRequest_6_list) AppendMutable() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_BandOracleRequest_6_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_BandOracleRequest_6_list) NewElement() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_BandOracleRequest_6_list) IsValid() bool {
+	return x.list != nil
+}
+
+var (
+	md_BandOracleRequest                  protoreflect.MessageDescriptor
+	fd_BandOracleRequest_request_id       protoreflect.FieldDescriptor
+	fd_BandOracleRequest_oracle_script_id protoreflect.FieldDescriptor
+	fd_BandOracleRequest_symbols          protoreflect.FieldDescriptor
+	fd_BandOracleRequest_ask_count        protoreflect.FieldDescriptor
+	fd_BandOracleRequest_min_count        protoreflect.FieldDescriptor
+	fd_BandOracleRequest_fee_limit        protoreflect.FieldDescriptor
+	fd_BandOracleRequest_prepare_gas      protoreflect.FieldDescriptor
+	fd_BandOracleRequest_execute_gas      protoreflect.FieldDescriptor
+	fd_BandOracleRequest_min_source_count protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_BandOracleRequest = File_reserve_oracle_genesis_proto.Messages().ByName("BandOracleRequest")
+	fd_BandOracleRequest_request_id = md_BandOracleRequest.Fields().ByName("request_id")
+	fd_BandOracleRequest_oracle_script_id = md_BandOracleRequest.Fields().ByName("oracle_script_id")
+	fd_BandOracleRequest_symbols = md_BandOracleRequest.Fields().ByName("symbols")
+	fd_BandOracleRequest_ask_count = md_BandOracleRequest.Fields().ByName("ask_count")
+	fd_BandOracleRequest_min_count = md_BandOracleRequest.Fields().ByName("min_count")
+	fd_BandOracleRequest_fee_limit = md_BandOracleRequest.Fields().ByName("fee_limit")
+	fd_BandOracleRequest_prepare_gas = md_BandOracleRequest.Fields().ByName("prepare_gas")
+	fd_BandOracleRequest_execute_gas = md_BandOracleRequest.Fields().ByName("execute_gas")
+	fd_BandOracleRequest_min_source_count = md_BandOracleRequest.Fields().ByName("min_source_count")
+}
+
+var _ protoreflect.Message = (*fastReflection_BandOracleRequest)(nil)
+
+type fastReflection_BandOracleRequest BandOracleRequest
+
+func (x *BandOracleRequest) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_BandOracleRequest)(x)
+}
+
+func (x *BandOracleRequest) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_BandOracleRequest_messageType fastReflection_BandOracleRequest_messageType
+var _ protoreflect.MessageType = fastReflection_BandOracleRequest_messageType{}
+
+type fastReflection_BandOracleRequest_messageType struct{}
+
+func (x fastReflection_BandOracleRequest_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_BandOracleRequest)(nil)
+}
+func (x fastReflection_BandOracleRequest_messageType) New() protoreflect.Message {
+	return new(fastReflection_BandOracleRequest)
+}
+func (x fastReflection_BandOracleRequest_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandOracleRequest
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_BandOracleRequest) Descriptor() protoreflect.MessageDescriptor {
+	return md_BandOracleRequest
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_BandOracleRequest) Type() protoreflect.MessageType {
+	return _fastReflection_BandOracleRequest_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_BandOracleRequest) New() protoreflect.Message {
+	return new(fastReflection_BandOracleRequest)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_BandOracleRequest) Interface() protoreflect.ProtoMessage {
+	return (*BandOracleRequest)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_BandOracleRequest) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.RequestId != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.RequestId)
+		if !f(fd_BandOracleRequest_request_id, value) {
+			return
+		}
+	}
+	if x.OracleScriptId != int64(0) {
+		value := protoreflect.ValueOfInt64(x.OracleScriptId)
+		if !f(fd_BandOracleRequest_oracle_script_id, value) {
+			return
+		}
+	}
+	if len(x.Symbols) != 0 {
+		value := protoreflect.ValueOfList(&_BandOracleRequest_3_list{list: &x.Symbols})
+		if !f(fd_BandOracleRequest_symbols, value) {
+			return
+		}
+	}
+	if x.AskCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.AskCount)
+		if !f(fd_BandOracleRequest_ask_count, value) {
+			return
+		}
+	}
+	if x.MinCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MinCount)
+		if !f(fd_BandOracleRequest_min_count, value) {
+			return
+		}
+	}
+	if len(x.FeeLimit) != 0 {
+		value := protoreflect.ValueOfList(&_BandOracleRequest_6_list{list: &x.FeeLimit})
+		if !f(fd_BandOracleRequest_fee_limit, value) {
+			return
+		}
+	}
+	if x.PrepareGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.PrepareGas)
+		if !f(fd_BandOracleRequest_prepare_gas, value) {
+			return
+		}
+	}
+	if x.ExecuteGas != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.ExecuteGas)
+		if !f(fd_BandOracleRequest_execute_gas, value) {
+			return
+		}
+	}
+	if x.MinSourceCount != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.MinSourceCount)
+		if !f(fd_BandOracleRequest_min_source_count, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_BandOracleRequest) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequest.request_id":
+		return x.RequestId != uint64(0)
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		return x.OracleScriptId != int64(0)
+	case "reserve.oracle.BandOracleRequest.symbols":
+		return len(x.Symbols) != 0
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		return x.AskCount != uint64(0)
+	case "reserve.oracle.BandOracleRequest.min_count":
+		return x.MinCount != uint64(0)
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		return len(x.FeeLimit) != 0
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		return x.PrepareGas != uint64(0)
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		return x.ExecuteGas != uint64(0)
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		return x.MinSourceCount != uint64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequest) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequest.request_id":
+		x.RequestId = uint64(0)
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		x.OracleScriptId = int64(0)
+	case "reserve.oracle.BandOracleRequest.symbols":
+		x.Symbols = nil
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		x.AskCount = uint64(0)
+	case "reserve.oracle.BandOracleRequest.min_count":
+		x.MinCount = uint64(0)
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		x.FeeLimit = nil
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		x.PrepareGas = uint64(0)
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		x.ExecuteGas = uint64(0)
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		x.MinSourceCount = uint64(0)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_BandOracleRequest) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.BandOracleRequest.request_id":
+		value := x.RequestId
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		value := x.OracleScriptId
+		return protoreflect.ValueOfInt64(value)
+	case "reserve.oracle.BandOracleRequest.symbols":
+		if len(x.Symbols) == 0 {
+			return protoreflect.ValueOfList(&_BandOracleRequest_3_list{})
+		}
+		listValue := &_BandOracleRequest_3_list{list: &x.Symbols}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		value := x.AskCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequest.min_count":
+		value := x.MinCount
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		if len(x.FeeLimit) == 0 {
+			return protoreflect.ValueOfList(&_BandOracleRequest_6_list{})
+		}
+		listValue := &_BandOracleRequest_6_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		value := x.PrepareGas
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		value := x.ExecuteGas
+		return protoreflect.ValueOfUint64(value)
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		value := x.MinSourceCount
+		return protoreflect.ValueOfUint64(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequest) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequest.request_id":
+		x.RequestId = value.Uint()
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		x.OracleScriptId = value.Int()
+	case "reserve.oracle.BandOracleRequest.symbols":
+		lv := value.List()
+		clv := lv.(*_BandOracleRequest_3_list)
+		x.Symbols = *clv.list
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		x.AskCount = value.Uint()
+	case "reserve.oracle.BandOracleRequest.min_count":
+		x.MinCount = value.Uint()
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		lv := value.List()
+		clv := lv.(*_BandOracleRequest_6_list)
+		x.FeeLimit = *clv.list
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		x.PrepareGas = value.Uint()
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		x.ExecuteGas = value.Uint()
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		x.MinSourceCount = value.Uint()
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequest) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequest.symbols":
+		if x.Symbols == nil {
+			x.Symbols = []string{}
+		}
+		value := &_BandOracleRequest_3_list{list: &x.Symbols}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		if x.FeeLimit == nil {
+			x.FeeLimit = []*v1beta1.Coin{}
+		}
+		value := &_BandOracleRequest_6_list{list: &x.FeeLimit}
+		return protoreflect.ValueOfList(value)
+	case "reserve.oracle.BandOracleRequest.request_id":
+		panic(fmt.Errorf("field request_id of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		panic(fmt.Errorf("field oracle_script_id of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		panic(fmt.Errorf("field ask_count of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.min_count":
+		panic(fmt.Errorf("field min_count of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		panic(fmt.Errorf("field prepare_gas of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		panic(fmt.Errorf("field execute_gas of message reserve.oracle.BandOracleRequest is not mutable"))
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		panic(fmt.Errorf("field min_source_count of message reserve.oracle.BandOracleRequest is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_BandOracleRequest) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.BandOracleRequest.request_id":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequest.oracle_script_id":
+		return protoreflect.ValueOfInt64(int64(0))
+	case "reserve.oracle.BandOracleRequest.symbols":
+		list := []string{}
+		return protoreflect.ValueOfList(&_BandOracleRequest_3_list{list: &list})
+	case "reserve.oracle.BandOracleRequest.ask_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequest.min_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequest.fee_limit":
+		list := []*v1beta1.Coin{}
+		return protoreflect.ValueOfList(&_BandOracleRequest_6_list{list: &list})
+	case "reserve.oracle.BandOracleRequest.prepare_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequest.execute_gas":
+		return protoreflect.ValueOfUint64(uint64(0))
+	case "reserve.oracle.BandOracleRequest.min_source_count":
+		return protoreflect.ValueOfUint64(uint64(0))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.BandOracleRequest"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.BandOracleRequest does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_BandOracleRequest) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.BandOracleRequest", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_BandOracleRequest) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_BandOracleRequest) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_BandOracleRequest) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_BandOracleRequest) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*BandOracleRequest)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		if x.RequestId != 0 {
+			n += 1 + runtime.Sov(uint64(x.RequestId))
+		}
+		if x.OracleScriptId != 0 {
+			n += 1 + runtime.Sov(uint64(x.OracleScriptId))
+		}
+		if len(x.Symbols) > 0 {
+			for _, s := range x.Symbols {
+				l = len(s)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.AskCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.AskCount))
+		}
+		if x.MinCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.MinCount))
+		}
+		if len(x.FeeLimit) > 0 {
+			for _, e := range x.FeeLimit {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.PrepareGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.PrepareGas))
+		}
+		if x.ExecuteGas != 0 {
+			n += 1 + runtime.Sov(uint64(x.ExecuteGas))
+		}
+		if x.MinSourceCount != 0 {
+			n += 1 + runtime.Sov(uint64(x.MinSourceCount))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*BandOracleRequest)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.MinSourceCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinSourceCount))
+			i--
+			dAtA[i] = 0x48
+		}
+		if x.ExecuteGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.ExecuteGas))
+			i--
+			dAtA[i] = 0x40
+		}
+		if x.PrepareGas != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.PrepareGas))
+			i--
+			dAtA[i] = 0x38
+		}
+		if len(x.FeeLimit) > 0 {
+			for iNdEx := len(x.FeeLimit) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.FeeLimit[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x32
+			}
+		}
+		if x.MinCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.MinCount))
+			i--
+			dAtA[i] = 0x28
+		}
+		if x.AskCount != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.AskCount))
+			i--
+			dAtA[i] = 0x20
+		}
+		if len(x.Symbols) > 0 {
+			for iNdEx := len(x.Symbols) - 1; iNdEx >= 0; iNdEx-- {
+				i -= len(x.Symbols[iNdEx])
+				copy(dAtA[i:], x.Symbols[iNdEx])
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Symbols[iNdEx])))
+				i--
+				dAtA[i] = 0x1a
+			}
+		}
+		if x.OracleScriptId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.OracleScriptId))
+			i--
+			dAtA[i] = 0x10
+		}
+		if x.RequestId != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.RequestId))
+			i--
+			dAtA[i] = 0x8
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*BandOracleRequest)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandOracleRequest: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: BandOracleRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field RequestId", wireType)
+				}
+				x.RequestId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.RequestId |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 2:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field OracleScriptId", wireType)
+				}
+				x.OracleScriptId = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.OracleScriptId |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Symbols", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Symbols = append(x.Symbols, string(dAtA[iNdEx:postIndex]))
+				iNdEx = postIndex
+			case 4:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field AskCount", wireType)
+				}
+				x.AskCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.AskCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 5:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinCount", wireType)
+				}
+				x.MinCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.MinCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 6:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field FeeLimit", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.FeeLimit = append(x.FeeLimit, &v1beta1.Coin{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.FeeLimit[len(x.FeeLimit)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 7:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field PrepareGas", wireType)
+				}
+				x.PrepareGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.PrepareGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 8:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ExecuteGas", wireType)
+				}
+				x.ExecuteGas = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.ExecuteGas |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			case 9:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field MinSourceCount", wireType)
+				}
+				x.MinSourceCount = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.MinSourceCount |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+			default:
+				iNdEx = preIndex
+				skippy, err := runtime.Skip(dAtA[iNdEx:])
+				if err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				if (skippy < 0) || (iNdEx+skippy) < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if (iNdEx + skippy) > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if !options.DiscardUnknown {
+					x.unknownFields = append(x.unknownFields, dAtA[iNdEx:iNdEx+skippy]...)
+				}
+				iNdEx += skippy
+			}
+		}
+
+		if iNdEx > l {
+			return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+		}
+		return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, nil
+	}
+	return &protoiface.Methods{
+		NoUnkeyedLiterals: struct{}{},
+		Flags:             protoiface.SupportMarshalDeterministic | protoiface.SupportUnmarshalDiscardUnknown,
+		Size:              size,
+		Marshal:           marshal,
+		Unmarshal:         unmarshal,
+		Merge:             nil,
+		CheckInitialized:  nil,
+	}
+}
+
+var (
+	md_PairDecimalsRate       protoreflect.MessageDescriptor
+	fd_PairDecimalsRate_base  protoreflect.FieldDescriptor
+	fd_PairDecimalsRate_quote protoreflect.FieldDescriptor
+	fd_PairDecimalsRate_rate  protoreflect.FieldDescriptor
+)
+
+func init() {
+	file_reserve_oracle_genesis_proto_init()
+	md_PairDecimalsRate = File_reserve_oracle_genesis_proto.Messages().ByName("PairDecimalsRate")
+	fd_PairDecimalsRate_base = md_PairDecimalsRate.Fields().ByName("base")
+	fd_PairDecimalsRate_quote = md_PairDecimalsRate.Fields().ByName("quote")
+	fd_PairDecimalsRate_rate = md_PairDecimalsRate.Fields().ByName("rate")
+}
+
+var _ protoreflect.Message = (*fastReflection_PairDecimalsRate)(nil)
+
+type fastReflection_PairDecimalsRate PairDecimalsRate
+
+func (x *PairDecimalsRate) ProtoReflect() protoreflect.Message {
+	return (*fastReflection_PairDecimalsRate)(x)
+}
+
+func (x *PairDecimalsRate) slowProtoReflect() protoreflect.Message {
+	mi := &file_reserve_oracle_genesis_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+var _fastReflection_PairDecimalsRate_messageType fastReflection_PairDecimalsRate_messageType
+var _ protoreflect.MessageType = fastReflection_PairDecimalsRate_messageType{}
+
+type fastReflection_PairDecimalsRate_messageType struct{}
+
+func (x fastReflection_PairDecimalsRate_messageType) Zero() protoreflect.Message {
+	return (*fastReflection_PairDecimalsRate)(nil)
+}
+func (x fastReflection_PairDecimalsRate_messageType) New() protoreflect.Message {
+	return new(fastReflection_PairDecimalsRate)
+}
+func (x fastReflection_PairDecimalsRate_messageType) Descriptor() protoreflect.MessageDescriptor {
+	return md_PairDecimalsRate
+}
+
+// Descriptor returns message descriptor, which contains only the protobuf
+// type information for the message.
+func (x *fastReflection_PairDecimalsRate) Descriptor() protoreflect.MessageDescriptor {
+	return md_PairDecimalsRate
+}
+
+// Type returns the message type, which encapsulates both Go and protobuf
+// type information. If the Go type information is not needed,
+// it is recommended that the message descriptor be used instead.
+func (x *fastReflection_PairDecimalsRate) Type() protoreflect.MessageType {
+	return _fastReflection_PairDecimalsRate_messageType
+}
+
+// New returns a newly allocated and mutable empty message.
+func (x *fastReflection_PairDecimalsRate) New() protoreflect.Message {
+	return new(fastReflection_PairDecimalsRate)
+}
+
+// Interface unwraps the message reflection interface and
+// returns the underlying ProtoMessage interface.
+func (x *fastReflection_PairDecimalsRate) Interface() protoreflect.ProtoMessage {
+	return (*PairDecimalsRate)(x)
+}
+
+// Range iterates over every populated field in an undefined order,
+// calling f for each field descriptor and value encountered.
+// Range returns immediately if f returns false.
+// While iterating, mutating operations may only be performed
+// on the current field descriptor.
+func (x *fastReflection_PairDecimalsRate) Range(f func(protoreflect.FieldDescriptor, protoreflect.Value) bool) {
+	if x.Base != "" {
+		value := protoreflect.ValueOfString(x.Base)
+		if !f(fd_PairDecimalsRate_base, value) {
+			return
+		}
+	}
+	if x.Quote != "" {
+		value := protoreflect.ValueOfString(x.Quote)
+		if !f(fd_PairDecimalsRate_quote, value) {
+			return
+		}
+	}
+	if x.Rate != "" {
+		value := protoreflect.ValueOfString(x.Rate)
+		if !f(fd_PairDecimalsRate_rate, value) {
+			return
+		}
+	}
+}
+
+// Has reports whether a field is populated.
+//
+// Some fields have the property of nullability where it is possible to
+// distinguish between the default value of a field and whether the field
+// was explicitly populated with the default value. Singular message fields,
+// member fields of a oneof, and proto2 scalar fields are nullable. Such
+// fields are populated only if explicitly set.
+//
+// In other cases (aside from the nullable cases above),
+// a proto3 scalar field is populated if it contains a non-zero value, and
+// a repeated field is populated if it is non-empty.
+func (x *fastReflection_PairDecimalsRate) Has(fd protoreflect.FieldDescriptor) bool {
+	switch fd.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		return x.Base != ""
+	case "reserve.oracle.PairDecimalsRate.quote":
+		return x.Quote != ""
+	case "reserve.oracle.PairDecimalsRate.rate":
+		return x.Rate != ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", fd.FullName()))
+	}
+}
+
+// Clear clears the field such that a subsequent Has call reports false.
+//
+// Clearing an extension field clears both the extension type and value
+// associated with the given field number.
+//
+// Clear is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PairDecimalsRate) Clear(fd protoreflect.FieldDescriptor) {
+	switch fd.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		x.Base = ""
+	case "reserve.oracle.PairDecimalsRate.quote":
+		x.Quote = ""
+	case "reserve.oracle.PairDecimalsRate.rate":
+		x.Rate = ""
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", fd.FullName()))
+	}
+}
+
+// Get retrieves the value for a field.
+//
+// For unpopulated scalars, it returns the default value, where
+// the default value of a bytes scalar is guaranteed to be a copy.
+// For unpopulated composite types, it returns an empty, read-only view
+// of the value; to obtain a mutable reference, use Mutable.
+func (x *fastReflection_PairDecimalsRate) Get(descriptor protoreflect.FieldDescriptor) protoreflect.Value {
+	switch descriptor.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		value := x.Base
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.PairDecimalsRate.quote":
+		value := x.Quote
+		return protoreflect.ValueOfString(value)
+	case "reserve.oracle.PairDecimalsRate.rate":
+		value := x.Rate
+		return protoreflect.ValueOfString(value)
+	default:
+		if descriptor.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", descriptor.FullName()))
+	}
+}
+
+// Set stores the value for a field.
+//
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType.
+// When setting a composite type, it is unspecified whether the stored value
+// aliases the source's memory in any way. If the composite value is an
+// empty, read-only value, then it panics.
+//
+// Set is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PairDecimalsRate) Set(fd protoreflect.FieldDescriptor, value protoreflect.Value) {
+	switch fd.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		x.Base = value.Interface().(string)
+	case "reserve.oracle.PairDecimalsRate.quote":
+		x.Quote = value.Interface().(string)
+	case "reserve.oracle.PairDecimalsRate.rate":
+		x.Rate = value.Interface().(string)
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", fd.FullName()))
+	}
+}
+
+// Mutable returns a mutable reference to a composite type.
+//
+// If the field is unpopulated, it may allocate a composite value.
+// For a field belonging to a oneof, it implicitly clears any other field
+// that may be currently set within the same oneof.
+// For extension fields, it implicitly stores the provided ExtensionType
+// if not already stored.
+// It panics if the field does not contain a composite type.
+//
+// Mutable is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PairDecimalsRate) Mutable(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		panic(fmt.Errorf("field base of message reserve.oracle.PairDecimalsRate is not mutable"))
+	case "reserve.oracle.PairDecimalsRate.quote":
+		panic(fmt.Errorf("field quote of message reserve.oracle.PairDecimalsRate is not mutable"))
+	case "reserve.oracle.PairDecimalsRate.rate":
+		panic(fmt.Errorf("field rate of message reserve.oracle.PairDecimalsRate is not mutable"))
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", fd.FullName()))
+	}
+}
+
+// NewField returns a new value that is assignable to the field
+// for the given descriptor. For scalars, this returns the default value.
+// For lists, maps, and messages, this returns a new, empty, mutable value.
+func (x *fastReflection_PairDecimalsRate) NewField(fd protoreflect.FieldDescriptor) protoreflect.Value {
+	switch fd.FullName() {
+	case "reserve.oracle.PairDecimalsRate.base":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.PairDecimalsRate.quote":
+		return protoreflect.ValueOfString("")
+	case "reserve.oracle.PairDecimalsRate.rate":
+		return protoreflect.ValueOfString("")
+	default:
+		if fd.IsExtension() {
+			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.oracle.PairDecimalsRate"))
+		}
+		panic(fmt.Errorf("message reserve.oracle.PairDecimalsRate does not contain field %s", fd.FullName()))
+	}
+}
+
+// WhichOneof reports which field within the oneof is populated,
+// returning nil if none are populated.
+// It panics if the oneof descriptor does not belong to this message.
+func (x *fastReflection_PairDecimalsRate) WhichOneof(d protoreflect.OneofDescriptor) protoreflect.FieldDescriptor {
+	switch d.FullName() {
+	default:
+		panic(fmt.Errorf("%s is not a oneof field in reserve.oracle.PairDecimalsRate", d.FullName()))
+	}
+	panic("unreachable")
+}
+
+// GetUnknown retrieves the entire list of unknown fields.
+// The caller may only mutate the contents of the RawFields
+// if the mutated bytes are stored back into the message with SetUnknown.
+func (x *fastReflection_PairDecimalsRate) GetUnknown() protoreflect.RawFields {
+	return x.unknownFields
+}
+
+// SetUnknown stores an entire list of unknown fields.
+// The raw fields must be syntactically valid according to the wire format.
+// An implementation may panic if this is not the case.
+// Once stored, the caller must not mutate the content of the RawFields.
+// An empty RawFields may be passed to clear the fields.
+//
+// SetUnknown is a mutating operation and unsafe for concurrent use.
+func (x *fastReflection_PairDecimalsRate) SetUnknown(fields protoreflect.RawFields) {
+	x.unknownFields = fields
+}
+
+// IsValid reports whether the message is valid.
+//
+// An invalid message is an empty, read-only value.
+//
+// An invalid message often corresponds to a nil pointer of the concrete
+// message type, but the details are implementation dependent.
+// Validity is not part of the protobuf data model, and may not
+// be preserved in marshaling or other operations.
+func (x *fastReflection_PairDecimalsRate) IsValid() bool {
+	return x != nil
+}
+
+// ProtoMethods returns optional fastReflectionFeature-path implementations of various operations.
+// This method may return nil.
+//
+// The returned methods type is identical to
+// "google.golang.org/protobuf/runtime/protoiface".Methods.
+// Consult the protoiface package documentation for details.
+func (x *fastReflection_PairDecimalsRate) ProtoMethods() *protoiface.Methods {
+	size := func(input protoiface.SizeInput) protoiface.SizeOutput {
+		x := input.Message.Interface().(*PairDecimalsRate)
+		if x == nil {
+			return protoiface.SizeOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Size:              0,
+			}
+		}
+		options := runtime.SizeInputToOptions(input)
+		_ = options
+		var n int
+		var l int
+		_ = l
+		l = len(x.Base)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.Quote)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		l = len(x.Rate)
+		if l > 0 {
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if x.unknownFields != nil {
+			n += len(x.unknownFields)
+		}
+		return protoiface.SizeOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Size:              n,
+		}
+	}
+
+	marshal := func(input protoiface.MarshalInput) (protoiface.MarshalOutput, error) {
+		x := input.Message.Interface().(*PairDecimalsRate)
+		if x == nil {
+			return protoiface.MarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Buf:               input.Buf,
+			}, nil
+		}
+		options := runtime.MarshalInputToOptions(input)
+		_ = options
+		size := options.Size(x)
+		dAtA := make([]byte, size)
+		i := len(dAtA)
+		_ = i
+		var l int
+		_ = l
+		if x.unknownFields != nil {
+			i -= len(x.unknownFields)
+			copy(dAtA[i:], x.unknownFields)
+		}
+		if len(x.Rate) > 0 {
+			i -= len(x.Rate)
+			copy(dAtA[i:], x.Rate)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Rate)))
+			i--
+			dAtA[i] = 0x1a
+		}
+		if len(x.Quote) > 0 {
+			i -= len(x.Quote)
+			copy(dAtA[i:], x.Quote)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Quote)))
+			i--
+			dAtA[i] = 0x12
+		}
+		if len(x.Base) > 0 {
+			i -= len(x.Base)
+			copy(dAtA[i:], x.Base)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(x.Base)))
+			i--
+			dAtA[i] = 0xa
+		}
+		if input.Buf != nil {
+			input.Buf = append(input.Buf, dAtA...)
+		} else {
+			input.Buf = dAtA
+		}
+		return protoiface.MarshalOutput{
+			NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+			Buf:               input.Buf,
+		}, nil
+	}
+	unmarshal := func(input protoiface.UnmarshalInput) (protoiface.UnmarshalOutput, error) {
+		x := input.Message.Interface().(*PairDecimalsRate)
+		if x == nil {
+			return protoiface.UnmarshalOutput{
+				NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+				Flags:             input.Flags,
+			}, nil
+		}
+		options := runtime.UnmarshalInputToOptions(input)
+		_ = options
+		dAtA := input.Buf
+		l := len(dAtA)
+		iNdEx := 0
+		for iNdEx < l {
+			preIndex := iNdEx
+			var wire uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+				}
+				if iNdEx >= l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				wire |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			fieldNum := int32(wire >> 3)
+			wireType := int(wire & 0x7)
+			if wireType == 4 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PairDecimalsRate: wiretype end group for non-group")
+			}
+			if fieldNum <= 0 {
+				return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: PairDecimalsRate: illegal tag %d (wire type %d)", fieldNum, wire)
+			}
+			switch fieldNum {
+			case 1:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Base", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Base = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 2:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Quote", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Quote = string(dAtA[iNdEx:postIndex])
+				iNdEx = postIndex
+			case 3:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field Rate", wireType)
+				}
+				var stringLen uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					stringLen |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				intStringLen := int(stringLen)
+				if intStringLen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + intStringLen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.Rate = string(dAtA[iNdEx:postIndex])
 				iNdEx = postIndex
 			default:
 				iNdEx = preIndex
@@ -533,8 +5886,15 @@ type GenesisState struct {
 	unknownFields protoimpl.UnknownFields
 
 	// params defines all the parameters of the module.
-	Params *Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
-	PortId string  `protobuf:"bytes,2,opt,name=port_id,json=portId,proto3" json:"port_id,omitempty"`
+	Params                  *Params                  `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
+	BandParams              *BandParams              `protobuf:"bytes,2,opt,name=band_params,json=bandParams,proto3" json:"band_params,omitempty"`
+	BandPriceStates         []*BandPriceState        `protobuf:"bytes,3,rep,name=band_price_states,json=bandPriceStates,proto3" json:"band_price_states,omitempty"`
+	BandOracleRequests      []*BandOracleRequest     `protobuf:"bytes,4,rep,name=band_oracle_requests,json=bandOracleRequests,proto3" json:"band_oracle_requests,omitempty"`
+	BandLatestClientId      uint64                   `protobuf:"varint,5,opt,name=band_latest_client_id,json=bandLatestClientId,proto3" json:"band_latest_client_id,omitempty"`
+	CalldataRecords         []*CalldataRecord        `protobuf:"bytes,6,rep,name=calldata_records,json=calldataRecords,proto3" json:"calldata_records,omitempty"`
+	BandLatestRequestId     uint64                   `protobuf:"varint,7,opt,name=band_latest_request_id,json=bandLatestRequestId,proto3" json:"band_latest_request_id,omitempty"`
+	BandOracleRequestParams *BandOracleRequestParams `protobuf:"bytes,8,opt,name=band_oracle_request_params,json=bandOracleRequestParams,proto3" json:"band_oracle_request_params,omitempty"`
+	PairDecimalsRates       []*PairDecimalsRate      `protobuf:"bytes,9,rep,name=pair_decimals_rates,json=pairDecimalsRates,proto3" json:"pair_decimals_rates,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -564,9 +5924,534 @@ func (x *GenesisState) GetParams() *Params {
 	return nil
 }
 
-func (x *GenesisState) GetPortId() string {
+func (x *GenesisState) GetBandParams() *BandParams {
 	if x != nil {
-		return x.PortId
+		return x.BandParams
+	}
+	return nil
+}
+
+func (x *GenesisState) GetBandPriceStates() []*BandPriceState {
+	if x != nil {
+		return x.BandPriceStates
+	}
+	return nil
+}
+
+func (x *GenesisState) GetBandOracleRequests() []*BandOracleRequest {
+	if x != nil {
+		return x.BandOracleRequests
+	}
+	return nil
+}
+
+func (x *GenesisState) GetBandLatestClientId() uint64 {
+	if x != nil {
+		return x.BandLatestClientId
+	}
+	return 0
+}
+
+func (x *GenesisState) GetCalldataRecords() []*CalldataRecord {
+	if x != nil {
+		return x.CalldataRecords
+	}
+	return nil
+}
+
+func (x *GenesisState) GetBandLatestRequestId() uint64 {
+	if x != nil {
+		return x.BandLatestRequestId
+	}
+	return 0
+}
+
+func (x *GenesisState) GetBandOracleRequestParams() *BandOracleRequestParams {
+	if x != nil {
+		return x.BandOracleRequestParams
+	}
+	return nil
+}
+
+func (x *GenesisState) GetPairDecimalsRates() []*PairDecimalsRate {
+	if x != nil {
+		return x.PairDecimalsRates
+	}
+	return nil
+}
+
+type BandOracleRequestParams struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// AskCount is the number of validators that are requested to respond to this
+	// oracle request. Higher value means more security, at a higher gas cost.
+	AskCount uint64 `protobuf:"varint,1,opt,name=ask_count,json=askCount,proto3" json:"ask_count,omitempty"`
+	// MinCount is the minimum number of validators necessary for the request to
+	// proceed to the execution phase. Higher value means more security, at the
+	// cost of liveness.
+	MinCount uint64 `protobuf:"varint,2,opt,name=min_count,json=minCount,proto3" json:"min_count,omitempty"`
+	// FeeLimit is the maximum tokens that will be paid to all data source
+	// providers.
+	FeeLimit []*v1beta1.Coin `protobuf:"bytes,3,rep,name=fee_limit,json=feeLimit,proto3" json:"fee_limit,omitempty"`
+	// PrepareGas is amount of gas to pay to prepare raw requests
+	PrepareGas uint64 `protobuf:"varint,4,opt,name=prepare_gas,json=prepareGas,proto3" json:"prepare_gas,omitempty"`
+	// ExecuteGas is amount of gas to reserve for executing
+	ExecuteGas uint64 `protobuf:"varint,5,opt,name=execute_gas,json=executeGas,proto3" json:"execute_gas,omitempty"`
+	// MinSourceCount is the minimum number of data sources that must be used by
+	// each validator
+	MinSourceCount uint64 `protobuf:"varint,6,opt,name=min_source_count,json=minSourceCount,proto3" json:"min_source_count,omitempty"`
+}
+
+func (x *BandOracleRequestParams) Reset() {
+	*x = BandOracleRequestParams{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BandOracleRequestParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BandOracleRequestParams) ProtoMessage() {}
+
+// Deprecated: Use BandOracleRequestParams.ProtoReflect.Descriptor instead.
+func (*BandOracleRequestParams) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *BandOracleRequestParams) GetAskCount() uint64 {
+	if x != nil {
+		return x.AskCount
+	}
+	return 0
+}
+
+func (x *BandOracleRequestParams) GetMinCount() uint64 {
+	if x != nil {
+		return x.MinCount
+	}
+	return 0
+}
+
+func (x *BandOracleRequestParams) GetFeeLimit() []*v1beta1.Coin {
+	if x != nil {
+		return x.FeeLimit
+	}
+	return nil
+}
+
+func (x *BandOracleRequestParams) GetPrepareGas() uint64 {
+	if x != nil {
+		return x.PrepareGas
+	}
+	return 0
+}
+
+func (x *BandOracleRequestParams) GetExecuteGas() uint64 {
+	if x != nil {
+		return x.ExecuteGas
+	}
+	return 0
+}
+
+func (x *BandOracleRequestParams) GetMinSourceCount() uint64 {
+	if x != nil {
+		return x.MinSourceCount
+	}
+	return 0
+}
+
+type BandPriceState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Symbol      string      `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	Rate        string      `protobuf:"bytes,2,opt,name=rate,proto3" json:"rate,omitempty"`
+	ResolveTime int64       `protobuf:"varint,3,opt,name=resolve_time,json=resolveTime,proto3" json:"resolve_time,omitempty"`
+	Request_ID  uint64      `protobuf:"varint,4,opt,name=request_ID,json=requestID,proto3" json:"request_ID,omitempty"`
+	PriceState  *PriceState `protobuf:"bytes,5,opt,name=price_state,json=priceState,proto3" json:"price_state,omitempty"`
+}
+
+func (x *BandPriceState) Reset() {
+	*x = BandPriceState{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BandPriceState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BandPriceState) ProtoMessage() {}
+
+// Deprecated: Use BandPriceState.ProtoReflect.Descriptor instead.
+func (*BandPriceState) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *BandPriceState) GetSymbol() string {
+	if x != nil {
+		return x.Symbol
+	}
+	return ""
+}
+
+func (x *BandPriceState) GetRate() string {
+	if x != nil {
+		return x.Rate
+	}
+	return ""
+}
+
+func (x *BandPriceState) GetResolveTime() int64 {
+	if x != nil {
+		return x.ResolveTime
+	}
+	return 0
+}
+
+func (x *BandPriceState) GetRequest_ID() uint64 {
+	if x != nil {
+		return x.Request_ID
+	}
+	return 0
+}
+
+func (x *BandPriceState) GetPriceState() *PriceState {
+	if x != nil {
+		return x.PriceState
+	}
+	return nil
+}
+
+type PriceState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Price     string `protobuf:"bytes,1,opt,name=price,proto3" json:"price,omitempty"`
+	Timestamp int64  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+}
+
+func (x *PriceState) Reset() {
+	*x = PriceState{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PriceState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PriceState) ProtoMessage() {}
+
+// Deprecated: Use PriceState.ProtoReflect.Descriptor instead.
+func (*PriceState) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PriceState) GetPrice() string {
+	if x != nil {
+		return x.Price
+	}
+	return ""
+}
+
+func (x *PriceState) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+type CalldataRecord struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClientId uint64 `protobuf:"varint,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	Calldata []byte `protobuf:"bytes,2,opt,name=calldata,proto3" json:"calldata,omitempty"`
+}
+
+func (x *CalldataRecord) Reset() {
+	*x = CalldataRecord{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CalldataRecord) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CalldataRecord) ProtoMessage() {}
+
+// Deprecated: Use CalldataRecord.ProtoReflect.Descriptor instead.
+func (*CalldataRecord) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CalldataRecord) GetClientId() uint64 {
+	if x != nil {
+		return x.ClientId
+	}
+	return 0
+}
+
+func (x *CalldataRecord) GetCalldata() []byte {
+	if x != nil {
+		return x.Calldata
+	}
+	return nil
+}
+
+type BandParams struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// block request interval to send Band IBC prices
+	IbcRequestInterval int64 `protobuf:"varint,1,opt,name=ibc_request_interval,json=ibcRequestInterval,proto3" json:"ibc_request_interval,omitempty"`
+	// band IBC source channel
+	IbcSourceChannel string `protobuf:"bytes,2,opt,name=ibc_source_channel,json=ibcSourceChannel,proto3" json:"ibc_source_channel,omitempty"`
+	// band IBC version
+	IbcVersion string `protobuf:"bytes,3,opt,name=ibc_version,json=ibcVersion,proto3" json:"ibc_version,omitempty"`
+	// band IBC portID
+	IbcPortId string `protobuf:"bytes,4,opt,name=ibc_port_id,json=ibcPortId,proto3" json:"ibc_port_id,omitempty"`
+	// legacy oracle scheme ids
+	LegacyOracleIds []int64 `protobuf:"varint,5,rep,packed,name=legacy_oracle_ids,json=legacyOracleIds,proto3" json:"legacy_oracle_ids,omitempty"`
+}
+
+func (x *BandParams) Reset() {
+	*x = BandParams{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BandParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BandParams) ProtoMessage() {}
+
+// Deprecated: Use BandParams.ProtoReflect.Descriptor instead.
+func (*BandParams) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *BandParams) GetIbcRequestInterval() int64 {
+	if x != nil {
+		return x.IbcRequestInterval
+	}
+	return 0
+}
+
+func (x *BandParams) GetIbcSourceChannel() string {
+	if x != nil {
+		return x.IbcSourceChannel
+	}
+	return ""
+}
+
+func (x *BandParams) GetIbcVersion() string {
+	if x != nil {
+		return x.IbcVersion
+	}
+	return ""
+}
+
+func (x *BandParams) GetIbcPortId() string {
+	if x != nil {
+		return x.IbcPortId
+	}
+	return ""
+}
+
+func (x *BandParams) GetLegacyOracleIds() []int64 {
+	if x != nil {
+		return x.LegacyOracleIds
+	}
+	return nil
+}
+
+type BandOracleRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Unique Identifier for band ibc oracle request
+	RequestId uint64 `protobuf:"varint,1,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`
+	// OracleScriptID is the unique identifier of the oracle script to be
+	// executed.
+	OracleScriptId int64 `protobuf:"varint,2,opt,name=oracle_script_id,json=oracleScriptId,proto3" json:"oracle_script_id,omitempty"`
+	// Symbols is the list of symbols to prepare in the calldata
+	Symbols []string `protobuf:"bytes,3,rep,name=symbols,proto3" json:"symbols,omitempty"`
+	// AskCount is the number of validators that are requested to respond to this
+	// oracle request. Higher value means more security, at a higher gas cost.
+	AskCount uint64 `protobuf:"varint,4,opt,name=ask_count,json=askCount,proto3" json:"ask_count,omitempty"`
+	// MinCount is the minimum number of validators necessary for the request to
+	// proceed to the execution phase. Higher value means more security, at the
+	// cost of liveness.
+	MinCount uint64 `protobuf:"varint,5,opt,name=min_count,json=minCount,proto3" json:"min_count,omitempty"`
+	// FeeLimit is the maximum tokens that will be paid to all data source
+	// providers.
+	FeeLimit []*v1beta1.Coin `protobuf:"bytes,6,rep,name=fee_limit,json=feeLimit,proto3" json:"fee_limit,omitempty"`
+	// PrepareGas is amount of gas to pay to prepare raw requests
+	PrepareGas uint64 `protobuf:"varint,7,opt,name=prepare_gas,json=prepareGas,proto3" json:"prepare_gas,omitempty"`
+	// ExecuteGas is amount of gas to reserve for executing
+	ExecuteGas uint64 `protobuf:"varint,8,opt,name=execute_gas,json=executeGas,proto3" json:"execute_gas,omitempty"`
+	// MinSourceCount is the minimum number of data sources that must be used by
+	// each validator
+	MinSourceCount uint64 `protobuf:"varint,9,opt,name=min_source_count,json=minSourceCount,proto3" json:"min_source_count,omitempty"`
+}
+
+func (x *BandOracleRequest) Reset() {
+	*x = BandOracleRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BandOracleRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BandOracleRequest) ProtoMessage() {}
+
+// Deprecated: Use BandOracleRequest.ProtoReflect.Descriptor instead.
+func (*BandOracleRequest) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *BandOracleRequest) GetRequestId() uint64 {
+	if x != nil {
+		return x.RequestId
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetOracleScriptId() int64 {
+	if x != nil {
+		return x.OracleScriptId
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetSymbols() []string {
+	if x != nil {
+		return x.Symbols
+	}
+	return nil
+}
+
+func (x *BandOracleRequest) GetAskCount() uint64 {
+	if x != nil {
+		return x.AskCount
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetMinCount() uint64 {
+	if x != nil {
+		return x.MinCount
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetFeeLimit() []*v1beta1.Coin {
+	if x != nil {
+		return x.FeeLimit
+	}
+	return nil
+}
+
+func (x *BandOracleRequest) GetPrepareGas() uint64 {
+	if x != nil {
+		return x.PrepareGas
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetExecuteGas() uint64 {
+	if x != nil {
+		return x.ExecuteGas
+	}
+	return 0
+}
+
+func (x *BandOracleRequest) GetMinSourceCount() uint64 {
+	if x != nil {
+		return x.MinSourceCount
+	}
+	return 0
+}
+
+type PairDecimalsRate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Base  string `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
+	Quote string `protobuf:"bytes,2,opt,name=quote,proto3" json:"quote,omitempty"`
+	Rate  string `protobuf:"bytes,3,opt,name=rate,proto3" json:"rate,omitempty"`
+}
+
+func (x *PairDecimalsRate) Reset() {
+	*x = PairDecimalsRate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_reserve_oracle_genesis_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PairDecimalsRate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PairDecimalsRate) ProtoMessage() {}
+
+// Deprecated: Use PairDecimalsRate.ProtoReflect.Descriptor instead.
+func (*PairDecimalsRate) Descriptor() ([]byte, []int) {
+	return file_reserve_oracle_genesis_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *PairDecimalsRate) GetBase() string {
+	if x != nil {
+		return x.Base
+	}
+	return ""
+}
+
+func (x *PairDecimalsRate) GetQuote() string {
+	if x != nil {
+		return x.Quote
+	}
+	return ""
+}
+
+func (x *PairDecimalsRate) GetRate() string {
+	if x != nil {
+		return x.Rate
 	}
 	return ""
 }
@@ -581,13 +6466,141 @@ var file_reserve_oracle_genesis_proto_rawDesc = []byte{
 	0x6f, 0x1a, 0x14, 0x67, 0x6f, 0x67, 0x6f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x67,
 	0x6f, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65,
 	0x2f, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x22, 0x62, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53,
-	0x74, 0x61, 0x74, 0x65, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f,
-	0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8, 0xde,
-	0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12,
-	0x17, 0x0a, 0x07, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x06, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x42, 0x9c, 0x01, 0x0a, 0x12, 0x63, 0x6f, 0x6d,
+	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x62, 0x61, 0x73,
+	0x65, 0x2f, 0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2f, 0x63, 0x6f, 0x69, 0x6e, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x22, 0xa4, 0x05, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73,
+	0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e,
+	0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8,
+	0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73,
+	0x12, 0x41, 0x0a, 0x0b, 0x62, 0x61, 0x6e, 0x64, 0x5f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e,
+	0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x42, 0x61, 0x6e, 0x64, 0x50, 0x61, 0x72, 0x61, 0x6d,
+	0x73, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x0a, 0x62, 0x61, 0x6e, 0x64, 0x50, 0x61, 0x72,
+	0x61, 0x6d, 0x73, 0x12, 0x4a, 0x0a, 0x11, 0x62, 0x61, 0x6e, 0x64, 0x5f, 0x70, 0x72, 0x69, 0x63,
+	0x65, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1e,
+	0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e,
+	0x42, 0x61, 0x6e, 0x64, 0x50, 0x72, 0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x0f,
+	0x62, 0x61, 0x6e, 0x64, 0x50, 0x72, 0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x12,
+	0x53, 0x0a, 0x14, 0x62, 0x61, 0x6e, 0x64, 0x5f, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5f, 0x72,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x21, 0x2e,
+	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x42,
+	0x61, 0x6e, 0x64, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x52, 0x12, 0x62, 0x61, 0x6e, 0x64, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x73, 0x12, 0x31, 0x0a, 0x15, 0x62, 0x61, 0x6e, 0x64, 0x5f, 0x6c, 0x61, 0x74,
+	0x65, 0x73, 0x74, 0x5f, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x05, 0x20,
+	0x01, 0x28, 0x04, 0x52, 0x12, 0x62, 0x61, 0x6e, 0x64, 0x4c, 0x61, 0x74, 0x65, 0x73, 0x74, 0x43,
+	0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x49, 0x0a, 0x10, 0x63, 0x61, 0x6c, 0x6c, 0x64,
+	0x61, 0x74, 0x61, 0x5f, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x1e, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63,
+	0x6c, 0x65, 0x2e, 0x43, 0x61, 0x6c, 0x6c, 0x64, 0x61, 0x74, 0x61, 0x52, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x52, 0x0f, 0x63, 0x61, 0x6c, 0x6c, 0x64, 0x61, 0x74, 0x61, 0x52, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x73, 0x12, 0x33, 0x0a, 0x16, 0x62, 0x61, 0x6e, 0x64, 0x5f, 0x6c, 0x61, 0x74, 0x65, 0x73,
+	0x74, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01,
+	0x28, 0x04, 0x52, 0x13, 0x62, 0x61, 0x6e, 0x64, 0x4c, 0x61, 0x74, 0x65, 0x73, 0x74, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x49, 0x64, 0x12, 0x6a, 0x0a, 0x1a, 0x62, 0x61, 0x6e, 0x64, 0x5f,
+	0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x5f, 0x70,
+	0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x27, 0x2e, 0x72, 0x65,
+	0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x42, 0x61, 0x6e,
+	0x64, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x50, 0x61,
+	0x72, 0x61, 0x6d, 0x73, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x17, 0x62, 0x61, 0x6e, 0x64,
+	0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x50, 0x61, 0x72,
+	0x61, 0x6d, 0x73, 0x12, 0x56, 0x0a, 0x13, 0x70, 0x61, 0x69, 0x72, 0x5f, 0x64, 0x65, 0x63, 0x69,
+	0x6d, 0x61, 0x6c, 0x73, 0x5f, 0x72, 0x61, 0x74, 0x65, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x20, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c,
+	0x65, 0x2e, 0x50, 0x61, 0x69, 0x72, 0x44, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c, 0x73, 0x52, 0x61,
+	0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x11, 0x70, 0x61, 0x69, 0x72, 0x44, 0x65,
+	0x63, 0x69, 0x6d, 0x61, 0x6c, 0x73, 0x52, 0x61, 0x74, 0x65, 0x73, 0x22, 0xa9, 0x02, 0x0a, 0x17,
+	0x42, 0x61, 0x6e, 0x64, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x1b, 0x0a, 0x09, 0x61, 0x73, 0x6b, 0x5f, 0x63,
+	0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x61, 0x73, 0x6b, 0x43,
+	0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x69, 0x6e, 0x5f, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x6d, 0x69, 0x6e, 0x43, 0x6f, 0x75, 0x6e,
+	0x74, 0x12, 0x68, 0x0a, 0x09, 0x66, 0x65, 0x65, 0x5f, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x03,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x62, 0x61,
+	0x73, 0x65, 0x2e, 0x76, 0x31, 0x62, 0x65, 0x74, 0x61, 0x31, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x42,
+	0x30, 0xc8, 0xde, 0x1f, 0x00, 0xaa, 0xdf, 0x1f, 0x28, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f,
+	0x73, 0x2d, 0x73, 0x64, 0x6b, 0x2f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x43, 0x6f, 0x69, 0x6e,
+	0x73, 0x52, 0x08, 0x66, 0x65, 0x65, 0x4c, 0x69, 0x6d, 0x69, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x70,
+	0x72, 0x65, 0x70, 0x61, 0x72, 0x65, 0x5f, 0x67, 0x61, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04,
+	0x52, 0x0a, 0x70, 0x72, 0x65, 0x70, 0x61, 0x72, 0x65, 0x47, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b,
+	0x65, 0x78, 0x65, 0x63, 0x75, 0x74, 0x65, 0x5f, 0x67, 0x61, 0x73, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x04, 0x52, 0x0a, 0x65, 0x78, 0x65, 0x63, 0x75, 0x74, 0x65, 0x47, 0x61, 0x73, 0x12, 0x28, 0x0a,
+	0x10, 0x6d, 0x69, 0x6e, 0x5f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0e, 0x6d, 0x69, 0x6e, 0x53, 0x6f, 0x75, 0x72,
+	0x63, 0x65, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0xe0, 0x01, 0x0a, 0x0e, 0x42, 0x61, 0x6e, 0x64,
+	0x50, 0x72, 0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x79,
+	0x6d, 0x62, 0x6f, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x79, 0x6d, 0x62,
+	0x6f, 0x6c, 0x12, 0x31, 0x0a, 0x04, 0x72, 0x61, 0x74, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x42, 0x1d, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x15, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73,
+	0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x49, 0x6e, 0x74, 0x52,
+	0x04, 0x72, 0x61, 0x74, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x72, 0x65, 0x73, 0x6f, 0x6c, 0x76, 0x65,
+	0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b, 0x72, 0x65, 0x73,
+	0x6f, 0x6c, 0x76, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x72, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x5f, 0x49, 0x44, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x72, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x49, 0x44, 0x12, 0x41, 0x0a, 0x0b, 0x70, 0x72, 0x69, 0x63, 0x65,
+	0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x72,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x2e, 0x50, 0x72,
+	0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x42, 0x04, 0xc8, 0xde, 0x1f, 0x00, 0x52, 0x0a,
+	0x70, 0x72, 0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x22, 0x65, 0x0a, 0x0a, 0x50, 0x72,
+	0x69, 0x63, 0x65, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x39, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x23, 0xc8, 0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f,
+	0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61,
+	0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44, 0x65, 0x63, 0x52, 0x05, 0x70, 0x72,
+	0x69, 0x63, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
+	0x70, 0x22, 0x49, 0x0a, 0x0e, 0x43, 0x61, 0x6c, 0x6c, 0x64, 0x61, 0x74, 0x61, 0x52, 0x65, 0x63,
+	0x6f, 0x72, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64,
+	0x12, 0x1a, 0x0a, 0x08, 0x63, 0x61, 0x6c, 0x6c, 0x64, 0x61, 0x74, 0x61, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0c, 0x52, 0x08, 0x63, 0x61, 0x6c, 0x6c, 0x64, 0x61, 0x74, 0x61, 0x22, 0xd9, 0x01, 0x0a,
+	0x0a, 0x42, 0x61, 0x6e, 0x64, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x30, 0x0a, 0x14, 0x69,
+	0x62, 0x63, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x5f, 0x69, 0x6e, 0x74, 0x65, 0x72,
+	0x76, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x12, 0x69, 0x62, 0x63, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x76, 0x61, 0x6c, 0x12, 0x2c, 0x0a,
+	0x12, 0x69, 0x62, 0x63, 0x5f, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x63, 0x68, 0x61, 0x6e,
+	0x6e, 0x65, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x69, 0x62, 0x63, 0x53, 0x6f,
+	0x75, 0x72, 0x63, 0x65, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x12, 0x1f, 0x0a, 0x0b, 0x69,
+	0x62, 0x63, 0x5f, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0a, 0x69, 0x62, 0x63, 0x56, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x1e, 0x0a, 0x0b,
+	0x69, 0x62, 0x63, 0x5f, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x09, 0x69, 0x62, 0x63, 0x50, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x12, 0x2a, 0x0a, 0x11,
+	0x6c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x5f, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5f, 0x69, 0x64,
+	0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x03, 0x52, 0x0f, 0x6c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x4f,
+	0x72, 0x61, 0x63, 0x6c, 0x65, 0x49, 0x64, 0x73, 0x22, 0x86, 0x03, 0x0a, 0x11, 0x42, 0x61, 0x6e,
+	0x64, 0x4f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d,
+	0x0a, 0x0a, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x04, 0x52, 0x09, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x49, 0x64, 0x12, 0x28, 0x0a,
+	0x10, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x5f, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x5f, 0x69,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x53,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x79, 0x6d, 0x62, 0x6f,
+	0x6c, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x73, 0x79, 0x6d, 0x62, 0x6f, 0x6c,
+	0x73, 0x12, 0x1b, 0x0a, 0x09, 0x61, 0x73, 0x6b, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x08, 0x61, 0x73, 0x6b, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x1b,
+	0x0a, 0x09, 0x6d, 0x69, 0x6e, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x04, 0x52, 0x08, 0x6d, 0x69, 0x6e, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x68, 0x0a, 0x09, 0x66,
+	0x65, 0x65, 0x5f, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x19,
+	0x2e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x76, 0x31, 0x62,
+	0x65, 0x74, 0x61, 0x31, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x42, 0x30, 0xc8, 0xde, 0x1f, 0x00, 0xaa,
+	0xdf, 0x1f, 0x28, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x6f,
+	0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2d, 0x73, 0x64, 0x6b, 0x2f,
+	0x74, 0x79, 0x70, 0x65, 0x73, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x73, 0x52, 0x08, 0x66, 0x65, 0x65,
+	0x4c, 0x69, 0x6d, 0x69, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x72, 0x65, 0x70, 0x61, 0x72, 0x65,
+	0x5f, 0x67, 0x61, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x70, 0x72, 0x65, 0x70,
+	0x61, 0x72, 0x65, 0x47, 0x61, 0x73, 0x12, 0x1f, 0x0a, 0x0b, 0x65, 0x78, 0x65, 0x63, 0x75, 0x74,
+	0x65, 0x5f, 0x67, 0x61, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x65, 0x78, 0x65,
+	0x63, 0x75, 0x74, 0x65, 0x47, 0x61, 0x73, 0x12, 0x28, 0x0a, 0x10, 0x6d, 0x69, 0x6e, 0x5f, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x09, 0x20, 0x01, 0x28,
+	0x04, 0x52, 0x0e, 0x6d, 0x69, 0x6e, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x43, 0x6f, 0x75, 0x6e,
+	0x74, 0x22, 0x75, 0x0a, 0x10, 0x50, 0x61, 0x69, 0x72, 0x44, 0x65, 0x63, 0x69, 0x6d, 0x61, 0x6c,
+	0x73, 0x52, 0x61, 0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x62, 0x61, 0x73, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x62, 0x61, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x71, 0x75, 0x6f,
+	0x74, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x71, 0x75, 0x6f, 0x74, 0x65, 0x12,
+	0x37, 0x0a, 0x04, 0x72, 0x61, 0x74, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x42, 0x23, 0xc8,
+	0xde, 0x1f, 0x00, 0xda, 0xde, 0x1f, 0x1b, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b,
+	0x2e, 0x69, 0x6f, 0x2f, 0x6d, 0x61, 0x74, 0x68, 0x2e, 0x4c, 0x65, 0x67, 0x61, 0x63, 0x79, 0x44,
+	0x65, 0x63, 0x52, 0x04, 0x72, 0x61, 0x74, 0x65, 0x42, 0x9c, 0x01, 0x0a, 0x12, 0x63, 0x6f, 0x6d,
 	0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x6f, 0x72, 0x61, 0x63, 0x6c, 0x65, 0x42,
 	0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a,
 	0x1f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70,
@@ -612,18 +6625,35 @@ func file_reserve_oracle_genesis_proto_rawDescGZIP() []byte {
 	return file_reserve_oracle_genesis_proto_rawDescData
 }
 
-var file_reserve_oracle_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_reserve_oracle_genesis_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_reserve_oracle_genesis_proto_goTypes = []interface{}{
-	(*GenesisState)(nil), // 0: reserve.oracle.GenesisState
-	(*Params)(nil),       // 1: reserve.oracle.Params
+	(*GenesisState)(nil),            // 0: reserve.oracle.GenesisState
+	(*BandOracleRequestParams)(nil), // 1: reserve.oracle.BandOracleRequestParams
+	(*BandPriceState)(nil),          // 2: reserve.oracle.BandPriceState
+	(*PriceState)(nil),              // 3: reserve.oracle.PriceState
+	(*CalldataRecord)(nil),          // 4: reserve.oracle.CalldataRecord
+	(*BandParams)(nil),              // 5: reserve.oracle.BandParams
+	(*BandOracleRequest)(nil),       // 6: reserve.oracle.BandOracleRequest
+	(*PairDecimalsRate)(nil),        // 7: reserve.oracle.PairDecimalsRate
+	(*Params)(nil),                  // 8: reserve.oracle.Params
+	(*v1beta1.Coin)(nil),            // 9: cosmos.base.v1beta1.Coin
 }
 var file_reserve_oracle_genesis_proto_depIdxs = []int32{
-	1, // 0: reserve.oracle.GenesisState.params:type_name -> reserve.oracle.Params
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	8,  // 0: reserve.oracle.GenesisState.params:type_name -> reserve.oracle.Params
+	5,  // 1: reserve.oracle.GenesisState.band_params:type_name -> reserve.oracle.BandParams
+	2,  // 2: reserve.oracle.GenesisState.band_price_states:type_name -> reserve.oracle.BandPriceState
+	6,  // 3: reserve.oracle.GenesisState.band_oracle_requests:type_name -> reserve.oracle.BandOracleRequest
+	4,  // 4: reserve.oracle.GenesisState.calldata_records:type_name -> reserve.oracle.CalldataRecord
+	1,  // 5: reserve.oracle.GenesisState.band_oracle_request_params:type_name -> reserve.oracle.BandOracleRequestParams
+	7,  // 6: reserve.oracle.GenesisState.pair_decimals_rates:type_name -> reserve.oracle.PairDecimalsRate
+	9,  // 7: reserve.oracle.BandOracleRequestParams.fee_limit:type_name -> cosmos.base.v1beta1.Coin
+	3,  // 8: reserve.oracle.BandPriceState.price_state:type_name -> reserve.oracle.PriceState
+	9,  // 9: reserve.oracle.BandOracleRequest.fee_limit:type_name -> cosmos.base.v1beta1.Coin
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_reserve_oracle_genesis_proto_init() }
@@ -645,6 +6675,90 @@ func file_reserve_oracle_genesis_proto_init() {
 				return nil
 			}
 		}
+		file_reserve_oracle_genesis_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BandOracleRequestParams); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BandPriceState); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PriceState); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CalldataRecord); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BandParams); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BandOracleRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_reserve_oracle_genesis_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PairDecimalsRate); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -652,7 +6766,7 @@ func file_reserve_oracle_genesis_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_reserve_oracle_genesis_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

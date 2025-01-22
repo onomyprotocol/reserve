@@ -3,7 +3,9 @@ package vaults
 
 import (
 	_ "cosmossdk.io/api/amino"
+	v1beta1 "cosmossdk.io/api/cosmos/base/v1beta1"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-proto"
 	runtime "github.com/cosmos/cosmos-proto/runtime"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -116,11 +118,65 @@ func (x *_GenesisState_3_list) IsValid() bool {
 	return x.list != nil
 }
 
+var _ protoreflect.List = (*_GenesisState_5_list)(nil)
+
+type _GenesisState_5_list struct {
+	list *[]*v1beta1.Coin
+}
+
+func (x *_GenesisState_5_list) Len() int {
+	if x.list == nil {
+		return 0
+	}
+	return len(*x.list)
+}
+
+func (x *_GenesisState_5_list) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOfMessage((*x.list)[i].ProtoReflect())
+}
+
+func (x *_GenesisState_5_list) Set(i int, value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	(*x.list)[i] = concreteValue
+}
+
+func (x *_GenesisState_5_list) Append(value protoreflect.Value) {
+	valueUnwrapped := value.Message()
+	concreteValue := valueUnwrapped.Interface().(*v1beta1.Coin)
+	*x.list = append(*x.list, concreteValue)
+}
+
+func (x *_GenesisState_5_list) AppendMutable() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	*x.list = append(*x.list, v)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_5_list) Truncate(n int) {
+	for i := n; i < len(*x.list); i++ {
+		(*x.list)[i] = nil
+	}
+	*x.list = (*x.list)[:n]
+}
+
+func (x *_GenesisState_5_list) NewElement() protoreflect.Value {
+	v := new(v1beta1.Coin)
+	return protoreflect.ValueOfMessage(v.ProtoReflect())
+}
+
+func (x *_GenesisState_5_list) IsValid() bool {
+	return x.list != nil
+}
+
 var (
-	md_GenesisState                protoreflect.MessageDescriptor
-	fd_GenesisState_params         protoreflect.FieldDescriptor
-	fd_GenesisState_vault_managers protoreflect.FieldDescriptor
-	fd_GenesisState_vaults         protoreflect.FieldDescriptor
+	md_GenesisState                   protoreflect.MessageDescriptor
+	fd_GenesisState_params            protoreflect.FieldDescriptor
+	fd_GenesisState_vault_managers    protoreflect.FieldDescriptor
+	fd_GenesisState_vaults            protoreflect.FieldDescriptor
+	fd_GenesisState_last_update       protoreflect.FieldDescriptor
+	fd_GenesisState_shortfall_amounts protoreflect.FieldDescriptor
+	fd_GenesisState_vault_sequence    protoreflect.FieldDescriptor
 )
 
 func init() {
@@ -129,6 +185,9 @@ func init() {
 	fd_GenesisState_params = md_GenesisState.Fields().ByName("params")
 	fd_GenesisState_vault_managers = md_GenesisState.Fields().ByName("vault_managers")
 	fd_GenesisState_vaults = md_GenesisState.Fields().ByName("vaults")
+	fd_GenesisState_last_update = md_GenesisState.Fields().ByName("last_update")
+	fd_GenesisState_shortfall_amounts = md_GenesisState.Fields().ByName("shortfall_amounts")
+	fd_GenesisState_vault_sequence = md_GenesisState.Fields().ByName("vault_sequence")
 }
 
 var _ protoreflect.Message = (*fastReflection_GenesisState)(nil)
@@ -214,6 +273,24 @@ func (x *fastReflection_GenesisState) Range(f func(protoreflect.FieldDescriptor,
 			return
 		}
 	}
+	if x.LastUpdate != nil {
+		value := protoreflect.ValueOfMessage(x.LastUpdate.ProtoReflect())
+		if !f(fd_GenesisState_last_update, value) {
+			return
+		}
+	}
+	if len(x.ShortfallAmounts) != 0 {
+		value := protoreflect.ValueOfList(&_GenesisState_5_list{list: &x.ShortfallAmounts})
+		if !f(fd_GenesisState_shortfall_amounts, value) {
+			return
+		}
+	}
+	if x.VaultSequence != uint64(0) {
+		value := protoreflect.ValueOfUint64(x.VaultSequence)
+		if !f(fd_GenesisState_vault_sequence, value) {
+			return
+		}
+	}
 }
 
 // Has reports whether a field is populated.
@@ -235,6 +312,12 @@ func (x *fastReflection_GenesisState) Has(fd protoreflect.FieldDescriptor) bool 
 		return len(x.VaultManagers) != 0
 	case "reserve.vaults.GenesisState.vaults":
 		return len(x.Vaults) != 0
+	case "reserve.vaults.GenesisState.last_update":
+		return x.LastUpdate != nil
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		return len(x.ShortfallAmounts) != 0
+	case "reserve.vaults.GenesisState.vault_sequence":
+		return x.VaultSequence != uint64(0)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -257,6 +340,12 @@ func (x *fastReflection_GenesisState) Clear(fd protoreflect.FieldDescriptor) {
 		x.VaultManagers = nil
 	case "reserve.vaults.GenesisState.vaults":
 		x.Vaults = nil
+	case "reserve.vaults.GenesisState.last_update":
+		x.LastUpdate = nil
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		x.ShortfallAmounts = nil
+	case "reserve.vaults.GenesisState.vault_sequence":
+		x.VaultSequence = uint64(0)
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -288,6 +377,18 @@ func (x *fastReflection_GenesisState) Get(descriptor protoreflect.FieldDescripto
 		}
 		listValue := &_GenesisState_3_list{list: &x.Vaults}
 		return protoreflect.ValueOfList(listValue)
+	case "reserve.vaults.GenesisState.last_update":
+		value := x.LastUpdate
+		return protoreflect.ValueOfMessage(value.ProtoReflect())
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		if len(x.ShortfallAmounts) == 0 {
+			return protoreflect.ValueOfList(&_GenesisState_5_list{})
+		}
+		listValue := &_GenesisState_5_list{list: &x.ShortfallAmounts}
+		return protoreflect.ValueOfList(listValue)
+	case "reserve.vaults.GenesisState.vault_sequence":
+		value := x.VaultSequence
+		return protoreflect.ValueOfUint64(value)
 	default:
 		if descriptor.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -318,6 +419,14 @@ func (x *fastReflection_GenesisState) Set(fd protoreflect.FieldDescriptor, value
 		lv := value.List()
 		clv := lv.(*_GenesisState_3_list)
 		x.Vaults = *clv.list
+	case "reserve.vaults.GenesisState.last_update":
+		x.LastUpdate = value.Message().Interface().(*LastUpdate)
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		lv := value.List()
+		clv := lv.(*_GenesisState_5_list)
+		x.ShortfallAmounts = *clv.list
+	case "reserve.vaults.GenesisState.vault_sequence":
+		x.VaultSequence = value.Uint()
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -355,6 +464,19 @@ func (x *fastReflection_GenesisState) Mutable(fd protoreflect.FieldDescriptor) p
 		}
 		value := &_GenesisState_3_list{list: &x.Vaults}
 		return protoreflect.ValueOfList(value)
+	case "reserve.vaults.GenesisState.last_update":
+		if x.LastUpdate == nil {
+			x.LastUpdate = new(LastUpdate)
+		}
+		return protoreflect.ValueOfMessage(x.LastUpdate.ProtoReflect())
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		if x.ShortfallAmounts == nil {
+			x.ShortfallAmounts = []*v1beta1.Coin{}
+		}
+		value := &_GenesisState_5_list{list: &x.ShortfallAmounts}
+		return protoreflect.ValueOfList(value)
+	case "reserve.vaults.GenesisState.vault_sequence":
+		panic(fmt.Errorf("field vault_sequence of message reserve.vaults.GenesisState is not mutable"))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -377,6 +499,14 @@ func (x *fastReflection_GenesisState) NewField(fd protoreflect.FieldDescriptor) 
 	case "reserve.vaults.GenesisState.vaults":
 		list := []*Vault{}
 		return protoreflect.ValueOfList(&_GenesisState_3_list{list: &list})
+	case "reserve.vaults.GenesisState.last_update":
+		m := new(LastUpdate)
+		return protoreflect.ValueOfMessage(m.ProtoReflect())
+	case "reserve.vaults.GenesisState.shortfall_amounts":
+		list := []*v1beta1.Coin{}
+		return protoreflect.ValueOfList(&_GenesisState_5_list{list: &list})
+	case "reserve.vaults.GenesisState.vault_sequence":
+		return protoreflect.ValueOfUint64(uint64(0))
 	default:
 		if fd.IsExtension() {
 			panic(fmt.Errorf("proto3 declared messages do not support extensions: reserve.vaults.GenesisState"))
@@ -462,6 +592,19 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 				n += 1 + l + runtime.Sov(uint64(l))
 			}
 		}
+		if x.LastUpdate != nil {
+			l = options.Size(x.LastUpdate)
+			n += 1 + l + runtime.Sov(uint64(l))
+		}
+		if len(x.ShortfallAmounts) > 0 {
+			for _, e := range x.ShortfallAmounts {
+				l = options.Size(e)
+				n += 1 + l + runtime.Sov(uint64(l))
+			}
+		}
+		if x.VaultSequence != 0 {
+			n += 1 + runtime.Sov(uint64(x.VaultSequence))
+		}
 		if x.unknownFields != nil {
 			n += len(x.unknownFields)
 		}
@@ -490,6 +633,41 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 		if x.unknownFields != nil {
 			i -= len(x.unknownFields)
 			copy(dAtA[i:], x.unknownFields)
+		}
+		if x.VaultSequence != 0 {
+			i = runtime.EncodeVarint(dAtA, i, uint64(x.VaultSequence))
+			i--
+			dAtA[i] = 0x30
+		}
+		if len(x.ShortfallAmounts) > 0 {
+			for iNdEx := len(x.ShortfallAmounts) - 1; iNdEx >= 0; iNdEx-- {
+				encoded, err := options.Marshal(x.ShortfallAmounts[iNdEx])
+				if err != nil {
+					return protoiface.MarshalOutput{
+						NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+						Buf:               input.Buf,
+					}, err
+				}
+				i -= len(encoded)
+				copy(dAtA[i:], encoded)
+				i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+				i--
+				dAtA[i] = 0x2a
+			}
+		}
+		if x.LastUpdate != nil {
+			encoded, err := options.Marshal(x.LastUpdate)
+			if err != nil {
+				return protoiface.MarshalOutput{
+					NoUnkeyedLiterals: input.NoUnkeyedLiterals,
+					Buf:               input.Buf,
+				}, err
+			}
+			i -= len(encoded)
+			copy(dAtA[i:], encoded)
+			i = runtime.EncodeVarint(dAtA, i, uint64(len(encoded)))
+			i--
+			dAtA[i] = 0x22
 		}
 		if len(x.Vaults) > 0 {
 			for iNdEx := len(x.Vaults) - 1; iNdEx >= 0; iNdEx-- {
@@ -690,6 +868,95 @@ func (x *fastReflection_GenesisState) ProtoMethods() *protoiface.Methods {
 					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
 				}
 				iNdEx = postIndex
+			case 4:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field LastUpdate", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				if x.LastUpdate == nil {
+					x.LastUpdate = &LastUpdate{}
+				}
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.LastUpdate); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 5:
+				if wireType != 2 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field ShortfallAmounts", wireType)
+				}
+				var msglen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					msglen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if msglen < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				postIndex := iNdEx + msglen
+				if postIndex < 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrInvalidLength
+				}
+				if postIndex > l {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+				}
+				x.ShortfallAmounts = append(x.ShortfallAmounts, &v1beta1.Coin{})
+				if err := options.Unmarshal(dAtA[iNdEx:postIndex], x.ShortfallAmounts[len(x.ShortfallAmounts)-1]); err != nil {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, err
+				}
+				iNdEx = postIndex
+			case 6:
+				if wireType != 0 {
+					return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, fmt.Errorf("proto: wrong wireType = %d for field VaultSequence", wireType)
+				}
+				x.VaultSequence = 0
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, runtime.ErrIntOverflow
+					}
+					if iNdEx >= l {
+						return protoiface.UnmarshalOutput{NoUnkeyedLiterals: input.NoUnkeyedLiterals, Flags: input.Flags}, io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					x.VaultSequence |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
 			default:
 				iNdEx = preIndex
 				skippy, err := runtime.Skip(dAtA[iNdEx:])
@@ -745,9 +1012,12 @@ type GenesisState struct {
 	unknownFields protoimpl.UnknownFields
 
 	// params defines all the parameters of the module.
-	Params        *Params         `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
-	VaultManagers []*VaultManager `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers,omitempty"`
-	Vaults        []*Vault        `protobuf:"bytes,3,rep,name=vaults,proto3" json:"vaults,omitempty"`
+	Params           *Params         `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
+	VaultManagers    []*VaultManager `protobuf:"bytes,2,rep,name=vault_managers,json=vaultManagers,proto3" json:"vault_managers,omitempty"`
+	Vaults           []*Vault        `protobuf:"bytes,3,rep,name=vaults,proto3" json:"vaults,omitempty"`
+	LastUpdate       *LastUpdate     `protobuf:"bytes,4,opt,name=last_update,json=lastUpdate,proto3" json:"last_update,omitempty"`
+	ShortfallAmounts []*v1beta1.Coin `protobuf:"bytes,5,rep,name=shortfall_amounts,json=shortfallAmounts,proto3" json:"shortfall_amounts,omitempty"`
+	VaultSequence    uint64          `protobuf:"varint,6,opt,name=vault_sequence,json=vaultSequence,proto3" json:"vault_sequence,omitempty"`
 }
 
 func (x *GenesisState) Reset() {
@@ -791,6 +1061,27 @@ func (x *GenesisState) GetVaults() []*Vault {
 	return nil
 }
 
+func (x *GenesisState) GetLastUpdate() *LastUpdate {
+	if x != nil {
+		return x.LastUpdate
+	}
+	return nil
+}
+
+func (x *GenesisState) GetShortfallAmounts() []*v1beta1.Coin {
+	if x != nil {
+		return x.ShortfallAmounts
+	}
+	return nil
+}
+
+func (x *GenesisState) GetVaultSequence() uint64 {
+	if x != nil {
+		return x.VaultSequence
+	}
+	return 0
+}
+
 var File_reserve_vaults_genesis_proto protoreflect.FileDescriptor
 
 var file_reserve_vaults_genesis_proto_rawDesc = []byte{
@@ -801,32 +1092,46 @@ var file_reserve_vaults_genesis_proto_rawDesc = []byte{
 	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61,
 	0x75, 0x6c, 0x74, 0x73, 0x2f, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x1a, 0x11, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2f, 0x61, 0x6d, 0x69, 0x6e, 0x6f, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1a, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61,
-	0x75, 0x6c, 0x74, 0x73, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x22, 0xd3, 0x01, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74,
-	0x65, 0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c,
-	0x74, 0x73, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8,
-	0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x4e, 0x0a, 0x0e,
-	0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x18, 0x02,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6d, 0x61, 0x67,
-	0x65, 0x72, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0d, 0x76,
-	0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x12, 0x38, 0x0a, 0x06,
-	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x72,
-	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61,
-	0x75, 0x6c, 0x74, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06,
-	0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x9c, 0x01, 0x0a, 0x12, 0x63, 0x6f, 0x6d, 0x2e, 0x72,
-	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x42, 0x0c, 0x47,
-	0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1f, 0x63,
-	0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69, 0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f,
-	0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xa2, 0x02,
-	0x03, 0x52, 0x56, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0xca, 0x02, 0x0e, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x5c,
-	0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xe2, 0x02, 0x1a, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65,
-	0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64,
-	0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x3a, 0x3a, 0x56,
-	0x61, 0x75, 0x6c, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x19, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x5f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x2f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a,
+	0x1e, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2f, 0x62, 0x61, 0x73, 0x65, 0x2f, 0x76, 0x31, 0x62,
+	0x65, 0x74, 0x61, 0x31, 0x2f, 0x63, 0x6f, 0x69, 0x6e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
+	0x8a, 0x03, 0x0a, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x53, 0x74, 0x61, 0x74, 0x65,
+	0x12, 0x39, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x16, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74,
+	0x73, 0x2e, 0x50, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7,
+	0xb0, 0x2a, 0x01, 0x52, 0x06, 0x70, 0x61, 0x72, 0x61, 0x6d, 0x73, 0x12, 0x4e, 0x0a, 0x0e, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x5f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x18, 0x02, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61,
+	0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65,
+	0x72, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x0d, 0x76, 0x61,
+	0x75, 0x6c, 0x74, 0x4d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x73, 0x12, 0x38, 0x0a, 0x06, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x72, 0x65,
+	0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x56, 0x61, 0x75,
+	0x6c, 0x74, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7, 0xb0, 0x2a, 0x01, 0x52, 0x06, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x73, 0x12, 0x3b, 0x0a, 0x0b, 0x6c, 0x61, 0x73, 0x74, 0x5f, 0x75, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x72, 0x65, 0x73,
+	0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x2e, 0x4c, 0x61, 0x73, 0x74,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x0a, 0x6c, 0x61, 0x73, 0x74, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x12, 0x51, 0x0a, 0x11, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x66, 0x61, 0x6c, 0x6c, 0x5f,
+	0x61, 0x6d, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x19, 0x2e,
+	0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x76, 0x31, 0x62, 0x65,
+	0x74, 0x61, 0x31, 0x2e, 0x43, 0x6f, 0x69, 0x6e, 0x42, 0x09, 0xc8, 0xde, 0x1f, 0x00, 0xa8, 0xe7,
+	0xb0, 0x2a, 0x01, 0x52, 0x10, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x66, 0x61, 0x6c, 0x6c, 0x41, 0x6d,
+	0x6f, 0x75, 0x6e, 0x74, 0x73, 0x12, 0x25, 0x0a, 0x0e, 0x76, 0x61, 0x75, 0x6c, 0x74, 0x5f, 0x73,
+	0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0d, 0x76,
+	0x61, 0x75, 0x6c, 0x74, 0x53, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x42, 0x9c, 0x01, 0x0a,
+	0x12, 0x63, 0x6f, 0x6d, 0x2e, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2e, 0x76, 0x61, 0x75,
+	0x6c, 0x74, 0x73, 0x42, 0x0c, 0x47, 0x65, 0x6e, 0x65, 0x73, 0x69, 0x73, 0x50, 0x72, 0x6f, 0x74,
+	0x6f, 0x50, 0x01, 0x5a, 0x1f, 0x63, 0x6f, 0x73, 0x6d, 0x6f, 0x73, 0x73, 0x64, 0x6b, 0x2e, 0x69,
+	0x6f, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x72, 0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x2f, 0x76, 0x61,
+	0x75, 0x6c, 0x74, 0x73, 0xa2, 0x02, 0x03, 0x52, 0x56, 0x58, 0xaa, 0x02, 0x0e, 0x52, 0x65, 0x73,
+	0x65, 0x72, 0x76, 0x65, 0x2e, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xca, 0x02, 0x0e, 0x52, 0x65,
+	0x73, 0x65, 0x72, 0x76, 0x65, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0xe2, 0x02, 0x1a, 0x52,
+	0x65, 0x73, 0x65, 0x72, 0x76, 0x65, 0x5c, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x5c, 0x47, 0x50,
+	0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x0f, 0x52, 0x65, 0x73, 0x65,
+	0x72, 0x76, 0x65, 0x3a, 0x3a, 0x56, 0x61, 0x75, 0x6c, 0x74, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -847,16 +1152,20 @@ var file_reserve_vaults_genesis_proto_goTypes = []interface{}{
 	(*Params)(nil),       // 1: reserve.vaults.Params
 	(*VaultManager)(nil), // 2: reserve.vaults.VaultManager
 	(*Vault)(nil),        // 3: reserve.vaults.Vault
+	(*LastUpdate)(nil),   // 4: reserve.vaults.LastUpdate
+	(*v1beta1.Coin)(nil), // 5: cosmos.base.v1beta1.Coin
 }
 var file_reserve_vaults_genesis_proto_depIdxs = []int32{
 	1, // 0: reserve.vaults.GenesisState.params:type_name -> reserve.vaults.Params
 	2, // 1: reserve.vaults.GenesisState.vault_managers:type_name -> reserve.vaults.VaultManager
 	3, // 2: reserve.vaults.GenesisState.vaults:type_name -> reserve.vaults.Vault
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	4, // 3: reserve.vaults.GenesisState.last_update:type_name -> reserve.vaults.LastUpdate
+	5, // 4: reserve.vaults.GenesisState.shortfall_amounts:type_name -> cosmos.base.v1beta1.Coin
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_reserve_vaults_genesis_proto_init() }
@@ -865,7 +1174,6 @@ func file_reserve_vaults_genesis_proto_init() {
 		return
 	}
 	file_reserve_vaults_params_proto_init()
-	file_reserve_vaults_vault_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_reserve_vaults_genesis_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GenesisState); i {
