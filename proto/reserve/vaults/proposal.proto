@@ -29,3 +29,13 @@ message UpdatesCollateralProposal {
   string               description = 2;
   MsgUpdatesCollateral updates_collateral     = 3 [(gogoproto.nullable) = false];
 }
+
+message BurnShortfallProposal {
+  option (gogoproto.goproto_getters)         = false;
+  option (cosmos_proto.implements_interface) = "cosmos.gov.v1beta1.Content";
+  option (amino.name)                        = "reserve/BurnShortfallProposal";
+
+  string               title       = 1;
+  string               description = 2;
+  MsgBurnShortfall burn_shortfall     = 3 [(gogoproto.nullable) = false];
+}

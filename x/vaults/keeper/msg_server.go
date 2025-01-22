@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	errorsmod "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -179,4 +180,27 @@ func (k msgServer) Close(ctx context.Context, msg *types.MsgClose) (*types.MsgCl
 		return nil, err
 	}
 	return &types.MsgCloseResponse{}, nil
+}
+
+// use mintDenom in reserve to burn Shortfall via gov
+func (k msgServer) BurnShortfall(ctx context.Context, msg *types.MsgBurnShortfall) (*types.MsgBurnShortfallResponse, error) {
+	err := msg.ValidateBasic()
+	if err != nil {
+		return &types.MsgBurnShortfallResponse{}, err
+	}
+
+	if k.authority != msg.Authority {
+		return nil, errorsmod.Wrapf(types.ErrInvalidSigner, "invalid authority; expected %s, got %s", k.authority, msg.Authority)
+	}
+
+	if !slices.Contains(k.GetParams(ctx).AllowedMintDenom, msg.MintDenom) {
+		return nil, fmt.Errorf("denom %s is not in the allowed mint denom list", msg.MintDenom)
+	}
+
+	err = k.BurnShortfallByMintDenom(ctx, msg.MintDenom, msg.Amount)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgBurnShortfallResponse{}, nil
 }
