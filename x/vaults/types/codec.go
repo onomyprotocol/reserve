@@ -12,6 +12,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&ActiveCollateralProposal{}, "reserve/ActiveCollateralProposal", nil)
 	cdc.RegisterConcrete(&UpdatesCollateralProposal{}, "reserve/UpdatesCollateralProposal", nil)
+	cdc.RegisterConcrete(&BurnShortfallProposal{}, "reserve/BurnShortfallProposal", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -20,6 +21,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateParams{},
 		&MsgActiveCollateral{},
+		&MsgBurnShortfall{},
 		&MsgUpdatesCollateral{},
 		&MsgCreateVault{},
 		&MsgDeposit{},
@@ -33,6 +35,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		(*govtypes.Content)(nil),
 		&ActiveCollateralProposal{},
 		&UpdatesCollateralProposal{},
+		&BurnShortfallProposal{},
 	)
 
 }

@@ -21,6 +21,9 @@ func NewVaultsProposalHandler(k *keeper.Keeper) govtypes.Handler {
 		case *types.UpdatesCollateralProposal:
 			_, err := msgSv.UpdatesCollateral(ctx, types.NewMsgUpdatesCollateral(c))
 			return err
+		case *types.BurnShortfallProposal:
+			_, err := msgSv.BurnShortfall(ctx, types.NewMsgBurnShortfall(c))
+			return err
 		default:
 			return errorsmod.Wrapf(sdkerrors.ErrUnknownRequest, "unrecognized %s proposal content type: %T", types.ModuleName, c)
 		}

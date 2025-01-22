@@ -48,8 +48,24 @@ service Query {
   rpc QueryTotalCollateralLockedByDenom(QueryTotalCollateralLockedByDenomRequest) returns (QueryTotalCollateralLockedByDenomResponse){
     option (google.api.http).get = "/reserve/vaults/params";
   }
+
+  rpc QueryShortfallAmount(QueryShortfallAmountRequest) returns (QueryShortfallAmountResponse){
+    option (google.api.http).get = "/reserve/vaults/params";
+  }
 }
 
+message QueryShortfallAmountRequest {
+  string mint_denom = 1;
+}
+
+message QueryShortfallAmountResponse {
+  string amount = 1 [
+    (cosmos_proto.scalar) = "cosmos.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (amino.dont_omitempty) = true,
+    (gogoproto.nullable) = false
+  ];
+}
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 

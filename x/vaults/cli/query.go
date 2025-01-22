@@ -29,6 +29,7 @@ func GetQueryCmd() *cobra.Command {
 	cmd.AddCommand(CmdQueryVaultFromAddress())
 	cmd.AddCommand(CmdQueryCollateralsByDenom())
 	cmd.AddCommand(CmdQueryTotalCollateralLockedByDenom())
+	cmd.AddCommand(CmdQueryShortfallAmount())
 	return cmd
 }
 
@@ -235,6 +236,32 @@ func CmdQueryTotalCollateralLockedByDenom() *cobra.Command {
 			}
 
 			res, err := queryClient.QueryTotalCollateralLockedByDenom(context.Background(), &msg)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+	return cmd
+}
+
+func CmdQueryShortfallAmount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "query-shortfall-amount [mint-denom]",
+		Short: "show total shortfall amount by mint denom",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			msg := types.QueryShortfallAmountRequest{
+				MintDenom: args[0],
+			}
+
+			res, err := queryClient.QueryShortfallAmount(context.Background(), &msg)
 			if err != nil {
 				return err
 			}
