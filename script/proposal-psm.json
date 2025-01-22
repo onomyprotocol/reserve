@@ -6,7 +6,8 @@
       "limit_total": "100000000000000000000000000000",
       "fee_in": "0.001000000000000000",
       "fee_out": "0.001000000000000000",
-      "oracle_script": "44"
+      "oracle_script": "44",
+      "symbol": "USD"
     },
     {
       "@type": "/reserve.psm.v1.MsgAddStableCoin",
@@ -15,7 +16,8 @@
       "limit_total": "100000000000000000000000000000",
       "fee_in": "0.001000000000000000",
       "fee_out": "0.001000000000000000",
-      "oracle_script": "44"
+      "oracle_script": "44",
+      "symbol": "USD"
     }],
     "deposit": "100000000stake",
     "title": "My proposal",
