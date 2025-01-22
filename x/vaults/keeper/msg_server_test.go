@@ -18,7 +18,30 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 		expPass                     bool
 	}{
 		{
-			name:      "success, shortfallAmount is less than reserve balances",
+			name:      "success burn part",
+			mintDenom: "fxUSD",
+			setup: func() types.MsgBurnShortfall {
+				// make sure reserve has money
+				mintCoin := sdk.NewCoins(sdk.NewCoin("fxUSD", math.NewInt(10_000_000)))
+				s.FundAccount(s.TestAccs[0], types.ModuleName, mintCoin)
+				err := s.k.BankKeeper.SendCoinsFromAccountToModule(s.Ctx, s.TestAccs[0], types.ReserveModuleName, mintCoin)
+				s.Require().NoError(err)
+
+				// make sure Guaranteed Shortfall Amount
+				err = s.k.ShortfallAmount.Set(s.Ctx, "fxUSD", math.NewInt(5_000_000))
+				s.Require().NoError(err)
+				return types.MsgBurnShortfall{
+					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
+					MintDenom: "fxUSD",
+					Amount:    math.NewInt(1_000_000),
+				}
+			},
+			expShortfallAmountAfterBurn: math.NewInt(4_000_000),
+			expReserveBalcesAfterBurn:   math.NewInt(9_000_000),
+			expPass:                     true,
+		},
+		{
+			name:      "success maximum burn, shortfallAmount is less than reserve balances",
 			mintDenom: "fxUSD",
 			setup: func() types.MsgBurnShortfall {
 				// make sure reserve has money
@@ -33,6 +56,7 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				return types.MsgBurnShortfall{
 					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
 					MintDenom: "fxUSD",
+					Amount:    math.NewInt(1_000_000),
 				}
 			},
 			expShortfallAmountAfterBurn: math.ZeroInt(),
@@ -40,7 +64,7 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 			expPass:                     true,
 		},
 		{
-			name:      "success, reserve balancess is less than shortfallAmount",
+			name:      "success maximum burn, reserve balancess is less than shortfallAmount",
 			mintDenom: "fxUSD",
 			setup: func() types.MsgBurnShortfall {
 				// make sure reserve has money
@@ -55,6 +79,7 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				return types.MsgBurnShortfall{
 					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
 					MintDenom: "fxUSD",
+					Amount:    math.NewInt(1_000_000),
 				}
 			},
 			expShortfallAmountAfterBurn: math.NewInt(9_000_000),
@@ -62,7 +87,7 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 			expPass:                     true,
 		},
 		{
-			name:      "success, reserve balancess no money",
+			name:      "fail, reserve balancess no money",
 			mintDenom: "fxUSD",
 			setup: func() types.MsgBurnShortfall {
 				// make sure Guaranteed Shortfall Amount
@@ -71,11 +96,10 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				return types.MsgBurnShortfall{
 					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
 					MintDenom: "fxUSD",
+					Amount:    math.NewInt(1_000_000),
 				}
 			},
-			expShortfallAmountAfterBurn: math.NewInt(10_000_000),
-			expReserveBalcesAfterBurn:   math.ZeroInt(),
-			expPass:                     true,
+			expPass: false,
 		},
 		{
 			name:      "fail, government account not the signatory for the proposed message",
@@ -93,11 +117,10 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				return types.MsgBurnShortfall{
 					Authority: s.TestAccs[0].String(),
 					MintDenom: "fxUSD",
+					Amount:    math.NewInt(1_000_000),
 				}
 			},
-			expShortfallAmountAfterBurn: math.NewInt(9_000_000),
-			expReserveBalcesAfterBurn:   math.ZeroInt(),
-			expPass:                     false,
+			expPass: false,
 		},
 		{
 			name:      "fail, denom is not in the allowed mint denom list",
@@ -115,11 +138,31 @@ func (s *KeeperTestSuite) TestBurnShortfallByMintDenom() {
 				return types.MsgBurnShortfall{
 					Authority: s.TestAccs[0].String(),
 					MintDenom: "atom",
+					Amount:    math.NewInt(1_000_000),
 				}
 			},
-			expShortfallAmountAfterBurn: math.NewInt(9_000_000),
-			expReserveBalcesAfterBurn:   math.ZeroInt(),
-			expPass:                     false,
+			expPass: false,
+		},
+		{
+			name:      "fail, burn all",
+			mintDenom: "fxUSD",
+			setup: func() types.MsgBurnShortfall {
+				// make sure reserve has money
+				mintCoin := sdk.NewCoins(sdk.NewCoin("fxUSD", math.NewInt(5_000_000)))
+				s.FundAccount(s.TestAccs[0], types.ModuleName, mintCoin)
+				err := s.k.BankKeeper.SendCoinsFromAccountToModule(s.Ctx, s.TestAccs[0], types.ReserveModuleName, mintCoin)
+				s.Require().NoError(err)
+
+				// make sure Guaranteed Shortfall Amount
+				err = s.k.ShortfallAmount.Set(s.Ctx, "fxUSD", math.NewInt(5_000_000))
+				s.Require().NoError(err)
+				return types.MsgBurnShortfall{
+					Authority: "onomy10d07y265gmmuvt4z0w9aw880jnsr700jqr8n8k",
+					MintDenom: "fxUSD",
+					Amount:    math.NewInt(10_000_000),
+				}
+			},
+			expPass: false,
 		},
 	}
 
