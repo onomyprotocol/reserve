@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: reserve/auction/v1/tx.proto
+// source: reserve/psm/v1/tx.proto
 
-package auctionv1
+package psmv1
 
 import (
 	context "context"
@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Msg_UpdateParams_FullMethodName = "/reserve.auction.v1.Msg/UpdateParams"
-	Msg_Bid_FullMethodName          = "/reserve.auction.v1.Msg/Bid"
-	Msg_CancelBid_FullMethodName    = "/reserve.auction.v1.Msg/CancelBid"
+	Msg_UpdateParams_FullMethodName              = "/reserve.psm.v1.Msg/UpdateParams"
+	Msg_AddStableCoinProposal_FullMethodName     = "/reserve.psm.v1.Msg/AddStableCoinProposal"
+	Msg_UpdatesStableCoinProposal_FullMethodName = "/reserve.psm.v1.Msg/UpdatesStableCoinProposal"
+	Msg_StableSwap_FullMethodName                = "/reserve.psm.v1.Msg/StableSwap"
 )
 
 // MsgClient is the client API for Msg service.
@@ -31,10 +32,9 @@ type MsgClient interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
-	// Bid defines an operation for submit a bid entry.
-	Bid(ctx context.Context, in *MsgBid, opts ...grpc.CallOption) (*MsgBidResponse, error)
-	// CancelBid defines an operation for cancel an existing bid entry.
-	CancelBid(ctx context.Context, in *MsgCancelBid, opts ...grpc.CallOption) (*MsgCancelBidResponse, error)
+	AddStableCoinProposal(ctx context.Context, in *MsgAddStableCoin, opts ...grpc.CallOption) (*MsgAddStableCoinResponse, error)
+	UpdatesStableCoinProposal(ctx context.Context, in *MsgUpdatesStableCoin, opts ...grpc.CallOption) (*MsgUpdatesStableCoinResponse, error)
+	StableSwap(ctx context.Context, in *MsgStableSwap, opts ...grpc.CallOption) (*MsgStableSwapResponse, error)
 }
 
 type msgClient struct {
@@ -54,18 +54,27 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
-func (c *msgClient) Bid(ctx context.Context, in *MsgBid, opts ...grpc.CallOption) (*MsgBidResponse, error) {
-	out := new(MsgBidResponse)
-	err := c.cc.Invoke(ctx, Msg_Bid_FullMethodName, in, out, opts...)
+func (c *msgClient) AddStableCoinProposal(ctx context.Context, in *MsgAddStableCoin, opts ...grpc.CallOption) (*MsgAddStableCoinResponse, error) {
+	out := new(MsgAddStableCoinResponse)
+	err := c.cc.Invoke(ctx, Msg_AddStableCoinProposal_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) CancelBid(ctx context.Context, in *MsgCancelBid, opts ...grpc.CallOption) (*MsgCancelBidResponse, error) {
-	out := new(MsgCancelBidResponse)
-	err := c.cc.Invoke(ctx, Msg_CancelBid_FullMethodName, in, out, opts...)
+func (c *msgClient) UpdatesStableCoinProposal(ctx context.Context, in *MsgUpdatesStableCoin, opts ...grpc.CallOption) (*MsgUpdatesStableCoinResponse, error) {
+	out := new(MsgUpdatesStableCoinResponse)
+	err := c.cc.Invoke(ctx, Msg_UpdatesStableCoinProposal_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) StableSwap(ctx context.Context, in *MsgStableSwap, opts ...grpc.CallOption) (*MsgStableSwapResponse, error) {
+	out := new(MsgStableSwapResponse)
+	err := c.cc.Invoke(ctx, Msg_StableSwap_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,10 +88,9 @@ type MsgServer interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
-	// Bid defines an operation for submit a bid entry.
-	Bid(context.Context, *MsgBid) (*MsgBidResponse, error)
-	// CancelBid defines an operation for cancel an existing bid entry.
-	CancelBid(context.Context, *MsgCancelBid) (*MsgCancelBidResponse, error)
+	AddStableCoinProposal(context.Context, *MsgAddStableCoin) (*MsgAddStableCoinResponse, error)
+	UpdatesStableCoinProposal(context.Context, *MsgUpdatesStableCoin) (*MsgUpdatesStableCoinResponse, error)
+	StableSwap(context.Context, *MsgStableSwap) (*MsgStableSwapResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -93,11 +101,14 @@ type UnimplementedMsgServer struct {
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
 }
-func (UnimplementedMsgServer) Bid(context.Context, *MsgBid) (*MsgBidResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Bid not implemented")
+func (UnimplementedMsgServer) AddStableCoinProposal(context.Context, *MsgAddStableCoin) (*MsgAddStableCoinResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddStableCoinProposal not implemented")
 }
-func (UnimplementedMsgServer) CancelBid(context.Context, *MsgCancelBid) (*MsgCancelBidResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelBid not implemented")
+func (UnimplementedMsgServer) UpdatesStableCoinProposal(context.Context, *MsgUpdatesStableCoin) (*MsgUpdatesStableCoinResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatesStableCoinProposal not implemented")
+}
+func (UnimplementedMsgServer) StableSwap(context.Context, *MsgStableSwap) (*MsgStableSwapResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StableSwap not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 
@@ -130,38 +141,56 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_Bid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgBid)
+func _Msg_AddStableCoinProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddStableCoin)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).Bid(ctx, in)
+		return srv.(MsgServer).AddStableCoinProposal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_Bid_FullMethodName,
+		FullMethod: Msg_AddStableCoinProposal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).Bid(ctx, req.(*MsgBid))
+		return srv.(MsgServer).AddStableCoinProposal(ctx, req.(*MsgAddStableCoin))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_CancelBid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgCancelBid)
+func _Msg_UpdatesStableCoinProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdatesStableCoin)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).CancelBid(ctx, in)
+		return srv.(MsgServer).UpdatesStableCoinProposal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Msg_CancelBid_FullMethodName,
+		FullMethod: Msg_UpdatesStableCoinProposal_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).CancelBid(ctx, req.(*MsgCancelBid))
+		return srv.(MsgServer).UpdatesStableCoinProposal(ctx, req.(*MsgUpdatesStableCoin))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_StableSwap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgStableSwap)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).StableSwap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_StableSwap_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).StableSwap(ctx, req.(*MsgStableSwap))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -170,7 +199,7 @@ func _Msg_CancelBid_Handler(srv interface{}, ctx context.Context, dec func(inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Msg_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "reserve.auction.v1.Msg",
+	ServiceName: "reserve.psm.v1.Msg",
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -178,14 +207,18 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_UpdateParams_Handler,
 		},
 		{
-			MethodName: "Bid",
-			Handler:    _Msg_Bid_Handler,
+			MethodName: "AddStableCoinProposal",
+			Handler:    _Msg_AddStableCoinProposal_Handler,
 		},
 		{
-			MethodName: "CancelBid",
-			Handler:    _Msg_CancelBid_Handler,
+			MethodName: "UpdatesStableCoinProposal",
+			Handler:    _Msg_UpdatesStableCoinProposal_Handler,
+		},
+		{
+			MethodName: "StableSwap",
+			Handler:    _Msg_StableSwap_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "reserve/auction/v1/tx.proto",
+	Metadata: "reserve/psm/v1/tx.proto",
 }
