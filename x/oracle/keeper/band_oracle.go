@@ -621,3 +621,167 @@ func (k Keeper) GetAllPairDecimalsRate(ctx context.Context) []types.PairDecimals
 
 	return allPair
 }
+
+func (k Keeper) SetInitPrice(ctx context.Context) error {
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+	initPrice := []*types.BandPriceState{
+		// multiplier = 1000
+		{
+			Symbol:      "fxUSD",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: sdkCtx.BlockTime().Unix(),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "USD",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "EUR",
+			Rate:        math.NewInt(10910), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "JPY",
+			Rate:        math.NewInt(66), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "fxEUR",
+			Rate:        math.NewInt(10910), //1.091
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1.091"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "fxJPY",
+			Rate:        math.NewInt(66), //0.0066
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.0066"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "anom",
+			Rate:        math.NewInt(330), //0.03
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.03"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "NOM",
+			Rate:        math.NewInt(330), //0.03
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.03"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "usdt",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "USDT",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "usdc",
+			Rate:        math.NewInt(10000), //1
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "eurt",
+			Rate:        math.NewInt(10910), //1.091
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1.091"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "jpyt",
+			Rate:        math.NewInt(66), //0.0066
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.0066"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "uatom",
+			Rate:        math.NewInt(80000), //8
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("8"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ATOM",
+			Rate:        math.NewInt(80000), //8
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("8"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "uosmo",
+			Rate:        math.NewInt(4500), //0.45
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.45"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "uusdt",
+			Rate:        math.NewInt(10000), //0.45
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "atom",
+			Rate:        math.NewInt(80000), //0.45
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("8"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ibc/E50A183716AB596378047D9688FE648CD3470C4D196FB4C2C8E61989DB48562E", //transfer/channel-10/transfer/channel-7/transfer/channel-143/erc20/tether/usdt
+			Rate:        math.NewInt(10000),
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ibc/BE4C72028781730B9DF0542466EB26DEA6DDD42C32316D774F943151F6010320", // transfer/channel-5/usdt
+			Rate:        math.NewInt(10000),
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518", //transfer/channel-0/uosmo
+			Rate:        math.NewInt(4500),                                                      //0.45
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("0.45"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2", //ibc-atom
+			Rate:        math.NewInt(80000),                                                     //0.45
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("8"), sdkCtx.BlockTime().Unix()),
+		},
+		{
+			Symbol:      "ibc/BC599B88586F8C22E408569D7F6FAD40AEBF808A67D2051B86958CBB5F0A16B0", //usdt
+			Rate:        math.NewInt(10000),
+			ResolveTime: (sdkCtx.BlockTime().Unix()),
+			PriceState:  *types.NewPriceState(math.LegacyMustNewDecFromStr("1"), sdkCtx.BlockTime().Unix()),
+		},
+	}
+
+	for _, i := range initPrice {
+		err := k.SetBandPriceState(ctx, i.Symbol, i)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (k Keeper) SetPrice(goCtx context.Context, msg *types.MsgSetPrice) (*types.MsgSetPriceResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(goCtx)
+	k.SetBandPriceState(goCtx, msg.Denom, &types.BandPriceState{
+		Symbol:      msg.Denom,
+		Rate:        math.NewInt(10000).ToLegacyDec().Mul(msg.Price).TruncateInt(),
+		ResolveTime: (sdkCtx.BlockTime().Unix()),
+		PriceState:  *types.NewPriceState(msg.Price, sdkCtx.BlockTime().Unix()),
+	})
+	return &types.MsgSetPriceResponse{}, nil
+}

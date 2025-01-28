@@ -22,6 +22,8 @@ service Msg {
 
   rpc UpdateBandParams(MsgUpdateBandParams) returns (MsgUpdateBandParamsResponse);
 
+  rpc SetPrice(MsgSetPrice) returns (MsgSetPriceResponse);
+
   rpc UpdateBandOracleRequest(MsgUpdateBandOracleRequestRequest) returns (MsgUpdateBandOracleRequestResponse);
 
   rpc DeleteBandOracleRequests(MsgDeleteBandOracleRequests) returns (MsgDeleteBandOracleRequestsResponse);
@@ -122,3 +124,19 @@ message MsgUpdateBandOracleRequestParamsRequest {
 
 // MsgUpdateBandOracleRequestParamsResponse define the Msg/UpdateBandOracleRequestParams response type.
 message MsgUpdateBandOracleRequestParamsResponse {}
+
+message MsgSetPrice{
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "reserve/x/oracle/MsgSetPrice";
+  string denom = 1;
+
+  bytes price = 2 [
+    (cosmos_proto.scalar)  = "cosmos.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable)   = false
+  ];
+
+  string authority = 3;
+}
+
+message MsgSetPriceResponse {}
