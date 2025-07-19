@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// EndBlocker called at every block, update validator set
+// BeginBlocker called at every block, update validator set
 func (k *Keeper) BeginBlocker(goCtx context.Context) error {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	currentTime := ctx.BlockTime()

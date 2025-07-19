@@ -325,7 +325,7 @@ func (app *App) GetMemKey(storeKey string) *storetypes.MemoryStoreKey {
 	return app.AppKeepers.GetMemKey(storeKey)
 }
 
-// kvStoreKeys returns all the kv store keys registered inside App.
+// KvStoreKeys returns all the kv store keys registered inside App.
 func (app *App) KvStoreKeys() map[string]*storetypes.KVStoreKey {
 
 	return app.AppKeepers.GetKVStoreKey()
